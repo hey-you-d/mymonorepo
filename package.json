@@ -1,0 +1,27 @@
+{
+  "name": "mymonorepo",
+  "version": "0.1.0",
+  "description": "",
+  "private": true,
+  "workspaces": [
+    "myapps/*"
+  ],
+  "scripts": {
+    "prepare": "husky install",
+    "workspaces-info": "yarn workspaces info",
+    "hello-next-js-build": "yarn workspace hello-next-js build",
+    "hello-next-js-start": "yarn workspace hello-next-js start",
+    "helloreactjs-build": "yarn workspace helloreactjswithvite build",
+    "helloreactjs-dev": "yarn workspace helloreactjswithvite dev",
+    "my-shared-ui-build": "yarn workspace my-shared-ui build"
+  },
+  "keywords": [],
+  "author": "Yudiman Kwanmas",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "@commitlint/cli": "^17.6.7",
+    "@commitlint/config-conventional": "^17.6.7"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}
