@@ -1,0 +1,19 @@
+{
+    "family": "mymonorepo-ecs-task-trial-1",
+    "requiresCompatibilities": ["EC2"],
+    "containerDefinitions": [
+        {
+            "name": "mymonorepo-ecr-trial-1",
+            "image": "120569641426.dkr.ecr.us-east-1.amazonaws.com/mymonorepo-ecr-trial-1:latest",
+            "memory": 512,
+            "cpu": 256,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 80
+                }
+            ]
+        }
+    ]
+}
