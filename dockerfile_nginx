@@ -2,7 +2,7 @@
 FROM node:18-alpine as build
 
 # Step 2: Set working directory
-WORKDIR /myapps
+WORKDIR /app
 
 # Step 3: Install dependencies only for the workspace
 COPY package.json yarn.lock ./
@@ -14,8 +14,7 @@ COPY . .
 RUN yarn install --frozen-lockfile
 
 # Step 6: Build the React app (from the root folder)
-WORKDIR /
-RUN yarn helloreactjs-build
+RUN yarn workspace helloreactjswithvite build
 
 ### PRODUCTION STAGE ###
 
@@ -23,7 +22,7 @@ RUN yarn helloreactjs-build
 FROM nginx:alpine as production
 
 # Step 8: Copy the build files from the build stage to NGINX
-COPY --from=build /myapps/helloreactjswithvite/dist /usr/share/nginx/html
+COPY --from=build /app/myapps/helloreactjswithvite/dist /usr/share/nginx/html
 
 # Step 9: Expose the port for the NGINX server
 EXPOSE 80
