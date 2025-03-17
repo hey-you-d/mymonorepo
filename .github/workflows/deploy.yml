@@ -17,11 +17,11 @@ jobs:
       - name: Set Deployment environment based on branch
         run: |
           echo "GITHUB REF -> ${{ github.ref }}"
-          if [[ "${{ github.ref }}" == "refs/head/dev" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             echo "DEPLOY_ENV=development" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/head/staging" ]]; then
+          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
             echo "DEPLOY_ENV=staging" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/head/master" ]]; then
+          elif [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
             echo "DEPLOY_ENV=production" >> $GITHUB_ENV      
           fi
 
