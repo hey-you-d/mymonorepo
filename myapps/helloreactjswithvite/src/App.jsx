@@ -9,6 +9,8 @@ function App() {
 
   return (
     <>
+      <ExampleComponent text='hello from my-shared-ui!' />
+      <p>CD Trial #1</p>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -29,7 +31,6 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      <ExampleComponent text='hello from my-shared-ui!' />
     </>
   )
 }
