@@ -36,7 +36,9 @@ jobs:
         id: login-ecr
         #uses: aws-actions/amazon-ecr-login@v1
         run: | 
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.ECS_REGISTRY }}
+          ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com"
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+          docker login --username AWS --password-stdin $ECR_REGISTRY
 
       - name: Build, tag,& push docker image
         env: 
