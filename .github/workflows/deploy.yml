@@ -40,7 +40,7 @@ jobs:
         env: 
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }} # use a unique tag
+          IMAGE_TAG: 'latest' 
         run: |
           echo "Building image: mymonorepo-ecr-trial-0 "
           docker build -f dockerfile_nginx -t mymonorepo-ecr-trial-0 .
@@ -56,13 +56,6 @@ jobs:
 
           echo "Pushing image to ECR... $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 
-
-      - name: Update Copilot Manifest with New Image (to handle the dynamic tagging from the previous step)
-        run: |
-          IMAGE_URI="$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          sed -i "s|location: .*|location: \"$IMAGE_URI\"|" copilot/${{ secrets.ECS_SERVICE }}/manifest.yml
-          echo "Updated manifest.yml:"
-          cat copilot/${{ secrets.ECS_SERVICE }}/manifest.yml  # Debugging   
 
       - name: Deploy to Amazon Copilot 
         run: |
