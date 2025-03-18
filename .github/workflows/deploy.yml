@@ -41,18 +41,11 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         run: |
-          LOCAL_IMAGE_TAG=$(git rev-parse --short HEAD) 
           echo "Building image: mymonorepo-ecr-trial-0:$LOCAL_IMAGE_TAG "
-          docker build -f dockerfile_nginx -t mymonorepo-ecr-trial-0:$LOCAL_IMAGE_TAG .
+          docker build -f dockerfile_nginx -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
 
           echo "Verifying build image..."
-          docker images | grep $LOCAL_IMAGE_TAG || echo "image not found!"
-
-          echo "Tag the build image"
-          docker tag mymonorepo-ecr-trial-0:$LOCAL_IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
-
-          echo "Verifying tagged build image..."
-          docker images | grep $ECR_REGISTRY/$ECR_REPOSITORY:latest || echo "tagged image not found!"
+          docker images | grep $ECR_REGISTRY/$ECR_REPOSITORY || echo "tagged image not found!"
 
           echo "Pushing image to ECR... $ECR_REGISTRY/$ECR_REPOSITORY:latest"
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest 
