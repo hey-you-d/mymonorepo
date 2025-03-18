@@ -45,13 +45,13 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         run: |
-          echo "Building image: mymonorepo-ecr-trial-0:$LOCAL_IMAGE_TAG "
+          echo "Building image: $ECR_REGISTRY/$ECR_REPOSITORY:latest "
           docker build -f dockerfile_nginx -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
 
           echo "Verifying build image..."
           docker images | grep $ECR_REGISTRY/$ECR_REPOSITORY || echo "tagged image not found!"
 
-          echo "Pushing image to ECR... $ECR_REGISTRY/$ECR_REPOSITORY:latest"
+          echo "Pushing the following image to ECR: $ECR_REGISTRY/$ECR_REPOSITORY:latest"
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest 
 
       - name: Deploy to Amazon Copilot 
