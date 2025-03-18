@@ -49,10 +49,10 @@ jobs:
           IMAGE_TAG: ${{ github.sha }} # use a unique tag
         run: |
           echo "Building image: mymonorepo_ecr_trial_3 "
-          docker build . -t mymonorepo_ecr_trial_3 -f dockerfile_nginx
+          docker build -f dockerfile_nginx -t mymonorepo_ecr_trial_0 .
 
           echo "Verifying build image..."
-          docker images | grep mymonorepo_ecr_trial_3 | echo "image not found!"
+          docker images | grep mymonorepo_ecr_trial_0 | echo "image not found!"
 
           echo "Tag the build image"
           docker tag mymonorepo_ecr_trial_3:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
