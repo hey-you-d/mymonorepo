@@ -59,7 +59,9 @@ jobs:
 
       - name: Update Copilot Manifest with New Image (to handle the dynamic tagging from the previous step)
         run: |
-          sed -i "s|location: .*|location: \"$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG\"|" copilot/${{ secrets.ECS_SERVICE }}/manifest.yml
+          IMAGE_URI="$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          sed -i "s|location: .*|location: \"$IMAGE_URI\"|" copilot/${{ secrets.ECS_SERVICE }}/manifest.yml
+          echo "Updated manifest.yml:"
           cat copilot/${{ secrets.ECS_SERVICE }}/manifest.yml  # Debugging   
 
       - name: Deploy to Amazon Copilot 
@@ -69,7 +71,11 @@ jobs:
           sudo mv copilot-cli /usr/local/bin/copilot
           echo "Deploying to the following environment: $DEPLOY_ENV"
           copilot svc deploy --name ${{ secrets.ECS_SERVICE }} --env $DEPLOY_ENV \
-          --force -- image $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG #pass explicit image     
+          --force -- image $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG #pass explicit image    
+          
+      - name: Check ECS to verify images
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.ECS_SERVICE }} | grep image   
 
 
 
