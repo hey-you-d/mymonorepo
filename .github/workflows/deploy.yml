@@ -34,10 +34,9 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Mask the docker password from the previous step
-        run: echo "::add-mask::${{ steps.login-ecr.outputs.docker_password }}"       
+        #uses: aws-actions/amazon-ecr-login@v1
+        run: | 
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ secrets.ECS_REGISTRY }}
 
       - name: Build, tag,& push docker image
         env: 
