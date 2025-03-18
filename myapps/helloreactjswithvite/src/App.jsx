@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <ExampleComponent text='hello from my-shared-ui!' />
-      <p>CD Trial #5</p>
+      <p>CD Trial #6</p>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
