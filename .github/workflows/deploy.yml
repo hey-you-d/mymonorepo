@@ -59,8 +59,8 @@ jobs:
 
       - name: Update Copilot Manifest with New Image (to handle the dynamic tagging from the previous step)
         run: |
-          sed -i "s|location:.*|location: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|" .copilot/${{ secrets.ECS_SERVICE }}/manifest.yml
-          cat .copilot/${{ secrets.ECS_SERVICE }}/manifest.yml  # Debugging   
+          sed -i "s|location:.*|location: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|" copilot/${{ secrets.ECS_SERVICE }}/manifest.yml
+          cat copilot/${{ secrets.ECS_SERVICE }}/manifest.yml  # Debugging   
 
       - name: Deploy to Amazon Copilot 
         run: |
