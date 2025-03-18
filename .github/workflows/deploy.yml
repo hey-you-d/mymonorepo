@@ -40,32 +40,32 @@ jobs:
         env: 
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          IMAGE_TAG: 'latest' 
         run: |
           LOCAL_IMAGE_TAG=$(git rev-parse --short HEAD) 
           echo "Building image: mymonorepo-ecr-trial-0:$LOCAL_IMAGE_TAG "
           docker build -f dockerfile_nginx -t mymonorepo-ecr-trial-0:$LOCAL_IMAGE_TAG .
 
           echo "Verifying build image..."
-          docker images | grep mymonorepo-ecr-trial-0:$LOCAL_IMAGE_TAG || echo "image not found!"
+          docker images | grep $LOCAL_IMAGE_TAG || echo "image not found!"
 
           echo "Tag the build image"
-          docker tag mymonorepo-ecr-trial-0:$LOCAL_IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker tag mymonorepo-ecr-trial-0:$LOCAL_IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:tagged-$LOCAL_IMAGE_TAG
 
           echo "Verifying tagged build image..."
-          docker images | grep $IMAGE_TAG || echo "tagged image not found!"
+          docker images | grep tagged-$IMAGE_TAG || echo "tagged image not found!"
 
-          echo "Pushing image to ECR... $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 
+          echo "Pushing image to ECR... $ECR_REGISTRY/$ECR_REPOSITORY:tagged-$IMAGE_TAG"
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:tagged-$IMAGE_TAG 
 
       - name: Deploy to Amazon Copilot 
         run: |
+          LOCAL_IMAGE_TAG=$(git rev-parse --short HEAD) 
           curl -Lo copilot-cli https://github.com/aws/copilot-cli/releases/latest/download/copilot-linux
           chmod +x copilot-cli
           sudo mv copilot-cli /usr/local/bin/copilot
           echo "Deploying to the following environment: $DEPLOY_ENV"
           copilot svc deploy --name ${{ secrets.ECS_SERVICE }} --env $DEPLOY_ENV \
-          --force -- image $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG #pass explicit image     
+          --force -- image $ECR_REGISTRY/$ECR_REPOSITORY:tagged-$IMAGE_TAG #pass explicit image     
 
 
 
