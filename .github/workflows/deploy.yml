@@ -64,11 +64,7 @@ jobs:
           sudo mv copilot-cli /usr/local/bin/copilot
           echo "Deploying to the following environment: $DEPLOY_ENV"
           copilot svc deploy --name ${{ secrets.ECS_SERVICE }} --env $DEPLOY_ENV \
-          --force -- image $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG #pass explicit image    
-          
-      - name: Check ECS to verify images
-        run: |
-          aws ecs describe-task-definition --task-definition ${{ secrets.ECS_SERVICE }} | grep image   
+          --force -- image $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG #pass explicit image     
 
 
 
