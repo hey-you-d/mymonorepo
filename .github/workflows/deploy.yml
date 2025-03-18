@@ -64,7 +64,7 @@ jobs:
           sudo mv copilot-cli /usr/local/bin/copilot
           echo "Deploying to the following environment: $DEPLOY_ENV"
           copilot svc deploy --name ${{ secrets.ECS_SERVICE }} --env $DEPLOY_ENV \
-          -- image $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG #pass explicit image     
+          --force -- image $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG #pass explicit image     
 
 
 
