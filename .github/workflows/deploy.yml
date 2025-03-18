@@ -52,16 +52,10 @@ jobs:
           docker tag mymonorepo-ecr-trial-0 $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
           echo "Verifying tagged build image..."
-          docker images | grep $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG || echo "tagged image not found!"
+          docker images | grep $IMAGE_TAG || echo "tagged image not found!"
 
-          echo "Pushing image to ECR..."
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      - name: Debug env variable
-        run: |
-          echo "ECR_REGISTRY: $ECR_REGISTRY"
-          echo "ECR_REPOSITORY: $ECR_REPOSITORY"
-          echo "IMAGE_TAG: $IMAGE_TAG"  
+          echo "Pushing image to ECR... $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 
 
       - name: Deploy to Amazon Copilot 
         run: |
