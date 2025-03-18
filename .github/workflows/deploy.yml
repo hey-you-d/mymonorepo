@@ -36,13 +36,25 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Debug env variable
+        run: |
+          echo "ECR_REGISTRY: $ECR_REGISTRY"
+          echo "ECR_REPOSITORY: $ECR_REPOSITORY"
+          echo "IMAGE_TAG: $IMAGE_TAG"  
+
       - name: Build, tag,& push docker image
         env: 
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }} # use a unique tag
         run: |
-          docker build -f dockerfile_nginx -t $ECR_REGISTRY/$ECR_REPOSITORY .
+          echo "Building image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG "
+          docker build -f dockerfile_nginx -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+
+          echo "Verifying build image..."
+          docker images | grep $ECR_REGISTRY/$ECR_REPOSITORY | echo "image not found!"
+
+          echo "Pushing image to ECR..."
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Deploy to Amazon Copilot 
