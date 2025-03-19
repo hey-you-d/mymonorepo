@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - dev
-      - staging
-      - master
+      #- staging
+      #- master
     paths:
-      - 'myapps/helloreactjswithvite/**'
-      - '.github/workflows/deploy-hello-next-js.yml'      
+      - 'myapps/hello-next-js/**'     
 
 jobs:
   deploy:
@@ -46,8 +45,8 @@ jobs:
       - name: Build, tag,& push docker image
         env: 
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          DOCKERFILE: "dockerfile_nginx"
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_HELLO_NEXT_JS }}
+          DOCKERFILE: "dockerfile_hellonextjs_nginx"
         run: |
           echo "Building image: $ECR_REGISTRY/$ECR_REPOSITORY:latest "
           docker build -f $DOCKERFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
@@ -64,7 +63,7 @@ jobs:
           chmod +x copilot-cli
           sudo mv copilot-cli /usr/local/bin/copilot
           echo "Deploying to the following environment: $DEPLOY_ENV"
-          copilot svc deploy --name ${{ secrets.ECS_SERVICE }} --env $DEPLOY_ENV \
+          copilot svc deploy --name ${{ secrets.ECS_SERVICE_HELLO_NEXT_JS }} --env $DEPLOY_ENV \
           --force -- image $ECR_REGISTRY/$ECR_REPOSITORY:latest #pass explicit image     
 
 
