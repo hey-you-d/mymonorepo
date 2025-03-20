@@ -8,7 +8,7 @@ on:
       - master
     paths:
       - 'myapps/helloreactjswithvite/**'
-      - '.github/workflows/deploy-hello-next-js.yml'      
+      - '.github/workflows/**'      
 
 jobs:
   deploy:
