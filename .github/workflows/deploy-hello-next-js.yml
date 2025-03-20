@@ -8,7 +8,8 @@ on:
       #- master
     paths:
       - 'myapps/hello-next-js/**'  
-      - '.github/workflows/**'   
+      - '.github/workflows/deploy-hello-next-js.yml'   
+      - 'copilot/mymonorepo-svc-lb-hello-next-js-trial-1-dev/manifest.yml'
 
 jobs:
   deploy:
