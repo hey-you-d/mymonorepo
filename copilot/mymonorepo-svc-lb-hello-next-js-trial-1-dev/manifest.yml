@@ -15,6 +15,7 @@ http:
   # You can specify a custom health check path. The default is "/".
   # healthcheck: '/'
   additionalPaths:
+    - '/*.svg'
     - '/_next/*'
     - '/static/*'
     - '/_next/static/*'
