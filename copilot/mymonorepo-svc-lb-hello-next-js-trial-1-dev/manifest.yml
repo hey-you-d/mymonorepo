@@ -10,8 +10,7 @@ type: Load Balanced Web Service
 http:
   # Requests to this path will be forwarded to your service.
   # To match all requests you can use the "/" path.
-  #path: 'mymonorepo-svc-lb-hello-next-js-trial-1-dev'
-  path: /mymonorepo-hello-next-js/*
+  path: 'mymonorepo-svc-lb-hello-next-js-trial-1-dev'
   # You can specify a custom health check path. The default is "/".
   # healthcheck: '/'
 
