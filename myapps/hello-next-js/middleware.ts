@@ -7,7 +7,9 @@ export const middleware = (req: NextRequest) => {
     /***
      * handle static assets (_next, static) so they load correctly
      */
-    if (url.pathname.startsWith(`${prefix}/_next`) || url.pathname.startsWith(`${prefix}/static`)) {
+    if (url.pathname.startsWith(`${prefix}/_next`) || 
+        url.pathname.startsWith(`${prefix}/static`) ||
+        url.pathname.match(new RegExp(`${prefix}/.*\.(ico|svg|png|webp|jpg|jpeg)$`))) {
         //const newUrl = url.clone();
         //newUrl.pathname = url.pathname.replace(prefix, '');
         const newUrl = new URL(url.pathname.replace(prefix, ''), req.url);
