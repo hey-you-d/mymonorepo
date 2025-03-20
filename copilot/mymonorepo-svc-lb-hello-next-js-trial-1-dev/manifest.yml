@@ -19,6 +19,7 @@ http:
     - '/_next/*'
     - '/static/*'
     - '/_next/static/*'
+    - '/hello-next-js/*.svg'
     - '/hello-next-js/_next/*'
     - '/hello-next-js/static/*'
     - '/hello-next-js/_next/static/*'
