@@ -15,8 +15,12 @@ http:
   # You can specify a custom health check path. The default is "/".
   # healthcheck: '/'
   additionalPaths:
+    - '/_next/*'
+    - '/static/*'
+    - '/_next/static/*'
     - '/hello-next-js/_next/*'
     - '/hello-next-js/static/*'
+    - '/hello-next-js/_next/static/*'
 
 # Configuration for your containers and service.
 image:
