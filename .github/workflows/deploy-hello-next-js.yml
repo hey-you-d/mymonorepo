@@ -1,4 +1,4 @@
-name: Deploy to AWS Copilot
+name: Deploy to AWS Copilot for hello-next-js
 
 on:
   push:
