@@ -1,0 +1,25 @@
+# Step 1: Set the base image
+FROM node:18-alpine as build
+
+# Step 2: Set working directory
+WORKDIR /app
+
+# Step 3: Install dependencies only for the workspace
+COPY package.json yarn.lock ./
+
+# Step 4: Copy the monorepo (except the ignored files)
+COPY . .
+
+# Step 5: Install dependencies using Yarn
+RUN yarn install --frozen-lockfile
+
+# Step 6: Build the Next.JS app (from the root folder)
+RUN yarn workspace hello-next-js build
+
+### PRODUCTION STAGE ###
+# Step 7: Expose the default next.js port
+EXPOSE 3000
+
+# Step 8: Need to run as a Node.js server instead of serving
+# static files via nginx
+CMD ["yarn", "workspace", "hello-next-js", "start", "-p", "3000"]
