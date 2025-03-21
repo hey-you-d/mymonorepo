@@ -5,16 +5,6 @@ export const middleware = (req: NextRequest) => {
     const prefix = '/hello-next-js';
 
     /***
-     * Handle assets in the public folder
-     */
-    if (url.pathname.match(new RegExp(`${prefix}/.*\.(ico|svg|png|webp|jpg|jpeg)$`))) {
-        const newUrl = url.clone();
-        newUrl.pathname = url.pathname.replace(prefix, '');
-        return NextResponse.rewrite(newUrl);
-    }
-
-
-    /***
      * handle static assets (_next, static) so they load correctly
      */
     if (url.pathname.startsWith(`${prefix}/_next`) || 
