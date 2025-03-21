@@ -5,7 +5,7 @@ on:
     branches:
       - dev
       - staging
-      #- master
+      - master
     paths:
       - 'myapps/hello-next-js/**'  
       - '.github/workflows/deploy-hello-next-js.yml'   
