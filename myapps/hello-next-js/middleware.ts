@@ -10,9 +10,8 @@ export const middleware = (req: NextRequest) => {
     if (url.pathname.startsWith(`${prefix}/_next`) || 
         url.pathname.startsWith(`${prefix}/static`) ||
         url.pathname.match(new RegExp(`${prefix}/.*\.(ico|svg|png|webp|jpg|jpeg)$`))) {
-        //const newUrl = url.clone();
-        //newUrl.pathname = url.pathname.replace(prefix, '');
-        const newUrl = new URL(url.pathname.replace(prefix, ''), req.url);
+        const newUrl = url.clone();
+        newUrl.pathname = url.pathname.replace(prefix, '');
         return NextResponse.rewrite(newUrl);
     }
 
