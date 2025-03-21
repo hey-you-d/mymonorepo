@@ -8,8 +8,7 @@ export const middleware = (req: NextRequest) => {
      * handle static assets (_next, static) so they load correctly
      */
     if (url.pathname.startsWith(`${prefix}/_next`) || 
-        url.pathname.startsWith(`${prefix}/static`) ||
-        url.pathname.match(new RegExp(`${prefix}/.*\.(ico|svg|png|webp|jpg|jpeg)$`))) {
+        url.pathname.startsWith(`${prefix}/static`)) {
         const newUrl = url.clone();
         newUrl.pathname = url.pathname.replace(prefix, '');
         return NextResponse.rewrite(newUrl);
