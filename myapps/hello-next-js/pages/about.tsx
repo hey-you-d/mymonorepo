@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserPage } from "../src/app/views/userPage";
+import { UserPage } from "@/app/views/userPage";
 
 const About = () => {
     return ( 
