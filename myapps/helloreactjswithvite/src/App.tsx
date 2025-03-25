@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { ExampleComponent } from 'my-shared-ui'
+import { UserPage } from './views/UserPage';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -10,7 +11,7 @@ function App() {
   return (
     <>
       <ExampleComponent text='hello from my-shared-ui!' />
-      <p>CD Trial #13</p>
+      <UserPage userId="2" />
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
