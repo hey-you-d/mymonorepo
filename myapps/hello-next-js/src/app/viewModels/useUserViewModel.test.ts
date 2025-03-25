@@ -1,7 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useUserViewModel } from '@/app/viewModels/useUserViewModel';
+import { useUserViewModel } from './useUserViewModel';
 import { AxiosInstance } from 'axios';
-//import { UserModel } from "@/app/models/UserModel";
 
 const resolvedOutput = {
     name: "Yudiman Kwanmas",
@@ -10,7 +9,7 @@ const resolvedOutput = {
     createdAt: "2025-03-24"
 };
 
-jest.mock("../src/app/models/UserModel", () => {
+jest.mock("../models/UserModel", () => {
     return {
         UserModel: jest.fn().mockImplementation(() => {
             return {

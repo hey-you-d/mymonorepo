@@ -8,7 +8,7 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <h1>This is H1</h1>
-        <Link href="/about">About</Link>
+        <Link href={`${imagePrefix}/about`}>About</Link>
         <Image
           className={styles.logo}
           src={`${imagePrefix}/next.svg`}
