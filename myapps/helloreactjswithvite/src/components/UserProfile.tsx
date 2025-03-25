@@ -3,7 +3,7 @@
 // The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 
-import React, { MouseEventHandler } from 'react';
+import { MouseEventHandler } from 'react';
 import { User } from '../types/User';
 
 export const UserProfile = ({ user, onRefresh } : { user: User | null, onRefresh: MouseEventHandler<HTMLButtonElement> }) => {
