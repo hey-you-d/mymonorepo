@@ -22,5 +22,12 @@
       "noFallthroughCasesInSwitch": true,
       "noUncheckedSideEffectImports": true
     },
-    "include": ["src", "constants/User.ts", "test", "custom.d.ts"]
+    "include": [
+      "src/**/*",  // Make sure all source files are included
+    ],
+    "exclude": [
+      "node_modules",
+      "dist",
+      "build"
+    ]
   }

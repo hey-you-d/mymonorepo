@@ -1,8 +1,8 @@
 import js from '@eslint/js';
-import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin'; // Import the TypeScript ESLint plugin
+import typescriptEslintParser from '@typescript-eslint/parser'; // Import the TypeScript parser
 
 export default [
   { ignores: ['dist'] }, // Ignore dist folder
@@ -10,14 +10,29 @@ export default [
   
   // Apply rules directly for .ts and .tsx files
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
+      parser: typescriptEslintParser, // Specify the TypeScript parser
       parserOptions: {
-        ecmaVersion: 'latest',
+        //project: './tsconfig.json',
+        ecmaVersion: 6,
         sourceType: 'module',
         ecmaFeatures: {
           jsx: true,
+          modules: true,
         },
+      },
+      globals: {
+        jest: 'readonly',  // Allow 'jest' as a global variable
+        describe: 'readonly',  // Allow 'describe' as a global variable
+        beforeEach: 'readonly',  // Allow 'beforeEach' as a global variable
+        it: 'readonly',  // Allow 'it' as a global variable
+        expect: 'readonly',  // Allow 'expect' as a global variable
+        document: 'readonly',
+        fetch: 'readonly',
+        global: 'readonly',
+        console: 'readonly',
+        module: 'readonly',
       },
     },
     plugins: {

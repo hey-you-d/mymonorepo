@@ -5,7 +5,10 @@
       { "path": "./tsconfig.node.json" }
     ],
     "compilerOptions": {
+        "module": "esnext",
         "jsx": "react-jsx",
+        "moduleResolution": "node",
         "esModuleInterop": true,
-    }
+        "forceConsistentCasingInFileNames": true,
+    },
 }
