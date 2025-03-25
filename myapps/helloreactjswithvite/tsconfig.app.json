@@ -22,5 +22,5 @@
       "noFallthroughCasesInSwitch": true,
       "noUncheckedSideEffectImports": true
     },
-    "include": ["src"]
+    "include": ["src", "constants/User.ts", "test", "custom.d.ts"]
   }

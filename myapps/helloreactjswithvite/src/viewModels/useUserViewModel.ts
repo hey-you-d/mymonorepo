@@ -14,9 +14,15 @@ export const useUserViewModel = (baseUrl: string, userId: string) => {
 
   const fetchUser = async () => {
     setLoading(true);
-    const data = await userModel.fetchUser(userId);
-    setUser(data);
-    setLoading(false);
+    try {
+      const data = await userModel.fetchUser(userId);
+      setUser(data);
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+      setUser(null); // Ensure user is set to null on failure
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

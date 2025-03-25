@@ -16,14 +16,14 @@ export class UserModel {
         const response = await fetch(`${this.baseUrl}/v1/users/${userId}`, {
             method: 'GET',
             headers: {
-                "Content-type": "application/json",
+                "Content-Type": "application/json",
             }
         });
 
         if (!response.ok) {
             console.error("Error fetching user data:", `${response.status} - ${response.statusText}`);
         }
-
+        
         return await response.json() as User;
       } catch(error) {
         console.error("Error fetching user data:", error);
