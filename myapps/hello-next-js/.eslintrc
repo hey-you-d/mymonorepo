@@ -1,0 +1,12 @@
+{
+    "extends": [
+      "plugin:react-hooks/recommended",
+      "other-configs-if-any"
+    ],
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      // Your custom rules
+    }
+}

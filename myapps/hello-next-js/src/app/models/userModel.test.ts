@@ -1,4 +1,4 @@
-import { UserModel } from "../src/app/models/UserModel";
+import { UserModel } from "./UserModel";
 import axios from "axios";
 
 jest.mock("axios");
