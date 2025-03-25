@@ -3,7 +3,7 @@
 // The ViewModel manages state and business logic, bridging the model and the view. 
 
 import { AxiosInstance } from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { UserModel } from '../models/UserModel';
 import { User } from '../types/User';
 
@@ -11,18 +11,25 @@ export const useUserViewModel = (apiClient: AxiosInstance, userId: string) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   
-  const userModel = new UserModel(apiClient);
+  // Memoize userModel so it is created only once unless apiClient changes
+  const userModel = useMemo(() => new UserModel(apiClient), [apiClient]);
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     setLoading(true);
-    const data = await userModel.fetchUser(userId);
-    setUser(data);
-    setLoading(false);
-  };
+    try {
+      const data = await userModel.fetchUser(userId);
+      setUser(data);
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+      setUser(null); // Ensure user is set to null on failure
+    } finally {
+      setLoading(false);
+    }
+  }, [userId, userModel]);
 
   useEffect(() => {
     fetchUser();
-  }, [userId]);
+  }, [userId, fetchUser]);
 
   return {
     user,
