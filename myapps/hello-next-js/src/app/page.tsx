@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>This is H1</h1>
+        <h1>This is H1 - CI Test 1</h1>
         <Link href={`${imagePrefix}/about`}>About</Link>
         <Image
           className={styles.logo}
