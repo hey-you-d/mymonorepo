@@ -45,6 +45,7 @@ jobs:
   
   # CD Job: Deploy using AWS Copilot (Only if CI Passes)
   deploy:
+    if: success() 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
