@@ -33,6 +33,7 @@ export default [
         global: 'readonly',
         console: 'readonly',
         module: 'readonly',
+        HTMLButtonElement: 'readonly',
       },
     },
     plugins: {
