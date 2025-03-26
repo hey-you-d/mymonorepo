@@ -10,6 +10,7 @@ function App() {
 
   return (
     <>
+      <h1>This is H1 - CI test #1</h1>
       <ExampleComponent text='hello from my-shared-ui!' />
       <UserPage userId="2" />
       <div>
