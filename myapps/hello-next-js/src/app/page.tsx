@@ -12,13 +12,13 @@ export default function Home() {
   }
   const contentLinks: Record<string, LinkAttributes> = {
     mvvmFetchAxios: { title: "MVVM Pattern/Fetching with Axios", href: "/mvvm-fetch-axios" },
-    exampleMySharedUI: { title: "Example/My Shared UI package", href:"/example-my-shared-ui" },
-    ExampleBasicRedux: { title: "Example/Basic Redux", href:"/example-basic-redux" }    
+    mvvmBasicRedux: { title: "MVVM Pattern/Basic Redux", href:"/mvvm-basic-redux" }, 
+    exampleMySharedUI: { title: "Example/My Shared UI package", href:"/example-my-shared-ui" },   
   }
 
   const renderedLinks: ReactElement[] = [];
   Object.keys(contentLinks).forEach((key) => {
-    return renderedLinks.push(<HomepageLink href={contentLinks[key].href} title={contentLinks[key].title} />);
+    return renderedLinks.push(<HomepageLink key={key} href={contentLinks[key].href} title={contentLinks[key].title} />);
   });
 
   return (

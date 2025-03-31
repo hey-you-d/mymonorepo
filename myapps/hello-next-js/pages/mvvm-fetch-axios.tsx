@@ -3,7 +3,7 @@ import Layout from '../components/Layout';
 
 const AxiosFetchMVVM = () => {
     return ( 
-        <Layout title="hello-next-js - MVVM example - fetch with Axios">
+        <Layout title="hello-next-js - MVVM pattern example - fetch with Axios">
             <UserPage userId="1" />
             <br />
         </Layout>    
