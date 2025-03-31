@@ -1,17 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
+import { IMAGE_PREFIX } from "../../constants/common";
+import HomepageLink from "../../components/HomepageLink";
+import { ReactElement } from "react";
 
 export default function Home() {
-  const imagePrefix = '/hello-next-js';
+  type LinkAttributes = {
+    title: string,
+    href: string,
+  }
+  const contentLinks: Record<string, LinkAttributes> = {
+    mvvmFetchAxios: { title: "MVVM Pattern/Fetching with Axios", href: "/mvvm-fetch-axios" },
+    mvvmBasicRedux: { title: "MVVM Pattern/Basic Redux", href:"/mvvm-basic-redux" }, 
+    exampleMySharedUI: { title: "Example/My Shared UI package", href:"/example-my-shared-ui" },   
+  }
+
+  const renderedLinks: ReactElement[] = [];
+  Object.keys(contentLinks).forEach((key) => {
+    return renderedLinks.push(<HomepageLink key={key} href={contentLinks[key].href} title={contentLinks[key].title} />);
+  });
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <h1>This is H1 - CI Test 1</h1>
-        <Link href={`${imagePrefix}/about`}>About</Link>
+        <h1>Hello-Next-JS</h1>
         <Image
           className={styles.logo}
-          src={`${imagePrefix}/next.svg`}
+          src={`${IMAGE_PREFIX}/next.svg`}
           alt="Next.js logo"
           width={180}
           height={38}
@@ -33,7 +49,7 @@ export default function Home() {
           >
             <Image
               className={styles.logo}
-              src={`${imagePrefix}/vercel.svg`}
+              src={`${IMAGE_PREFIX}/vercel.svg`}
               alt="Vercel logomark"
               width={20}
               height={20}
@@ -49,50 +65,24 @@ export default function Home() {
             Read our docs
           </a>
         </div>
+
       </main>
       <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
+        <Link
+          href="/"
+          target="_self"
           rel="noopener noreferrer"
         >
           <Image
             aria-hidden
-            src={`${imagePrefix}/file.svg`}
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src={`${imagePrefix}/window.svg`}
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src={`${imagePrefix}/globe.svg`}
+            src={`${IMAGE_PREFIX}/globe.svg`}
             alt="Globe icon"
             width={16}
             height={16}
           />
-          Go to nextjs.org →
-        </a>
+          Back to hello-react-js →
+        </Link>
+        {renderedLinks}
       </footer>
     </div>
   );

@@ -13,7 +13,7 @@ on:
 
 jobs:
   # CI Job: Lint, Test, and Build Next.js App
-  ci:
+  ci-hello-next-js:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,8 +43,8 @@ jobs:
 
   # CD Job: Deploy using AWS Copilot (Only if CI Passes)
   deploy:
-    needs: ci
-    if: ${{ needs.ci.result == 'success' }}
+    needs: ci-hello-next-js
+    if: ${{ needs.ci-hello-next-js.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
