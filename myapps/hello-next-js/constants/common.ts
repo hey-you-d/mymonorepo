@@ -1,1 +1,1 @@
-export const IMAGE_PREFIX = '/hello-next-js';
+export const MONOREPO_PREFIX = '/hello-next-js';
