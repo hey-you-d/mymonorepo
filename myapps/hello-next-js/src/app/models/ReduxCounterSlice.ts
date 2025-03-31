@@ -14,4 +14,5 @@ const reduxCounterSlice = createSlice({
 
 export const { increment, decrement, setValue } = reduxCounterSlice.actions;
 
-export default reduxCounterSlice.reducer;
+const reduxCounterReducer = reduxCounterSlice.reducer;
+export default reduxCounterReducer;
