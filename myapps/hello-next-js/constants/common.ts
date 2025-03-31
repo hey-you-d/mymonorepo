@@ -1,0 +1,1 @@
+export const IMAGE_PREFIX = '/hello-next-js';
