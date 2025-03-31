@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from "@/app/page.module.css";
-import { IMAGE_PREFIX } from '../constants/common';
+import { MONOREPO_PREFIX } from '../constants/common';
 
 
 const Footer = () => {
@@ -14,7 +14,7 @@ const Footer = () => {
             >
                 <Image
                 aria-hidden
-                src={`${IMAGE_PREFIX}/globe.svg`}
+                src={`${MONOREPO_PREFIX}/globe.svg`}
                 alt="Globe icon"
                 width={16}
                 height={16}

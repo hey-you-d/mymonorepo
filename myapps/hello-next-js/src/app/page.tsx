@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { IMAGE_PREFIX } from "../../constants/common";
+import { MONOREPO_PREFIX } from "../../constants/common";
 import HomepageLink from "../../components/HomepageLink";
 import { ReactElement } from "react";
 
@@ -27,7 +27,7 @@ export default function Home() {
         <h1>Hello-Next-JS</h1>
         <Image
           className={styles.logo}
-          src={`${IMAGE_PREFIX}/next.svg`}
+          src={`${MONOREPO_PREFIX}/next.svg`}
           alt="Next.js logo"
           width={180}
           height={38}
@@ -49,7 +49,7 @@ export default function Home() {
           >
             <Image
               className={styles.logo}
-              src={`${IMAGE_PREFIX}/vercel.svg`}
+              src={`${MONOREPO_PREFIX}/vercel.svg`}
               alt="Vercel logomark"
               width={20}
               height={20}
@@ -75,7 +75,7 @@ export default function Home() {
         >
           <Image
             aria-hidden
-            src={`${IMAGE_PREFIX}/globe.svg`}
+            src={`${MONOREPO_PREFIX}/globe.svg`}
             alt="Globe icon"
             width={16}
             height={16}
