@@ -20,7 +20,7 @@ export const useUserViewModel = (apiClient: AxiosInstance, userId: string) => {
       const data = await userModel.fetchUser(userId);
       setUser(data);
     } catch (error) {
-      console.error("Failed to fetch user:", error);
+      //console.error("Failed to fetch user:", error);
       setUser(null); // Ensure user is set to null on failure
     } finally {
       setLoading(false);
