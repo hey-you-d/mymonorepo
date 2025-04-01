@@ -1,6 +1,5 @@
 import React from 'react';
 import { useReduxCounterViewModel } from '../viewModels/useReduxCounterViewModel';
-
 const ReduxExamplePage = () => {
     const { counter, increment, decrement, setValue } = useReduxCounterViewModel();
     const [inputValue, setInputValue] = React.useState<number>(counter);

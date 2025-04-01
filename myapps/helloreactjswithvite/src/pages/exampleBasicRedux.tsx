@@ -1,5 +1,7 @@
+import ReduxExamplePage from "../views/reduxExamplePage";
+
 const ExampleBasicRedux = () => (
-    <p>tba...</p>
+    <ReduxExamplePage />
 );
 
 export default ExampleBasicRedux;
