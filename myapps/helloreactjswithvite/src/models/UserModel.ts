@@ -21,12 +21,12 @@ export class UserModel {
         });
 
         if (!response.ok) {
-            //console.error("Error fetching user data:", `${response.status} - ${response.statusText}`);
+            console.error("Error fetching user data:", `${response.status} - ${response.statusText}`);
         }
         
         return await response.json() as User;
       } catch(error) {
-        //console.error("Error fetching user data:", error);
+        console.error("Error fetching user data:", error);
 
         throw error;
       } 
