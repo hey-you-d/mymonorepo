@@ -11,9 +11,9 @@ export default function Home() {
     href: string,
   }
   const contentLinks: Record<string, LinkAttributes> = {
-    mvvmFetchAxios: { title: "MVVM Pattern/Fetching with Axios", href: "/mvvm-fetch-axios" },
-    mvvmBasicRedux: { title: "MVVM Pattern/Basic Redux", href:"/mvvm-basic-redux" }, 
-    exampleMySharedUI: { title: "Example/My Shared UI package", href:"/example-my-shared-ui" },   
+    mvvmFetchAxios: { title: "MVVM Pattern/Fetching with Axios", href: "mvvm-fetch-axios" },
+    mvvmSagaRedux: { title: "MVVM Pattern/Redux Saga", href:"mvvm-redux-saga" },
+    exampleMySharedUI: { title: "Example/My Shared UI package", href:"example-my-shared-ui" },   
   }
 
   const renderedLinks: ReactElement[] = [];
