@@ -1,14 +1,11 @@
 import React from "react";
-import { Provider } from 'react-redux';
-import { reduxStore } from '@/app/reduxStore';
+import { reduxSagaWrapper } from "@/app/reduxSagaStore";
+import type { AppProps } from 'next/app';
 
-// eslint-disable-next-line
-const MyNextApp = ({ Component, pageProps } : { Component: React.ComponentType; pageProps: any }) => {
+const MyNextApp = ({ Component, pageProps } : AppProps) => {
     return (
-        <Provider store={reduxStore}>
-            <Component {...pageProps} />
-        </Provider>
+        <Component {...pageProps} />
     );
 }
 
-export default MyNextApp;
+export default reduxSagaWrapper.withRedux(MyNextApp);
