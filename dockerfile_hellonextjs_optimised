@@ -2,9 +2,6 @@
 # Set the base image
 FROM node:18-alpine as base
 
-# install yarn globally
-#RUN npm add install -g yarn
-
 # Set working directory
 WORKDIR /app
 
@@ -39,10 +36,24 @@ COPY --from=builder /app/myapps/hello-next-js/.next/standalone  ./
 COPY --from=builder /app/myapps/hello-next-js/public /app/myapps/hello-next-js/public/
 COPY --from=builder /app/myapps/hello-next-js/.next/static /app/myapps/hello-next-js/.next/static/
 
-### PRODUCTION STAGE ###
+# === Stage 3 ===
+# change ownership of the files to the node user
+RUN chown -R node:node /app
+
+# switch to non-root user - good practice
+USER node
+
+# add healthcheck for container monitoring
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production 
+
 # Expose the default next.js port
 EXPOSE 3000
-ENV PORT = 3000
 
 # Because we are using node.js standalone mode structures, 
 # start next.js standalone server
