@@ -38,10 +38,10 @@ COPY --from=builder /app/myapps/hello-next-js/.next/static /app/myapps/hello-nex
 
 # === Stage 3 ===
 # change ownership of the files to the node user
-RUN chown -R node:node /app
+#RUN chown -R node:node /app
 
 # switch to non-root user - good practice
-USER node
+#USER node
 
 # add healthcheck for container monitoring
 #HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
