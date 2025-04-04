@@ -14,7 +14,7 @@ http:
   path: 'hello-next-js'
   # You can specify a custom health check path. The default is "/".
   healthcheck:
-    path: /api/health
+    path: /api/health/ # the trailing slash at the end is to match the trailingSlash: false, in next.config.js
     grace_period: 60s
   additionalPaths:
     - '/_next/*'
