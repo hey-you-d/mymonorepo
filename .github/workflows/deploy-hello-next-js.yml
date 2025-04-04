@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - staging
       - master
     paths:
       - 'myapps/hello-next-js/**'  
