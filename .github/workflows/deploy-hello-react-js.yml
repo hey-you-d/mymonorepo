@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - dev
-      - staging
       - master
     paths:
       - 'myapps/helloreactjswithvite/**'
       - '.github/workflows/deploy-hello-react-js.yml'  
       - 'copilot/mymonorepo-svc-lb-trial-1-dev/manifest.yml'
-      - 'copilot/mymonorepo-svc-lb-trial-1-stg/manifest.yml'
       - 'copilot/mymonorepo-svc-lb-trial-1-prod/manifest.yml'
 
 jobs:

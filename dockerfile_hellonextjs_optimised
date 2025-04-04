@@ -1,0 +1,60 @@
+# === Stage 1 ===
+# Set the base image
+FROM node:18-alpine as base
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies only for the workspace
+COPY package.json yarn.lock ./
+
+# Copy the entire monorepo project
+COPY . .
+
+# Install dependencies using Yarn
+RUN yarn install --frozen-lockfile
+
+# === Stage 2 ===
+FROM base AS builder 
+
+# Build the Next.JS app (from the root folder)
+RUN yarn workspace hello-next-js build
+
+# Set the runner image
+FROM node:18-alpine as runner
+
+# Set the working directory
+WORKDIR /app
+
+# Install dependencies only for the workspace
+COPY package.json yarn.lock ./
+
+# copy the necessary files from the builder stage
+COPY --from=builder /app/myapps/hello-next-js/.next/standalone  ./
+# NOTE: the trailing / at the end of the destination path ensures that the sources are copied directly
+# into /app/myapps/hello-next-js/ without nesting another myapps/ folder 
+COPY --from=builder /app/myapps/hello-next-js/public /app/myapps/hello-next-js/public/
+COPY --from=builder /app/myapps/hello-next-js/.next/static /app/myapps/hello-next-js/.next/static/
+
+# === Stage 3 ===
+# change ownership of the files to the node user
+#RUN chown -R node:node /app
+
+# switch to non-root user - good practice
+#USER node
+
+# add healthcheck for container monitoring
+#HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+#CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+ENV NEXT_TELEMETRY_DISABLED=1
+#ENV NODE_ENV=production 
+
+# Expose the default next.js port
+EXPOSE 3000
+
+# Because we are using node.js standalone mode structures, 
+# start next.js standalone server
+CMD ["node", "myapps/hello-next-js/server.js"]
