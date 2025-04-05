@@ -3,14 +3,14 @@
 #  https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/
 
 # Your service name will be used in naming your resources like log groups, ECS services, etc.
-name: mymonorepo-svc-lb-hello-next-js-trial-1-dev
+name: mymonorepo-svc-lb-hello-next-js-trial-1-prod
 type: Load Balanced Web Service
 
 # Distribute traffic to your service.
 http:
   # Requests to this path will be forwarded to your service.
   # To match all requests you can use the "/" path.
-  #path: 'mymonorepo-svc-lb-hello-next-js-trial-1-dev'
+  #path: 'mymonorepo-svc-lb-hello-next-js-trial-1-prod'
   path: 'hello-next-js'
   # You can specify a custom health check path. The default is "/".
   healthcheck:
@@ -28,7 +28,7 @@ http:
 # Configuration for your containers and service.
 image:
   # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#image-build
-  build: dockerfile_hellonextjs_nginx
+  location: 120569641426.dkr.ecr.us-east-1.amazonaws.com/mymonorepo-app-trial-1/mymonorepo-svc-lb-hello-next-js-trial-1-prod:latest
   # Port exposed through your container to route traffic to it.
   port: 3000
 
