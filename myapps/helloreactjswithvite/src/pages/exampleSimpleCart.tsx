@@ -1,4 +1,4 @@
-import { SimpleCartPage } from "../views/simpleCartPage";
+import { SimpleCartPage } from "../views/simpleCardPage/simpleCartPage";
 
 const ExampleSimpleCart = () => (
     <SimpleCartPage />

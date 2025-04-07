@@ -1,6 +1,5 @@
 // Redux implementation example #2: 
-// Next.js redux implementation using Redux saga while following the MVVM pattern & 
-// fetching data on the server side (SSR)
+// Next.js redux implementation using Redux saga while following the MVVM patternW
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import { createWrapper } from 'next-redux-wrapper';

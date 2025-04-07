@@ -1,6 +1,5 @@
 // Redux implementation example #2: 
-// Next.js redux implementation using Redux saga while following the MVVM pattern & 
-// fetching data on the server side (SSR)
+// Next.js redux implementation using Redux saga while following the MVVM patternW
 
 // model -> state, reducers, actions
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";

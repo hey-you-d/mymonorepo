@@ -1,4 +1,4 @@
-import { useState, ReactElement } from 'react';
+import { ReactElement } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
@@ -10,9 +10,8 @@ import ExampleSimpleCart from './pages/exampleSimpleCart';
 import { RouterAttributes } from "./types/Common";
 
 function App() {
-  const [count, setCount] = useState(0);
-  
   const contentLinks: Record<string, RouterAttributes> = {
+    Home: { title: "Home", path: "/", render: <></> },
     MvvmPatternFetchPage: { title: "MVVM Pattern - data fetch example", path: "/mvvm-pattern-fetch", render: <MvvmPatternFetchPage /> },
     ExampleSharedLibrary: { title: "Example - shared library", path: "/example-shared-ui", render: <ExampleSharedUI /> },
     ExampleBasicRedux: { title: "Example - basic redux", path: "/example-basic-redux", render: <ExampleBasicRedux /> },
@@ -28,6 +27,8 @@ function App() {
     return routeMembers.push(<Route key={`route-${key}`} path={contentLinks[key].path} element={contentLinks[key].render} />);
   });
 
+  console.log("HOME");
+
   return (
     <>
       <div>
@@ -40,9 +41,6 @@ function App() {
       </div>
       <h1>Hello-React-JS</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
         <p>
           Head to the <a href="/hello-next-js" target="_self">Hello-Next-JS</a> site
         </p>
