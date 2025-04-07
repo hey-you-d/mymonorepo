@@ -7,16 +7,11 @@ import MvvmPatternFetchPage from './pages/mvvmPatternFetch';
 import ExampleSharedUI from './pages/exampleSharedUI';
 import ExampleBasicRedux from './pages/exampleBasicRedux';
 import ExampleSimpleCart from './pages/exampleSimpleCart';
+import { RouterAttributes } from "./types/Common";
 
 function App() {
   const [count, setCount] = useState(0);
   
-  type RouterAttributes = {
-    title: string,
-    path: string,
-    render: ReactElement,
-  }
-
   const contentLinks: Record<string, RouterAttributes> = {
     MvvmPatternFetchPage: { title: "MVVM Pattern - data fetch example", path: "/mvvm-pattern-fetch", render: <MvvmPatternFetchPage /> },
     ExampleSharedLibrary: { title: "Example - shared library", path: "/example-shared-ui", render: <ExampleSharedUI /> },
