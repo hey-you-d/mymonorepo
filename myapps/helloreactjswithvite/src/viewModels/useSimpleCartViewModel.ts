@@ -2,7 +2,7 @@
 
 // The ViewModel manages state and business logic, bridging the model and the view. 
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { SimpleCartInventoryModel } from '../models/SimpleCartInventoryModel';
 import { SimpleCartProductInfo } from '../types/SimpleCart';
 

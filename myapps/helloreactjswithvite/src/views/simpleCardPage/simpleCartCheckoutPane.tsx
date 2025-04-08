@@ -1,12 +1,11 @@
-import { ReactElement, Dispatch, SetStateAction } from "react";
+import { ReactElement } from "react";
 import { SimpleCartProductInfo } from "../../types/SimpleCart";
 
 type SimpleCartCheckoutPaneArgsType = {
-    addedToCartProducts: SimpleCartProductInfo[],
-    setAddedToCartProducts: Dispatch<SetStateAction<SimpleCartProductInfo[]>>,
+    addedToCartProducts: SimpleCartProductInfo[]
 }
 
-export const SimpleCartCheckoutPane = ({addedToCartProducts, setAddedToCartProducts} :  SimpleCartCheckoutPaneArgsType) => {
+export const SimpleCartCheckoutPane = ({addedToCartProducts} :  SimpleCartCheckoutPaneArgsType) => {
     if (addedToCartProducts.length <= 0) (<p>Empty Cart</p>);
 
     let cart: ReactElement[] = [];
