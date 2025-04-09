@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSimpleCartViewModel } from "../../viewModels/useSimpleCartViewModel";
 import { SimpleCartInventoryPane } from './simpleCartInventoryPane';
 import { SimpleCartCheckoutPane } from './simpleCartCheckoutPane';
@@ -7,21 +7,40 @@ import { SimpleCartProductInfo } from "../../types/SimpleCart"
 export const SimpleCartPage = () => {
   const { inventory, loading } = useSimpleCartViewModel();
 
-  const [selectedProduct, setSelectedProduct] = useState<SimpleCartProductInfo>({ sku: "", name: "", qty: 0, price: 0 });
-  const [addedToCardProducts, setAddedToCartProducts] = useState<SimpleCartProductInfo[]>([]);
+  const [checkoutList, setCheckoutList] = useState<SimpleCartProductInfo[]>([]);
 
-  let currentInventory: SimpleCartProductInfo[] = inventory;
-  if (!loading && selectedProduct.sku.length > 0) {
-    console.log(selectedProduct);
-    // TODO : work on the logic -find if elem exist in addedToCardProducts. If yes, increment the qty
-    // if not, just push into the array. 
-    addedToCardProducts.push(selectedProduct);
+  useEffect(() => {
+    console.log("simpleCartPage - checkoutList ", checkoutList);
+    
+    console.log("parent mounted");
+    return () => console.log("parent unmounted");
+  });
+
+  const updateCheckoutList = (product: SimpleCartProductInfo) => {
+    let toBeUpdatedCheckoutList: SimpleCartProductInfo[] = checkoutList;
+      const found = checkoutList.findIndex(aProduct => aProduct.sku === product.sku);
+
+      if(found >= 0) {
+        toBeUpdatedCheckoutList[found].qty += 1;
+        //console.log("found ", toBeUpdatedCheckoutList);
+      } else {
+        const newCheckoutItem = { 
+          sku: product.sku, 
+          name: product.name, 
+          price: product.price, 
+          qty: 1, 
+        };
+        toBeUpdatedCheckoutList.push(newCheckoutItem);
+        //console.log("not found ", toBeUpdatedCheckoutList);
+      }
+      
+      setCheckoutList(toBeUpdatedCheckoutList);
   }
 
   return ( 
     <>
-      <SimpleCartInventoryPane currentInventory={currentInventory} loading={loading} setSelectedProduct={setSelectedProduct}  />
-      <SimpleCartCheckoutPane addedToCartProducts={addedToCardProducts} setAddedToCartProducts={setAddedToCartProducts} />
+      <SimpleCartInventoryPane currentInventory={inventory} loading={loading} checkoutList={checkoutList} updateCheckoutList={updateCheckoutList}  />
+      <SimpleCartCheckoutPane checkoutList={checkoutList} />
     </>
   );
 };

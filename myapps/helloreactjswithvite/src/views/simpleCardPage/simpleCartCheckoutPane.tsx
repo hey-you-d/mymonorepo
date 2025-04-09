@@ -1,21 +1,38 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { SimpleCartProductInfo } from "../../types/SimpleCart";
 
 type SimpleCartCheckoutPaneArgsType = {
-    addedToCartProducts: SimpleCartProductInfo[]
+    checkoutList: SimpleCartProductInfo[],
 }
 
-export const SimpleCartCheckoutPane = ({addedToCartProducts} :  SimpleCartCheckoutPaneArgsType) => {
-    if (addedToCartProducts.length <= 0) (<p>Empty Cart</p>);
+const renderedOutput = (children: ReactElement) => (
+    <>
+        <h3>---Cart---</h3>
+        {children}    
+    </>
+)
 
-    let cart: ReactElement[] = [];
+export const SimpleCartCheckoutPane = ({checkoutList} :  SimpleCartCheckoutPaneArgsType) => {    
+    const [cartList, setCartList] = useState<SimpleCartProductInfo[]>([]);
     
-    addedToCartProducts.forEach((product) => {
-        cart.push(
-            <p>{`${product.name} - ${product.qty} - A$${product.qty * product.price}`}</p>
-        );
-    })
+    //console.log("simpleCardCheckoutPane - checkoutList ", checkoutList);
 
-    return cart;
+    if (checkoutList.length <= 0) {
+        renderedOutput(<p>Empty Cart</p>);
+    } else {
+        setCartList(checkoutList);
+    }
+    
+    let renderedCart: ReactElement[] = [];
+    if (cartList.length > 0) {
+        cartList.forEach((product) => {
+            renderedCart.push(
+                <p key={`checkoutItem_${product.sku}`}>{`${product.name} - ${product.qty} - A$${product.qty * product.price}`}</p>
+            );
+        });
+    } else {
+        renderedCart.push(<p key="checkoutItem_empty">Empty Cart</p>);
+    }
+
+    return renderedOutput(<>{renderedCart}</>);
 }
-    
