@@ -1,13 +1,7 @@
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import { SimpleCartInventoryCard } from "../../components/SimpleCartInventoryCard";
-import { SimpleCartProductInfo } from "../../types/SimpleCart";
-
-type SimpleCartInventoryPaneArgs = {
-    currentInventory: SimpleCartProductInfo[],
-    loading: boolean,
-    checkoutList: SimpleCartProductInfo[],
-    updateCheckoutList: (product: SimpleCartProductInfo) => void,
-}
+import { SimpleCartCheckoutPane } from "./simpleCartCheckoutPane";
+import { SimpleCartInventoryPaneArgs } from "../../types/SimpleCart";
 
 const renderedOutput = (children: ReactElement) => (
   <>
@@ -19,10 +13,6 @@ const renderedOutput = (children: ReactElement) => (
 export const SimpleCartInventoryPane = ({ currentInventory, loading, checkoutList, updateCheckoutList }: SimpleCartInventoryPaneArgs) => {
   if (loading) return renderedOutput(<p>Loading...</p>);  
   
-  useEffect(() => {
-    console.log("SimpleCartInventoryPane checkoutList - ", checkoutList);
-  });
-
   let productCards: ReactElement[] = [];
   currentInventory.forEach((product) => {
     productCards.push(
@@ -30,5 +20,5 @@ export const SimpleCartInventoryPane = ({ currentInventory, loading, checkoutLis
     );
   })
 
-  return renderedOutput(<>{productCards}</>);
+  return renderedOutput(<>{productCards}<SimpleCartCheckoutPane checkoutList={checkoutList}/></>);
 };

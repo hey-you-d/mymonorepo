@@ -1,38 +1,33 @@
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import { SimpleCartProductInfo } from "../../types/SimpleCart";
 
 type SimpleCartCheckoutPaneArgsType = {
     checkoutList: SimpleCartProductInfo[],
 }
 
-const renderedOutput = (children: ReactElement) => (
+const renderedOutput = (list: ReactElement, total?: number) => (
     <>
         <h3>---Cart---</h3>
-        {children}    
+        {list}
+        {total ? <><hr/><p>{`Total: A$${total}`}</p></>  : <></>}
     </>
 )
 
 export const SimpleCartCheckoutPane = ({checkoutList} :  SimpleCartCheckoutPaneArgsType) => {    
-    const [cartList, setCartList] = useState<SimpleCartProductInfo[]>([]);
-    
-    //console.log("simpleCardCheckoutPane - checkoutList ", checkoutList);
+    let renderedCart: ReactElement[] = [];
 
     if (checkoutList.length <= 0) {
         renderedOutput(<p>Empty Cart</p>);
     } else {
-        setCartList(checkoutList);
-    }
-    
-    let renderedCart: ReactElement[] = [];
-    if (cartList.length > 0) {
-        cartList.forEach((product) => {
+        checkoutList.forEach((product) => {
             renderedCart.push(
                 <p key={`checkoutItem_${product.sku}`}>{`${product.name} - ${product.qty} - A$${product.qty * product.price}`}</p>
             );
         });
-    } else {
-        renderedCart.push(<p key="checkoutItem_empty">Empty Cart</p>);
     }
 
-    return renderedOutput(<>{renderedCart}</>);
+    let totalTransaction = 0;
+    checkoutList.forEach((product) => totalTransaction += (product.qty * product.price));
+
+    return renderedOutput(<>{renderedCart}</>, totalTransaction);
 }

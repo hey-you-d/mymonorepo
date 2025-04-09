@@ -1,10 +1,5 @@
 import { MouseEvent, useState } from 'react';
-import { SimpleCartProductInfo } from '../types/SimpleCart';
-
-type SimpleCartInventoryCardType = {
-    product: SimpleCartProductInfo,
-    updateCheckoutList: (product: SimpleCartProductInfo) => void,
-}
+import { SimpleCartInventoryCardType } from '../types/SimpleCart';
 
 export const SimpleCartInventoryCard = ({ product, updateCheckoutList } : SimpleCartInventoryCardType) => {
     const [quantity, setQuantity] = useState<number>(product.qty);    
