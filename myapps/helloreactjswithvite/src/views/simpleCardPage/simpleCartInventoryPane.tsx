@@ -13,6 +13,7 @@ const renderedOutput = (children: ReactElement) => (
 export const SimpleCartInventoryPane = ({ currentInventory, loading, checkoutList, updateCheckoutList }: SimpleCartInventoryPaneArgs) => {
   if (loading) return renderedOutput(<p>Loading...</p>);  
   
+  
   let productCards: ReactElement[] = [];
   currentInventory.forEach((product) => {
     productCards.push(

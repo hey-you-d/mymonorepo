@@ -1,5 +1,6 @@
 import { ReactElement, MouseEvent } from "react";
 import { SimpleCartCheckoutPaneArgsType, SimpleCartProductInfo, UpdateCheckoutListOperation } from "../../types/SimpleCart";
+import { CheckoutTable, CheckoutCell } from "./styles";
 
 const renderedOutput = (list: ReactElement, total?: number) => (
     <>
@@ -23,11 +24,11 @@ export const SimpleCartCheckoutPane = ({checkoutList, updateCheckoutList} :  Sim
     } else {
         checkoutList.forEach((product) => {
             renderedCart.push(
-                <div key={`checkoutItem_${product.sku}`}>
-                    <button onClick={(e) => clickHandler(e, product, "decrement")}>{"<"}</button>
-                    <p>{`${product.name} - ${product.qty} - A$${product.qty * product.price}`}</p>
-                    <button onClick={(e) => clickHandler(e, product, "increment")}>{">"}</button>
-                </div>
+                <CheckoutTable key={`checkoutItem_${product.sku}`}>
+                    <CheckoutCell><p>{`${product.name} - ${product.qty} - A$${product.qty * product.price}`}</p></CheckoutCell>
+                    <CheckoutCell><button onClick={(e) => clickHandler(e, product, "decrement")}>{"<"}</button></CheckoutCell>
+                    <CheckoutCell><button onClick={(e) => clickHandler(e, product, "increment")}>{">"}</button></CheckoutCell>
+                </CheckoutTable>
             );
         });
     }
