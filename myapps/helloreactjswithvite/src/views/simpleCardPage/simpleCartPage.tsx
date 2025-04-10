@@ -11,24 +11,33 @@ export const SimpleCartPage = () => {
 
   const updateCheckoutList = (product: SimpleCartProductInfo, operation: UpdateCheckoutListOperation) => {
     let toBeUpdatedCheckoutList: SimpleCartProductInfo[] = checkoutList;
-      const found = checkoutList.findIndex(aProduct => aProduct.sku === product.sku);
-
-      if(found >= 0) {
-        if (operation === "increment") {
-          toBeUpdatedCheckoutList[found].qty += 1;
-        } else if(operation === "decrement") {
-          toBeUpdatedCheckoutList[found].qty -= 1;
-        }
-      } else {
-        toBeUpdatedCheckoutList.push({ 
-          sku: product.sku, 
-          name: product.name, 
-          price: product.price, 
-          qty: 1, 
-        });
+    
+    const found = checkoutList.findIndex(aProduct => aProduct.sku === product.sku);
+    if(found >= 0) {
+      switch(operation) {
+        case "increment" :
+          const foundInInventory = inventory.findIndex(aProduct => aProduct.sku === product.sku);
+          console.log("foundInInventory ", inventory[foundInInventory]);
+          if (toBeUpdatedCheckoutList[found].qty + 1 <= inventory[foundInInventory].qty) {
+            toBeUpdatedCheckoutList[found].qty += 1;
+          }  
+          break;
+        case "decrement" :
+          if (toBeUpdatedCheckoutList[found].qty - 1 >= 0) {
+            toBeUpdatedCheckoutList[found].qty -= 1;
+          }  
+          break;  
       }
-      console.log(toBeUpdatedCheckoutList);
-      setCheckoutList(toBeUpdatedCheckoutList);
+    } else {
+      toBeUpdatedCheckoutList.push({ 
+        sku: product.sku, 
+        name: product.name, 
+        price: product.price, 
+        qty: 1, 
+      });
+    }
+    console.log(toBeUpdatedCheckoutList);
+    setCheckoutList(toBeUpdatedCheckoutList);
   }
 
   return ( 
