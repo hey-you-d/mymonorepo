@@ -18,7 +18,12 @@ export const SimpleCartInventoryPane = ({ currentInventory, loading, checkoutLis
     productCards.push(
       SimpleCartInventoryCard({product, updateCheckoutList})
     );
-  })
+  });
 
-  return renderedOutput(<>{productCards}<SimpleCartCheckoutPane checkoutList={checkoutList}/></>);
+  return renderedOutput(
+    <>
+      {productCards}
+      <SimpleCartCheckoutPane checkoutList={checkoutList} updateCheckoutList={updateCheckoutList} />
+    </>
+  );
 };

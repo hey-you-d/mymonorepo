@@ -1,9 +1,5 @@
-import { ReactElement } from "react";
-import { SimpleCartProductInfo } from "../../types/SimpleCart";
-
-type SimpleCartCheckoutPaneArgsType = {
-    checkoutList: SimpleCartProductInfo[],
-}
+import { ReactElement, MouseEvent } from "react";
+import { SimpleCartCheckoutPaneArgsType, SimpleCartProductInfo, UpdateCheckoutListOperation } from "../../types/SimpleCart";
 
 const renderedOutput = (list: ReactElement, total?: number) => (
     <>
@@ -13,15 +9,25 @@ const renderedOutput = (list: ReactElement, total?: number) => (
     </>
 )
 
-export const SimpleCartCheckoutPane = ({checkoutList} :  SimpleCartCheckoutPaneArgsType) => {    
+export const SimpleCartCheckoutPane = ({checkoutList, updateCheckoutList} :  SimpleCartCheckoutPaneArgsType) => {    
     let renderedCart: ReactElement[] = [];
+
+    const clickHandler = (e: MouseEvent<HTMLButtonElement>, product: SimpleCartProductInfo, operation: UpdateCheckoutListOperation) => {
+        e.preventDefault();
+        console.log("clickHandler ", operation, product);
+        updateCheckoutList(product, operation);
+    }
 
     if (checkoutList.length <= 0) {
         renderedOutput(<p>Empty Cart</p>);
     } else {
         checkoutList.forEach((product) => {
             renderedCart.push(
-                <p key={`checkoutItem_${product.sku}`}>{`${product.name} - ${product.qty} - A$${product.qty * product.price}`}</p>
+                <div key={`checkoutItem_${product.sku}`}>
+                    <button onClick={(e) => clickHandler(e, product, "decrement")}>{"<"}</button>
+                    <p>{`${product.name} - ${product.qty} - A$${product.qty * product.price}`}</p>
+                    <button onClick={(e) => clickHandler(e, product, "increment")}>{">"}</button>
+                </div>
             );
         });
     }

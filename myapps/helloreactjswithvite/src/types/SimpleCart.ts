@@ -5,8 +5,8 @@ export type SimpleCartProductInfo = {
     price: number,
 }
 
-//type updateCheckoutList = (product: SimpleCartProductInfo) => void; 
-type updateCheckoutList = () => void;
+export type UpdateCheckoutListOperation = "increment" | "decrement";
+type updateCheckoutList = (_product: SimpleCartProductInfo, _operation: UpdateCheckoutListOperation) => void; 
 
 export type SimpleCartInventoryCardType = {
     product: SimpleCartProductInfo,
@@ -16,6 +16,11 @@ export type SimpleCartInventoryCardType = {
 export type SimpleCartInventoryPaneArgs = {
     currentInventory: SimpleCartProductInfo[],
     loading: boolean,
+    checkoutList: SimpleCartProductInfo[],
+    updateCheckoutList: updateCheckoutList,
+}
+
+export type SimpleCartCheckoutPaneArgsType = {
     checkoutList: SimpleCartProductInfo[],
     updateCheckoutList: updateCheckoutList,
 }

@@ -8,13 +8,13 @@ export const SimpleCartInventoryCard = ({ product, updateCheckoutList } : Simple
         e.preventDefault();
         if(quantity > 0) {
           setQuantity(quantity - 1);
-          updateCheckoutList(product);
+          updateCheckoutList(product, "increment");
         }
     }
   
     return product ? (
       <div key={product.sku}>
-          <p><sub>{`[SKU: ${product.sku}] `}</sub><strong>{product.name}</strong></p>
+          <p>{`[SKU: ${product.sku}] `}<strong>{product.name}</strong></p>
           <p>{`A$${product.price} each - QTY: ${quantity > 0 ? quantity : "out of stock"}`}</p>
           {quantity > 0 ? <button onClick={addToCartButtonHandler}>Add to Cart</button> : <p>Out of Stock</p>}
           
