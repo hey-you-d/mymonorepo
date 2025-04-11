@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import MvvmPatternFetchPage from './pages/mvvmPatternFetch';
 import ExampleSharedUI from './pages/exampleSharedUI';
 import ExampleBasicRedux from './pages/exampleBasicRedux';
-import ExampleSimpleCart from './pages/exampleSimpleCart';
+//import ExampleSimpleCart from './pages/exampleSimpleCart';
 import { RouterAttributes } from "./types/Common";
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
     MvvmPatternFetchPage: { title: "MVVM Pattern - data fetch example", path: "/mvvm-pattern-fetch", render: <MvvmPatternFetchPage /> },
     ExampleSharedLibrary: { title: "Example - shared library", path: "/example-shared-ui", render: <ExampleSharedUI /> },
     ExampleBasicRedux: { title: "Example - basic redux", path: "/example-basic-redux", render: <ExampleBasicRedux /> },
-    ExampleSimpleCart: { title: "Example - simple cart", path: "/example-simple-cart", render: <ExampleSimpleCart /> },
+    //ExampleSimpleCart: { title: "Example - simple cart", path: "/example-simple-cart", render: <ExampleSimpleCart /> },
   }
 
   const renderedLinks: ReactElement[] = [];
