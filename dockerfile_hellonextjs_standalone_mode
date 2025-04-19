@@ -51,17 +51,28 @@ RUN chown -R node:node /app
 USER node
 
 # add healthcheck for container monitoring
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+#NOTE: 
+# the healthcheck setup only affects the docker container locally / if you ran in a docker swarm /
+# ECS with EC2 launch type (which this monorepo is not using, its using the Copilot with Fargate)
+# from the healthcheck setup context, deploying with copilot means it automatically setup:
+# ALB with a target group that performs healthcheck on port 3000 at /api/health.
+# Hence, check out the /pages/api/health.ts
+# If those fails, it will: mark the task as unhealthy, stop it, & try again (looping forever)
+# If the endless loop happened, the only solution would be: 1. manually stop the deploy
+# 2. From the CloudFormation, try to rollback the update of the affected service
+# 3. If rollback failed, delete the service, & then run copilot svc deploy again to recreate the service.      
+#HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+#CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
 
-ENV PORT=3000
-ENV HOSTNAME=0.0.0.0
-ENV NEXT_TELEMETRY_DISABLED=1
-#ENV NODE_ENV=production 
+# move all variables to copilot manifest.yml
+#ENV PORT=3000
+#ENV HOSTNAME=0.0.0.0
+#ENV NEXT_TELEMETRY_DISABLED=1
+#ENV NODE_ENV=production
 
 # Expose the default next.js port
 EXPOSE 3000
 
 # Because we are using node.js standalone mode structures, 
 # start next.js standalone server
-CMD ["node", "server.js"]
+CMD ["node", "server.js", "-p", "3000"]

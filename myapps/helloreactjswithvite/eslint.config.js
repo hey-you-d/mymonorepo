@@ -50,7 +50,7 @@ export default [
         { allowConstantExport: true },
       ],
       // Add other rules or modify them as needed
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', "argsIgnorePattern": "^_" }],
       '@typescript-eslint/explicit-module-boundary-types': 'off', // Disable this rule if you don't want explicit types for functions
     },
   },

@@ -1,27 +1,56 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSimpleCartViewModel } from "../../viewModels/useSimpleCartViewModel";
 import { SimpleCartInventoryPane } from './simpleCartInventoryPane';
-import { SimpleCartCheckoutPane } from './simpleCartCheckoutPane';
-import { SimpleCartProductInfo } from "../../types/SimpleCart"
+import { SimpleCartProductInfo } from "../../types/SimpleCart";
+import { UpdateCheckoutListOperation } from '../../types/SimpleCart';
 
 export const SimpleCartPage = () => {
   const { inventory, loading } = useSimpleCartViewModel();
 
-  const [selectedProduct, setSelectedProduct] = useState<SimpleCartProductInfo>({ sku: "", name: "", qty: 0, price: 0 });
-  const [addedToCardProducts, setAddedToCartProducts] = useState<SimpleCartProductInfo[]>([]);
+  const [currentInventory, setCurrentInventory] = useState<SimpleCartProductInfo[]>(inventory);
+  const [checkoutList, setCheckoutList] = useState<SimpleCartProductInfo[]>([]);
+  
+  useEffect(() => {
+    setCurrentInventory(inventory);
+  }, [inventory, setCurrentInventory]);
+  
+  const updateCheckoutList = (product: SimpleCartProductInfo, operation: UpdateCheckoutListOperation) => {
+    let toBeUpdatedCheckoutList: SimpleCartProductInfo[] = checkoutList;
+    let toBeUpdatedCurrentInventory: SimpleCartProductInfo[] = currentInventory;  
 
-  let currentInventory: SimpleCartProductInfo[] = inventory;
-  if (!loading && selectedProduct.sku.length > 0) {
-    console.log(selectedProduct);
-    // TODO : work on the logic -find if elem exist in addedToCardProducts. If yes, increment the qty
-    // if not, just push into the array. 
-    addedToCardProducts.push(selectedProduct);
+    const found = checkoutList.findIndex(aProduct => aProduct.sku === product.sku);
+    const foundInInventory = inventory.findIndex(aProduct => aProduct.sku === product.sku);
+    if(found >= 0) {
+      switch(operation) {
+        case "increment" :
+          if (toBeUpdatedCheckoutList[found].qty + 1 <= inventory[foundInInventory].qty) {
+            toBeUpdatedCheckoutList[found].qty += 1;
+            toBeUpdatedCurrentInventory[found].qty -= 1;  
+          }  
+          break;
+        case "decrement" :
+          if (toBeUpdatedCheckoutList[found].qty - 1 >= 0) {
+            toBeUpdatedCheckoutList[found].qty -= 1;
+            toBeUpdatedCurrentInventory[found].qty += 1;
+          }  
+          break;  
+      }
+    } else {
+      toBeUpdatedCheckoutList.push({ 
+        sku: product.sku, 
+        name: product.name, 
+        price: product.price, 
+        qty: 1, 
+      });
+    }
+    //console.log(toBeUpdatedCheckoutList);
+    setCheckoutList(toBeUpdatedCheckoutList);
+    setCurrentInventory(toBeUpdatedCurrentInventory);
   }
 
   return ( 
     <>
-      <SimpleCartInventoryPane currentInventory={currentInventory} loading={loading} setSelectedProduct={setSelectedProduct}  />
-      <SimpleCartCheckoutPane addedToCartProducts={addedToCardProducts} setAddedToCartProducts={setAddedToCartProducts} />
+      <SimpleCartInventoryPane currentInventory={currentInventory} loading={loading} checkoutList={checkoutList} updateCheckoutList={updateCheckoutList}  />
     </>
   );
 };

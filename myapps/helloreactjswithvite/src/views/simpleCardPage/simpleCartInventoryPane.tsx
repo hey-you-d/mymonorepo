@@ -1,22 +1,30 @@
-import { ReactElement, Dispatch, SetStateAction } from "react";
+import { ReactElement } from "react";
 import { SimpleCartInventoryCard } from "../../components/SimpleCartInventoryCard";
-import { SimpleCartProductInfo } from "../../types/SimpleCart";
+import { SimpleCartCheckoutPane } from "./simpleCartCheckoutPane";
+import { SimpleCartInventoryPaneArgs } from "../../types/SimpleCart";
 
-type SimpleCartInventoryPaneArgs = {
-    currentInventory: SimpleCartProductInfo[],
-    loading: boolean,
-    setSelectedProduct: Dispatch<SetStateAction<SimpleCartProductInfo>>,
-}
+const renderedOutput = (children: ReactElement) => (
+  <>
+    <h3>---Stocks---</h3>
+    {children}
+  </>
+);
 
-export const SimpleCartInventoryPane = ({ currentInventory, loading, setSelectedProduct }: SimpleCartInventoryPaneArgs) => {
-    if (loading) return <p>Loading...</p>;
+export const SimpleCartInventoryPane = ({ currentInventory, loading, checkoutList, updateCheckoutList }: SimpleCartInventoryPaneArgs) => {
+  if (loading) return renderedOutput(<p>Loading...</p>);  
   
-    let productCards: ReactElement[] = [];
-    currentInventory.forEach((product) => {
-      productCards.push(
-        SimpleCartInventoryCard({product, setSelectedProduct})
-      );
-    })
+  
+  let productCards: ReactElement[] = [];
+  currentInventory.forEach((product) => {
+    productCards.push(
+      SimpleCartInventoryCard({product, updateCheckoutList})
+    );
+  });
 
-    return productCards;
+  return renderedOutput(
+    <>
+      {productCards}
+      <SimpleCartCheckoutPane checkoutList={checkoutList} updateCheckoutList={updateCheckoutList} />
+    </>
+  );
 };

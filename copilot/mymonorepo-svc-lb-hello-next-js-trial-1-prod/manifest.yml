@@ -10,36 +10,50 @@ type: Load Balanced Web Service
 http:
   # Requests to this path will be forwarded to your service.
   # To match all requests you can use the "/" path.
-  #path: 'mymonorepo-svc-lb-hello-next-js-trial-1-prod'
-  path: 'hello-next-js'
+  path: hello-next-js
+  target_port: 3000
   # You can specify a custom health check path. The default is "/".
   healthcheck:
-    path: /api/health # the trailing slash at the end is to comply with trailingSlash: false in next.config.js
-    method: GET
-    grace_period: 60s
+    path: /api/health
+    port: 3000
+    success_codes: "200,301"
+    grace_period: 90s
+    interval: 30s
+    timeout: 10s
+
   additionalPaths:
     - '/_next/*'
     - '/static/*'
-    - '/_next/static/*'
     - '/hello-next-js/_next/*'
     - '/hello-next-js/static/*'
-    - '/hello-next-js/_next/static/*'
 
 # Configuration for your containers and service.
 image:
   # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#image-build
-  #step1. -> build: dockerfile_hellonextjs_nginx
-  location: 120569641426.dkr.ecr.us-east-1.amazonaws.com/mymonorepo-ecr-hello-next-js-trial-1:latest
+  # get the docker image from the ECR
+  location: 120569641426.dkr.ecr.us-east-1.amazonaws.com/mymonorepo-app-trial-1/mymonorepo-svc-lb-hello-next-js-trial-1-dev:latest
+  #location: 120569641426.dkr.ecr.us-east-1.amazonaws.com/mymonorepo-ecr-hello-next-js-trial-1:latest
   
+  # alternative step: build from dockerfile
+  #build: dockerfile_hellonextjs_standalone_mode
+
   # Port exposed through your container to route traffic to it.
   port: 3000
 
 cpu: 256       # Number of CPU units for the task.
 memory: 512    # Amount of memory in MiB used by the task.
+#count: 0      # !! for creating the service for the 1st time with copilot svc deploy, otherwise service creation will fail due to healtcheck failure !!
 count: 1       # Number of tasks that should be running in your service.
 exec: true     # Enable running commands in your container.
 network:
   connect: true # Enable Service Connect for intra-environment traffic between services.
+
+# alternatively, declare them in dockerfile (better practice to declare them here)
+variables:
+  PORT: "3000"
+  HOSTNAME: "0.0.0.0"
+  NEXT_TELEMETRY_DISABLED: "1"
+  NODE_ENV: "production"
 
 # storage:
   # readonly_fs: true       # Limit to read-only access to mounted root filesystems.

@@ -27,8 +27,6 @@ function App() {
     return routeMembers.push(<Route key={`route-${key}`} path={contentLinks[key].path} element={contentLinks[key].render} />);
   });
 
-  console.log("HOME");
-
   return (
     <>
       <div>

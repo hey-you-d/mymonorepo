@@ -79,7 +79,7 @@ jobs:
         env: 
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_HELLO_NEXT_JS }}
-          DOCKERFILE: "dockerfile_hellonextjs_nginx"
+          DOCKERFILE: "dockerfile_hellonextjs_standalone_mode"
         run: |
           echo "Building image: $ECR_REGISTRY/$ECR_REPOSITORY:latest "
           docker build -f $DOCKERFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
