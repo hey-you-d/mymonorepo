@@ -9,6 +9,7 @@
   "scripts": {
     "prepare": "husky install",
     "workspaces-info": "yarn workspaces info",
+    "hello-next-js-dev-compose-build": "docker-compose -f dockercompose-hellonextjs up --build",
     "hello-next-js-dev": "yarn workspace hello-next-js dev",
     "hello-next-js-build": "yarn workspace hello-next-js build",
     "hello-next-js-start": "yarn workspace hello-next-js start",

@@ -1,0 +1,12 @@
+CREATE DATABASE 'tasks-db'
+  LC_COLLATE='en_US.utf8'
+  LC_CTYPE='en_US.utf8'
+  ENCODING='UTF8';
+
+CREATE TABLE tasks (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL COLLATE "en_US.utf8",
+  detail TEXT NOT NULL COLLATE "en_US.utf8",
+  completed BOOLEAN DEFAULT FALSE, 
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
