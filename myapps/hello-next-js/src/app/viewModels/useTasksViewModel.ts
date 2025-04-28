@@ -39,7 +39,8 @@ export const useTaskViewModel = () => {
   const seedTasksDB = useCallback(async () => {
     setLoading(true);
     try {
-      await taskModel.seedTasksDB();
+      const result: Task[] = await taskModel.seedTasksDB();
+      setTasks(result);
     } catch (error) {
       console.error("Failed to seed tasks db:", error);
     } finally {
@@ -47,6 +48,7 @@ export const useTaskViewModel = () => {
     }
   }, [taskModel]);
   
+  // first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {
     getTasksDBRows();
   }, [getTasksDBRows]);
@@ -55,7 +57,6 @@ export const useTaskViewModel = () => {
     tasks,
     loading,
     seedTasksDB,
-    getTasksDBRows,
     deleteAllRows
   };
 };
