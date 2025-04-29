@@ -2,6 +2,7 @@
 // responding to user actions passed in as props.
 import React from 'react';
 import { Task } from "../types/Task";
+import { MONOREPO_PREFIX } from "../../../constants/common";
 
 type TaskTableType = {
     row: Task,
@@ -10,18 +11,11 @@ type TaskTableType = {
 }
 
 export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
-    console.log("ROW ", row);
-
     if (tasks.length <= 0) {
-        // a delete row operation has just been performed by calling the deleteRowFromId(), 
+        // a delete row operation has just been performed by calling the deleteRowFromId().
+        // recall, the deleteRowFromId will set the tasks state to [] upon successful delete op.
         // redirect back to the table page
-        window.location.href="/hello-next-js/bff-tasks-db";
-    }
-
-    const deleteRowHandler = (e: React.MouseEvent) => {
-        e.preventDefault();
-
-        deleteRowFromId(Number(row.id));
+        window.location.href=`${MONOREPO_PREFIX}/bff-tasks-db`;
     }
 
     return row && row.id ? 
@@ -31,7 +25,7 @@ export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
             <p>title: {row.title}</p>
             <p>detail: {row.detail}</p>
             <p>completed? {row.completed ? "yes" : "no"}</p>
-            <div><button type="button" onClick={(e) => deleteRowHandler(e)}>Delete this record</button></div>
+            <div><button type="button" onClick={() => deleteRowFromId(Number(row.id))}>Delete this record</button></div>
         </>
     ) : <p>None</p>
 };

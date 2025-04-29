@@ -60,6 +60,20 @@ export const useTaskViewModel = () => {
     }
   }, [taskModel]);
 
+  const updateRowFromId = useCallback(async (id: number, title: string, detail: string, completed: boolean) => {
+    setLoading(true);
+    try {
+      await taskModel.updateRowFromId(id, title, detail, completed);
+      // then refresh the tasks state
+      const result: Task[] = await taskModel.getTasksDBRows();
+      setTasks(result);
+    } catch (error) {
+      console.error(`Failed to update row for id ${id}:`, error);
+    } finally {
+      setLoading(false);
+    }
+  }, [taskModel]);
+
   const deleteRowFromId = useCallback(async (id: number) => {
     setLoading(true);
     try {
@@ -83,6 +97,7 @@ export const useTaskViewModel = () => {
     seedTasksDB,
     deleteAllRows,
     getRowFromId,
+    updateRowFromId,
     deleteRowFromId,
   };
 };

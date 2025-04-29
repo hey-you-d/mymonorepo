@@ -1,4 +1,4 @@
-// The View (presentation component) is a pure functional component focused on displaying data and 
+// DEV NOTE: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import React, { useCallback } from 'react';
 import { Task } from "../types/Task";
@@ -6,35 +6,36 @@ import { MONOREPO_PREFIX } from "../../../constants/common";
 
 type TaskTableType = {
     tasks: Task[], 
-    getRowFromId: (id: number) => Promise<void>,
+    updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void>
 }
 
-export const TaskTable = ({ tasks, getRowFromId } : TaskTableType) => {
+export const TaskTable = ({ tasks, updateRowFromId } : TaskTableType) => {
     const addNewTodoHandler = (e: React.MouseEvent) => {
         e.preventDefault();
-        
+        // TODO: Logic to be added
     }
 
-    const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
+    const chkBoxHandler = (e: React.MouseEvent,id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         e.preventDefault();
-        console.log("editTodoHandler ", id);
-        
-        if(id) {
-            //getRowFromId(id);
-        }
-        // if you want to simulate someone clicking a link
-        //window.location.href =  `${MONOREPO_PREFIX}/bff-tasks-db/${id}`;
-        // if you want to simulate HTTP redirect
+        updateRowFromId(id, title, detail, !isCurrentlySelected);
+    }
+
+    const editTodoHandler = (e: React.MouseEvent, id: number) => {
+        e.preventDefault();
         window.location.replace( `${MONOREPO_PREFIX}/bff-tasks-db/${id}`);
-    }, [getRowFromId]);
+    }
 
     let tBody: React.ReactElement[] = [];
     let tFooter: React.ReactElement[] = [];
+    // TODO: refactor the if condition below
     if (Array.isArray(tasks) && tasks.length > 0) {
+        // DEV NOTE: tbody content
         tasks.forEach(aTask => {
             const checkbox = aTask.completed 
-                ? <input type="checkbox" id={`chkbox-${aTask.id}`} checked></input>
-                : <input type="checkbox" id={`chkbox-${aTask.id}`}></input>
+                ? <input type="checkbox" id={`chkbox-${aTask.id}`} checked 
+                    onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, true)} />
+                : <input type="checkbox" id={`chkbox-${aTask.id}`} 
+                    onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, false)} />
 
             tBody.push(
                 <tr key={aTask.id}>
@@ -46,7 +47,7 @@ export const TaskTable = ({ tasks, getRowFromId } : TaskTableType) => {
                 </tr>
             );
         });
-
+        // DEV NOTE: tfoot content
         tFooter.push(
             <>
                 <tr>
@@ -62,6 +63,7 @@ export const TaskTable = ({ tasks, getRowFromId } : TaskTableType) => {
             </>
         );
     } else {
+        // DEV NOTE: tbody content
         tBody.push(
             <tr>
                 <td>-</td>
@@ -71,7 +73,7 @@ export const TaskTable = ({ tasks, getRowFromId } : TaskTableType) => {
                 <td>-</td>
             </tr>
         );
-
+        // DEV NOTE: tfoot content
         tFooter.push(
             <>
                 <tr>

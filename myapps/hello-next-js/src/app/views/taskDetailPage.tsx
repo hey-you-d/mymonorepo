@@ -5,7 +5,7 @@ import { TaskDetail } from '../components/TaskDetail';
 import { Task } from '@/app/types/Task';
 
 export const TaskDetailPage = ({id}: {id: number}) => {
-  const { tasks, loading, getRowFromId, deleteRowFromId } = useTaskViewModel();
+  const { tasks, loading, deleteRowFromId } = useTaskViewModel();
   
   const [row, setRow] = useState<Task | undefined>(undefined);
 
@@ -18,9 +18,7 @@ export const TaskDetailPage = ({id}: {id: number}) => {
 
   if (loading) return <p>Loading...</p>;
 
-  return row ? (
-    <>
-      <TaskDetail row={row} tasks={tasks} deleteRowFromId={deleteRowFromId} />
-    </>
-  ) : <p>Not found</p>;
+  return row 
+    ? <TaskDetail row={row} tasks={tasks} deleteRowFromId={deleteRowFromId} />
+    : <p>{`The record ${id} is no longer exist`}</p>;
 };
