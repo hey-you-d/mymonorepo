@@ -1,4 +1,4 @@
-import Layout from '../components/Layout';
+import Layout from '../../components/Layout';
 import { TaskPage } from '@/app/views/taskPage';
 
 const BffTasksDB = () => {

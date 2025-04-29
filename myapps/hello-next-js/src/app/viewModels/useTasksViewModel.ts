@@ -47,6 +47,30 @@ export const useTaskViewModel = () => {
       setLoading(false);
     }
   }, [taskModel]);
+
+  const getRowFromId = useCallback(async (id: number) => {
+    setLoading(true);
+    try {
+      const result: Task[] = await taskModel.getRowFromId(id);
+      setTasks(result);
+    } catch (error) {
+      console.error(`Failed to get row for id ${id}:`, error);
+    } finally {
+      setLoading(false);
+    }
+  }, [taskModel]);
+
+  const deleteRowFromId = useCallback(async (id: number) => {
+    setLoading(true);
+    try {
+      const result: Task[] = await taskModel.deleteRowFromId(id);
+      setTasks(result);
+    } catch (error) {
+      console.error(`Failed to delete row for id ${id}:`, error);
+    } finally {
+      setLoading(false);
+    }
+  }, [taskModel]);
   
   // first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {
@@ -57,6 +81,8 @@ export const useTaskViewModel = () => {
     tasks,
     loading,
     seedTasksDB,
-    deleteAllRows
+    deleteAllRows,
+    getRowFromId,
+    deleteRowFromId,
   };
 };

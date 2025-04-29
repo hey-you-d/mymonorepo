@@ -12,6 +12,8 @@ import { db } from '@/bff/tasks/db_postgreSQL';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
+        // for the sake of demo, lets use POST instead of DELETE request type
+        // to demonstrate its possible to use the POST request to send a DELETE request.
         case "POST" :
             const result = await db.query('DELETE FROM tasks');
         
