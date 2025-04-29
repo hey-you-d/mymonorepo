@@ -100,7 +100,7 @@ export class TaskModel {
       } 
     }
 
-    async deleteRowFromId(id: number) {
+    async deleteRowFromId(id: number): Promise<void> {
       try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
             method: 'DELETE',
@@ -115,9 +115,11 @@ export class TaskModel {
             throw new Error(`Error fetching row: ${response.status}`);
         }
 
-        const result = await response.json();
-
-        return result;
+        // to prevent receiving the following warning: 
+        // API handler should not return a value, received object.
+        // make this fn returns void by comment out the return value below
+        //const result = await response.json();
+        //return result;
       } catch(error) {
         console.error(`Error fetching row for id ${id}: `, error );
 

@@ -1,30 +1,27 @@
 // The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import React, { useState } from 'react';
+import React from 'react';
 import { Task } from "../types/Task";
 
 type TaskTableType = {
-    id: number,
-    tasks: Task[], 
-    getRowFromId: (id: number) => Promise<void>,
+    row: Task,
+    tasks: Task[],
     deleteRowFromId: (id: number) => Promise<void>,
 }
 
-export const TaskDetail = ({ id, tasks, getRowFromId, deleteRowFromId } : TaskTableType) => {
-    const [row, setRow] = useState<Task | undefined>(undefined);
+export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
+    console.log("ROW ", row);
 
-    React.useEffect(() => {
-            const row = tasks.find((el) => el.id == Number(id));
-            //console.log("TaskDetail ", id, row);
-            setRow(row);
-            //getRowFromId(id);
-         
-    }, [id, tasks, getRowFromId]);
+    if (tasks.length <= 0) {
+        // a delete row operation has just been performed by calling the deleteRowFromId(), 
+        // redirect back to the table page
+        window.location.href="/hello-next-js/bff-tasks-db";
+    }
 
     const deleteRowHandler = (e: React.MouseEvent) => {
         e.preventDefault();
 
-        deleteRowFromId(Number(id));
+        deleteRowFromId(Number(row.id));
     }
 
     return row && row.id ? 

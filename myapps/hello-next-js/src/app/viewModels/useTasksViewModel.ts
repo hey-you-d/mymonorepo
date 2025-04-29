@@ -63,8 +63,8 @@ export const useTaskViewModel = () => {
   const deleteRowFromId = useCallback(async (id: number) => {
     setLoading(true);
     try {
-      const result: Task[] = await taskModel.deleteRowFromId(id);
-      setTasks(result);
+      await taskModel.deleteRowFromId(id);
+      setTasks([]);
     } catch (error) {
       console.error(`Failed to delete row for id ${id}:`, error);
     } finally {

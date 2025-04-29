@@ -9,7 +9,7 @@ const BffTasksDB = () => {
 
     return ( 
         <Layout title="hello-next-js - Next.JS API - Backend For Frontend (BFF) demo">               
-            <TaskDetailPage id={id} />
+            <TaskDetailPage id={Number(id)} />
             <br />
         </Layout>
     );
