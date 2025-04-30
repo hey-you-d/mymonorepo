@@ -117,8 +117,7 @@ jobs:
       
       - name: Install Copilot CLI
         run: |
-          COPILOT_VERSION="v1.34.1"
-          curl -Lo copilot-cli https://github.com/aws/copilot-cli/releases/download/${COPILOT_VERSION}/copilot-linux
+          curl -Lo copilot-cli https://github.com/aws/copilot-cli/releases/latest/download/copilot-linux
           chmod +x copilot-cli
           sudo mv copilot-cli /usr/local/bin/copilot     
       
@@ -130,7 +129,7 @@ jobs:
             --name ${{ secrets.ECS_SERVICE_HELLO_NEXT_JS_DEV }} \
             --env $DEPLOY_ENV \
             --force \
-            --image $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            -- image $ECR_REGISTRY/$ECR_REPOSITORY:latest
       
       - name: Deploy to Amazon Copilot (PROD)
         if: github.ref == 'refs/heads/master'
@@ -140,5 +139,5 @@ jobs:
             --name ${{ secrets.ECS_SERVICE_HELLO_NEXT_JS_PROD }} \
             --env $DEPLOY_ENV \
             --force \
-            --image $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            -- image $ECR_REGISTRY/$ECR_REPOSITORY:latest
       
