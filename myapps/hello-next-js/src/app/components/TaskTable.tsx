@@ -45,7 +45,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
 
     const tBody = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
-            let output:React.ReactElement[] = [];
+            const output:React.ReactElement[] = [];
             
             tasks.forEach(aTask => {
                 const checkbox = aTask.completed 
@@ -69,7 +69,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
         } 
 
         return[(
-            <tr>
+            <tr key="random string here">
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
@@ -81,7 +81,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
 
     const tFooter = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
-            let output:React.ReactElement[] = [];
+            const output:React.ReactElement[] = [];
             
             output.push(
                 <>
