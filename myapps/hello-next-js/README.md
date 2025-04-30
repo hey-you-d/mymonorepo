@@ -1,36 +1,84 @@
+# hello-next-js
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## URLs
+- Prod: [https://www.yudimankwanmas.com/hello-next-js](https://www.yudimankwanmas.com/hello-next-js)
+- Dev:  [https://dev.yudimankwanmas.com/hello-next-js](https://dev.yudimankwanmas.com/hello-next-js)
 
-To learn more about Next.js, take a look at the following resources:
+## Getting Started
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To run the development server:
+```bash
+yarn workspace hello-next-js dev
+```
+To run the production ready build:
+```bash
+yarn workspace hello-next-js build
+#followed by
+yarn workspace hello-next-js start
+```
+To run the test suite
+```bash
+yarn workspace hello-next-js test
+```
+To run the linter
+```bash
+yarn workspace hello-next-js lint
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## BFF (Backend for Frontend) Demo
 
-## Deploy on Vercel
+Covered Tech Stacks:
+- Backend framework: Next.JS API
+- RDBMS: PostgreSQL
+- Authentication: JWT-based auth
+- Client-side Caching: SWR or React  Query
+- Server-side Caching: Redis 
+- Documentation: Swagger
+- Unit Test: Jest
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Prod & Dev branches
+- **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db) 
+- **Dev URL:** [https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db)
+- **STATUS: NOT READY**
+Will commence after the localhost development is complete.
+Point of consideration for PROD build: 
+1. Determine the remote RDBMS (Candidate: AWS RDS or Supabase)
+2. Set CORS to expose the API for external use (e.g hello-react-js as the client)
+3. Redis based rate limiting as a protection layer. 
+4. Secure Networking (HTTPS + ALB)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Localhost
+- **LOCALHOST URL:** [http://localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
+- **STATUS: WIP**
+1. Core API Endpoint implementation - **STATUS: DONE**
+2. Barebones frontend implementation with unit test - **STATUS: DONE**
+3. API Authentication with JWT-based auth - **STATUS: TODO**
+4. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
+4. Client-side Caching implementation with SWR or React Query - **STATUS: TODO**
+5. Server-side Caching implementation with Redis - **STATUS: TODO** 
+5. Swagger integration - **STATUS: TODO** 
+
+**How to set up the localhost DB:**
+1. For DEV env sql db, Use Docker - Quick, isolated, no OS clutter. To build & run postgres db from scratch (internet connection is needed) 
+```bash
+docker run --name hellonextjs-postgresdb -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=tasks-db -p 5432:5432 -d postgres
+```
+2. Install the Postgresql-client
+```bash
+#For Linux ubuntu
+sudo apt update
+#followed by
+sudo apt install postgresql-client
+```
+3. To interact with the database via the CLI
+```bash
+psql -U postgres -d tasks-db -h localhost
+```
+4. To kickstart the db for localhost development
+```bash
+docker start hellonextjs-postgresdb
+```
