@@ -1,4 +1,4 @@
-// The Model manages the data and business logic of the app.
+// DEV NOTE: The Model manages the data and business logic of the app.
 import { TASKS_BFF_BASE_API_URL } from "../../../constants/tasksBff";
 import { Task } from "../types/Task";
 
@@ -101,6 +101,33 @@ export class TaskModel {
       } 
     }
 
+    async createRow(title: string, detail: string): Promise<void> {
+      try {
+        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/create-row`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              title,
+              detail
+            }),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text(); // <- Just read as text
+            console.error(`Error updating row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
+            throw new Error(`Error updating row: ${response.status}`);
+        }
+
+        // DEV NOTE: returns nothing
+      } catch(error) {
+        console.error(`Error fetching row for id ${id}: `, error );
+
+        throw error;
+      } 
+    }
+
     async updateRowFromId(id: number, title: string, detail: string, completed: boolean): Promise<void> {
       try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
@@ -121,9 +148,7 @@ export class TaskModel {
             throw new Error(`Error updating row: ${response.status}`);
         }
 
-        // returns nothing
-        //const result = await response.json();
-        //return result.rows;
+        // DEV NOTE: returns nothing
       } catch(error) {
         console.error(`Error fetching row for id ${id}: `, error );
 
@@ -146,9 +171,10 @@ export class TaskModel {
             throw new Error(`Error fetching row: ${response.status}`);
         }
 
-        // to prevent receiving the following warning: 
+        // DEV NOTE: to prevent receiving the following warning: 
         // API handler should not return a value, received object.
         // make this fn returns void by comment out the return value below
+        
         //const result = await response.json();
         //return result.rows;
       } catch(error) {

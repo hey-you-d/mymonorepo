@@ -60,6 +60,20 @@ export const useTaskViewModel = () => {
     }
   }, [taskModel]);
 
+  const createRow = useCallback(async (title: string, detail: string) => {
+    setLoading(true);
+    try {
+      await taskModel.createRow(title, detail);
+      // then refresh the tasks state
+      const result: Task[] = await taskModel.getTasksDBRows();
+      setTasks(result);
+    } catch (error) {
+      console.error("Failed to create a new row in the db: ", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [taskModel]);
+
   const updateRowFromId = useCallback(async (id: number, title: string, detail: string, completed: boolean) => {
     setLoading(true);
     try {
@@ -96,6 +110,7 @@ export const useTaskViewModel = () => {
     loading,
     seedTasksDB,
     deleteAllRows,
+    createRow,
     getRowFromId,
     updateRowFromId,
     deleteRowFromId,

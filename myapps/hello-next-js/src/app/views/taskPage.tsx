@@ -4,14 +4,14 @@ import { TaskSeedDB } from '../components/TaskSeedDB';
 import { TaskTable } from '../components/TaskTable';
 
 export const TaskPage = () => {
-  const { tasks, loading, seedTasksDB, updateRowFromId, deleteAllRows } = useTaskViewModel();
+  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
 
   if (loading) return <p>Loading...</p>;
 
   return (
     <>
       <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
-      <TaskTable tasks={tasks} updateRowFromId={updateRowFromId} />
+      <TaskTable tasks={tasks} createRow={createRow} updateRowFromId={updateRowFromId} />
     </>
   );
 };

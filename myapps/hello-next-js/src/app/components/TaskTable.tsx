@@ -1,20 +1,26 @@
 // DEV NOTE: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import React, { useCallback } from 'react';
+import React, { useRef } from 'react';
 import { Task } from "../types/Task";
 import { MONOREPO_PREFIX } from "../../../constants/common";
 
 type TaskTableType = {
     tasks: Task[], 
+    createRow: (title: string, detail: string)=> Promise<void>,
     updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void>
 }
 
-export const TaskTable = ({ tasks, updateRowFromId } : TaskTableType) => {
-    const addNewTodoHandler = (e: React.MouseEvent) => {
-        e.preventDefault();
-        // TODO: Logic to be added
-    }
+const isSafeInput = (str: string) => {
+    // DEV NOTE: To prevent SQL injection attack
+    // Only allow alphanumeric characters, basic punctuation, and whitespace
+    const regex = /^[a-zA-Z0-9\s.,!?'"()\-_:;]{1,500}$/;
+    return regex.test(str);
+};
 
+export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType) => {
+    const inputTitleRef = useRef<HTMLInputElement>(null);
+    const inputDetailRef = useRef<HTMLInputElement>(null);
+    
     const chkBoxHandler = (e: React.MouseEvent,id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         e.preventDefault();
         updateRowFromId(id, title, detail, !isCurrentlySelected);
@@ -23,6 +29,18 @@ export const TaskTable = ({ tasks, updateRowFromId } : TaskTableType) => {
     const editTodoHandler = (e: React.MouseEvent, id: number) => {
         e.preventDefault();
         window.location.replace( `${MONOREPO_PREFIX}/bff-tasks-db/${id}`);
+    }
+
+    const addNewTodoHandler = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (inputTitleRef.current && inputDetailRef.current && 
+            inputTitleRef.current.value.length > 0 && 
+            isSafeInput(inputTitleRef.current.value) &&
+            isSafeInput(inputDetailRef.current.value)) {
+                createRow(inputTitleRef.current.value, inputDetailRef.current.value);
+        } else {
+            // TODO: red border styling
+        }
     }
 
     let tBody: React.ReactElement[] = [];
@@ -56,9 +74,9 @@ export const TaskTable = ({ tasks, updateRowFromId } : TaskTableType) => {
                 </tr>
                 <tr>
                     <td>new todo:</td>
-                    <td><input type="text" id="form-new-todo-title" placeholder="Title"></input></td>
-                    <td><input type="text" id="form-new-todo-detail" placeholder="Description"></input></td>
-                    <td><button type="button" onClick={addNewTodoHandler}>add</button></td>
+                    <td><input type="text" ref={inputTitleRef} placeholder="Title" /></td>
+                    <td><input type="text" ref={inputDetailRef} placeholder="Description" /></td>
+                    <td><button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button></td>
                 </tr>
             </>
         );
