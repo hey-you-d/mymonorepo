@@ -31,16 +31,18 @@ yarn workspace hello-next-js lint
 
 ## BFF (Backend for Frontend) Demo
 
+### RESTFul API demo
 Covered Tech Stacks:
 - Backend framework: Next.JS API
 - RDBMS: PostgreSQL
+- Query Language: SQL and GraphQL
 - Authentication: JWT-based auth
 - Client-side Caching: SWR or React  Query
 - Server-side Caching: Redis 
 - Documentation: Swagger
 - Unit Test: Jest
 
-### Prod & Dev branches
+#### Prod & Dev branches
 - **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db) 
 - **Dev URL:** [https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db)
 - **STATUS: NOT READY**
@@ -51,7 +53,7 @@ Point of consideration for PROD build:
 3. Redis based rate limiting as a protection layer. 
 4. Secure Networking (HTTPS + ALB)
 
-### Localhost
+#### Localhost
 - **LOCALHOST URL:** [http://localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
 - **STATUS: WIP**
 1. Core API Endpoint implementation - **STATUS: DONE**
@@ -62,7 +64,15 @@ Point of consideration for PROD build:
 5. Server-side Caching implementation with Redis - **STATUS: TODO** 
 5. Swagger integration - **STATUS: TODO** 
 
-**How to set up the localhost DB:**
+### with GraphQL Demo
+**Status: TODO**
+Objective: clone the implementation, but use Apollo GraphQL to consume the API endpoints
+
+### Websocket protocol Demo
+**Status: TODO**
+Objective: with a new database table
+
+### Steps to set up the localhost DB for the Tasks API demo
 1. For DEV env sql db, Use Docker - Quick, isolated, no OS clutter. To build & run postgres db from scratch (internet connection is needed) 
 ```bash
 docker run --name hellonextjs-postgresdb -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=tasks-db -p 5432:5432 -d postgres
@@ -78,7 +88,19 @@ sudo apt install postgresql-client
 ```bash
 psql -U postgres -d tasks-db -h localhost
 ```
-4. To kickstart the db for localhost development
+
+4. Create a table via the CLI
+```bash
+CREATE TABLE tasks (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL COLLATE "en_US.utf8",
+  detail TEXT NOT NULL COLLATE "en_US.utf8",
+  completed BOOLEAN DEFAULT FALSE, 
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+5. To kickstart the db for localhost development (no need to redo step 1)
 ```bash
 docker start hellonextjs-postgresdb
 ```
