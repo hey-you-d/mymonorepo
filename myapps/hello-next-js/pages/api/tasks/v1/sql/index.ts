@@ -9,6 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         
           return res.status(200).json(rows);
         } catch (err) {
+          console.error('Database error:', err); // Log detailed error
           return res.status(500).json({ error: 'Database error' });
         } 
       case "POST" :
@@ -20,6 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           
           return res.status(201).json(result.rows[0]);
         } catch (err) {
+          console.error('Database error:', err); // Log detailed error
           return res.status(500).json({ error: 'Database error' });
         } 
       default:

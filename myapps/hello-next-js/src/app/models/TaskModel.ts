@@ -39,7 +39,7 @@ export class TaskModel {
 
         if (!response.ok) {
             const errorText = await response.text(); // <- Just read as text
-            console.error("Error deleting DB Table rows: ", `${response.status} - ${response.statusText}`);
+            console.error("Error deleting DB Table rows: ", `${response.status} - ${response.statusText} - ${errorText}`);
             throw new Error(`Error fetching row: ${response.status}`);
         }
         
@@ -63,7 +63,7 @@ export class TaskModel {
 
         if (!response.ok) {
             const errorText = await response.text(); // <- Just read as text
-            console.error("Error seeding tasks DB: ", `${response.status} - ${response.statusText}`);
+            console.error("Error seeding tasks DB: ", `${response.status} - ${response.statusText} - ${errorText}`);
             throw new Error(`Error fetching row: ${response.status}`);
         }
 
@@ -116,13 +116,13 @@ export class TaskModel {
 
         if (!response.ok) {
             const errorText = await response.text(); // <- Just read as text
-            console.error(`Error updating row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
-            throw new Error(`Error updating row: ${response.status}`);
+            console.error(`Error creating row: ${response.status} - ${response.statusText}`, errorText);
+            throw new Error(`Error creating row: ${response.status}`);
         }
 
         // DEV NOTE: returns nothing
       } catch(error) {
-        console.error(`Error fetching row for id ${id}: `, error );
+        console.error("Error creating row: ", error );
 
         throw error;
       } 
@@ -150,7 +150,7 @@ export class TaskModel {
 
         // DEV NOTE: returns nothing
       } catch(error) {
-        console.error(`Error fetching row for id ${id}: `, error );
+        console.error(`Error updating row for id ${id}: `, error );
 
         throw error;
       } 
@@ -168,7 +168,7 @@ export class TaskModel {
         if (!response.ok) {
             const errorText = await response.text(); // <- Just read as text
             console.error(`Error deleting row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
-            throw new Error(`Error fetching row: ${response.status}`);
+            throw new Error(`Error deleting row: ${response.status}`);
         }
 
         // DEV NOTE: to prevent receiving the following warning: 

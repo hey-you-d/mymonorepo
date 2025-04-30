@@ -43,46 +43,32 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
         }
     }
 
-    let tBody: React.ReactElement[] = [];
-    let tFooter: React.ReactElement[] = [];
-    // TODO: refactor the if condition below
-    if (Array.isArray(tasks) && tasks.length > 0) {
-        // DEV NOTE: tbody content
-        tasks.forEach(aTask => {
-            const checkbox = aTask.completed 
-                ? <input type="checkbox" id={`chkbox-${aTask.id}`} checked 
-                    onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, true)} />
-                : <input type="checkbox" id={`chkbox-${aTask.id}`} 
-                    onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, false)} />
+    const tBody = (): React.ReactElement[] => {
+        if (Array.isArray(tasks) && tasks.length > 0) {
+            let output:React.ReactElement[] = [];
+            
+            tasks.forEach(aTask => {
+                const checkbox = aTask.completed 
+                    ? <input type="checkbox" id={`chkbox-${aTask.id}`} checked 
+                        onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, true)} />
+                    : <input type="checkbox" id={`chkbox-${aTask.id}`} 
+                        onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, false)} />
+    
+                output.push(
+                    <tr key={aTask.id}>
+                        <td>{aTask.id}</td>
+                        <td>{aTask.title}</td>
+                        <td>{aTask.detail}</td>
+                        <td>{checkbox}</td>
+                        <td><button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button></td>
+                    </tr>
+                );
+            });
 
-            tBody.push(
-                <tr key={aTask.id}>
-                    <td>{aTask.id}</td>
-                    <td>{aTask.title}</td>
-                    <td>{aTask.detail}</td>
-                    <td>{checkbox}</td>
-                    <td><button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button></td>
-                </tr>
-            );
-        });
-        // DEV NOTE: tfoot content
-        tFooter.push(
-            <>
-                <tr>
-                    <td>Total Rows:</td>
-                    <td>{tasks.length}</td>
-                </tr>
-                <tr>
-                    <td>new todo:</td>
-                    <td><input type="text" ref={inputTitleRef} placeholder="Title" /></td>
-                    <td><input type="text" ref={inputDetailRef} placeholder="Description" /></td>
-                    <td><button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button></td>
-                </tr>
-            </>
-        );
-    } else {
-        // DEV NOTE: tbody content
-        tBody.push(
+            return output;
+        } 
+
+        return[(
             <tr>
                 <td>-</td>
                 <td>-</td>
@@ -90,9 +76,32 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
                 <td>-</td>
                 <td>-</td>
             </tr>
-        );
-        // DEV NOTE: tfoot content
-        tFooter.push(
+        )];
+    }
+
+    const tFooter = (): React.ReactElement[] => {
+        if (Array.isArray(tasks) && tasks.length > 0) {
+            let output:React.ReactElement[] = [];
+            
+            output.push(
+                <>
+                    <tr>
+                        <td>Total Rows:</td>
+                        <td>{tasks.length}</td>
+                    </tr>
+                    <tr>
+                        <td>new todo:</td>
+                        <td><input type="text" ref={inputTitleRef} placeholder="Title" /></td>
+                        <td><input type="text" ref={inputDetailRef} placeholder="Description" /></td>
+                        <td><button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button></td>
+                    </tr>
+                </>
+            );
+
+            return output;
+        } 
+
+        return[(
             <>
                 <tr>
                     <td>Total Rows:</td>
@@ -100,13 +109,13 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
                 </tr>
                 <tr>
                     <td>new todo:</td>
-                    <td><input type="text" id="form-new-todo-title" placeholder="Title" disabled></input></td>
-                    <td><input type="text" id="form-new-todo-detail" placeholder="Description" disabled></input></td>
-                    <td><button disabled type="button" onClick={addNewTodoHandler}>add</button></td>
+                    <td><input type="text" placeholder="Title" disabled></input></td>
+                    <td><input type="text" placeholder="Description" disabled></input></td>
+                    <td><button disabled type="button">add</button></td>
                 </tr>
             </>
-        );
-    }
+        )];
+    };
 
     return (
         <table>
@@ -129,10 +138,10 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
                 </tr>
             </thead>
             <tbody>
-               {tBody}
+               {tBody()}
             </tbody>
             <tfoot>
-               {tFooter}
+               {tFooter()}
             </tfoot>
         </table>
     )

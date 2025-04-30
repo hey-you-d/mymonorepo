@@ -14,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 
                 return res.status(200).json(getResult.rows[0]);
             } catch (err) {
+                console.error('Database error:', err); // Log detailed error
                 return res.status(500).json({ error: 'Database error' });
             }
         case "PUT" :
@@ -27,6 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 
                 return res.status(200).json(putResult.rows[0]);
             } catch (err) {
+                console.error('Database error:', err); // Log detailed error
                 return res.status(500).json({ error: 'Database error' });
             }    
         case "DELETE" :
@@ -36,6 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 
                 return res.status(204).end();
             } catch (err) {
+                console.error('Database error:', err); // Log detailed error
                 return res.status(500).json({ error: 'Database error' });
             }         
         default:

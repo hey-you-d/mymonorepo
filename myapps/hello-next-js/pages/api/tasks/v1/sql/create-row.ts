@@ -13,6 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 
                 return res.status(201).json(result);
             } catch (err) {
+                console.error('Database error:', err); // Log detailed error
                 return res.status(500).json({ error: 'Database error' });
             }   
         default:
