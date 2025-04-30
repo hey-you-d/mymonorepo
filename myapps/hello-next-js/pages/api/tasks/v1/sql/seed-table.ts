@@ -24,12 +24,16 @@ const placeholders = tasks
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "POST" :
-            const result = await db.query(
-                `INSERT INTO tasks (title, detail) VALUES ${placeholders} RETURNING *`,
-                values
-            );
-            
-            return res.status(201).json(result);
+            try {
+                const result = await db.query(
+                    `INSERT INTO tasks (title, detail) VALUES ${placeholders} RETURNING *`,
+                    values
+                );
+                
+                return res.status(201).json(result);
+            } catch (err) {
+                return res.status(500).json({ error: 'Database error' });
+            } 
         default:
             res.setHeader('Allow', ['POST']);
             res.status(405).end(`Method ${req.method} Not Allowed`);    
