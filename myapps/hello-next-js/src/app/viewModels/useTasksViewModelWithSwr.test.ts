@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useTaskViewModel } from './useTasksViewModel';
+import { useTaskViewModelWithSwr } from './useTasksViewModelWithSwr';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
 
@@ -11,7 +11,7 @@ const mockTasks: Task[] = [
   { id: 2, title: 'Task 2', detail: 'lorem ipsum', completed: true, created_at: '' },
 ];
 
-describe('useTaskViewModel', () => {
+describe('useTaskViewModelWithSwr', () => {
   let mockGetTasksDBRows: jest.Mock;
   let mockDeleteAllRows: jest.Mock;
   let mockSeedTasksDB: jest.Mock;
@@ -20,8 +20,9 @@ describe('useTaskViewModel', () => {
   beforeEach(() => {
     // suppress console.error to reduce noise
     spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+
     // Create fresh mocks for each test
-    mockGetTasksDBRows = jest.fn();
+    mockGetTasksDBRows = jest.fn().mockResolvedValue(mockTasks);
     mockDeleteAllRows = jest.fn();
     mockSeedTasksDB = jest.fn();
 
@@ -38,23 +39,27 @@ describe('useTaskViewModel', () => {
     jest.clearAllMocks();
   });
 
-  it('should initialize with empty tasks and loading state', () => {
+  it('should initialize with undefined tasks and false loading state', () => {
+    // not []. 
+    // tasks comes from useSWR, which is asynchronous and cache-driven instead of directly returned 
+    // by TaskModel fn, and won’t update immediately after rendering the hook — 
+    // especially when you’re using renderHook in a unit test and not triggering a real HTTP request.
     mockGetTasksDBRows.mockResolvedValue([]);
     
-    const { result } = renderHook(() => useTaskViewModel());
+    const { result } = renderHook(() => useTaskViewModelWithSwr());
     
-    expect(result.current.tasks).toEqual([]);
+    expect(result.current.tasks).toBeUndefined;
     expect(result.current.loading).toBe(true);
   });
 
   it('should load tasks on mount', async () => {
     mockGetTasksDBRows.mockResolvedValue(mockTasks);
     
-    const { result } = renderHook(() => useTaskViewModel());
+    const { result } = renderHook(() => useTaskViewModelWithSwr());
     
     // Initial state
-    expect(result.current.tasks).toEqual([]);
-    expect(result.current.loading).toBe(true);
+    expect(result.current.tasks).toBeUndefined; 
+    expect(result.current.loading).toBe(false); // because getTasksDBRows() is called within useEffect to populate the table after init page load 
     
     // Wait for useEffect to complete
     await act(async () => {
@@ -67,24 +72,11 @@ describe('useTaskViewModel', () => {
     expect(mockGetTasksDBRows).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle task loading error', async () => {
-    mockGetTasksDBRows.mockRejectedValue(new Error('Loading failed'));
-    
-    const { result } = renderHook(() => useTaskViewModel());
-    
-    await act(async () => {
-      await Promise.resolve();
-    });
-    
-    expect(result.current.tasks).toEqual([]);
-    expect(result.current.loading).toBe(false);
-  });
-
   it('should seed tasks database', async () => {
     mockGetTasksDBRows.mockResolvedValue([]);
     mockSeedTasksDB.mockResolvedValue(mockTasks);
     
-    const { result } = renderHook(() => useTaskViewModel());
+    const { result } = renderHook(() => useTaskViewModelWithSwr());
     
     // Wait for initial load
     await act(async () => {
@@ -103,7 +95,7 @@ describe('useTaskViewModel', () => {
     mockGetTasksDBRows.mockResolvedValue(mockTasks);
     mockDeleteAllRows.mockResolvedValue([]);
     
-    const { result } = renderHook(() => useTaskViewModel());
+    const { result } = renderHook(() => useTaskViewModelWithSwr());
     
     // Wait for initial load
     await act(async () => {
@@ -122,7 +114,7 @@ describe('useTaskViewModel', () => {
     mockGetTasksDBRows.mockResolvedValue([]);
     mockSeedTasksDB.mockRejectedValue(new Error('Seeding failed'));
     
-    const { result } = renderHook(() => useTaskViewModel());
+    const { result } = renderHook(() => useTaskViewModelWithSwr());
     
     // Wait for initial load
     await act(async () => {
@@ -141,7 +133,7 @@ describe('useTaskViewModel', () => {
     mockGetTasksDBRows.mockResolvedValue(mockTasks);
     mockDeleteAllRows.mockRejectedValue(new Error('Deletion failed'));
     
-    const { result } = renderHook(() => useTaskViewModel());
+    const { result } = renderHook(() => useTaskViewModelWithSwr());
     
     // Wait for initial load
     await act(async () => {
@@ -153,6 +145,24 @@ describe('useTaskViewModel', () => {
     });
     
     // On error, tasks should be set to empty array
+    // because of calling mutate("Tasks-API", [], false); // Explicitly clear cache 
+    // in the catch(error) condition
     expect(result.current.tasks).toEqual([]);
+  });
+
+  it('should handle task loading error', async () => {
+    mockGetTasksDBRows.mockRejectedValue(new Error('Loading failed'));
+    
+    const { result } = renderHook(() => useTaskViewModelWithSwr());
+    
+    await act(async () => {
+      await Promise.resolve();
+    });
+    
+    // On error, tasks should be set to empty array
+    // because of calling mutate("Tasks-API", [], false); // Explicitly clear cache 
+    // in the catch(error) condition
+    expect(result.current.tasks).toEqual([]);
+    expect(result.current.loading).toBe(false);
   });
 });
