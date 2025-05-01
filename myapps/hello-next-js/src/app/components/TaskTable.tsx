@@ -31,7 +31,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
         window.location.replace( `${MONOREPO_PREFIX}/bff-tasks-db/${id}`);
     }
 
-    const addNewTodoHandler = (e: React.MouseEvent) => {
+    const addNewTodoHandler = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         if (inputTitleRef.current && inputDetailRef.current && 
             inputTitleRef.current.value.length > 0 && 
@@ -41,7 +41,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
         } else {
             // TODO: red border styling
         }
-    }
+    }, [createRow]);
 
     const tBody = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
@@ -102,7 +102,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
         }
 
         return output;
-    }, []);
+    }, [addNewTodoHandler]);
 
     const tFooter = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
