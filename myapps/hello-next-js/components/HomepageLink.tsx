@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Link from 'next/link';
 import Image from 'next/image';
 import { MONOREPO_PREFIX } from '../constants/common';
@@ -21,4 +22,4 @@ const HomepageLink = ({ href, title } : { href: string, title: string }) => {
     );
 }
 
-export default HomepageLink;
+export default memo(HomepageLink);

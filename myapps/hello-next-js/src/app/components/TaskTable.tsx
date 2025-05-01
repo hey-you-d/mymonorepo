@@ -1,6 +1,6 @@
 // DEV NOTE: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import React, { useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Task } from "../types/Task";
 import { MONOREPO_PREFIX } from "../../../constants/common";
 
@@ -79,6 +79,31 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
         )];
     }
 
+    const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
+        const output: React.ReactElement[] = [];
+        
+        output.push(<td>new todo:</td>);
+        if (!isDisabled) {
+            output.push(
+                <>
+                    <td><input type="text" ref={inputTitleRef} placeholder="Title" /></td>
+                    <td><input type="text" ref={inputDetailRef} placeholder="Description" /></td>
+                    <td><button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button></td>
+                </>
+            );
+        } else {
+            output.push(
+                <>
+                    <td><input type="text" placeholder="Title" disabled></input></td>
+                    <td><input type="text" placeholder="Description" disabled></input></td>
+                    <td><button disabled type="button">add</button></td>
+                </>
+            );
+        }
+
+        return output;
+    }, []);
+
     const tFooter = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
@@ -90,10 +115,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
                         <td>{tasks.length}</td>
                     </tr>
                     <tr>
-                        <td>new todo:</td>
-                        <td><input type="text" ref={inputTitleRef} placeholder="Title" /></td>
-                        <td><input type="text" ref={inputDetailRef} placeholder="Description" /></td>
-                        <td><button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button></td>
+                        {renderAddRowForm(false)}
                     </tr>
                 </>
             );
@@ -108,10 +130,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
                     <td>0</td>
                 </tr>
                 <tr>
-                    <td>new todo:</td>
-                    <td><input type="text" placeholder="Title" disabled></input></td>
-                    <td><input type="text" placeholder="Description" disabled></input></td>
-                    <td><button disabled type="button">add</button></td>
+                    {renderAddRowForm(true)}
                 </tr>
             </>
         )];
