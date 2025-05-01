@@ -5,17 +5,10 @@ import { User } from '../types/User';
 global.fetch = jest.fn(); // Mock fetch globally
 
 describe('UserModel', () => {
-  let spyConsoleError: jest.SpyInstance<any, any>;
   const userModel = new UserModel(API_BASE_URL);
 
   beforeEach(() => {
-    // suppress console.error to reduce noise
-    spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
     jest.clearAllMocks(); // Clear mock calls between tests
-  });
-
-  afterEach(() => {
-    spyConsoleError.mockRestore();
   });
 
   it('should fetch user data successfully', async () => {
