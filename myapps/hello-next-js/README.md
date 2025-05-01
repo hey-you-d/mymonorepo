@@ -55,12 +55,16 @@ Point of consideration for PROD build:
 
 #### Localhost
 - **LOCALHOST URL:** [http://localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
+- **Build with:** 
+```bash
+yarn workspace hello-next-js dev
+```
 - **STATUS: WIP**
 1. Core API Endpoint implementation - **STATUS: DONE**
 2. Barebones frontend implementation with unit test - **STATUS: DONE**
 3. API Authentication with JWT-based auth - **STATUS: TODO**
 4. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
-4. Client-side Caching implementation with SWR or React Query - **STATUS: TODO**
+4. Client-side Caching implementation with SWR - **STATUS: DONE**
 5. Server-side Caching implementation with Redis - **STATUS: TODO** 
 5. Swagger integration - **STATUS: TODO** 
 
@@ -103,4 +107,9 @@ CREATE TABLE tasks (
 5. To kickstart the db for localhost development (no need to redo step 1)
 ```bash
 docker start hellonextjs-postgresdb
+```
+
+6. run the dev build of hello-next-js, and then visit localhost:3000/hello-next-js
+```bash
+yarn workspace hello-next-js dev
 ```

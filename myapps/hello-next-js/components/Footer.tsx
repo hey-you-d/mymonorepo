@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from "@/app/page.module.css";
@@ -25,4 +26,4 @@ const Footer = () => {
     )
 }
 
-export default Footer;
+export default memo(Footer);

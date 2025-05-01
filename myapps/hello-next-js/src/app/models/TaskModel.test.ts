@@ -10,6 +10,7 @@ type MockResponse = {
 
 describe('TaskModel', () => {
   let taskModel: TaskModel;
+  let spyConsoleError: jest.SpyInstance<any, any>;
   
   // Helper function to create mock responses
   const mockResponse = (ok: boolean, data: any): MockResponse => ({
@@ -20,11 +21,15 @@ describe('TaskModel', () => {
   });
 
   beforeEach(() => {
+    // suppress console.error to reduce noise
+    spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+
     taskModel = new TaskModel();
     global.fetch = jest.fn() as jest.Mock;
   });
 
   afterEach(() => {
+    spyConsoleError.mockRestore();
     jest.clearAllMocks();
   });
 
