@@ -42,18 +42,7 @@ Covered Tech Stacks:
 - Documentation: Swagger
 - Unit Test: Jest
 
-#### Prod & Dev branches
-- **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db) 
-- **Dev URL:** [https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db)
-- **STATUS: NOT READY**
-Will commence after the localhost development is complete.
-Point of consideration for PROD build: 
-1. Determine the remote RDBMS (Candidate: AWS RDS or Supabase)
-2. Set CORS to expose the API for external use (e.g hello-react-js as the client)
-3. Redis based rate limiting as a protection layer. 
-4. Secure Networking (HTTPS + ALB)
-
-#### Localhost
+#### Localhost demo
 - **LOCALHOST URL:** [http://localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
 - **Build with:** 
 ```bash
@@ -68,10 +57,18 @@ yarn workspace hello-next-js dev
 5. Server-side Caching implementation with Redis - **STATUS: TODO** 
 6. Swagger Doc integration - **STATUS: DONE** - URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 
 7. Apollo GraphQL to consume the API - **STATUS: TODO**
+8. [optional]Websocket demo - **STATUS: TO BE DETERMINED**
 
-### Websocket protocol Demo
-**Status: TODO**
-Objective: with a new database table
+#### Remote site demo (Prod & Dev branches)
+- **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db) 
+- **Dev URL:** [https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db)
+- **STATUS: NOT READY**
+Will commence after the localhost development is complete.
+Point of consideration for PROD build: 
+1. Determine the remote RDBMS (Candidate: AWS RDS or Supabase)
+2. Set CORS to expose the API for external use (e.g hello-react-js as the client)
+3. Redis based rate limiting as a protection layer. 
+4. Secure Networking (HTTPS + ALB)
 
 ### Steps to set up the localhost DB for the Tasks API demo
 1. For DEV env sql db, Use Docker - Quick, isolated, no OS clutter. To build & run postgres db from scratch (internet connection is needed) 
