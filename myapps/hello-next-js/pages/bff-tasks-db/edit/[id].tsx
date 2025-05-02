@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
-import Layout from '../../components/Layout';
-import { TaskDetailPage } from '@/app/views/taskDetailPage';
-
+import Layout from "../../../components/Layout";
+import { TaskDetailPage } from "@/app/views/taskDetailPage";
 
 const BffTasksDB = () => {
     const router = useRouter();
-    const { id } = router.query; // id is now available
+    const { id } = router.query;
 
     return ( 
         <Layout title="hello-next-js - Next.JS API - Backend For Frontend (BFF) demo">               

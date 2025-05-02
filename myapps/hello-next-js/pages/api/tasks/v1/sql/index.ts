@@ -1,6 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/bff/tasks/db_postgreSQL';
 
+/**
+ * @swagger
+ * /api/tasks/v1/sql:
+ *   get:
+ *     summary: Get all tasks from the DB
+ *     responses:
+ *       200:
+ *         description: A list of tasks
+ *   post:
+ *      summary: Add a task into the DB
+ *      responses:
+ *        200:
+ *          description: the newly created Task item
+ */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
       case "GET" :
