@@ -28,7 +28,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
 
     const editTodoHandler = (e: React.MouseEvent, id: number) => {
         e.preventDefault();
-        window.location.replace( `${MONOREPO_PREFIX}/bff-tasks-db/${id}`);
+        window.location.replace( `${MONOREPO_PREFIX}/bff-tasks-db/edit/${id}`);
     }
 
     const addNewTodoHandler = useCallback((e: React.MouseEvent) => {

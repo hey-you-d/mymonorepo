@@ -1,6 +1,91 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/bff/tasks/db_postgreSQL';
 
+/**
+ * @swagger
+ * /api/tasks/v1/sql/{id}:
+ *   get:
+ *     summary: Get a single row (row #[id]) from the DB
+ *     tags:
+ *       - Tasks
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The ID of the task
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       400:
+ *         description: not found        
+ *       500:
+ *         description: database error
+ *       200:
+ *         description: A list of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ *   delete:
+ *     summary: Delete a single row (row #[id]) from the DB
+ *     tags:
+ *       - Tasks
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The ID of the task
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       400:
+ *         description: not found        
+ *       500:
+ *         description: database error
+ *       204:
+ *         description: returns nothing
+ *   put:
+ *     summary: update a row (row #[id]) in the DB
+ *     tags:
+ *       - Tasks
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The ID of the task
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - detail
+ *               - completed
+ *             properties:
+ *               title:
+ *                 type: string
+ *               detail:
+ *                 type: string
+ *               completed:
+ *                 type: boolean                     
+ *     responses:
+ *       404:
+ *         description: not found
+ *       500:
+ *         description: database error
+ *       200:
+ *         description: The newly created Task item
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
     const numericId = parseInt(id || '', 10);

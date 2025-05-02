@@ -12,6 +12,19 @@ import { db } from '@/bff/tasks/db_postgreSQL';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
+        /**
+         * @swagger
+         * /api/tasks/v1/sql/delete-rows:
+         *   post:
+         *     summary: delete all rows in the database 
+         *     tags:
+         *       - Tasks
+         *     responses:
+         *       200:
+         *         description: an empty array 
+         *       500:
+         *         description: database error
+         */
         // for the sake of demo, lets use POST instead of DELETE request type
         // to demonstrate its possible to use the POST request to send a DELETE request.
         case "POST" :
