@@ -61,12 +61,12 @@ yarn workspace hello-next-js dev
 ```
 - **STATUS: WIP**
 1. Core API Endpoint implementation - **STATUS: DONE**
-2. Barebones frontend implementation with unit test - **STATUS: DONE**
+2. Barebones frontend implementation with unit test - **STATUS: DONE** - URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
 3. API Authentication with JWT-based auth - **STATUS: TODO**
 4. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
-4. Client-side Caching implementation with SWR - **STATUS: DONE**
+4. Client-side Caching implementation with SWR - **STATUS: DONE** - module: [https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts)
 5. Server-side Caching implementation with Redis - **STATUS: TODO** 
-6. Swagger Doc integration - **STATUS: DONE** 
+6. Swagger Doc integration - **STATUS: DONE** - URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 
 7. Apollo GraphQL to consume the API - **STATUS: TODO**
 
 ### Websocket protocol Demo
@@ -111,6 +111,6 @@ docker start hellonextjs-postgresdb
 yarn workspace hello-next-js dev
 ```
 
-7. The URL: [localhost:3000/hello-next-js/](http://localhost:3000/hello-next-js/bff-tasks-db)
+7. The URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
 
 8. The Swagger Doc URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 
