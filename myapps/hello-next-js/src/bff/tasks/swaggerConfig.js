@@ -1,9 +1,11 @@
+import path from 'path';
+
 export const swaggerDefinition = {
     openapi: '3.0.0',
     info: {
-      title: 'Next.js MVVM CRUD API',
+      title: 'Tasks API',
       version: '1.0.0',
-      description: 'A simple CRUD API using Next.js MVVM architecture',
+      description: 'A simple CRUD API using Next.js API feature',
     },
     servers: [
       {
@@ -12,9 +14,9 @@ export const swaggerDefinition = {
       },
     ],
   };
-  
-  export const swaggerOptions = {
-    swaggerDefinition,
-    apis: ['./pages/api/**/*.ts'],
-  };
+
+export const swaggerOptions = {
+  swaggerDefinition,
+  apis: [path.resolve(process.cwd(), 'pages/api/tasks/v1/sql/*.ts')],
+};
   
