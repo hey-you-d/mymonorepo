@@ -19,16 +19,14 @@ import { db } from '@/bff/tasks/db_postgreSQL';
  *         created_at:
  *            type: string
  *            format: date-time
- */
-
-/**
- * @swagger
  * /api/tasks/v1/sql:
  *   get:
  *     summary: Get all tasks from the DB
  *     tags:
  *       - Tasks
  *     responses:
+ *       500:
+ *         description: database error
  *       200:
  *         description: A list of tasks
  *         content:
@@ -53,6 +51,10 @@ import { db } from '@/bff/tasks/db_postgreSQL';
  *               title:
  *                 type: string
  *     responses:
+ *       400:
+ *         description: title is required
+ *       500:
+ *         description: database error
  *       201:
  *         description: The newly created Task item
  *         content:

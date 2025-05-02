@@ -21,6 +21,23 @@ const placeholders = tasks
     .map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`)
     .join(', ');
 
+/**
+ * @swagger
+ * /api/tasks/v1/sql/seed-table:
+ *   post:
+ *     summary: insert hardcoded task items into the database 
+ *     tags:
+ *       - Tasks
+ *     responses:
+ *       201:
+ *         description: The newly added Task items from a hardcoded data 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ *       500:
+ *         description: database error
+ */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "POST" :

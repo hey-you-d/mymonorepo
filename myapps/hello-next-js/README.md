@@ -66,11 +66,8 @@ yarn workspace hello-next-js dev
 4. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
 4. Client-side Caching implementation with SWR - **STATUS: DONE**
 5. Server-side Caching implementation with Redis - **STATUS: TODO** 
-5. Swagger integration - **STATUS: TODO** 
-
-### with GraphQL Demo
-**Status: TODO**
-Objective: clone the implementation, but use Apollo GraphQL to consume the API endpoints
+6. Swagger Doc integration - **STATUS: DONE** 
+7. Apollo GraphQL to consume the API - **STATUS: TODO**
 
 ### Websocket protocol Demo
 **Status: TODO**
@@ -88,12 +85,12 @@ sudo apt update
 #followed by
 sudo apt install postgresql-client
 ```
-3. To interact with the database via the CLI
+3. To interact with the database via the postgresql-client
 ```bash
 psql -U postgres -d tasks-db -h localhost
 ```
 
-4. Create a table via the CLI
+4. Create a table via the postgresql-client
 ```bash
 CREATE TABLE tasks (
   id SERIAL PRIMARY KEY,
@@ -109,7 +106,11 @@ CREATE TABLE tasks (
 docker start hellonextjs-postgresdb
 ```
 
-6. run the dev build of hello-next-js, and then visit localhost:3000/hello-next-js
+6. run the dev build of hello-next-js
 ```bash
 yarn workspace hello-next-js dev
 ```
+
+7. The URL: [localhost:3000/hello-next-js/](http://localhost:3000/hello-next-js/bff-tasks-db)
+
+8. The Swagger Doc URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 

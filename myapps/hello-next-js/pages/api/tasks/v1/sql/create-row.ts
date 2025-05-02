@@ -3,9 +3,44 @@ import { db } from '@/bff/tasks/db_postgreSQL';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
+        /**
+         * @swagger
+         * /api/tasks/v1/sql/create-row:
+         *   post:
+         *     summary: Add a task into the DB
+         *     tags:
+         *       - Tasks
+         *     requestBody:
+         *       required: true
+         *       content:
+         *         application/json:
+         *           schema:
+         *             type: object
+         *             required:
+         *               - title
+         *               - detail
+         *             properties:
+         *               title:
+         *                 type: string
+         *               detail:
+         *                 type: string 
+         *     responses:
+         *       201:
+         *         description: The newly created Task item
+         *         content:
+         *           application/json:
+         *             schema:
+         *               $ref: '#/components/schemas/Task'
+         *       400:
+         *         description: title is required / detail is required
+         *       500:
+         *         description: database error
+         */
         case "POST" :
             try {
                 const { title, detail } = req.body;
+                if (!title) return res.status(400).json({ error: 'Title is required' });
+                if (!title) return res.status(400).json({ error: 'Detail is required' });    
                 const result = await db.query(
                     `INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *`,
                     [title, detail]
