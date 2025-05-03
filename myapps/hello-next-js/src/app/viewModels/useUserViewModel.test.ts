@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { useUserViewModel } from './useUserViewModel';
 import { AxiosInstance } from 'axios';
 
@@ -30,9 +30,16 @@ describe("useUserViewModel", () => {
         expect(result.current.user).toBe(null);
 
         // wait for data to be fetched & state to update
-        await waitFor(() => {
+        //await waitFor(() => {
             // after update, verify that user data is set and loading is false
-            expect(result.current.user).toEqual(resolvedOutput);
+            //expect(result.current.user).toEqual(resolvedOutput);
+        //});
+
+        await act(async () => {
+            await Promise.resolve();
         });
+        
+        // after update, verify that user data is set and loading is false
+        expect(result.current.user).toEqual(resolvedOutput);
     });
 });
