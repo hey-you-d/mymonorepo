@@ -29,9 +29,7 @@ export const useUserViewModel = (apiClient: AxiosInstance, userId: string) => {
   }, [userId, userModel]);
 
   useEffect(() => {
-    if (DATA_FETCH_MODE === "useEffect") {
-      fetchUser();
-    }
+    fetchUser();
   }, [userId, fetchUser]);
 
   return {

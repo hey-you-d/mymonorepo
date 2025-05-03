@@ -1,7 +1,9 @@
 import { renderHook, act } from '@testing-library/react';
+import { SWRConfig } from 'swr';
 import { useTaskViewModelWithSwr } from './useTasksViewModelWithSwr';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
+import { DATA_FETCH_MODE } from "../../../constants/tasksBff";
 
 // Mock the entire TaskModel module
 jest.mock('../models/TaskModel');
@@ -10,6 +12,11 @@ const mockTasks: Task[] = [
   { id: 1, title: 'Task 1', detail: 'lorem ipsum', completed: false, created_at: '' },
   { id: 2, title: 'Task 2', detail: 'lorem ipsum', completed: true, created_at: '' },
 ];
+
+// Mocked fallback data (as if it came from getServerSideProps)
+const fallbackData = {
+  'Tasks-API': mockTasks,
+};
 
 describe('useTaskViewModelWithSwr', () => {
   let mockGetTasksDBRows: jest.Mock;
@@ -52,25 +59,46 @@ describe('useTaskViewModelWithSwr', () => {
     expect(result.current.loading).toBe(true);
   });
 
-  it('should load tasks on mount', async () => {
-    mockGetTasksDBRows.mockResolvedValue(mockTasks);
-    
-    const { result } = renderHook(() => useTaskViewModelWithSwr());
-    
-    // Initial state
-    expect(result.current.tasks).toBeUndefined; 
-    expect(result.current.loading).toBe(false); // because getTasksDBRows() is called within useEffect to populate the table after init page load 
-    
-    // Wait for useEffect to complete
-    await act(async () => {
-      await Promise.resolve(); // Let the useEffect complete
+  if (DATA_FETCH_MODE === "useEffect") {
+    it('should load tasks on mount', async () => {
+      mockGetTasksDBRows.mockResolvedValue(mockTasks);
+      
+      const { result } = renderHook(() => useTaskViewModelWithSwr());
+      
+      // Initial state
+      expect(result.current.tasks).toBeUndefined; 
+      expect(result.current.loading).toBe(false); // because getTasksDBRows() is called within useEffect to populate the table after init page load 
+      
+      // Wait for useEffect to complete
+      await act(async () => {
+        await Promise.resolve(); // Let the useEffect complete
+      });
+      
+      // After loading
+      expect(result.current.tasks).toEqual(mockTasks);
+      expect(result.current.loading).toBe(false);
+      expect(mockGetTasksDBRows).toHaveBeenCalledTimes(1);
     });
+  }
+
+  if (DATA_FETCH_MODE === "getServerSideProps") {
+    it('should load tasks from fallback data (as in getServerSideProps)', async () => {
+      const { result } = renderHook(() => useTaskViewModelWithSwr(), {
+        wrapper: ({ children }) => (
+          <SWRConfig value={{ fallback: fallbackData, dedupingInterval: 0 }}>
+            {children}
+          </SWRConfig>
+        )  
+      });
     
-    // After loading
-    expect(result.current.tasks).toEqual(mockTasks);
-    expect(result.current.loading).toBe(false);
-    expect(mockGetTasksDBRows).toHaveBeenCalledTimes(1);
-  });
+      // SWR should return tasks immediately from fallback
+      expect(result.current.tasks).toEqual(mockTasks);
+      expect(result.current.loading).toBe(false);
+    
+      // `getTasksDBRows` should not be called at all
+      expect(mockGetTasksDBRows).not.toHaveBeenCalled();
+    });
+  }
 
   it('should seed tasks database', async () => {
     mockGetTasksDBRows.mockResolvedValue([]);

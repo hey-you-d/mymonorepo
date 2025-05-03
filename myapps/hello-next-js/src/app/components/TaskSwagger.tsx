@@ -17,9 +17,12 @@ import { TASKS_BFF_BASE_API_URL } from "../../../constants/tasksBff";
 // This ensures:
 // 1. The Swagger UI loads after hydration
 // 2. You avoid SSR-related runtime errors
-const SwaggerDoc = dynamic(() => import('swagger-ui-react'), { ssr: DATA_FETCH_MODE === "getServerSideProps" });
+const SwaggerDoc = dynamic(() => import('swagger-ui-react'), { ssr: false });
 
 export default function SwaggerPage() {
-  return <SwaggerDoc url="/hello-next-js/api/tasks/v1/sql/swagger" />;
-  //return  <SwaggerDoc url={`${TASKS_BFF_BASE_API_URL}/swagger`} />;
+  const url = DATA_FETCH_MODE === "getServerSideProps" 
+    ?  "/hello-next-js/api/tasks/v1/sql"
+    : `${TASKS_BFF_BASE_API_URL}`;
+
+  return <SwaggerDoc url={`${url}/swagger`} />;
 }

@@ -2,6 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useTaskViewModel } from './useTasksViewModel';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
+import { DATA_FETCH_MODE } from "../../../constants/tasksBff";
 
 // Mock the entire TaskModel module
 jest.mock('../models/TaskModel');
@@ -47,38 +48,42 @@ describe('useTaskViewModel', () => {
     expect(result.current.loading).toBe(true);
   });
 
-  it('should load tasks on mount', async () => {
-    mockGetTasksDBRows.mockResolvedValue(mockTasks);
-    
-    const { result } = renderHook(() => useTaskViewModel());
-    
-    // Initial state
-    expect(result.current.tasks).toEqual([]);
-    expect(result.current.loading).toBe(true);
-    
-    // Wait for useEffect to complete
-    await act(async () => {
-      await Promise.resolve(); // Let the useEffect complete
+  if (DATA_FETCH_MODE === "useEffect") {
+    it('should load tasks on mount', async () => {
+      mockGetTasksDBRows.mockResolvedValue(mockTasks);
+      
+      const { result } = renderHook(() => useTaskViewModel());
+      
+      // Initial state
+      expect(result.current.tasks).toEqual([]);
+      expect(result.current.loading).toBe(true);
+      
+      // Wait for useEffect to complete
+      await act(async () => {
+        await Promise.resolve(); // Let the useEffect complete
+      });
+      
+      // After loading
+      expect(result.current.tasks).toEqual(mockTasks);
+      expect(result.current.loading).toBe(false);
+      expect(mockGetTasksDBRows).toHaveBeenCalledTimes(1);
     });
-    
-    // After loading
-    expect(result.current.tasks).toEqual(mockTasks);
-    expect(result.current.loading).toBe(false);
-    expect(mockGetTasksDBRows).toHaveBeenCalledTimes(1);
-  });
+  }
 
-  it('should handle task loading error', async () => {
-    mockGetTasksDBRows.mockRejectedValue(new Error('Loading failed'));
-    
-    const { result } = renderHook(() => useTaskViewModel());
-    
-    await act(async () => {
-      await Promise.resolve();
+  if (DATA_FETCH_MODE === "useEffect") {
+    it('should handle task loading error', async () => {
+      mockGetTasksDBRows.mockRejectedValue(new Error('Loading failed'));
+      
+      const { result } = renderHook(() => useTaskViewModel());
+      
+      await act(async () => {
+        await Promise.resolve();
+      });
+      
+      expect(result.current.tasks).toEqual([]);
+      expect(result.current.loading).toBe(false);
     });
-    
-    expect(result.current.tasks).toEqual([]);
-    expect(result.current.loading).toBe(false);
-  });
+  }
 
   it('should seed tasks database', async () => {
     mockGetTasksDBRows.mockResolvedValue([]);

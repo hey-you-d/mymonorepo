@@ -2,6 +2,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
+import { TASKS_BFF_BASE_API_URL, DATA_FETCH_MODE } from "../../../constants/tasksBff";
 
 export const useTaskViewModel = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -102,7 +103,9 @@ export const useTaskViewModel = () => {
   
   // first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {
-    getTasksDBRows();
+    if (DATA_FETCH_MODE === "useEffect") {
+      getTasksDBRows();
+    }
   }, [getTasksDBRows]);
   
   return {

@@ -5,7 +5,6 @@ import useSWR, { mutate } from 'swr';
 import { TASKS_BFF_BASE_API_URL, DATA_FETCH_MODE } from "../../../constants/tasksBff";
 
 const fetcher = async () => {
-    console.log("URL ", TASKS_BFF_BASE_API_URL);
     try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/`, {
             method: 'GET',
