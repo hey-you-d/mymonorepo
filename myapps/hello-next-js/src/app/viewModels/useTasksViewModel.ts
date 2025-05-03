@@ -2,7 +2,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
-import { TASKS_BFF_BASE_API_URL, DATA_FETCH_MODE } from "../../../constants/tasksBff";
+import { DATA_FETCH_MODE } from "../../../constants/tasksBff";
 
 export const useTaskViewModel = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

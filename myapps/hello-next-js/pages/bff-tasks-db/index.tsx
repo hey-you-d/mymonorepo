@@ -22,7 +22,6 @@ const BffTasksDB = ({ fallback }: Props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  // for SSR demo purpose
   if (DATA_FETCH_MODE === "getServerSideProps") {
     const taskModel = new TaskModel();
     const tasks = await taskModel.getTasksDBRows();
@@ -35,6 +34,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
     };
   }
 
+  // Dev note: A workaround to retain the getServerSideProps In case the taskModel.getTasksDBRows() is 
+  // called within the useEffect in the react hook (viewmodel component), hence 
+  // demonstrating CSR instead of SSR data fetching
   return {
     props: {
       fallback: {

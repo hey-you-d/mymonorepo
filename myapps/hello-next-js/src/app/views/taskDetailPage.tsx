@@ -1,12 +1,14 @@
 // The View connects the ViewModel and UI component
 import { useState, useEffect } from 'react';
-import { useTaskViewModel } from '../viewModels/useTasksViewModel';
+//import { useTaskViewModel } from '../viewModels/useTasksViewModel';
+import { useTaskViewModelWithSwr } from '../viewModels/useTasksViewModelWithSwr';
 import { TaskDetail } from '../components/TaskDetail';
 import { Task } from '@/app/types/Task';
 
 export const TaskDetailPage = ({id}: {id: number}) => {
-  const { tasks, loading, deleteRowFromId } = useTaskViewModel();
-  
+  //const { tasks, loading, deleteRowFromId } = useTaskViewModel();
+  const { tasks, loading, deleteRowFromId } = useTaskViewModelWithSwr();
+
   const [row, setRow] = useState<Task | undefined>(undefined);
 
   useEffect(() => {

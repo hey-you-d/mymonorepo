@@ -6,12 +6,12 @@ import { MONOREPO_PREFIX } from "../../../constants/common";
 
 type TaskTableType = {
     row: Task,
-    tasks: Task[],
+    tasks: Task[] | undefined,
     deleteRowFromId: (id: number) => Promise<void>,
 }
 
 export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
-    if (tasks.length <= 0) {
+    if (tasks && tasks.length <= 0) {
         // a delete row operation has just been performed by calling the deleteRowFromId().
         // recall, the deleteRowFromId will set the tasks state to [] upon successful delete op.
         // redirect back to the table page

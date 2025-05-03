@@ -1,6 +1,12 @@
 import { DataFetchModeType } from "@/app/types/Task";
 
+const DOMAIN_URL = process.env.NODE_ENV === "production"
+    ? "https://www.yudimankwanmas.com"
+    : "http://localhost:3000";
+export const BASE_URL = `${DOMAIN_URL}/hello-next-js`;
+
 //export const DATA_FETCH_MODE: DataFetchModeType = "useEffect";
-//export const TASKS_BFF_BASE_API_URL = "/api/tasks/v1/sql";
 export const DATA_FETCH_MODE: DataFetchModeType = "getServerSideProps";
-export const TASKS_BFF_BASE_API_URL = `http://localhost:3000/hello-next-js/api/tasks/v1/sql`;
+
+export const TASKS_BFF_BASE_API_URL = 
+    `${["getServerSideProps"].includes(DATA_FETCH_MODE) ? BASE_URL : ""}/api/tasks/v1/sql`;

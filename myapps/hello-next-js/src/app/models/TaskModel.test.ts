@@ -1,5 +1,5 @@
 import { TaskModel } from './TaskModel';
-import { DATA_FETCH_MODE } from "../../../constants/tasksBff";
+import { DATA_FETCH_MODE, BASE_URL } from "../../../constants/tasksBff";
 
 // Define mock response type
 type MockResponse = {
@@ -13,7 +13,7 @@ describe('TaskModel', () => {
   let taskModel: TaskModel;
   let spyConsoleError: jest.SpyInstance<any, any>;
 
-  const url = DATA_FETCH_MODE === "getServerSideProps" ? "http://localhost:3000/hello-next-js" : "";
+  const url = DATA_FETCH_MODE === "getServerSideProps" ? BASE_URL : "";
   
   // Helper function to create mock responses
   const mockResponse = (ok: boolean, data: any): MockResponse => ({
