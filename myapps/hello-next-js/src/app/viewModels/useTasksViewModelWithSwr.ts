@@ -2,9 +2,10 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
 import useSWR, { mutate } from 'swr';
-import { TASKS_BFF_BASE_API_URL } from "../../../constants/tasksBff";
+import { TASKS_BFF_BASE_API_URL, DATA_FETCH_MODE } from "../../../constants/tasksBff";
 
 const fetcher = async () => {
+    console.log("URL ", TASKS_BFF_BASE_API_URL);
     try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/`, {
             method: 'GET',
@@ -116,7 +117,9 @@ export const useTaskViewModelWithSwr = () => {
 
   // first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {
-    getTasksDBRows();
+    if (DATA_FETCH_MODE === "useEffect") {
+      getTasksDBRows();
+    }
   }, [getTasksDBRows]);
 
   return {

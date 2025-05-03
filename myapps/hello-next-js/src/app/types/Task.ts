@@ -5,3 +5,5 @@ export type Task = {
     completed: boolean,
     created_at: string
 }
+
+export type DataFetchModeType = "getServerSideProps" | "useEffect";

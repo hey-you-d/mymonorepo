@@ -6,6 +6,7 @@ import { AxiosInstance } from 'axios';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { UserModel } from '../models/UserModel';
 import { User } from '../types/User';
+import { DATA_FETCH_MODE } from '../../../constants/tasksBff';
 
 export const useUserViewModel = (apiClient: AxiosInstance, userId: string) => {
   const [user, setUser] = useState<User | null>(null);
@@ -28,7 +29,9 @@ export const useUserViewModel = (apiClient: AxiosInstance, userId: string) => {
   }, [userId, userModel]);
 
   useEffect(() => {
-    fetchUser();
+    if (DATA_FETCH_MODE === "useEffect") {
+      fetchUser();
+    }
   }, [userId, fetchUser]);
 
   return {
