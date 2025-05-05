@@ -35,7 +35,7 @@
 * Scale Down effect: will be served with 503 page
 * Scale Up effect: the site is up and running
 
-More info: [README](https://github.com/hey-you-d/mymonorepo/blob/dev/copilot/mymonorepo-svc-lb-hello-next-js-trial-1-prod/overrides/README.md)
+hint: This was done via ECS Auto Scaling Configuration in ECS Console
 
 ## Dev Sites Availability
 * All dev sites will be scaled down 24/7. No Load balanced web services will be run when scaled down, hence users will be presented with the 503 "Service not available" page. 
