@@ -22,7 +22,15 @@
 ## Links
 1. [Prod site - hello-react-js](https://www.yudimankwanmas.com)
 2. [Prod site - hello-next-js](https://www.yudimankwanmas.com/hello-next-js) 
-3. ~~[Staging site - hello-react-js](https://stg.yudimankwanmas.com)~~ (removed to reduce the maintenance cost)
-4. ~~[Staging site - hello-next-js](https://stg.yudimankwanmas.com/hello-next-js)~~ (removed to reduce the maintenance cost)
-5. [Development site - hello-react-js](https://dev.yudimankwanmas.com)
-6. [Development site - hello-next-js](https://dev.yudimankwanmas.com/hello-next-js) 
+3. [Development site - hello-react-js](https://dev.yudimankwanmas.com)
+4. [Development site - hello-next-js](https://dev.yudimankwanmas.com/hello-next-js) 
+
+## Availability
+| Time (AEST)         | Time (UTC)         | Action     |
+| :------------------ | :----------------: | ---------: |
+| Mon–Fri 9 AM        | Sun–Thu 23:00 UTC  | Scale up   |
+| Mon–Fri 9 PM        | Mon–Fri 11:00 UTC  | Scale down |
+| Sat & Sun All Day   | Sat–Sun            | Scale down |
+
+Scale Down effect: will be served with 503 page
+Scale Up effect: the site is up and running
