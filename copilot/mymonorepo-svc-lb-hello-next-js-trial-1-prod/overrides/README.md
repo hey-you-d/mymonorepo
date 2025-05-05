@@ -24,8 +24,8 @@ Patches are applied in the order specified in the file.
 | Mon–Fri 9 PM        | Mon–Fri 11:00 UTC  | Scale down |
 | Sat & Sun All Day   | Sat–Sun            | Scale down |
 
-Scale Down effect: will be served with 503 page
-Scale Up effect: the site is up and running
+* Scale Down effect: will be served with 503 page
+* Scale Up effect: the site is up and running
 
 ### Explanation:
 As of AWS Copilot v1.34, scheduled scaling is not directly supported within the manifest.yml file.
