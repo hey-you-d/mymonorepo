@@ -38,5 +38,5 @@
 hint: This was done via ECS Auto Scaling Configuration in ECS Console
 
 ## Dev Sites Availability
-* All dev sites will be scaled down 24/7. No Load balanced web services will be run when scaled down, hence users will be presented with the 503 "Service not available" page. 
-* This is achieved by running a bash script which will be able to scale up each site on-demand as well. 
+* All dev sites are scaled down 24/7. No Load balanced web services are running when scaled down. Site visitors  will be presented with the 503 "Service not available" page instad. 
+* This is achieved by running a bash script which will be able to scale up each site as well (on-demand basis). 
