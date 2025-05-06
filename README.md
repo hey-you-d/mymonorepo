@@ -5,7 +5,7 @@
 **-- STATUS: FULFILLED**
 2. Explore the current-trend of microservice architecture, and backend / server-side API development with Node.JS (Next.JS) 
 **-- STATUS: WIP**
-3. Explore the current-trend of microservice architecture, and backend / server-side API development with non-Node.JS based framework (.NET Core) 
+3. Explore the current-trend of microservice architecture, and backend / server-side API development with non-Node.JS based framework (candidate: .NET Core) 
 **-- STATUS: TODO**   
 
 ## Infra: Covered tech stacks
@@ -14,7 +14,7 @@
 3. CDN Service with AWS Cloudfront
 4. DNS with Cloudflare
 6. CI/CD implementation with Github Action
-6. Sample front-end pages/projects (as part of the monorepo setup): Next.js, React.js with Vite, React.js with CRA 
+7. Demo front-end pages/projects (as part of the monorepo setup): Next.js, React.js with Vite, React.js with CRA 
 
 ## Backend for Frontend (BFF) Demo with Next.js
 [README](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md)
@@ -27,7 +27,7 @@
 
 ## Prod Sites Availability
 | Time (AEST)         | Time (UTC)         | Action     |
-| :------------------ | :----------------: | ---------: |
+| :------------------ | :----------------- | :--------- |
 | Mon–Fri 9 AM        | Sun–Thu 23:00 UTC  | Scale up   |
 | Mon–Fri 9 PM        | Mon–Fri 11:00 UTC  | Scale down |
 | Sat & Sun All Day   | Sat–Sun            | Scale down |
@@ -38,5 +38,5 @@
 hint: This was done via ECS Auto Scaling Configuration in ECS Console
 
 ## Dev Sites Availability
-* All dev sites are scaled down 24/7. No Load balanced web services are running when scaled down. Site visitors  will be presented with the 503 "Service not available" page instad. 
-* This is achieved by running a bash script which will be able to scale up each site as well (on-demand basis). 
+* All dev sites are scaled down 24/7. No Load balanced web services are running when scaled down. Site visitors  will be presented with the 503 "Service is temporarily not available" page instead. 
+* All dev sites will be scaled-up on an on-demand basis. 
