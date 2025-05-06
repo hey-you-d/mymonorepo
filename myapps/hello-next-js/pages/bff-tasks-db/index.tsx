@@ -25,7 +25,7 @@ const BffTasksDB = ({ fallback }: InferGetServerSidePropsType<typeof getServerSi
     : body;
 };
 
-const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   if (DATA_FETCH_MODE === "getServerSideProps") {
     const tasks = await (new TaskModel()).getTasksDBRows();
     return {

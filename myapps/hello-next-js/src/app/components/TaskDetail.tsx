@@ -18,7 +18,7 @@ export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
         window.location.href=`${MONOREPO_PREFIX}/bff-tasks-db`;
     }
 
-    const renderedDetail = (
+    return (
         <>
             <p>id: {row.id}</p>
             <p>title: {row.title}</p>
@@ -26,10 +26,5 @@ export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
             <p>completed? {row.completed ? "yes" : "no"}</p>
             <div><button type="button" onClick={() => deleteRowFromId(Number(row.id))}>Delete this record</button></div>
         </>
-    );
-    let renderedBody: React.ReactElement[] = [];
-    row && row.id && renderedBody.push(renderedDetail);
-    renderedBody.push(<hr/>);
-
-    return renderedBody;    
+    );    
 };

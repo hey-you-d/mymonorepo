@@ -22,7 +22,7 @@ export const TaskDetailPage = ({id}: {id: number}) => {
 
   if (loading) return <p>Loading...</p>;
 
-  let body: React.ReactElement[] = []
+  const body: React.ReactElement[] = []
   body.push(row 
     ? <TaskDetail row={row} tasks={tasks} deleteRowFromId={deleteRowFromId} /> 
     : <p>{`The record ${id} is no longer exist`}</p>);

@@ -3,7 +3,7 @@ import Layout from "../../../components/Layout";
 import { TaskDetailPage } from "@/app/views/taskDetailPage";
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-const BffTasksDB = ({ fallback }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const BffTasksDB = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const { id } = router.query;
 
@@ -15,7 +15,7 @@ const BffTasksDB = ({ fallback }: InferGetServerSidePropsType<typeof getServerSi
     );
 }
 
-const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {}, // skip SSR, that means getTasksDBRows() is called with useEffect (CSR approach)
   };
