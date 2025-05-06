@@ -33,9 +33,11 @@ export const TaskGraphQLPage = () => {
             }
           `);
           setTasks(data.tasks);
-        } catch (e: any) {
-          console.error("ERROR", e);
-          setError(typeof e === 'object' && e?.message ? `error: ${e.message}` : 'Something went wrong');
+        } catch (e) {
+          if (e instanceof Error) {
+            console.error("ERROR", e);
+            setError(e.message ? `error: ${e.message}` : 'Something went wrong');
+          }
         } finally {
           setLoading(false);
         }
@@ -45,7 +47,7 @@ export const TaskGraphQLPage = () => {
     }, []);
         
     if (loading) return <p>Loading...</p>;
-    //if (error) return <p>Error: {error}</p>; // TODO
+    if (error) return <p>Error: {error}</p>; // TODO
 
     const createRow = async(title: string, detail: string) => {
         const mutation = `
@@ -115,7 +117,7 @@ export const TaskGraphQLPage = () => {
     }
 
     const updateRowFromId = async(id: number, title: string, detail: string, completed: boolean) => {
-
+      console.log("TODO ", id, title, detail, completed);
     }
 
     console.log("Tasks ", tasks);

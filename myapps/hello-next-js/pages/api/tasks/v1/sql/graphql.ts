@@ -19,11 +19,11 @@ const typeDefs = gql`
     }
 
     type Mutation {
-        createTask(title: String!, detail: String!): Task
-        deleteTask(id: ID!): Task
-        deleteTasks: [Task]
+        createTask(title: String!, detail: String!): Task!
+        deleteTask(id: ID!): Task!
+        deleteTasks: [Task!]!
         seedTasks: [Task!]!
-        updateTask(id: ID!, title: String!, detail: String!, completed: Boolean!): Task
+        updateTask(id: ID!, title: String!, detail: String!, completed: Boolean!): Task!
     }
 `;
 
@@ -33,27 +33,27 @@ const resolvers = {
             const res = await db.query('SELECT * FROM tasks ORDER BY id DESC');
             return res.rows;
         },
-        task: async (_: any, { id }: { id: Task['id'] }) => {
+        task: async (_: unknown, { id }: { id: Task['id'] }) => {
             const res = await db.query('SELECT * FROM tasks WHERE id = $1', [id]);
             return res.rows[0];
         },
     },
     Mutation: {
-        createTask: async (_: any, { title, detail }: Task) => {
+        createTask: async (_: unknown, { title, detail }: Task) => {
             const res = await db.query(
                 'INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *', 
                 [title, detail]
             );
             return res.rows[0];
         },
-        updateTask: async (_: any, { id, title, detail, completed }: Task) => {
+        updateTask: async (_: unknown, { id, title, detail, completed }: Task) => {
             const res = await db.query(
                 'UPDATE tasks SET title = $1, detail = $2, completed = $3 WHERE id = $4 RETURNING *', 
                 [title, detail, completed, id]
             );
             return res.rows[0];
         },
-        deleteTask: async (_: any, { id }: { id: Task['id'] }) => {
+        deleteTask: async (_: unknown, { id }: { id: Task['id'] }) => {
             const res = await db.query('DELETE FROM tasks WHERE id = $1 RETURNING *', [id]);
             return res.rows[0];
         },
@@ -61,7 +61,7 @@ const resolvers = {
             const res = await db.query('DELETE FROM tasks RETURNING *', []);
             return res.rows;
         },
-        seedTasks: async (_: any, {}) => {
+        seedTasks: async (_: unknown, {}) => {
             const res = await db.query(`INSERT INTO tasks (title, detail) VALUES ${placeholders} RETURNING *`, 
                 values);
             //const res = await db.query(`INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *`, 
