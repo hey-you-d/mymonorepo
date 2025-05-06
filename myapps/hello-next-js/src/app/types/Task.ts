@@ -6,4 +6,4 @@ export type Task = {
     created_at: string
 }
 
-export type DataFetchModeType = "getServerSideProps" | "useEffect";
+export type DataFetchModeType = "getStaticPaths" | "getStaticProps" | "getServerSideProps" | "useEffect";

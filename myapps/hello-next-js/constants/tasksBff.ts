@@ -9,4 +9,6 @@ export const BASE_URL = `${DOMAIN_URL}/hello-next-js`;
 export const DATA_FETCH_MODE: DataFetchModeType = "getServerSideProps";
 
 export const TASKS_BFF_BASE_API_URL = 
-    `${["getServerSideProps"].includes(DATA_FETCH_MODE) ? BASE_URL : ""}/api/tasks/v1/sql`;
+    `${["getServerSideProps", "getStaticPaths", "getStaticProps"].includes(DATA_FETCH_MODE) 
+        ? BASE_URL 
+        : ""}/api/tasks/v1/sql`;

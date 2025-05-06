@@ -3,6 +3,7 @@
 import React from 'react';
 import { Task } from "../types/Task";
 import { MONOREPO_PREFIX } from "../../../constants/common";
+import Link from "next/link";
 
 type TaskTableType = {
     row: Task,
@@ -18,8 +19,7 @@ export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
         window.location.href=`${MONOREPO_PREFIX}/bff-tasks-db`;
     }
 
-    return row && row.id ? 
-    (
+    const renderedDetail = (
         <>
             <p>id: {row.id}</p>
             <p>title: {row.title}</p>
@@ -27,5 +27,10 @@ export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
             <p>completed? {row.completed ? "yes" : "no"}</p>
             <div><button type="button" onClick={() => deleteRowFromId(Number(row.id))}>Delete this record</button></div>
         </>
-    ) : <p>None</p>
+    );
+    let renderedBody: React.ReactElement[] = [];
+    row && row.id && renderedBody.push(renderedDetail);
+    renderedBody.push(<div><Link href={`${MONOREPO_PREFIX}/bff-tasks-db`}>Back to the table page</Link></div>);
+
+    return renderedBody;    
 };

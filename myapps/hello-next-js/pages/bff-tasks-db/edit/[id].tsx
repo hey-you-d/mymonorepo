@@ -1,15 +1,17 @@
 import { useRouter } from 'next/router';
 import Layout from "../../../components/Layout";
 import { TaskDetailPage } from "@/app/views/taskDetailPage";
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { SWRConfig } from 'swr';
-import { Task } from '@/app/types/Task';
+//import { Task } from '@/app/types/Task';
 
-type Props = {
-  fallback: Record<string, Task[]>;
-};
+//type Props = {
+//  fallback: Record<string, Task[]>;
+//};
 
-const BffTasksDB = ({ fallback }: Props) => {
+// dev note: alternatively...
+//const BffTasksDB = ({ fallback }: Props) => {
+const BffTasksDB = ({ fallback }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
     const { id } = router.query;
 
@@ -23,7 +25,7 @@ const BffTasksDB = ({ fallback }: Props) => {
     );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+const getServerSideProps: GetServerSideProps = async () => {
   // Dev note: A workaround to retain the getServerSideProps In case the taskModel.getTasksDBRows() is 
   // called within the useEffect in the react hook (viewmodel component), hence 
   // demonstrating CSR instead of SSR data fetching
