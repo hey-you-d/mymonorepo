@@ -14,10 +14,10 @@ const tasks = [
     { title: 'Private Networking', detail: 'optional - use a private VPC + internal load balancer setup in Copilot' },
 ];
     
-const values = tasks.flatMap(t => [t.title, t.detail]);
+export const values = tasks.flatMap(t => [t.title, t.detail]);
 // DEV NOTE: expected output of the placeholders var:
 // '($1, $2), ($3, $4), ($5, $6), ($7, $8), ($9, $10), ... '
-const placeholders = tasks
+export const placeholders = tasks
     .map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`)
     .join(', ');
 
