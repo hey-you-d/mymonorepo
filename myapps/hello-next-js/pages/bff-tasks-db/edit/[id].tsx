@@ -26,9 +26,6 @@ const BffTasksDB = ({ fallback }: InferGetServerSidePropsType<typeof getServerSi
 }
 
 const getServerSideProps: GetServerSideProps = async () => {
-  // Dev note: A workaround to retain the getServerSideProps In case the taskModel.getTasksDBRows() is 
-  // called within the useEffect in the react hook (viewmodel component), hence 
-  // demonstrating CSR instead of SSR data fetching
   return {
     props: {
       fallback: {
