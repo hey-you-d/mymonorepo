@@ -16,6 +16,7 @@ export const TaskGraphQLPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    // with graphql, lets use CSR instead of SSR for now
     useEffect(() => {
       const loadTasks = async () => {
         setError(null);
@@ -117,10 +118,30 @@ export const TaskGraphQLPage = () => {
     }
 
     const updateRowFromId = async(id: number, title: string, detail: string, completed: boolean) => {
-      console.log("TODO ", id, title, detail, completed);
+      const mutation = `
+        mutation UpdateTask($id: ID!, $title: String!, $detail: String!, $completed: Boolean!) {
+          updateTask(id: $id, title: $title, detail: $detail, completed: $completed) {
+            id
+            title
+            detail
+            completed
+            created_at
+          }
+        }
+      `;
+
+      try {
+        const variables = { id, title, detail, completed };
+        const data = await fetchGraphQL(mutation, variables);
+        // dev note: update only the changed task in the list
+        setTasks(prev =>
+          prev.map(task => (task.id === data.updateTask.id ? data.updateTask : task))
+        );
+      } catch (err) {
+        console.error(err);
+      }
     }
 
-    console.log("Tasks ", tasks);
     return tasks && (
         <>
             <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTaskDB} deleteAllRows={deleteAllRows} />

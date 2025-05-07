@@ -38,6 +38,8 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
                 createRow(inputTitleRef.current.value, inputDetailRef.current.value);
+                inputTitleRef.current.value = "";
+                inputDetailRef.current.value = "";
         } else {
             // TODO: red border styling
         }
