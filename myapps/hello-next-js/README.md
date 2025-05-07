@@ -56,7 +56,7 @@ yarn workspace hello-next-js dev
 4. Client-side Caching implementation with SWR - **STATUS: DONE** - module: [https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts)
 5. Server-side Caching implementation with Redis - **STATUS: TODO** 
 6. Swagger Doc integration - **STATUS: DONE** - URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger)
-7. Apollo GraphQL to consume the API - **STATUS: Release Candidate** - URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql) 
+7. Apollo GraphQL to consume the API - **STATUS: WIP** - URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql) 
 8. A feature relying on an event-driven system using Apache Kafka - **STATUS: TO DO**
 
 #### Remote site demo (Prod & Dev branches)
