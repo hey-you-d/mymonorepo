@@ -21,8 +21,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
-    const chkBoxHandler = (e: React.MouseEvent,id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
-        e.preventDefault();
+    const chkBoxHandler = (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         updateRowFromId(id, title, detail, !isCurrentlySelected);
     }
 
@@ -38,30 +37,32 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
                 createRow(inputTitleRef.current.value, inputDetailRef.current.value);
+                inputTitleRef.current.value = "";
+                inputDetailRef.current.value = "";
         } else {
-            // TODO: red border styling
+            // TODO: visual indicator - e.g. red border styling
         }
     }, [createRow]);
 
     const tBody = (): React.ReactElement[] => {
-        console.log("tBody ", tasks);
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
             
             tasks.forEach(aTask => {
-                const checkbox = aTask.completed 
-                    ? <input type="checkbox" id={`chkbox-${aTask.id}`} checked 
-                        onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, true)} />
-                    : <input type="checkbox" id={`chkbox-${aTask.id}`} 
-                        onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, false)} />
-    
+                // make checkbox uncontrolled
+                const checkbox = (
+                    <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
+                            onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />);
+                
+                const button = (<button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>);    
+
                 output.push(
                     <tr key={aTask.id}>
                         <td>{aTask.id}</td>
                         <td>{aTask.title}</td>
                         <td>{aTask.detail}</td>
                         <td>{checkbox}</td>
-                        <td><button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button></td>
+                        <td>{button}</td>
                     </tr>
                 );
             });
@@ -69,7 +70,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
             return output;
         } 
 
-        return[(
+        return [
             <tr key="random string here">
                 <td>-</td>
                 <td>-</td>
@@ -77,64 +78,59 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
                 <td>-</td>
                 <td>-</td>
             </tr>
-        )];
+        ];
     }
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
-        const output: React.ReactElement[] = [];
-        
-        output.push(<td>new todo:</td>);
-        if (!isDisabled) {
-            output.push(
-                <>
-                    <td><input type="text" ref={inputTitleRef} placeholder="Title" /></td>
-                    <td><input type="text" ref={inputDetailRef} placeholder="Description" /></td>
-                    <td><button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button></td>
-                </>
-            );
-        } else {
-            output.push(
-                <>
-                    <td><input type="text" placeholder="Title" disabled></input></td>
-                    <td><input type="text" placeholder="Description" disabled></input></td>
-                    <td><button disabled type="button">add</button></td>
-                </>
-            );
-        }
+        const inputForTitle = !isDisabled
+            ? <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />
+            : <input type="text" placeholder="Title" defaultValue="" disabled></input>;
 
-        return output;
+        const inputForDetail = !isDisabled
+            ? <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />
+            : <input type="text" placeholder="Description" defaultValue="" disabled></input>;
+
+        const button = !isDisabled
+            ? <button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button>
+            : <button disabled type="button">add</button>;
+
+        return ([
+            <>
+                <td>Add new task:</td>
+                <td>{inputForTitle}</td>
+                <td>{inputForDetail}</td>
+                <td></td>
+                <td>{button}</td>
+            </>
+        ]);
     }, [addNewTodoHandler]);
 
     const tFooter = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
             
-            output.push(
-                <>
-                    <tr>
-                        <td>Total Rows:</td>
-                        <td>{tasks.length}</td>
-                    </tr>
-                    <tr>
-                        {renderAddRowForm(false)}
-                    </tr>
-                </>
-            );
+            return [
+                <tr key="some-total-rows">
+                    <td>Total Rows:</td>
+                    <td>{tasks.length}</td>
+                </tr>,
+                <tr key="add-row-disabled">
+                    {renderAddRowForm(false)}
+                </tr>,
+            ];
 
             return output;
         } 
 
-        return[(
-            <>
-                <tr>
-                    <td>Total Rows:</td>
-                    <td>0</td>
-                </tr>
-                <tr>
-                    {renderAddRowForm(true)}
-                </tr>
-            </>
-        )];
+        return [
+            <tr key="zero-total-row">
+                <td>Total Rows:</td>
+                <td>0</td>,
+            </tr>,
+            <tr key="add-row-enabled">
+                {renderAddRowForm(true)}
+            </tr>,
+        ];
     };
 
     return (

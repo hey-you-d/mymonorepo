@@ -14,7 +14,8 @@ export default function Home() {
     mvvmFetchAxios: { title: "MVVM Pattern/Fetching with Axios", href: "mvvm-fetch-axios" },
     mvvmSagaRedux: { title: "MVVM Pattern/Redux Saga", href:"mvvm-redux-saga" },
     exampleMySharedUI: { title: "Example/My Shared UI package", href:"example-my-shared-ui" },
-    bffTasksPostgreDB: { title: "BFF/Tasks CRUD with PostgreSQL", href:"bff-tasks-db" },   
+    bffTasksPostgreDB: { title: "BFF/Tasks CRUD with PostgreSQL", href:"bff-tasks-db" },
+    bffTasksGraphQL: { title: "BFF/Tasks CRUD with PostgreSQL (Apollo GraphqQL)", href:"bff-tasks-db/graphql" },   
   }
 
   const renderedLinks: ReactElement[] = [];
