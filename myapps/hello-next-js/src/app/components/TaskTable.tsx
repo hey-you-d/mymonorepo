@@ -45,7 +45,6 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
     }, [createRow]);
 
     const tBody = (): React.ReactElement[] => {
-        //console.log("tBody ", tasks);
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
             
