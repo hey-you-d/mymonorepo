@@ -57,7 +57,7 @@ yarn workspace hello-next-js dev
 5. Server-side Caching implementation with Redis - **STATUS: TODO** 
 6. Swagger Doc integration - **STATUS: DONE** - URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 
 7. Apollo GraphQL to consume the API - **STATUS: TODO**
-8. [optional]Websocket demo - **STATUS: TO BE DETERMINED**
+8. A feature relying an event-driven system using Apache Kafka - **STATUS: TO DO**
 
 #### Remote site demo (Prod & Dev branches)
 - **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db) 

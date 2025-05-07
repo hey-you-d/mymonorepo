@@ -76,29 +76,71 @@ jobs:
         #  aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
         #  docker login --username AWS --password-stdin $ECR_REGISTRY
 
-      - name: Build, tag,& push docker image
-        env: 
+      - name: Build, tag, & push docker image (DEV)
+        if: github.ref == 'refs/heads/dev'
+        env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_HELLO_REACT_JS_DEV }}
           DOCKERFILE: "dockerfile_nginx"
         run: |
-          echo "Building image: $ECR_REGISTRY/$ECR_REPOSITORY:latest "
+          echo "ECR_REGISTRY=$ECR_REGISTRY" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
+          echo "DEPLOY_ENV=development" >> $GITHUB_ENV
+      
+          echo "Building image: $ECR_REGISTRY/$ECR_REPOSITORY:latest"
           docker build -f $DOCKERFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-
+      
           echo "Verifying build image..."
           docker images | grep $ECR_REGISTRY/$ECR_REPOSITORY || echo "tagged image not found!"
+      
+          echo "Pushing the image..."
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest    
 
-          echo "Pushing the following image to ECR: $ECR_REGISTRY/$ECR_REPOSITORY:latest"
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest 
+      - name: Build, tag, & push docker image (PROD)
+        if: github.ref == 'refs/heads/master'
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_HELLO_REACT_JS_PROD }}
+          DOCKERFILE: "dockerfile_nginx"
+        run: |
+          echo "ECR_REGISTRY=$ECR_REGISTRY" >> $GITHUB_ENV
+          echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
+          echo "DEPLOY_ENV=development" >> $GITHUB_ENV
+      
+          echo "Building image: $ECR_REGISTRY/$ECR_REPOSITORY:latest"
+          docker build -f $DOCKERFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+      
+          echo "Verifying build image..."
+          docker images | grep $ECR_REGISTRY/$ECR_REPOSITORY || echo "tagged image not found!"
+      
+          echo "Pushing the image..."
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest    
 
       - name: Deploy to Amazon Copilot 
         run: |
           curl -Lo copilot-cli https://github.com/aws/copilot-cli/releases/latest/download/copilot-linux
           chmod +x copilot-cli
           sudo mv copilot-cli /usr/local/bin/copilot
+
+      - name: Deploy to Amazon Copilot (DEV)
+        if: github.ref == 'refs/heads/dev'
+        run: |
           echo "Deploying to the following environment: $DEPLOY_ENV"
-          copilot svc deploy --name ${{ secrets.ECS_SERVICE }} --env $DEPLOY_ENV \
-          --force -- image $ECR_REGISTRY/$ECR_REPOSITORY:latest #pass explicit image     
+          copilot svc deploy \
+            --name ${{ secrets.ECS_SERVICE_HELLO_REACT_JS_DEV }} \
+            --env $DEPLOY_ENV \
+            --force \
+            -- image $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Deploy to Amazon Copilot (PROD)
+        if: github.ref == 'refs/heads/master'
+        run: |
+          echo "Deploying to the following environment: $DEPLOY_ENV"
+          copilot svc deploy \
+            --name ${{ secrets.ECS_SERVICE_HELLO_REACT_JS_PROD }} \
+            --env $DEPLOY_ENV \
+            --force \
+            -- image $ECR_REGISTRY/$ECR_REPOSITORY:latest   
 
 
 
