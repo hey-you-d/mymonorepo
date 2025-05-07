@@ -124,6 +124,9 @@ jobs:
 
       - name: Deploy to Amazon Copilot (DEV)
         if: github.ref == 'refs/heads/dev'
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_HELLO_REACT_JS_DEV }}
         run: |
           echo "Deploying to the following environment: $DEPLOY_ENV"
           copilot svc deploy \
@@ -134,6 +137,9 @@ jobs:
 
       - name: Deploy to Amazon Copilot (PROD)
         if: github.ref == 'refs/heads/master'
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_HELLO_REACT_JS_PROD }}
         run: |
           echo "Deploying to the following environment: $DEPLOY_ENV"
           copilot svc deploy \
