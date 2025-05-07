@@ -97,7 +97,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest    
 
       - name: Build, tag, & push docker image (PROD)
-        if: github.ref == 'refs/heads/dev'
+        if: github.ref == 'refs/heads/master'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_HELLO_REACT_JS_PROD }}
