@@ -10,14 +10,15 @@ type: Load Balanced Web Service
 http:
   # Requests to this path will be forwarded to your service.
   # To match all requests you can use the "/" path.
-  path: 'mymonorepo-svc-lb-trial-1-prod'
+  path: '/'
   # You can specify a custom health check path. The default is "/".
   # healthcheck: '/'
 
 # Configuration for your containers and service.
 image:
   # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#image-build
-  build: dockerfile_nginx
+  # get the docker image from the ECR instead
+  location: 120569641426.dkr.ecr.us-east-1.amazonaws.com/mymonorepo-app-trial-1/mymonorepo-svc-lb-hello-react-js-trial-1-prod:latest
   # Port exposed through your container to route traffic to it.
   port: 80
 
