@@ -38,7 +38,7 @@ Covered Tech Stacks:
 - Query Language: SQL and GraphQL
 - Authentication: JWT-based auth
 - Client-side Caching: SWR
-- Server-side Caching: Redis 
+- Server-side Caching: To be determined. 
 - Documentation: Swagger
 - Unit Test: Jest
 
@@ -49,15 +49,20 @@ Covered Tech Stacks:
 yarn workspace hello-next-js dev
 ```
 - **STATUS: WIP**
-1. Core API Endpoint implementation - **STATUS: DONE**
-2. Barebones frontend implementation with unit test - **STATUS: DONE** - URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
+1. Core API Endpoint implementation - **STATUS: DONE**  
+endpoints: [https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api) 
+2. Barebones frontend implementation with unit test - **STATUS: DONE**  
+URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
 3. API Authentication with JWT-based auth - **STATUS: TODO**
 4. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
-4. Client-side Caching implementation with SWR - **STATUS: DONE** - module: [https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts)
+5. Client-side Caching implementation with SWR - **STATUS: DONE**  
+component: [https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts)
 5. Server-side Caching implementation with Redis - **STATUS: TODO** 
-6. Swagger Doc integration - **STATUS: DONE** - URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger)
-7. Apollo GraphQL to consume the API - **STATUS: WIP** - URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql) 
-8. A feature relying on an event-driven system using Apache Kafka - **STATUS: TO DO**
+6. Swagger Doc integration - **STATUS: DONE**  
+URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger)
+7. alternative data query with Apollo GraphQL **STATUS: DONE**  
+URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql) 
+8. A feature relying on an event-driven system using Apache Kafka - **STATUS: TODO**
 
 #### Remote site demo (Prod & Dev branches)
 - **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db) 
@@ -110,4 +115,7 @@ yarn workspace hello-next-js dev
 
 7. The URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
 
-8. The Swagger Doc URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 
+8. The GraphQL version URL: [localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql)
+
+
+9. The Swagger Doc URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 

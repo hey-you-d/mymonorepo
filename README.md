@@ -8,7 +8,8 @@
 3. Explore the current-trend of microservice architecture, and backend / server-side API development with non-Node.JS based framework (candidate: .NET Core) 
 **-- STATUS: TODO**   
 
-## Infra: Covered tech stacks
+## Infrastructure
+### Tech stacks
 1. Monorepo setup with yarn workspace
 2. Serverless deployment with Docker, ECR, ECS, Copilot with Fargate Launch Type, ALB, CloudFormation
 3. CDN Service with AWS Cloudfront
@@ -17,7 +18,17 @@
 7. Demo front-end pages/projects (as part of the monorepo setup): Next.js, React.js with Vite, React.js with CRA 
 
 ## Backend for Frontend (BFF) Demo with Next.js
-[README](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md)
+Setup & Progress: [README](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md)
+
+### Tech stacks
+1. Backend framework: Next.JS API
+2. RDBMS: PostgreSQL DB
+3. Query Language: direct SQL and via Apollo GraphQL
+4. Authentication: JWT-based auth
+5. Client-side Caching: Vercel SWR
+6. Server-side Caching: To be determined. 
+7. Documentation: Swagger API Doc.
+8. Unit Test: Jest Testing Framework.
 
 ## Links
 1. [Production site - hello-react-js](https://www.yudimankwanmas.com)
