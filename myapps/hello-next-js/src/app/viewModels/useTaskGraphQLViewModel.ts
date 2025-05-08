@@ -27,7 +27,6 @@ export const useTaskGraphQLViewModel = () => {
                 setTasks(data.tasks);
             } catch (e) {
                 if (e instanceof Error) {
-                    console.error("ERROR", e);
                     setError(e.message ? `error: ${e.message}` : 'Something went wrong');
                 }
             } finally {
@@ -58,29 +57,33 @@ export const useTaskGraphQLViewModel = () => {
             // This ensures the update works even if multiple tasks are added quickly, 
             // preventing race conditions from stale closures.
             setTasks(prev => [data.createTask, ...prev]);
-            } catch (err) {
-            console.error(err);
+        } catch (e) {
+            if (e instanceof Error) {
+                setError(e.message ? `error: ${e.message}` : 'Something went wrong');
+            }
         }
     }
     
     const deleteAllRows = async() => {
         const mutation = `
-          mutation DeleteTasks {
-            deleteTasks {
-              id
-              title
-              detail
-              completed
-              created_at
+            mutation DeleteTasks {
+              deleteTasks {
+                id
+                title
+                detail
+                completed
+                created_at
+              }
             }
-          }
         `;
   
         try {
-          await fetchGraphQL(mutation);
-          setTasks([]);
-        } catch (err) {
-          console.error(err);
+            await fetchGraphQL(mutation);
+            setTasks([]);
+        } catch (e) {
+            if (e instanceof Error) {
+                setError(e.message ? `error: ${e.message}` : 'Something went wrong');
+            }
         }
     }
 
@@ -100,9 +103,11 @@ export const useTaskGraphQLViewModel = () => {
         try {
           const data = await fetchGraphQL(mutation);        
           setTasks([data.seedTasks, ...tasks]);
-        } catch (err) {
-          console.error(err);
-        }
+        } catch (e) {
+          if (e instanceof Error) {
+              setError(e.message ? `error: ${e.message}` : 'Something went wrong');
+          }
+      }
     }
 
     const updateRowFromId = async(id: number, title: string, detail: string, completed: boolean) => {
@@ -125,8 +130,10 @@ export const useTaskGraphQLViewModel = () => {
           setTasks(prev =>
             prev.map(task => (task.id === data.updateTask.id ? data.updateTask : task))
           );
-        } catch (err) {
-          console.error(err);
+        } catch (e) {
+            if (e instanceof Error) {
+                setError(e.message ? `error: ${e.message}` : 'Something went wrong');
+            }
         }
     }
   
