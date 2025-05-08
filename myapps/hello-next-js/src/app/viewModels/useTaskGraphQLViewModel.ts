@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchGraphQL } from '@/bff/tasks/graphQL_client';
+import { fetchGraphQL } from '@/app/models/TaskGraphqlClient';
 import { Task } from '../types/Task';
 
 export const useTaskGraphQLViewModel = () => {
@@ -16,12 +16,12 @@ export const useTaskGraphQLViewModel = () => {
             try {
                 const data = await fetchGraphQL(`
                     query {
-                    tasks {
-                        id
-                        title
-                        detail
-                        completed
-                    }
+                      tasks {
+                          id
+                          title
+                          detail
+                          completed
+                      }
                     }
                 `);
                 setTasks(data.tasks);
