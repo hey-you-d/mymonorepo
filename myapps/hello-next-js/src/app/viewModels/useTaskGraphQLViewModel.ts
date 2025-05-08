@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchGraphQL } from '@/app/models/TaskGraphqlClient';
+import { fetchGraphQL } from '../models/TaskGraphqlClient';
 import { Task } from '../types/Task';
 
 export const useTaskGraphQLViewModel = () => {

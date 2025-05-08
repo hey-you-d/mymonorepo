@@ -51,4 +51,23 @@ describe('fetchGraphQL', () => {
 
     await expect(fetchGraphQL(query)).rejects.toThrow('error in TaskGraphQL model component');
   });
+
+  it('throws an error when fetch itself fails (network error)', async () => {
+    (fetch as jest.Mock).mockRejectedValue(new Error('Network failure'));
+  
+    const query = `query { tasks { id } }`;
+  
+    await expect(fetchGraphQL(query)).rejects.toThrow('Network failure');
+  });
+  
+  it('throws an error when response.json() fails (bad JSON)', async () => {
+    (fetch as jest.Mock).mockResolvedValue({
+      json: jest.fn().mockRejectedValue(new Error('Invalid JSON')),
+    });
+  
+    const query = `query { tasks { id } }`;
+  
+    await expect(fetchGraphQL(query)).rejects.toThrow('Invalid JSON');
+  });
+  
 });
