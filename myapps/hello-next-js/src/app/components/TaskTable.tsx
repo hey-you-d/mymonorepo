@@ -110,26 +110,30 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
             const output:React.ReactElement[] = [];
             
             return [
-                <tr key="some-total-rows">
-                    <td>Total Rows:</td>
-                    <td>{tasks.length}</td>
-                </tr>,
-                <tr key="add-row-disabled">
-                    {renderAddRowForm(false)}
-                </tr>,
+                <>
+                    <tr key="some-total-rows">
+                        <td>Total Rows:</td>
+                        <td>{tasks.length}</td>
+                    </tr>
+                    <tr key="add-row-disabled">
+                        {renderAddRowForm(false)}
+                    </tr>
+                </>
             ];
 
             return output;
         } 
 
         return [
-            <tr key="zero-total-row">
-                <td>Total Rows:</td>
-                <td>0</td>,
-            </tr>,
-            <tr key="add-row-enabled">
-                {renderAddRowForm(true)}
-            </tr>,
+            <>
+                <tr key="zero-total-row">
+                    <td>Total Rows:</td>
+                    <td>0</td>
+                </tr>
+                <tr key="add-row-enabled">
+                    {renderAddRowForm(true)}
+                </tr>
+            </>
         ];
     };
 

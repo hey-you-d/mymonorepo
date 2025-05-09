@@ -102,7 +102,16 @@ export const useTaskGraphQLViewModel = () => {
   
         try {
           const data = await fetchGraphQL(mutation);        
-          setTasks([data.seedTasks, ...tasks]);
+          // dev note: Use Functional setTasks to Avoid Stale State
+          // This ensures the update works even if multiple tasks are added quickly, 
+          // preventing race conditions from stale closures.
+          // dev note 2: the returned data structure:
+          // result: { data: { tasks: [{ id: '1', ... }, { id: '2', ... }] } }
+          // hence, can't do [data.seedTasks, ...prev]
+          // otherwise, it will result in nested array: [[task1, task2], ...prev]) -> X
+          //setTasks(prev => [...data.seedTasks, ...prev]);
+          // dev note 3: I can 100% guarantee that prev is [], hence
+          setTasks([...data.seedTasks]);
         } catch (e) {
           if (e instanceof Error) {
               setError(e.message ? `error: ${e.message}` : 'Something went wrong');

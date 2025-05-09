@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, act } from '@testing-library/react';
 import { useTaskGraphQLViewModel } from './useTaskGraphQLViewModel';
 import { fetchGraphQL } from '../models/TaskGraphqlClient';
 
@@ -118,22 +118,32 @@ describe('useTaskGraphQLViewModel', () => {
   });
   
   it('seedTaskDB -> adds hardcoded sample data to the current list', async () => {
-    const seeded = { id: 3, title: 'Seeded', detail: 'Seed Detail', completed: false };
+    const seeded = [
+      { id: 1, title: 'Seed 1', detail: 'Seed Detail', completed: false },
+      { id: 2, title: 'Seed 2', detail: 'Seed Detail', completed: false },
+      { id: 3, title: 'Seed 3', detail: 'Seed Detail', completed: false }
+    ];
+
     (fetchGraphQL as jest.Mock)
-      .mockResolvedValueOnce({ tasks: mockTasks }) // initial
-      .mockResolvedValueOnce({ seedTasks: seeded }); // seed
+      .mockResolvedValueOnce({ tasks: mockTasks }) // initial GET
+      .mockResolvedValueOnce({ seedTasks: seeded }); // Correct structure for seed
   
     let viewModel: ReturnType<typeof useTaskGraphQLViewModel>;
     render(<TestComponent onRender={(vm) => (viewModel = vm)} />);
     await waitFor(() => {
       expect(viewModel.loading).toBe(false)
-      
-      viewModel.seedTaskDB();
+    });
+
+    // Run the seed operation
+    await act(async () => {
+      await viewModel.seedTaskDB();
     });
 
     await waitFor(() => {
-      expect(viewModel.tasks[0]).toEqual(seeded);
-      expect(viewModel.tasks.length).toBe(2);
+      expect(viewModel.tasks.length).toBe(3);
+      expect(viewModel.tasks[0]).toEqual(seeded[0]);
+      expect(viewModel.tasks[1]).toEqual(seeded[1]);
+      expect(viewModel.tasks[2]).toEqual(seeded[2]);
     });
   });
   
