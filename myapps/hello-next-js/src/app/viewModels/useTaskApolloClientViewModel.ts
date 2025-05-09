@@ -148,7 +148,6 @@ export const useTaskApolloClientViewModel = () => {
                 throw new Error('No task returned');
             }
             
-            // TODO
             setTasks([]);
         } catch (e) {
             if (e instanceof Error) {

@@ -1,16 +1,26 @@
+import '@testing-library/jest-dom';
 import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import { GraphQLError } from 'graphql';
 import { MockedProvider } from '@apollo/client/testing';
-import { useTaskApolloClientViewModel, GET_ALL_TASKS, CREATE_A_TASK } from './useTaskApolloClientViewModel';
+import { 
+    useTaskApolloClientViewModel, 
+    GET_ALL_TASKS, 
+    CREATE_A_TASK, 
+    DELETE_ALL_TASKS 
+} from './useTaskApolloClientViewModel';
 
 // Test component to expose the hook
 const TestComponent = () => {
-    const { tasks, loading: isLoading, error: errorMsg, createRow } = useTaskApolloClientViewModel();
+    const { 
+        tasks, loading: isLoading, error: errorMsg, 
+        createRow, deleteAllRows 
+    } = useTaskApolloClientViewModel();
   
     return (
       <>
         <button onClick={() => createRow('Test Task', 'Test Detail')}>Add Task</button>
+        <button onClick={deleteAllRows}>Delete All</button>
         {isLoading && <p>Loading...</p>}
         {errorMsg && <p>Error: {errorMsg}</p>}  
         <ul>
@@ -42,10 +52,6 @@ const getTasksMock = {
 };
 
 describe('useTaskApolloClientViewModel', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     it('GET_ALL_TASKS -> fetches and renders tasks correctly', async () => {
         const getAllDataMocks = [
             {
@@ -67,12 +73,12 @@ describe('useTaskApolloClientViewModel', () => {
         );
 
         // Initially shows loading
-        expect(getByText('Loading...')).toBeInTheDocument;
+        expect(getByText('Loading...')).toBeInTheDocument();
 
         // Wait for the tasks to load
         await waitFor(() => {
-            expect(getByText('Task 1')).toBeInTheDocument;
-            expect(getByText('Task 2')).toBeInTheDocument;
+            expect(getByText('Task 1')).toBeInTheDocument();
+            expect(getByText('Task 2')).toBeInTheDocument();
         });
     });
 
@@ -92,10 +98,10 @@ describe('useTaskApolloClientViewModel', () => {
             </MockedProvider>
         );
 
-        expect(getByText('Loading...')).toBeInTheDocument;
+        expect(getByText('Loading...')).toBeInTheDocument();
 
         await waitFor(() => {
-            expect(getByText(/Error: GraphQL error/i)).toBeInTheDocument;
+            expect(getByText(/Error: GraphQL error/i)).toBeInTheDocument();
         });
     });
 
@@ -135,7 +141,9 @@ describe('useTaskApolloClientViewModel', () => {
 
         // Wait for the task to appear
         const newTask = await findByText('Test Task');
-        expect(newTask).toBeInTheDocument;
+        expect(newTask).toBeInTheDocument();
+        const listItems = document.querySelectorAll('li');
+        expect(listItems.length).toBe(1);
     });
 
     it('CREATE_A_TASK -> handles GraphQL errors gracefully', async () => {
@@ -161,7 +169,7 @@ describe('useTaskApolloClientViewModel', () => {
         fireEvent.click(getByText('Add Task'));
         
         await waitFor(() => {
-            expect(getByText(/Error: Mocked createTask error/i)).toBeInTheDocument;
+            expect(getByText(/Error: Mocked createTask error/i)).toBeInTheDocument();
         });
     });
 
@@ -191,8 +199,64 @@ describe('useTaskApolloClientViewModel', () => {
         fireEvent.click(getByText('Add Task'));
         
         await waitFor(() => {
-            expect(getByText(/Error: No task returned/i)).toBeInTheDocument;
+            expect(getByText(/Error: No task returned/i)).toBeInTheDocument();
         });
+    });
+
+    it('DELETE_ALL_TASKS -> deletes all tasks successfully', async () => {
+        const deleteTasksMock = {
+            request: {
+              query: DELETE_ALL_TASKS,
+            },
+            result: {
+              data: {
+                deleteTasks: [
+                  {
+                    id: '1',
+                    title: 'Sample Task',
+                    detail: 'Detail',
+                    completed: false,
+                    created_at: '2025-01-01',
+                  },
+                ],
+              },
+            },
+        };
+
+        const { getByText, queryByText } = render(
+            <MockedProvider mocks={[deleteTasksMock, getTasksMock]} addTypename={false}>
+              <TestComponent />
+            </MockedProvider>
+        );
+
+        fireEvent.click(getByText('Delete All'));
+        
+        await waitFor(() => {
+            expect(queryByText(/Error:/i)).not.toBeInTheDocument();
+            expect(queryByText(/Loading.../i)).not.toBeInTheDocument();
+            const listItems = document.querySelectorAll('li');
+            expect(listItems.length).toBe(0);
+        });
+    });
+
+
+    it('DELETE_ALL_TASKS -> shows error message when deletion fails', async () => {
+        const deleteTasksErrorMock = {
+            request: {
+              query: DELETE_ALL_TASKS,
+            },
+            error: new Error('Delete failed'),
+        };
+        
+        const { getByText, findByText } = render(
+            <MockedProvider mocks={[deleteTasksErrorMock, getTasksMock]} addTypename={false}>
+                <TestComponent />
+            </MockedProvider>
+        );
+    
+        fireEvent.click(getByText('Delete All'));
+    
+        expect(await findByText(/Error: error: Delete failed/i)).toBeInTheDocument();
     });
 });
   
