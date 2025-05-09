@@ -61,7 +61,8 @@ component: [https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-nex
 6. Swagger Doc integration - **STATUS: DONE**  
 URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger)
 7. alternative data query with Apollo GraphQL **STATUS: DONE**  
-URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql) 
+URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql)  
+with Apollo Client in-memory cache URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient](http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient)  
 8. A feature relying on an event-driven system using Apache Kafka - **STATUS: TODO**
 
 #### Remote site demo (Prod & Dev branches)
@@ -117,5 +118,7 @@ yarn workspace hello-next-js dev
 
 8. The GraphQL version URL: [localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql)
 
+9. The GraphQL version with Apollo Client URL: [localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient](http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient)
 
-9. The Swagger Doc URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 
+
+10. The Swagger Doc URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 

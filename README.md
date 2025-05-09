@@ -25,7 +25,7 @@ Setup & Progress: [README](https://github.com/hey-you-d/mymonorepo/blob/master/m
 2. RDBMS: PostgreSQL DB
 3. Query Language: direct SQL and via Apollo GraphQL
 4. Authentication: JWT-based auth
-5. Client-side Caching: Vercel SWR
+5. Client-side Caching: Vercel SWR (for non-graphql) and Apollo Client in-Memory cache
 6. Server-side Caching: To be determined. 
 7. Documentation: Swagger API Doc.
 8. Unit Test: Jest Testing Framework.
