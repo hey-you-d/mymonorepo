@@ -9,20 +9,33 @@ import {
     CREATE_A_TASK, 
     DELETE_ALL_TASKS,
     SEED_TASKS, 
+    UPDATE_A_TASK,
 } from './useTaskApolloClientViewModel';
 
 // Test component to expose the hook
-const TestComponent = () => {
+type OpType = "seed" | "create" | "delete" | "update" | "get"; 
+const TestComponent = ({mode = "get"}: {mode: OpType}) => {
     const { 
         tasks, loading: isLoading, error: errorMsg, 
-        createRow, deleteAllRows, seedTaskDB 
+        createRow, deleteAllRows, seedTaskDB, updateRowFromId, 
     } = useTaskApolloClientViewModel();
   
     return (
       <>
-        <button onClick={seedTaskDB}>Seed DB</button>
-        <button onClick={() => createRow('Test Task', 'Test Detail')}>Add Task</button>
-        <button onClick={deleteAllRows}>Delete All</button>
+        {mode === "seed" &&
+            <button onClick={seedTaskDB}>Seed DB</button>
+        }
+        {mode === "create" &&
+            <button onClick={() => createRow('Test Task', 'Test Detail')}>Add Task</button>
+        }    
+        {mode === "update" && 
+            <button onClick={() => updateRowFromId(999, 'Updated Title', 'Updated Detail', true)}>
+                Update Task
+            </button>
+        }
+        {mode === "delete" &&
+            <button onClick={deleteAllRows}>Delete All</button>
+        }
         {isLoading && <p>Loading...</p>}
         {errorMsg && <p>Error: {errorMsg}</p>}  
         <ul>
@@ -70,7 +83,7 @@ describe('useTaskApolloClientViewModel', () => {
 
         const { getByText } = render(
             <MockedProvider mocks={getAllDataMocks} addTypename={false}>
-              <TestComponent />
+              <TestComponent mode="get" />
             </MockedProvider>
         );
 
@@ -96,7 +109,7 @@ describe('useTaskApolloClientViewModel', () => {
 
         const { getByText } = render(
             <MockedProvider mocks={errorMocks} addTypename={false}>
-                <TestComponent />
+                <TestComponent mode="get" />
             </MockedProvider>
         );
 
@@ -131,7 +144,7 @@ describe('useTaskApolloClientViewModel', () => {
 
         const { getByText, findByText } = render(
             <MockedProvider mocks={[getTasksMock, createTaskMock]} addTypename={false}>
-                <TestComponent />
+                <TestComponent mode="create" />
             </MockedProvider>
         );
 
@@ -164,7 +177,7 @@ describe('useTaskApolloClientViewModel', () => {
 
         const { getByText } = render(
             <MockedProvider mocks={[createErrorMock, getTasksMock]} addTypename={false}>
-              <TestComponent />
+              <TestComponent mode="create" />
             </MockedProvider>
         );
         
@@ -194,7 +207,7 @@ describe('useTaskApolloClientViewModel', () => {
         
         const { getByText } = render(
             <MockedProvider mocks={[createNullMock, getTasksMock]} addTypename={false}>
-              <TestComponent />
+              <TestComponent mode="create" />
             </MockedProvider>
         );
         
@@ -227,7 +240,7 @@ describe('useTaskApolloClientViewModel', () => {
 
         const { getByText, queryByText } = render(
             <MockedProvider mocks={[deleteTasksMock, getTasksMock]} addTypename={false}>
-              <TestComponent />
+              <TestComponent mode="delete" />
             </MockedProvider>
         );
 
@@ -252,7 +265,7 @@ describe('useTaskApolloClientViewModel', () => {
         
         const { getByText, findByText } = render(
             <MockedProvider mocks={[deleteTasksErrorMock, getTasksMock]} addTypename={false}>
-                <TestComponent />
+                <TestComponent mode="delete" />
             </MockedProvider>
         );
     
@@ -290,7 +303,7 @@ describe('useTaskApolloClientViewModel', () => {
 
         const { getByText, findByText } = render(
             <MockedProvider mocks={[getTasksMock, seedTasksMock]} addTypename={false}>
-                <TestComponent />
+                <TestComponent mode="seed" />
             </MockedProvider>
         );
 
@@ -323,11 +336,104 @@ describe('useTaskApolloClientViewModel', () => {
 
         const { getByText } = render(
             <MockedProvider mocks={[createErrorMock, getTasksMock]} addTypename={false}>
-              <TestComponent />
+              <TestComponent mode="seed" />
             </MockedProvider>
         );
         
         fireEvent.click(getByText('Seed DB'));
+        
+        await waitFor(() => {
+            expect(getByText(/Error: Mocked createTask error/i)).toBeInTheDocument();
+        });
+    });
+
+    it('UPDATE_A_TASK -> modifies existing task in list', async () => {
+        const getTasksMockForUpdate = {
+            request: {
+                query: GET_ALL_TASKS,
+            },
+            result: {
+                data: {
+                    tasks: [
+                        {
+                            id: 999,
+                            title: 'Pre-Updated Title',
+                            detail: 'Pre-Updated Detail',
+                            completed: false,
+                            created_at: '2025-01-01',
+                        }
+                    ],
+                },
+            },
+        }
+        
+        const updateTaskMock = {
+          request: {
+            query: UPDATE_A_TASK,
+            variables: {
+              id: 999,
+              title: 'Updated Title',
+              detail: 'Updated Detail',
+              completed: true,
+            },
+          },
+          result: {
+            data: {
+              updateTask: {
+                id: 999,
+                title: 'Updated Title',
+                detail: 'Updated Detail',
+                completed: true,
+                created_at: '2025-01-01',
+              },
+            },
+          },
+        };
+      
+        const { getByText, queryByText, findByText } = render(
+          <MockedProvider mocks={[updateTaskMock, getTasksMockForUpdate]} addTypename={false}>
+            <TestComponent mode="update" />
+          </MockedProvider>
+        );
+      
+        // Initially should see the placeholder item
+        await waitFor(() => {
+            expect(getByText('Pre-Updated Title')).toBeInTheDocument();
+        });
+        
+        // Trigger the update
+        fireEvent.click(getByText('Update Task'));
+      
+        // Should replace the placeholder with updated task
+        await waitFor(() => {
+          expect(queryByText('Pre-Updated Title')).not.toBeInTheDocument();
+          expect(getByText('Updated Title')).toBeInTheDocument();
+        });
+    });
+    
+    it('UPDATE_A_TASK -> handles GraphQL errors gracefully', async () => {
+        const createErrorMock = {
+            request: {
+              query: UPDATE_A_TASK,
+              variables: {
+                id: 999,
+                title: 'Updated Title',
+                detail: 'Updated Detail',
+                completed: true,
+              },
+            },
+            result: {
+              errors: [new GraphQLError('Mocked createTask error')],
+            },
+        };
+
+        const { getByText } = render(
+            <MockedProvider mocks={[createErrorMock, getTasksMock]} addTypename={false}>
+              <TestComponent mode="update" />
+            </MockedProvider>
+        );
+        
+        fireEvent.click(getByText('Update Task'));
         
         await waitFor(() => {
             expect(getByText(/Error: Mocked createTask error/i)).toBeInTheDocument();

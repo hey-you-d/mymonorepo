@@ -183,7 +183,9 @@ export const useTaskApolloClientViewModel = () => {
             // result: { data: { seedTasks: [{ id: '1', ... }, { id: '2', ... }] } }
             // hence, can't do [mutatedData.seedTasks, ...prev]
             // otherwise, it will result in nested array: [[task1, task2], ...prev]) -> X
-            setTasks(prev => [...mutatedData.seedTasks, ...prev]);
+            //setTasks(prev => [...mutatedData.seedTasks, ...prev]);
+            // dev note 3: I can 100% guarantee that prev is [], hence
+            setTasks([...mutatedData.seedTasks]);
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
