@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ApolloError, gql, useQuery, useMutation } from '@apollo/client';
 import { Task } from '../types/Task';
 
@@ -71,10 +71,10 @@ export const useTaskApolloClientViewModel = () => {
     //const [deleteTasks, { data: suppliedDeleteTasksData, loading: deleteTasksLoading, error: deleteTasksError }] = useMutation(DELETE_ALL_TASKS);
     //const [seedTasks, { data: suppliedSeedTasksData, loading: seedTasksLoading, error: seedTasksError }] = useMutation(SEED_TASKS);
     //const [updateTask, { data: suppliedUpdateTaskData, loading: updateTaskLoading, error: updateTaskError }] = useMutation(UPDATE_A_TASK);
-    const [createTask, { loading: createTaskLoading, error: createTaskError }] = useMutation(CREATE_A_TASK);
-    const [deleteTasks, { loading: deleteTasksLoading, error: deleteTasksError }] = useMutation(DELETE_ALL_TASKS);
-    const [seedTasks, { loading: seedTasksLoading, error: seedTasksError }] = useMutation(SEED_TASKS);
-    const [updateTask, { loading: updateTaskLoading, error: updateTaskError }] = useMutation(UPDATE_A_TASK);
+    const [createTask] = useMutation(CREATE_A_TASK);
+    const [deleteTasks] = useMutation(DELETE_ALL_TASKS);
+    const [seedTasks] = useMutation(SEED_TASKS);
+    const [updateTask] = useMutation(UPDATE_A_TASK);
 
     // Run the query to populate the table
     // dev note: with Apollo Client, to achieve "run once" behavior but still respond to query results is to 
