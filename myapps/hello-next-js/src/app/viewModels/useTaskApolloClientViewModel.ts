@@ -99,6 +99,11 @@ export const useTaskApolloClientViewModel = () => {
         try {
             const { data: mutatedData } = await createTask({ variables: { title, detail } });
 
+            // dev note: createTaskError and createTaskLoading are from the initial hook state — 
+            // they don’t update after the mutation. Apollo mutation hook returns a result from 
+            // await createTask(...), and the correct way to get errors or loading state after a mutation is 
+            // from the result object, not the hook state. 
+            /*
             if (createTaskError && createTaskError instanceof ApolloError) {
                 setErrorMsg(createTaskError.message);
             }
@@ -106,23 +111,30 @@ export const useTaskApolloClientViewModel = () => {
             if (createTaskLoading) {
                 setIsLoading(true);
             }
+            */    
+            if (!mutatedData?.createTask) {
+                throw new Error('No task returned');
+            }
 
             // dev note: Use Functional setTasks to Avoid Stale State
             // This ensures the update works even if multiple tasks are added quickly, 
             // preventing race conditions from stale closures.
             setTasks(prev => [mutatedData.createTask, ...prev]);
-            setIsLoading(false);
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
             }
+        } finally {
+            setIsLoading(false);
         }
     }
     
     const deleteAllRows = async() => {  
         try {
-            await deleteTasks();
+            const { data: mutatedData } = await deleteTasks();
 
+            // dev note: check the dev note in the createRow function
+            /*
             if (deleteTasksError && deleteTasksError instanceof ApolloError) {
                 setErrorMsg(deleteTasksError.message);
             }
@@ -130,13 +142,20 @@ export const useTaskApolloClientViewModel = () => {
             if (deleteTasksLoading) {
                 setIsLoading(true);
             }
-    
+            */
+
+            if (!mutatedData?.deleteTasks) {
+                throw new Error('No task returned');
+            }
+            
+            // TODO
             setTasks([]);
-            setIsLoading(false);
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
             }
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -144,6 +163,8 @@ export const useTaskApolloClientViewModel = () => {
         try {
             const { data: mutatedData } = await seedTasks();     
 
+            // dev note: check the dev note in the createRow function
+            /*
             if (seedTasksError && seedTasksError instanceof ApolloError) {
                 setErrorMsg(seedTasksError.message);
             }
@@ -151,16 +172,21 @@ export const useTaskApolloClientViewModel = () => {
             if (seedTasksLoading) {
                 setIsLoading(true);
             }
+            */
+            if (!mutatedData?.seedTasks) {
+                throw new Error('No task returned');
+            }
 
             // dev note: Use Functional setTasks to Avoid Stale State
             // This ensures the update works even if multiple tasks are added quickly, 
             // preventing race conditions from stale closures.
             setTasks(prev => [mutatedData.seedTasks, ...prev]);
-            setIsLoading(false);
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
             }
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -168,6 +194,8 @@ export const useTaskApolloClientViewModel = () => {
         try {
             const { data: mutatedData } = await updateTask({ variables: { id, title, detail, completed } });
 
+            // dev note: check the dev note in the createRow function
+            /*
             if (updateTaskError && updateTaskError instanceof ApolloError) {
                 setErrorMsg(updateTaskError.message);
             }
@@ -175,16 +203,22 @@ export const useTaskApolloClientViewModel = () => {
             if (updateTaskLoading) {
                 setIsLoading(true);
             }
+            */
+            if (!mutatedData?.updateTask) {
+                throw new Error('No task returned');
+            }
 
             // dev note: update only the changed task in the list
             setTasks(prev =>
                 prev.map(task => (task.id === mutatedData.updateTask.id ? mutatedData.updateTask : task))
             );
-            setIsLoading(false);
+            
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
             }
+        } finally {
+            setIsLoading(false);
         }
     }
   
