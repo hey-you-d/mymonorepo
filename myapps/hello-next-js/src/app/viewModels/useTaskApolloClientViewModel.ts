@@ -61,22 +61,18 @@ const UPDATE_A_TASK = gql`
     }
 `;
 
-
-
-export const useTaskGraphQLViewModel = () => {
+export const useTaskApolloClientViewModel = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-    // 2. Run the query
+    // Run the query to ppopulate the table
     const { data: getTasksData, loading: getTasksLoading, error: getTasksError } = useQuery(GET_ALL_TASKS);
-    // 2. Prepare the mutation function
-    /*
-    const [createTask, { data: suppliedCreateTaskData, loading: createTaskLoading, error: createTaskError }] = useMutation(CREATE_A_TASK);
-    const [deleteTasks, { data: suppliedDeleteTasksData, loading: deleteTasksLoading, error: deleteTasksError }] = useMutation(DELETE_ALL_TASKS);
-    const [seedTasks, { data: suppliedSeedTasksData, loading: seedTasksLoading, error: seedTasksError }] = useMutation(SEED_TASKS);
-    const [updateTask, { data: suppliedUpdateTaskData, loading: updateTaskLoading, error: updateTaskError }] = useMutation(UPDATE_A_TASK);
-    */
+    // All of the mutation query functions
+    //const [createTask, { data: suppliedCreateTaskData, loading: createTaskLoading, error: createTaskError }] = useMutation(CREATE_A_TASK);
+    //const [deleteTasks, { data: suppliedDeleteTasksData, loading: deleteTasksLoading, error: deleteTasksError }] = useMutation(DELETE_ALL_TASKS);
+    //const [seedTasks, { data: suppliedSeedTasksData, loading: seedTasksLoading, error: seedTasksError }] = useMutation(SEED_TASKS);
+    //const [updateTask, { data: suppliedUpdateTaskData, loading: updateTaskLoading, error: updateTaskError }] = useMutation(UPDATE_A_TASK);
     const [createTask, { loading: createTaskLoading, error: createTaskError }] = useMutation(CREATE_A_TASK);
     const [deleteTasks, { loading: deleteTasksLoading, error: deleteTasksError }] = useMutation(DELETE_ALL_TASKS);
     const [seedTasks, { loading: seedTasksLoading, error: seedTasksError }] = useMutation(SEED_TASKS);
@@ -84,17 +80,21 @@ export const useTaskGraphQLViewModel = () => {
     
     // with graphql, lets use CSR instead of SSR for now
     useEffect(() => {
-        if (!getTasksData.tasks) return; // Wait until data is available
+        if (!getTasksData || !getTasksData.tasks) return; // Wait until data is available
 
         const loadTasks = async () => {
-            setErrorMsg(null);
-            setIsLoading(true);
-        
             try {
-                setTasks(getTasksData.tasks);
-                setIsLoading(getTasksLoading);
                 if (getTasksError && getTasksError instanceof ApolloError) {
                     setErrorMsg(getTasksError.message);
+                }
+
+                if (getTasksLoading) {
+                    setIsLoading(true);
+                }
+
+                if (getTasksData?.tasks) {
+                    setTasks(getTasksData.tasks);
+                    setIsLoading(false);
                 }
             } catch (e) {
                 if (e instanceof Error) {
@@ -104,23 +104,25 @@ export const useTaskGraphQLViewModel = () => {
         };
         
         loadTasks();
-    }, [getTasksData.tasks, getTasksError, getTasksLoading]);
+    }, [getTasksData, getTasksError, getTasksLoading]);
 
     const createRow = async(title: string, detail: string) => {    
-        setErrorMsg(null);
-        setIsLoading(true);
-        
         try {
             const { data: mutatedData } = await createTask({ variables: { title, detail } });
-            
+
+            if (createTaskError && createTaskError instanceof ApolloError) {
+                setErrorMsg(createTaskError.message);
+            }
+
+            if (createTaskLoading) {
+                setIsLoading(true);
+            }
+
             // dev note: Use Functional setTasks to Avoid Stale State
             // This ensures the update works even if multiple tasks are added quickly, 
             // preventing race conditions from stale closures.
             setTasks(prev => [mutatedData.createTask, ...prev]);
-            setIsLoading(createTaskLoading);
-            if (createTaskError && createTaskError instanceof ApolloError) {
-                setErrorMsg(createTaskError.message);
-            }
+            setIsLoading(false);
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
@@ -129,16 +131,19 @@ export const useTaskGraphQLViewModel = () => {
     }
     
     const deleteAllRows = async() => {  
-        setErrorMsg(null);
-        setIsLoading(true);
-        
         try {
             await deleteTasks();
-            setTasks([]);
-            setIsLoading(deleteTasksLoading);
+
             if (deleteTasksError && deleteTasksError instanceof ApolloError) {
                 setErrorMsg(deleteTasksError.message);
             }
+    
+            if (deleteTasksLoading) {
+                setIsLoading(true);
+            }
+    
+            setTasks([]);
+            setIsLoading(false);
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
@@ -147,16 +152,22 @@ export const useTaskGraphQLViewModel = () => {
     }
 
     const seedTaskDB = async() => {
-        setErrorMsg(null);
-        setIsLoading(true);
-        
         try {
             const { data: mutatedData } = await seedTasks();     
-            setTasks(prev => [mutatedData.seedTasks, ...prev]);
-            setIsLoading(seedTasksLoading);
+
             if (seedTasksError && seedTasksError instanceof ApolloError) {
                 setErrorMsg(seedTasksError.message);
             }
+    
+            if (seedTasksLoading) {
+                setIsLoading(true);
+            }
+
+            // dev note: Use Functional setTasks to Avoid Stale State
+            // This ensures the update works even if multiple tasks are added quickly, 
+            // preventing race conditions from stale closures.
+            setTasks(prev => [mutatedData.seedTasks, ...prev]);
+            setIsLoading(false);
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
@@ -165,20 +176,22 @@ export const useTaskGraphQLViewModel = () => {
     }
 
     const updateRowFromId = async(id: number, title: string, detail: string, completed: boolean) => {  
-        setErrorMsg(null);
-        setIsLoading(true);
-        
         try {
             const { data: mutatedData } = await updateTask({ variables: { id, title, detail, completed } });
+
+            if (updateTaskError && updateTaskError instanceof ApolloError) {
+                setErrorMsg(updateTaskError.message);
+            }
+
+            if (updateTaskLoading) {
+                setIsLoading(true);
+            }
 
             // dev note: update only the changed task in the list
             setTasks(prev =>
                 prev.map(task => (task.id === mutatedData.updateTask.id ? mutatedData.updateTask : task))
             );
-            setIsLoading(updateTaskLoading);
-            if (updateTaskError && updateTaskError instanceof ApolloError) {
-                setErrorMsg(updateTaskError.message);
-            }
+            setIsLoading(false);
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
