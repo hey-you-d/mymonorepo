@@ -179,7 +179,11 @@ export const useTaskApolloClientViewModel = () => {
             // dev note: Use Functional setTasks to Avoid Stale State
             // This ensures the update works even if multiple tasks are added quickly, 
             // preventing race conditions from stale closures.
-            setTasks(prev => [mutatedData.seedTasks, ...prev]);
+            // dev note 2: the returned data structure:
+            // result: { data: { seedTasks: [{ id: '1', ... }, { id: '2', ... }] } }
+            // hence, can't do [mutatedData.seedTasks, ...prev]
+            // otherwise, it will result in nested array: [[task1, task2], ...prev]) -> X
+            setTasks(prev => [...mutatedData.seedTasks, ...prev]);
         } catch (e) {
             if (e instanceof Error) {
                 setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');

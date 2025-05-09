@@ -7,18 +7,20 @@ import {
     useTaskApolloClientViewModel, 
     GET_ALL_TASKS, 
     CREATE_A_TASK, 
-    DELETE_ALL_TASKS 
+    DELETE_ALL_TASKS,
+    SEED_TASKS, 
 } from './useTaskApolloClientViewModel';
 
 // Test component to expose the hook
 const TestComponent = () => {
     const { 
         tasks, loading: isLoading, error: errorMsg, 
-        createRow, deleteAllRows 
+        createRow, deleteAllRows, seedTaskDB 
     } = useTaskApolloClientViewModel();
   
     return (
       <>
+        <button onClick={seedTaskDB}>Seed DB</button>
         <button onClick={() => createRow('Test Task', 'Test Detail')}>Add Task</button>
         <button onClick={deleteAllRows}>Delete All</button>
         {isLoading && <p>Loading...</p>}
@@ -46,7 +48,7 @@ const getTasksMock = {
     },
     result: {
         data: {
-        tasks: [], // Assume initially no tasks
+            tasks: [], // Assume initially no tasks
         },
     },
 };
@@ -257,6 +259,79 @@ describe('useTaskApolloClientViewModel', () => {
         fireEvent.click(getByText('Delete All'));
     
         expect(await findByText(/Error: error: Delete failed/i)).toBeInTheDocument();
+    });
+
+    it('SEED_TASKS -> seed tasks and adds the data set to the list', async () => {
+        const seedTasksMock = {
+            request: {
+              query: SEED_TASKS,
+            },
+            result: {
+              data: {
+                seedTasks: [
+                    {
+                        id: '1',
+                        title: 'Test Task',
+                        detail: 'Test Detail',
+                        completed: false,
+                        created_at: '2025-01-01',
+                    }, 
+                    {
+                        id: '2',
+                        title: 'Test Task 2',
+                        detail: 'Test Detail 2',
+                        completed: false,
+                        created_at: '2025-01-01',
+                    }
+                ],
+              },
+            },
+        };
+
+        const { getByText, findByText } = render(
+            <MockedProvider mocks={[getTasksMock, seedTasksMock]} addTypename={false}>
+                <TestComponent />
+            </MockedProvider>
+        );
+
+        const button = getByText('Seed DB');
+        // dev note: must use fireEvent otherwise act related warning will appear. 
+        // however, don't use manual act. This is typically unnecessary and 
+        // can even obscure errors — stick with waitFor() or findBy*() when possible.
+        fireEvent.click(button);
+
+        const newTask = await findByText('Test Task');
+        const newTask2 = await findByText('Test Task 2');
+        // Wait for the task to appear
+        await waitFor(() => {
+            expect(newTask).toBeInTheDocument();
+            expect(newTask2).toBeInTheDocument();
+            const listItems = document.querySelectorAll('li');
+            expect(listItems.length).toBe(2);
+        });
+    });
+
+    it('SEED_TASKS -> handles GraphQL errors gracefully', async () => {
+        const createErrorMock = {
+            request: {
+              query: SEED_TASKS,
+            },
+            result: {
+              errors: [new GraphQLError('Mocked createTask error')],
+            },
+        };
+
+        const { getByText } = render(
+            <MockedProvider mocks={[createErrorMock, getTasksMock]} addTypename={false}>
+              <TestComponent />
+            </MockedProvider>
+        );
+        
+        fireEvent.click(getByText('Seed DB'));
+        
+        await waitFor(() => {
+            expect(getByText(/Error: Mocked createTask error/i)).toBeInTheDocument();
+        });
     });
 });
   
