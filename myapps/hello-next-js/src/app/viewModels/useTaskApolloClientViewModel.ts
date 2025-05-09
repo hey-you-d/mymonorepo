@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ApolloError, gql, useQuery, useMutation } from '@apollo/client';
 import { Task } from '../types/Task';
 
-const GET_ALL_TASKS = gql`
+export const GET_ALL_TASKS = gql`
     query {
         tasks {
             id
@@ -13,7 +13,7 @@ const GET_ALL_TASKS = gql`
     }
 `;
 
-const DELETE_ALL_TASKS = gql`
+export const DELETE_ALL_TASKS = gql`
     mutation DeleteTasks {
         deleteTasks {
             id
@@ -25,7 +25,7 @@ const DELETE_ALL_TASKS = gql`
     }
 `;
 
-const SEED_TASKS = gql`
+export const SEED_TASKS = gql`
     mutation SeedTasks {
         seedTasks {
             id
@@ -37,7 +37,7 @@ const SEED_TASKS = gql`
     }
 `;
 
-const CREATE_A_TASK = gql`
+export const CREATE_A_TASK = gql`
     mutation CreateTask($title: String!, $detail: String!) {
         createTask(title: $title, detail: $detail) {
             id
@@ -49,7 +49,7 @@ const CREATE_A_TASK = gql`
     }
 `;
 
-const UPDATE_A_TASK = gql`
+export const UPDATE_A_TASK = gql`
     mutation UpdateTask($id: ID!, $title: String!, $detail: String!, $completed: Boolean!) {
         updateTask(id: $id, title: $title, detail: $detail, completed: $completed) {
             id
@@ -66,8 +66,6 @@ export const useTaskApolloClientViewModel = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-    // Run the query to ppopulate the table
-    const { data: getTasksData, loading: getTasksLoading, error: getTasksError } = useQuery(GET_ALL_TASKS);
     // All of the mutation query functions
     //const [createTask, { data: suppliedCreateTaskData, loading: createTaskLoading, error: createTaskError }] = useMutation(CREATE_A_TASK);
     //const [deleteTasks, { data: suppliedDeleteTasksData, loading: deleteTasksLoading, error: deleteTasksError }] = useMutation(DELETE_ALL_TASKS);
@@ -77,34 +75,25 @@ export const useTaskApolloClientViewModel = () => {
     const [deleteTasks, { loading: deleteTasksLoading, error: deleteTasksError }] = useMutation(DELETE_ALL_TASKS);
     const [seedTasks, { loading: seedTasksLoading, error: seedTasksError }] = useMutation(SEED_TASKS);
     const [updateTask, { loading: updateTaskLoading, error: updateTaskError }] = useMutation(UPDATE_A_TASK);
-    
-    // with graphql, lets use CSR instead of SSR for now
-    useEffect(() => {
-        if (!getTasksData || !getTasksData.tasks) return; // Wait until data is available
 
-        const loadTasks = async () => {
-            try {
-                if (getTasksError && getTasksError instanceof ApolloError) {
-                    setErrorMsg(getTasksError.message);
-                }
-
-                if (getTasksLoading) {
-                    setIsLoading(true);
-                }
-
-                if (getTasksData?.tasks) {
-                    setTasks(getTasksData.tasks);
-                    setIsLoading(false);
-                }
-            } catch (e) {
-                if (e instanceof Error) {
-                    setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
-                }
+    // Run the query to populate the table
+    // dev note: with Apollo Client, to achieve "run once" behavior but still respond to query results is to 
+    // handle it inside the useQuery call, hence the purpose behind getAllTasksHandler obj. 
+    // This technique can be used to replace the CSR with useEffect
+    const getAllTasksHandler = {
+        onCompleted: (data: { tasks: Task[] } | undefined) => {
+            if(data?.tasks) {
+                setTasks(data.tasks);
+                setIsLoading(false);
             }
-        };
-        
-        loadTasks();
-    }, [getTasksData, getTasksError, getTasksLoading]);
+        },
+        onError: (error: ApolloError) => {
+            setErrorMsg(error.message);
+            setIsLoading(false);
+        }
+    }
+    //const { loading: getTasksLoading } = useQuery(GET_ALL_TASKS, getAllTasksHandler);
+    useQuery(GET_ALL_TASKS, getAllTasksHandler);
 
     const createRow = async(title: string, detail: string) => {    
         try {
