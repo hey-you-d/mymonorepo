@@ -1,3 +1,4 @@
+'use client';
 import { useMemo, useCallback, useEffect } from 'react';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';

@@ -18,13 +18,13 @@
 7. Demo front-end pages/projects (as part of the monorepo setup): Next.js, React.js with Vite, React.js with CRA 
 
 ## Backend for Frontend (BFF) Demo with Next.js
-Setup & Progress: [README](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md)
+Setup instruction (localhost) & Work Progress Log: [README](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md)
 
 ### Tech stacks
 1. Backend framework: Next.JS API
 2. RDBMS: PostgreSQL DB
-3. Query Language: direct SQL and via Apollo GraphQL
-4. Authentication: JWT-based auth
+3. Data Query Language: direct SQL and via Apollo GraphQL
+4. API Authentication: JWT-based auth
 5. Client-side Caching: Vercel SWR (for non-graphql) and Apollo Client in-Memory cache
 6. Server-side Caching: To be determined. 
 7. Documentation: Swagger API Doc.
@@ -43,10 +43,12 @@ Setup & Progress: [README](https://github.com/hey-you-d/mymonorepo/blob/master/m
 | Mon–Fri 9 PM        | Mon–Fri 11:00 UTC  | Scale down |
 | Sat & Sun All Day   | Sat–Sun            | Scale down |
 
-* Scale Down effect: will be served with 503 page
+* Scale Down effect: will be served with 503 page **  
 * Scale Up effect: the site is up and running
 
-hint: This was done via ECS Auto Scaling Configuration in ECS Console
+** If the Cloudfront CDN cache is not manually invalidated, visitors will still be able to see the cached HTML/JS/CSS. However, backend service is no longer serving the traffic.  
+
+hint: This is done via ECS Auto Scaling Configuration in ECS Console
 
 ## Dev Sites Availability
 * All dev sites are scaled down 24/7. No Load balanced web services are running when scaled down. Site visitors  will be presented with the 503 "Service is temporarily not available" page instead. 

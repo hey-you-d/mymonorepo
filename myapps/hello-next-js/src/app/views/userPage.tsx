@@ -1,7 +1,5 @@
-// src/app/views/container/userPage.ts
-
+'use client';
 // The View connects the ViewModel and UI component.
-
 import React from 'react';
 import { useUserViewModel } from '../viewModels/useUserViewModel';
 import { UserProfile } from '../components/UserProfile';

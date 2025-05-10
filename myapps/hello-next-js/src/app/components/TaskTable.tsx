@@ -1,3 +1,5 @@
+'use client'
+
 // DEV NOTE: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import React, { useCallback, useRef } from 'react';
