@@ -1,3 +1,5 @@
+'use client'
+
 import dynamic from 'next/dynamic';
 import { DATA_FETCH_MODE } from "../../../constants/tasksBff";
 

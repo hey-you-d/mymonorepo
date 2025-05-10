@@ -1,5 +1,6 @@
+'use client';
 // The View connects the ViewModel and UI component
-//import { useTaskViewModel } from '../viewModels/useTasksViewModel';
+//import { useTaskViewModel } from '../viewModels/useTasksViewModel'; // no Frontend caching 
 import { useTaskViewModelWithSwr } from '../viewModels/useTasksViewModelWithSwr';
 import { TaskSeedDB } from '../components/TaskSeedDB';
 import { TaskTable } from '../components/TaskTable';

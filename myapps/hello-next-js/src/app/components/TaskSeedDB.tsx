@@ -1,3 +1,5 @@
+'use client'
+
 // The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import React from 'react';

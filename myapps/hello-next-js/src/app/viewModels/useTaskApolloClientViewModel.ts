@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { ApolloError, gql, useQuery, useMutation } from '@apollo/client';
 import { Task } from '../types/Task';

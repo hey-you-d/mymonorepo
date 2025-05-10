@@ -1,3 +1,4 @@
+'use client';
 // The View connects the ViewModel and UI component
 import { useState, useEffect } from 'react';
 import Link from 'next/link';

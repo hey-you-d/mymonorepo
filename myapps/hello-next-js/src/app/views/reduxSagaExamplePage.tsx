@@ -1,3 +1,4 @@
+'use client';
 // Redux implementation example #2: 
 // Next.js redux implementation using Redux saga while following the MVVM patternW
 
@@ -31,16 +32,5 @@ const ReduxSagaExamplePage = () => {
         </div>
     );
 }
-
-// server side fetching - doesn't work
-/*
-export const getServerSideProps: GetServerSideProps = reduxSagaWrapper.getServerSideProps(
-    (store) => async () => {
-        await store.dispatch(fetchUsersRequest());
-        return { props: {} }
-    }
-);
-*/
-
 
 export default ReduxSagaExamplePage;
