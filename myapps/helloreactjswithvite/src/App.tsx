@@ -2,12 +2,14 @@ import { ReactElement } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import MvvmPatternFetchPage from './pages/mvvmPatternFetch';
 import ExampleSharedUI from './pages/exampleSharedUI';
 import ExampleBasicRedux from './pages/exampleBasicRedux';
 //import ExampleSimpleCart from './pages/exampleSimpleCart';
+//import ExampleReactLazy from './pages/exampleReactLazy';
 import { RouterAttributes } from "./types/Common";
+import { LazySamplePageRoutes, LazySamplePageLayout } from './views/lazySamplePage'; // TODO: refactor
 
 function App() {
   const contentLinks: Record<string, RouterAttributes> = {
@@ -49,9 +51,18 @@ function App() {
           <nav>
             <ul>
               {renderedLinks}
-              <Routes>{routeMembers}</Routes>
+              <li className="read-the-docs">
+                <Link to="/example-react-lazy">Example - React Lazy</Link>
+              </li>
             </ul>
           </nav>
+          <Routes>
+            {routeMembers}
+            <Route path="/example-react-lazy/*" element={<LazySamplePageLayout />}>
+              <Route index element={<Navigate to="home" replace />} />
+              <Route path="*" element={<LazySamplePageRoutes />} />
+            </Route>
+          </Routes> 
         </Router>
       </div>
     </>
