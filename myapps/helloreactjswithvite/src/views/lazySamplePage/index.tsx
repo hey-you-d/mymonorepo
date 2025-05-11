@@ -12,8 +12,9 @@ const featureFlags: FeatureFlags = {
 };
 
 type importFnType = () => Promise<{ default: React.ComponentType<any> }>;
-const lazyWithMemo = (importFn: importFnType, flag: boolean) => useMemo(
-    () => React.lazy(importFn), [flag]
+const LazyWithMemo = (importFn: importFnType, flag: boolean) => useMemo(
+    () => flag ? React.lazy(importFn) : null, 
+    [importFn, flag]
 );
 
 const LazySamplePageLayout = (): React.ReactElement => {
@@ -34,11 +35,11 @@ const LazySamplePageLayout = (): React.ReactElement => {
 
 const LazySamplePageRoutes = () => {
     // Lazily import components conditionally
-    const Home = lazyWithMemo(() => import("./Home"), true);
-    const Reports = lazyWithMemo(() => import("./Reports"), featureFlags.enableReports);
-    const Admin = lazyWithMemo(() => import("./Admin"), featureFlags.enableAdmin);
-
-    /*
+    const Home = LazyWithMemo(() => import("./Home"), true);
+    const Reports = LazyWithMemo(() => import("./Reports"), featureFlags.enableReports);
+    const Admin = LazyWithMemo(() => import("./Admin"), featureFlags.enableAdmin);
+    
+    /* alternatively, without relying on the LazyWithMemo reusable function
     const Home = useMemo(() => React.lazy(() => import("./Home")), []);
     const Reports = useMemo(() => featureFlags.enableReports 
         ? React.lazy(() => import("./Reports")) 
@@ -52,23 +53,23 @@ const LazySamplePageRoutes = () => {
     );
     */
 
-    const HomeElement = (
+    const HomeElement = Home ? (
         <Suspense fallback={<div>Loading Home...</div>}>
           <Home />
         </Suspense>
-    );
+    ) : null;
 
-    const AdminElement = (
+    const AdminElement = Admin ? (
         <Suspense fallback={<div>Loading Admin...</div>}>
           <Admin />
         </Suspense>
-    );
+    ) : null;
 
-    const ReportsElement = (
+    const ReportsElement = Reports ? (
         <Suspense fallback={<div>Loading Reports...</div>}>
           <Reports />
         </Suspense>
-    );
+    ) : null;
     
     return (
         <Routes location={useLocation()}> {/* Add location prop */}
