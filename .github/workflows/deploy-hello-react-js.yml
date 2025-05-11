@@ -105,7 +105,7 @@ jobs:
         run: |
           echo "ECR_REGISTRY=$ECR_REGISTRY" >> $GITHUB_ENV
           echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
-          echo "DEPLOY_ENV=development" >> $GITHUB_ENV
+          echo "DEPLOY_ENV=production" >> $GITHUB_ENV
       
           echo "Building image: $ECR_REGISTRY/$ECR_REPOSITORY:latest"
           docker build -f $DOCKERFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
