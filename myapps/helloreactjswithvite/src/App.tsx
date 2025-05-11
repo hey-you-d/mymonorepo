@@ -9,7 +9,7 @@ import ExampleBasicRedux from './pages/exampleBasicRedux';
 //import ExampleSimpleCart from './pages/exampleSimpleCart';
 //import ExampleReactLazy from './pages/exampleReactLazy';
 import { RouterAttributes } from "./types/Common";
-import { LazySamplePageRoutes, LazySamplePageLayout } from './views/lazySamplePage';
+import { LazySamplePageRoutes, LazySamplePageLayout } from './views/lazySamplePage'; // TODO: refactor
 
 function App() {
   const contentLinks: Record<string, RouterAttributes> = {
@@ -17,7 +17,6 @@ function App() {
     MvvmPatternFetchPage: { title: "MVVM Pattern - data fetch example", path: "/mvvm-pattern-fetch", render: <MvvmPatternFetchPage /> },
     ExampleSharedLibrary: { title: "Example - shared library", path: "/example-shared-ui", render: <ExampleSharedUI /> },
     ExampleBasicRedux: { title: "Example - basic redux", path: "/example-basic-redux", render: <ExampleBasicRedux /> },
-    //ExampleReactLazy: { title: "Example - react lazy", path: "/example-react-lazy", render: <ExampleReactLazy /> },
     //ExampleSimpleCart: { title: "Example - simple cart", path: "/example-simple-cart", render: <ExampleSimpleCart /> },
   }
 

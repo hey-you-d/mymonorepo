@@ -1,5 +1,5 @@
 import React, { useMemo, Suspense } from 'react';
-import { Outlet, Link, Navigate, Routes, Route } from 'react-router-dom';
+import { Outlet, Link, Navigate, Routes, Route, useLocation } from 'react-router-dom';
 
 type FeatureFlags = {
     enableReports: boolean;
@@ -17,13 +17,15 @@ const lazyWithMemo = (importFn: importFnType, flag: boolean) => useMemo(
 );
 
 const LazySamplePageLayout = (): React.ReactElement => {
+    const basePath = "/example-react-lazy";
+
     return (
         <Suspense fallback={<div>Loading view...</div>}>
-            <h1>Lazy Sample Page</h1>
+            <h1>Lazy Loading Page Sample with memoization</h1>
             <ul>
-                <li><Link to="/example-react-lazy/home">Home</Link></li>
-                { featureFlags.enableAdmin && <li><Link to="/example-react-lazy/admin">Admin</Link></li> }
-                { featureFlags.enableReports && <li><Link to="/example-react-lazy/reports">Reports</Link></li> }
+                <li><Link to={`${basePath}/home`}>Home</Link></li>
+                { featureFlags.enableAdmin && <li><Link to={`${basePath}/admin`}>Admin</Link></li> }
+                { featureFlags.enableReports && <li><Link to={`${basePath}/reports`}>Reports</Link></li> }
             </ul>
             <Outlet /> {/* This renders matched child routes */}
         </Suspense>
@@ -49,13 +51,31 @@ const LazySamplePageRoutes = () => {
         [featureFlags.enableAdmin]
     );
     */
+
+    const HomeElement = (
+        <Suspense fallback={<div>Loading Home...</div>}>
+          <Home />
+        </Suspense>
+    );
+
+    const AdminElement = (
+        <Suspense fallback={<div>Loading Admin...</div>}>
+          <Admin />
+        </Suspense>
+    );
+
+    const ReportsElement = (
+        <Suspense fallback={<div>Loading Reports...</div>}>
+          <Reports />
+        </Suspense>
+    );
     
     return (
-        <Routes>
-            <Route key="lazysamplepage-route-1" path="home" element={<Home />} />
-            { featureFlags.enableReports && <Route key="lazysamplepage-route-2" path="reports" element={<Reports />} /> }
-            { featureFlags.enableAdmin && <Route key="lazysamplepage-route-3" path="admin" element={<Admin />} /> }
-            <Route key="lazysamplepage-route-4" path="*" element={<Navigate to="." replace />} />
+        <Routes location={useLocation()}> {/* Add location prop */}
+            <Route key="lazysamplepage-route-1" path="home" element={HomeElement} />
+            { featureFlags.enableReports && <Route key="lazysamplepage-route-2" path="reports" element={ReportsElement} /> }
+            { featureFlags.enableAdmin && <Route key="lazysamplepage-route-3" path="admin" element={AdminElement} /> }
+            <Route key="lazysamplepage-route-4" path="*" element={<Navigate to="../home" replace />} />
         </Routes>
     );
 };
