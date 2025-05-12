@@ -1,39 +1,14 @@
 'use server';
 
-import { ClassicFormExampleType } from "@/app/types/ClassicForm";
+import { GenericFormExampleType } from "@/app/types/GenericForm";
 
-export const saveClassicFormDatasToDatabase = async (formData: ClassicFormExampleType) => {
-    const rawData = {
-        email: formData["email"] as string,
-        firstName: formData["firstName"] as string,
-        password: formData["password"] as string,
-    };
-
-    // server side input validation goes here
-    if (rawData.firstName.length < 10) {
-        return {
-            success: false,
-            message: "First name can't be less than 10 characters.",
-        };
-    }
-
-    console.log("inputs coming from the form ", rawData);
-};
-
-export const saveFormDatasToDatabase = async (_: unknown , formData: FormData) => {
-    const rawData = {
-        email: (formData.get("email") as string) || "",
-        firstName: (formData.get("firstName") as string) || "",
-        password: (formData.get("password") as string) || "",
-    };
-    
-    // server side input validations
+const serverSideValidations = (rawData: GenericFormExampleType) => {
     if (
         !rawData.firstName ||    
         !rawData.email ||
         !rawData.password
     ) {
-        return { message: "Please fill all the areas.", inputs: rawData };
+        return { message: "Server validation: Please fill all the areas.", inputs: rawData };
     }
     
     if (rawData.firstName.length < 10) {
@@ -60,11 +35,35 @@ export const saveFormDatasToDatabase = async (_: unknown , formData: FormData) =
             inputs: rawData,
         };
     }
-    
-    console.log("inputs coming from the form ", rawData);
+
+    // perform POST to DB here...
     
     return {
         success: true,
         message: "Form submitted successfully!",
     };
+} 
+
+export const saveGenericFormDatasToDatabase = async (formData: GenericFormExampleType) => {
+    const rawData = {
+        email: formData["email"] as string,
+        firstName: formData["firstName"] as string,
+        password: formData["password"] as string,
+    } satisfies GenericFormExampleType;
+
+    console.log("inputs coming from the form ", rawData);
+
+    return serverSideValidations(rawData);
+};
+
+export const saveFormDatasToDatabase = async (_: unknown , formData: FormData) => {
+    const rawData = {
+        email: (formData.get("email") as string) || "",
+        firstName: (formData.get("firstName") as string) || "",
+        password: (formData.get("password") as string) || "",
+    } satisfies GenericFormExampleType;
+
+    console.log("inputs coming from the form ", rawData);
+
+    return serverSideValidations(rawData);
 }

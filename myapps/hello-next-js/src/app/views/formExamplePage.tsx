@@ -1,51 +1,50 @@
 'use client';
 // The View connects the ViewModel and UI component.
-import { ChangeEvent, useState, useActionState } from "react";
-import { saveClassicFormDatasToDatabase, saveFormDatasToDatabase } from "@/app/models/FormExample";
-import { ClassicFormExampleType } from "@/app/types/ClassicForm";
+import { useState, useActionState } from "react";
+import { saveGenericFormDatasToDatabase, saveFormDatasToDatabase } from "@/app/models/FormExample";
+import { GenericFormExampleType } from "@/app/types/GenericForm";
 
 const initialState = {
     success: false,
     message: "",
 };
 
-/*
-export const ClassicFormExamplePage = () => {
+export const GenericFormExamplePage = () => {
     const [firstName, setFirstName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
-    const [formInputs, setFormInputs] = useState({
-        firstName: "",
-        email: "",
-        password: "",
-    } satisfies ClassicFormExampleType);
-      
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormInputs((prev) => ({ ...prev, [name]: value }));
-    };
+    const [validationMsg, setValidationMsg] = useState("");
 
     // dev note: onSubmit works on the client-side. So it expects functions that actually will work on the client. 
     // We can't just give it a function that will work on the server. Thats why we use the "classic" action attribute 
     const handleSubmit = async (e: React.MouseEvent) => {
         e.preventDefault();
-        await saveClassicFormDatasToDatabase(formInputs);
+
+        const outcome = await saveGenericFormDatasToDatabase({
+            firstName: firstName,
+            email: email,
+            password: password,
+        } satisfies GenericFormExampleType);
+
+        setValidationMsg(outcome.message);
     };
 
     return (
         <div>
             <input type="text" placeholder="First Name" name="firstName" value={firstName}
-                onChange={handleChange} />   
+                onChange={(e) => setFirstName(e.target.value)} />
+            <br />       
             <input type="email" placeholder="Email" name="email" value={email}
-                onChange={handleChange} />
+                onChange={(e) => setEmail(e.target.value)} />
+            <br />    
             <input type="password" placeholder="Password" name="password" value={password}
-                onChange={handleChange} />
-            <button type="button" onClick={handleSubmit}>Submit</button>    
+                onChange={(e) => setPassword(e.target.value)} />
+            <br />    
+            <button type="button" onClick={handleSubmit}>Submit</button>
+            <p>{validationMsg}</p>    
         </div>
     );
 }
-*/
 
 export const FormExamplePage = () => {
     // dev note:

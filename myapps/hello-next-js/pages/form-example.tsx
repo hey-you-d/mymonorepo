@@ -1,10 +1,14 @@
 import Layout from '../components/Layout';
-import { FormExamplePage } from '@/app/views/formExamplePage';
+import { FormExamplePage, GenericFormExamplePage } from '@/app/views/formExamplePage';
 
 const FormExample = () => {
     return ( 
-        <Layout title="hello-next-js - Form Example with useActionState">
+        <Layout title="hello-next-js - Form Examples">
+            <h2>With React's useActionState</h2>
             <FormExamplePage />
+            <br/>
+            <h2>Generic React form</h2>
+            <GenericFormExamplePage />
             <br />
         </Layout>
     );
