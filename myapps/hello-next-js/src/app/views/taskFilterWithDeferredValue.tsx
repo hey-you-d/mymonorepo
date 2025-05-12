@@ -27,7 +27,7 @@ export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId 
           : [];
     }, [tasks, deferredSearch]);
 
-    return tasks && (
+    return tasks ? (
         <>
           <h2>with useDeferredValue</h2>
           <br/>
@@ -35,5 +35,5 @@ export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId 
           <br/>
           <TaskTable tasks={filteredByDeferredValue} createRow={createRow} updateRowFromId={updateRowFromId} />
         </>
-    );
+    ) : (<></>);
 };

@@ -14,8 +14,8 @@ const featureFlag = {
 export const TaskWithSearchFilterPage = () => {
     const { tasks, loading, error, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();
     
-    loading && <p>Loading...</p>;
-    error && <p>{error.message}</p>;
+    if (loading) return (<p>Loading...</p>);
+    if (error) return (<p>{error.message}</p>);
 
     return tasks ? (
         <>

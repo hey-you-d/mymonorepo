@@ -17,20 +17,22 @@ export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId 
     const [search] = useState("");
     const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
   
-    isPending && <p>Is Pending...</p>;
+    if (isPending) return <p>Is Pending...</p>;
     
     const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       
       // Defer state update using useTransition
       startTransition(() => {
-        tasks && setFilteredTasks(
-          tasks.filter(row => row.detail.toLowerCase().includes(value.toLowerCase()))
-        );
+        if (tasks) {
+            setFilteredTasks(
+            tasks.filter(row => row.detail.toLowerCase().includes(value.toLowerCase()))
+            );
+        }
       });
     };
 
-    return tasks && (
+    return tasks ? (
         <>
           <h2>with useTransition</h2>
           <br/>
@@ -38,5 +40,5 @@ export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId 
           <br/>
           <TaskTable tasks={filteredTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
         </>
-    );
+    ) : (<></>);
 };
