@@ -41,10 +41,13 @@ export const placeholders = tasks
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "POST" :
-            try {
-                const result = await db.query(
-                    `INSERT INTO tasks (title, detail) VALUES ${placeholders} RETURNING *`,
+            try { 
+                await db.query(
+                    `INSERT INTO tasks (title, detail) VALUES ${placeholders}`,
                     values
+                );
+                const result = await db.query(
+                    "SELECT * FROM tasks ORDER BY id DESC;"
                 );
                 
                 return res.status(201).json(result);
