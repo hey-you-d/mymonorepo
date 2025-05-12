@@ -17,7 +17,7 @@ export const TaskWithSearchFilterPage = () => {
     loading && <p>Loading...</p>;
     error && <p>{error.message}</p>;
 
-    return tasks && (
+    return tasks ? (
         <>
           <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
           {featureFlag.withUseDeferredValue && 
@@ -27,5 +27,5 @@ export const TaskWithSearchFilterPage = () => {
             <TaskFilterWithUseTransition tasks={tasks} createRow={createRow} updateRowFromId={updateRowFromId} />
           }  
         </>
-    );
+    ) : (<></>);
 };

@@ -11,10 +11,10 @@ export const TaskPage = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  return tasks && (
+  return tasks ? (
     <>
       <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
       <TaskTable tasks={tasks} createRow={createRow} updateRowFromId={updateRowFromId} />
     </>
-  );
+  ) : (<></>);
 };
