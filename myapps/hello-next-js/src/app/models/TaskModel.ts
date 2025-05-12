@@ -16,6 +16,8 @@ export class TaskModel {
 
         if (!response.ok) {
             console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
+            // If the response isn't OK, throw an error to be caught in the catch block
+            throw new Error(`Database Fetch failed - make sure the DB is running: ${response.status} ${response.statusText}`);
         }
 
         const result:Task[] = await response.json();
