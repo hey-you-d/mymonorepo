@@ -8,7 +8,6 @@ import { TaskModel } from '@/app/models/TaskModel';
 const TasksTableWithSearchFilter = ({ fallback }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const body = (
     <Layout title="hello-next-js - Next.JS API - Backend For Frontend (BFF) demo">
-      <h2>With Search/Filter feature</h2>
       <TaskWithSearchFilterPage />                 
       <br />
     </Layout>
