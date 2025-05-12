@@ -1,6 +1,6 @@
 //import { render, screen } from '@testing-library/react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useReduxCounterViewModel } from './useReduxCounterViewModel';
+import { useReactReduxCounterViewModel } from './useReactReduxCounterViewModel';
 
 // create a mock redux store
 jest.mock('react-redux', () => ({
@@ -19,7 +19,7 @@ describe('useCounterViewModel', () => {
     });
 
     it("should increment counter when increment fn is called", () => {
-        const { increment } = useReduxCounterViewModel();
+        const { increment } = useReactReduxCounterViewModel();
 
         increment();
 
@@ -27,7 +27,7 @@ describe('useCounterViewModel', () => {
     });
 
     it("should increment counter when decrement fn is called", () => {
-        const { decrement } = useReduxCounterViewModel();
+        const { decrement } = useReactReduxCounterViewModel();
 
         decrement();
 
@@ -35,7 +35,7 @@ describe('useCounterViewModel', () => {
     });
 
     it("should set a counter value when setValue fn is called", () => {
-        const { setValue } = useReduxCounterViewModel();
+        const { setValue } = useReactReduxCounterViewModel();
 
         setValue(10);
 

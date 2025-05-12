@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { increment, decrement, setValue } from '../models/ReduxCounterSlice';
 import { ReduxRootState, ReduxAppDispatch } from '../reduxStore';
 
-export const useReduxCounterViewModel = () => {
+export const useReactReduxCounterViewModel = () => {
     const counter = useSelector((state: ReduxRootState) => state.counter.value);
     const dispatch: ReduxAppDispatch = useDispatch();
 
