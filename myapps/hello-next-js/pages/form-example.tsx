@@ -4,7 +4,7 @@ import { FormExamplePage, GenericFormExamplePage } from '@/app/views/formExample
 const FormExample = () => {
     return ( 
         <Layout title="hello-next-js - Form Examples">
-            <h2>With React's useActionState</h2>
+            <h2>With React&#39;s useActionState</h2>
             <FormExamplePage />
             <br/>
             <h2>Generic React form</h2>
