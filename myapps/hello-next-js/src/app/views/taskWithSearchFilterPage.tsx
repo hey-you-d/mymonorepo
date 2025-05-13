@@ -1,19 +1,18 @@
 'use client';
 // The View connects the ViewModel and UI component
-
 import { useTaskViewModelWithSwr } from '../viewModels/useTasksViewModelWithSwr'; 
 import { TaskSeedDB } from '../components/TaskSeedDB';
 import { TaskFilterWithDeferredValue } from './taskFilterWithDeferredValue';
 import { TaskFilterWithUseTransition } from './taskFilterWithUseTransition';
 
 const featureFlag = {
-  withUseDeferredValue: true,
-  withUseTransition: false,
+  withUseDeferredValue: false,
+  withUseTransition: true,
 }
 
 export const TaskWithSearchFilterPage = () => {
     const { tasks, loading, error, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();
-    
+
     if (loading) return (<p>Loading...</p>);
     if (error) return (<p>{error.message}</p>);
 

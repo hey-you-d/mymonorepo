@@ -7,3 +7,9 @@ export type Task = {
 }
 
 export type DataFetchModeType = "getStaticPaths" | "getStaticProps" | "getServerSideProps" | "useEffect";
+
+export type TaskTableType = {
+    tasks: Task[], 
+    createRow: (title: string, detail: string)=> Promise<void>,
+    updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void>
+}
