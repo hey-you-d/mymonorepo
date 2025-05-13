@@ -85,7 +85,11 @@ yarn workspace hello-next-js dev
     - Model component: reusing the default graphql implementation
     - Viewmodel component: [useTaskApolloClientViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTaskApolloClientViewModel.ts)
     - View component: [taskApolloClientPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskApolloClientPage.tsx)
-10. Frontend feature: table filter/search functionality **STATUS: WIP**
+10. Frontend feature: table filter/search functionality optimised with React's useDeferredValue **STATUS: DONE**  
+    - Localhost URL: [http://localhost:3000/hello-next-js/bff-tasks-db/with-search-filter](http://localhost:3000/hello-next-js/bff-tasks-db/with-search-filter)
+    - Model component: reusing the default implementation
+    - Viewmodel component: reusing the default implementation
+    - View component: [taskWithSearchFilterPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskWithSearchFilterPage.tsx)
 11. Frontend styling with Tailwind CSS **STATUS: TODO**
 12. (optional) A feature relying on an event-driven system using Apache Kafka - **STATUS: TODO**
 

@@ -1,6 +1,6 @@
 'use client';
 // The View connects the ViewModel and UI component
-import { useState, useTransition, useMemo } from 'react';
+import { useState, useTransition } from 'react';
 import { TaskTable } from '../components/TaskTable';
 import { Task, TaskTableType } from '../types/Task';
 
@@ -14,7 +14,9 @@ import { Task, TaskTableType } from '../types/Task';
 // - React schedules the setFilteredTasks update, which causes the component to re-render when it's ready.
 // - If your TaskTable or component tree depends heavily on this derived state, it may be causing the input to re-render or re-mount.
 // - As a result, React loses the DOM focus on the input.
-// resolution: save yourself from the potential headache, stick with useDeferredValue
+
+// resolution: 
+// save yourself from the potential headache, stick with useDeferredValue
 export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId } : TaskTableType) => {
     // dev note: 
     // recall, react state updates are blocking
