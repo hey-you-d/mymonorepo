@@ -6,8 +6,8 @@ import { TaskFilterWithDeferredValue } from './taskFilterWithDeferredValue';
 import { TaskFilterWithUseTransition } from './taskFilterWithUseTransition';
 
 const featureFlag = {
-  withUseDeferredValue: false,
-  withUseTransition: true,
+  withUseDeferredValue: true, // use this to optimise your filter feature 
+  withUseTransition: false, // save yourself from potential headache, try not to use this
 }
 
 export const TaskWithSearchFilterPage = () => {
