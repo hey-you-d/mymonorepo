@@ -4,11 +4,7 @@ import { useTaskViewModelWithSwr } from '../viewModels/useTasksViewModelWithSwr'
 import { TaskSeedDB } from '../components/TaskSeedDB';
 import { TaskFilterWithDeferredValue } from './taskFilterWithDeferredValue';
 import { TaskFilterWithUseTransition } from './taskFilterWithUseTransition';
-
-const featureFlag = {
-  withUseDeferredValue: true, // highly recommended to optimise your filter feature 
-  withUseTransition: false, // not recommended, not really suitable for this feature
-}
+import { TABLE_FILTER_OPTIMISATION as featureFlag } from "../../../feature-flags/tasksBff";
 
 export const TaskWithSearchFilterPage = () => {
     const { tasks, loading, error, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();

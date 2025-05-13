@@ -4,7 +4,7 @@
 // responding to user actions passed in as props.
 import React from 'react';
 import { Task } from "../types/Task";
-import { MONOREPO_PREFIX } from "../../../constants/common";
+import { MONOREPO_PREFIX } from "../../../global/common";
 
 type TaskTableType = {
     row: Task,

@@ -1,5 +1,5 @@
 import path from 'path';
-import { DATA_FETCH_MODE } from '../../../constants/tasksBff';
+import { DATA_FETCH_MODE } from '../../../feature-flags/tasksBff';
 
 const serversConfig = DATA_FETCH_MODE === "getServerSideProps"
   ? {

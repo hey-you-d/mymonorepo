@@ -1,7 +1,7 @@
 import Layout from '../../components/Layout';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { TaskWithSearchFilterPage } from '@/app/views/taskWithSearchFilterPage';
-import { DATA_FETCH_MODE } from '../../constants/tasksBff';
+import { DATA_FETCH_MODE } from '../../feature-flags/tasksBff';
 import { SWRConfig } from 'swr';
 import { TaskModel } from '@/app/models/TaskModel';
 

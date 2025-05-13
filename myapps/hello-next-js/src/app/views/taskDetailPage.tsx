@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useTaskViewModelWithSwr } from '../viewModels/useTasksViewModelWithSwr';
 import { TaskDetail } from '../components/TaskDetail';
 import { Task } from '@/app/types/Task';
-import { MONOREPO_PREFIX } from '../../../constants/common';
+import { MONOREPO_PREFIX } from '../../../global/common';
 
 export const TaskDetailPage = ({id}: {id: number}) => {
   //const { tasks, loading, deleteRowFromId } = useTaskViewModel();

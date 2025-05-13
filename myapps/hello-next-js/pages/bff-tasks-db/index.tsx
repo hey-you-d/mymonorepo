@@ -4,7 +4,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { SWRConfig } from 'swr';
 import { TaskModel } from '@/app/models/TaskModel';
 //import { Task } from '@/app/types/Task';
-import { DATA_FETCH_MODE } from '../../constants/tasksBff';
+import { DATA_FETCH_MODE } from '../../feature-flags/tasksBff';
 
 //type Props = {
 //  fallback: Record<string, Task[]>;

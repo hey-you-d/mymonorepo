@@ -63,7 +63,7 @@ yarn workspace hello-next-js dev
     - MVVM - viewmodel component: [useTasksViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModel.ts)
     - MVVM - view component: [taskPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskPage.tsx)
     - MVVM - view component #2: [taskDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskDetailPage.tsx)
-    - Next.js SSR/CSR toggle flag: [tasksBff.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/constants/tasksBff.ts)
+    - Next.js SSR/CSR toggle flag: [tasksBff.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/feature-flags/tasksBff.ts)
 3. API Authentication with JWT - **STATUS: TODO**
 4. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
 5. Frontend feature: Client-side Caching implementation with Vercel SWR - **STATUS: DONE**
