@@ -9,10 +9,10 @@ export const TaskGraphQLPage = () => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
-    return tasks && (
+    return tasks ? (
         <>
             <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTaskDB} deleteAllRows={deleteAllRows} />
             <TaskTable tasks={tasks} createRow={createRow} updateRowFromId={updateRowFromId} />
         </>
-    );
+    ) : (<></>);
 }

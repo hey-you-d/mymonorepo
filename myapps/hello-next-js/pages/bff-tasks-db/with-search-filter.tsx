@@ -1,21 +1,14 @@
 import Layout from '../../components/Layout';
-import { TaskPage } from '@/app/views/taskPage';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { TaskWithSearchFilterPage } from '@/app/views/taskWithSearchFilterPage';
+import { DATA_FETCH_MODE } from '../../feature-flags/tasksBff';
 import { SWRConfig } from 'swr';
 import { TaskModel } from '@/app/models/TaskModel';
-//import { Task } from '@/app/types/Task';
-import { DATA_FETCH_MODE } from '../../feature-flags/tasksBff';
 
-//type Props = {
-//  fallback: Record<string, Task[]>;
-//};
-
-// dev note: alternatively...
-//const BffTasksDB = ({ fallback }: Props) => {
-const BffTasksDB = ({ fallback }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const TasksTableWithSearchFilter = ({ fallback }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const body = (
     <Layout title="hello-next-js - Next.JS API - Backend For Frontend (BFF) demo">
-      <TaskPage />                 
+      <TaskWithSearchFilterPage />                 
       <br />
     </Layout>
   );
@@ -42,4 +35,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-export default BffTasksDB;
+export default TasksTableWithSearchFilter;

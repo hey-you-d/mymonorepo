@@ -16,7 +16,7 @@ function App() {
     Home: { title: "Home", path: "/", render: <></> },
     MvvmPatternFetchPage: { title: "MVVM Pattern - data fetch example", path: "/mvvm-pattern-fetch", render: <MvvmPatternFetchPage /> },
     ExampleSharedLibrary: { title: "Example - shared library", path: "/example-shared-ui", render: <ExampleSharedUI /> },
-    ExampleBasicRedux: { title: "Example - basic redux", path: "/example-basic-redux", render: <ExampleBasicRedux /> },
+    ExampleBasicRedux: { title: "Example - react & generic redux", path: "/example-basic-redux", render: <ExampleBasicRedux /> },
     //ExampleSimpleCart: { title: "Example - simple cart", path: "/example-simple-cart", render: <ExampleSimpleCart /> },
   }
 

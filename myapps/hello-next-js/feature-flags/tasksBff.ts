@@ -12,3 +12,9 @@ export const TASKS_BFF_BASE_API_URL =
     `${["getServerSideProps", "getStaticPaths", "getStaticProps"].includes(DATA_FETCH_MODE) 
         ? BASE_URL 
         : ""}/api/tasks/v1/sql`;
+
+export const TABLE_FILTER_OPTIMISATION = {
+  withUseDeferredValue: true, // highly recommended to optimise your filter feature 
+  withUseTransition: false, // not recommended, not really suitable for this feature
+}
+        

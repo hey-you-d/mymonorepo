@@ -1,7 +1,9 @@
 import React from 'react';
-import { useReduxCounterViewModel } from '../viewModels/useReduxCounterViewModel';
-const ReduxExamplePage = () => {
-    const { counter, increment, decrement, setValue } = useReduxCounterViewModel();
+import { useReactReduxCounterViewModel } from '../viewModels/useReactReduxCounterViewModel';
+import { useGenericReduxSelector, store, increment } from '../viewModels/useGenericReduxSelector';
+
+const ReactReduxExamplePage = () => {
+    const { counter, increment, decrement, setValue } = useReactReduxCounterViewModel();
     const [inputValue, setInputValue] = React.useState<number>(counter);
 
     return (
@@ -16,4 +18,18 @@ const ReduxExamplePage = () => {
     );
 }
 
-export default ReduxExamplePage;
+const GenericReduxExamplePage = () => {
+    const count = useGenericReduxSelector(state => state.count);
+
+    return (
+        <div>
+            <p>Counter: {count}</p>
+            <button onClick={() => store.dispatch(increment())}>Increment</button>
+        </div>
+    );
+}
+
+export {
+    ReactReduxExamplePage,
+    GenericReduxExamplePage
+};

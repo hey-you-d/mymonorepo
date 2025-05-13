@@ -1,5 +1,5 @@
 // DEV NOTE: The Model manages the data and business logic of the app.
-import { TASKS_BFF_BASE_API_URL } from "../../../constants/tasksBff";
+import { TASKS_BFF_BASE_API_URL } from "../../../feature-flags/tasksBff";
 import { Task } from "../types/Task";
 
 export class TaskModel {    
@@ -16,6 +16,8 @@ export class TaskModel {
 
         if (!response.ok) {
             console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
+            // If the response isn't OK, throw an error to be caught in the catch block
+            throw new Error(`Database Fetch failed - make sure the DB is running: ${response.status} ${response.statusText}`);
         }
 
         const result:Task[] = await response.json();

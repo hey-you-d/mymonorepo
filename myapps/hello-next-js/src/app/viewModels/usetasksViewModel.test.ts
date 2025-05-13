@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useTaskViewModel } from './useTasksViewModel';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
-import { DATA_FETCH_MODE } from "../../../constants/tasksBff";
+import { DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
 
 // Mock the entire TaskModel module
 jest.mock('../models/TaskModel');

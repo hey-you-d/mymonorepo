@@ -29,6 +29,8 @@ Setup instruction (localhost) & Work Progress Log: [README](https://github.com/h
 6. Server-side Caching: To be determined. 
 7. Documentation: Swagger API Doc.
 8. Unit Test: Jest Testing Framework.
+9. Frontend: react.js, and Next.js 
+10. Frontend CSS Styling: Tailwind CSS
 
 ## Links
 1. [Production site - hello-react-js](https://www.yudimankwanmas.com)

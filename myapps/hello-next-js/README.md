@@ -57,16 +57,16 @@ yarn workspace hello-next-js dev
 1. Core API Endpoint implementation - **STATUS: DONE**  
     - endpoint URL: **/api/tasks/v1/sql** - check out the Swagger doc (bullet point #6). 
     - endpoint module: [https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api) 
-2. Barebones frontend implementation with unit test - **STATUS: DONE**  
+2. Core Frontend implementation (no styling) with unit test - **STATUS: DONE**  
     - Localhost URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
     - MVVM - model component: [TaskModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/models/TaskModel.ts)
     - MVVM - viewmodel component: [useTasksViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModel.ts)
     - MVVM - view component: [taskPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskPage.tsx)
     - MVVM - view component #2: [taskDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskDetailPage.tsx)
-    - Next.js SSR/CSR toggle flag: [tasksBff.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/constants/tasksBff.ts)
+    - Next.js SSR/CSR toggle flag: [tasksBff.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/feature-flags/tasksBff.ts)
 3. API Authentication with JWT - **STATUS: TODO**
 4. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
-5. Client-side Caching implementation with Vercel SWR - **STATUS: DONE**
+5. Frontend feature: Client-side Caching implementation with Vercel SWR - **STATUS: DONE**
     - Localhost URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)  
     - Model component: reusing the default implementation
     - ViewModel component: [useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts)
@@ -75,17 +75,23 @@ yarn workspace hello-next-js dev
 7. Swagger Doc integration - **STATUS: DONE**  
     - Localhost URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger)
     - Merged PR: [https://github.com/hey-you-d/mymonorepo/pull/37/files](https://github.com/hey-you-d/mymonorepo/pull/37/files)
-8. Alternative data query with Apollo GraphQL Server **STATUS: DONE**  
+8. Frontend feature: Alternative data query with Apollo GraphQL Server **STATUS: DONE**  
     - Localhost URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql)
     - Model component: [TaskGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/models/TaskGraphqlClient.ts)
     - Viewmodel component: [useTaskGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTaskGraphQLViewModel.ts)
     - View component: [taskGraphQLPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskGraphQLPage.tsx)
-9. Alternative GraphQL frontend implementation with Apollo Client (with in-memory cache enabled)
+9. Frontend feature: Alternative GraphQL implementation with Apollo Client (with in-memory cache enabled)
     - Localhost URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient](http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient)  
     - Model component: reusing the default graphql implementation
     - Viewmodel component: [useTaskApolloClientViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTaskApolloClientViewModel.ts)
     - View component: [taskApolloClientPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskApolloClientPage.tsx)
-10. (optional) A feature relying on an event-driven system using Apache Kafka - **STATUS: TODO**
+10. Frontend feature: table filter/search functionality optimised with React's useDeferredValue **STATUS: DONE**  
+    - Localhost URL: [http://localhost:3000/hello-next-js/bff-tasks-db/with-search-filter](http://localhost:3000/hello-next-js/bff-tasks-db/with-search-filter)
+    - Model component: reusing the default implementation
+    - Viewmodel component: reusing the default implementation
+    - View component: [taskWithSearchFilterPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskWithSearchFilterPage.tsx)
+11. Frontend styling with Tailwind CSS **STATUS: TODO**
+12. (optional) A feature relying on an event-driven system using Apache Kafka - **STATUS: TODO**
 
 #### Remote site demo (Prod & Dev branches)
 - **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db) 

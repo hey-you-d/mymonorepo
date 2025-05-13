@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
-import { DATA_FETCH_MODE } from "../../../constants/tasksBff";
+import { DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
 
 export const useTaskViewModel = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

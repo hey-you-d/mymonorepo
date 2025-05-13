@@ -3,7 +3,7 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
 import useSWR, { mutate } from 'swr';
-import { TASKS_BFF_BASE_API_URL, DATA_FETCH_MODE } from "../../../constants/tasksBff";
+import { TASKS_BFF_BASE_API_URL, DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
 
 const fetcher = async () => {
     try {
@@ -16,15 +16,14 @@ const fetcher = async () => {
 
         if (!response.ok) {
             console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
+            throw new Error(`Database Fetch failed: ${response.status} ${response.statusText}`);
         }
-
         const result:Task[] = await response.json();
 
         return result;
     } catch(error) {
-        console.error("Error fetching all rows: ", error );
-
-        throw error;
+        //console.error("Error fetching all rows: ", error );
+        throw error; // Important: propagate error to SWR
     } 
 };
 
