@@ -5,6 +5,32 @@ import { Task } from "../types/Task";
 export class TaskModel {    
     constructor() {}
 
+    // for debug only
+    async getJwt(): Promise<{jwtSecret: string}> {
+      try {
+        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/jwt`, {
+          method: 'GET',
+          headers: {
+              "Content-Type": "application/json",
+          }
+        });
+
+        if (!response.ok) {
+          console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
+          // If the response isn't OK, throw an error to be caught in the catch block
+          throw new Error(`JWT Fetch failed: ${response.status} ${response.statusText}`);
+        }
+
+        const result:{ jwtSecret:string } = await response.json();
+      
+        return result;
+      } catch(error) {
+        console.error("Error fetching all rows: ", error );
+
+        throw error;
+      }
+    }
+
     async getTasksDBRows(): Promise<Task[]> {
       try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/`, {

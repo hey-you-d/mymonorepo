@@ -1,5 +1,5 @@
 import { UserPage } from "@/app/views/userPage";
-import Layout from '../components/Layout';
+import Layout from '../pagesLayouts/Layout';
 
 const AxiosFetchMVVM = () => {
     return ( 

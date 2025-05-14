@@ -22,7 +22,7 @@ const fetcher = async () => {
 
         return result;
     } catch(error) {
-        //console.error("Error fetching all rows: ", error );
+        console.error("Error fetching all rows: ", error );
         throw error; // Important: propagate error to SWR
     } 
 };

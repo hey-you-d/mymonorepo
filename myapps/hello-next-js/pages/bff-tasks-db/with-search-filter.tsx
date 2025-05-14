@@ -1,4 +1,4 @@
-import Layout from '../../components/Layout';
+import Layout from "../../pagesLayouts/Layout";
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { TaskWithSearchFilterPage } from '@/app/views/taskWithSearchFilterPage';
 import { DATA_FETCH_MODE } from '../../feature-flags/tasksBff';

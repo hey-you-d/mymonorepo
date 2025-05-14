@@ -1,4 +1,4 @@
-import Layout from '../components/Layout';
+import Layout from '../pagesLayouts/Layout';
 import ReduxSagaExamplePage from '@/app/views/reduxSagaExamplePage';
 
 const ExampleReduxSaga = () => {
