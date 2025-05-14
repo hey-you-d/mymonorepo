@@ -3,11 +3,11 @@ import { useMemo, useCallback, useEffect } from 'react';
 import { TaskModel } from '../models/TaskModel';
 import { Task } from '../types/Task';
 import useSWR, { mutate } from 'swr';
-import { TASKS_BFF_BASE_API_URL, DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
+import { TASKS_SQL_BASE_API_URL, DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
 
 const fetcher = async () => {
     try {
-        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/`, {
+        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

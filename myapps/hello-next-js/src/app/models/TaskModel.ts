@@ -1,5 +1,5 @@
 // DEV NOTE: The Model manages the data and business logic of the app.
-import { TASKS_BFF_BASE_API_URL } from "../../../feature-flags/tasksBff";
+import { TASKS_SQL_BASE_API_URL, TASKS_BFF_BASE_API_URL } from "../../../feature-flags/tasksBff";
 import { Task } from "../types/Task";
 
 export class TaskModel {    
@@ -8,7 +8,7 @@ export class TaskModel {
     // for debug only
     async getJwt(): Promise<{jwtSecret: string}> {
       try {
-        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/jwt`, {
+        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/jwt`, {
           method: 'GET',
           headers: {
               "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export class TaskModel {
       
         return result;
       } catch(error) {
-        console.error("Error fetching all rows: ", error );
+        console.error("Error fetching JWT: ", error );
 
         throw error;
       }
@@ -68,7 +68,7 @@ export class TaskModel {
         if (!response.ok) {
             const errorText = await response.text(); // <- Just read as text
             console.error("Error deleting DB Table rows: ", `${response.status} - ${response.statusText} - ${errorText}`);
-            throw new Error(`Error fetching row: ${response.status}`);
+            throw new Error(`Error deleting DB Table rows: ${response.status}`);
         }
         
         const result: Task[] = await response.json();
@@ -92,7 +92,7 @@ export class TaskModel {
         if (!response.ok) {
             const errorText = await response.text(); // <- Just read as text
             console.error("Error seeding tasks DB: ", `${response.status} - ${response.statusText} - ${errorText}`);
-            throw new Error(`Error fetching row: ${response.status}`);
+            throw new Error(`Error seeding tasks DB: ${response.status}`);
         }
 
         const result = await response.json();
@@ -106,7 +106,7 @@ export class TaskModel {
 
     async getRowFromId(id: number): Promise<Task[]> {
       try {
-        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
+        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -158,7 +158,7 @@ export class TaskModel {
 
     async updateRowFromId(id: number, title: string, detail: string, completed: boolean): Promise<void> {
       try {
-        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
+        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",
@@ -186,7 +186,7 @@ export class TaskModel {
 
     async deleteRowFromId(id: number): Promise<void> {
       try {
-        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
+        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",

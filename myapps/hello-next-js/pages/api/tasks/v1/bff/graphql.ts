@@ -1,0 +1,82 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { DOMAIN_URL } from "../../../../../feature-flags/tasksBff";
+
+export const config = {
+    api: {
+        bodyParser: true, // GraphQL body is JSON
+    },
+};
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    switch (req.method) {
+        case "POST" :
+            try {
+                const { query, variables } = req.body;
+                if (!query) return res.status(400).json({ error: 'BFF graphql proxy error - Query is required' });
+                if (!variables) return res.status(400).json({ error: 'BFF graphql proxy error - Variable is required' });  
+
+                // dev note:
+                // The GraphQL handler is registered under: /api/tasks/v1/sql/graphql
+                // and and Next.js API routes are not automatically prefixed with your basePath (like /hello-next-js) — that's 
+                // only used for page routes and static assets, not API routes.
+                const proxyResponse = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, { // V - correct
+                //const proxyResponse = await fetch(`${BASE_URL}/api/tasks/v1/sql/graphql`, {  // X - wrong
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": "", // TODO
+                    },
+                    body: JSON.stringify({
+                        query,
+                        variables
+                    }),
+                });
+                
+                if (!proxyResponse.ok) {
+                    console.error(`BFF Error fetching data with graphql server: ${proxyResponse.status} - ${proxyResponse.statusText}`);
+                    // If the response isn't OK, throw an error to be caught in the catch block
+                    throw new Error(`BFF Error fetching data with graphql server: ${proxyResponse.status} ${proxyResponse.statusText}`);
+                }
+
+                // dev note:
+                // const rawBody = await proxyResponse.text(); // receive entire raw body
+                // res.status(proxyResponse.status).send(rawBody);
+                // -> you're Not parsing the data yourself. 
+                // -> Forwarding everything, including potential errors, non-JSON responses, etc.
+                // -> This is safest if you're not sure if the response is always JSON.
+                // -> It preserves the original response as-is — headers, structure, and format.
+                // const json = await proxyResponse.json(); // parse JSON
+                // return res.status(200).json(json);       // re-wrap and send    
+                // -> You know the response is JSON
+                // -> You want to inspect, manipulate, or sanitize it before returning
+                // -> but this approach adds overhead
+                // -> Can throw if the body isn’t valid JSON
+                // -> Might unintentionally alter the structure (e.g., lose GraphQL error fields)    
+
+                /*
+                const result:Task[] = await proxyResponse.json();
+                return res.status(200).json(result);
+                */
+
+                const contentType = proxyResponse.headers.get('content-type');
+                const rawBody = await proxyResponse.text(); // await this fully
+
+                res.status(proxyResponse.status);
+
+                if (contentType?.includes('application/json')) {
+                    res.setHeader('Content-Type', 'application/json');
+                    res.send(rawBody); // forward raw response
+                } else {
+                    res.send(rawBody); // fallback: text/plain, etc.
+                }
+            } catch (err) {
+                console.error("BFF graphql proxy error", err); // Log detailed error
+                return res.status(500).json({ error: "BFF graphql proxy error" });
+            } 
+        default:
+            res.setHeader('Allow', ['POST']);
+            res.status(405).end(`Method ${req.method} Not Allowed`);          
+    }
+}
+  
+export default handler;

@@ -72,6 +72,7 @@ const resolvers = {
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
+const startServer = server.start();
 
 export const config = {
     api: {
@@ -79,10 +80,12 @@ export const config = {
     }
 };
 
-const startServer = server.start();
+const handler = async(req: NextApiRequest, res: NextApiResponse) => {
+    await startServer;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await startServer;
-  const handler = server.createHandler({ path: '/api/tasks/v1/sql/graphql' });
-  return handler(req, res);
+    // set up graphql endpoint at /api/tasks/v1/sql/graphql
+    const graphqlHandler = server.createHandler({ path: '/api/tasks/v1/sql/graphql' });
+    return graphqlHandler(req, res);
 }
+
+export default handler;
