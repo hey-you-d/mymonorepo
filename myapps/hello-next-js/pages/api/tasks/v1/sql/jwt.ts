@@ -1,4 +1,4 @@
-// for debugging only
+// for testing @aws-sdk/client-secrets-manager
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSecret } from '../../../../../global/awsSecretManager';
 
