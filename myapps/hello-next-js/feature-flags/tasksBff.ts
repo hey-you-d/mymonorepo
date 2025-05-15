@@ -19,7 +19,7 @@ export const TASKS_SQL_BASE_API_URL =
       : ""}/api/tasks/v1/sql`;        
 
 export const TABLE_FILTER_OPTIMISATION = {
-  withUseDeferredValue: true, // highly recommended to optimise your filter feature 
-  withUseTransition: false, // not recommended, not really suitable for this feature
+  withUseDeferredValue: true, // recommended to optimise your filter feature 
+  withUseTransition: false, // not recommended for this use case scenario
 }
         
