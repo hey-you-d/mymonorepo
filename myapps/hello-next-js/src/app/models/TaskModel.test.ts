@@ -55,7 +55,7 @@ describe('TaskModel', () => {
     it('should handle fetch error', async () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse(false, { error: 'Server error' }));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Database Fetch failed - make sure the DB is running: 500 Internal Server Error");
+      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
       expect(fetch).toHaveBeenCalledTimes(1);
     });
 
@@ -86,7 +86,7 @@ describe('TaskModel', () => {
     it('should handle delete error', async () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse(false, { error: 'Delete failed' }));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Database Fetch failed - make sure the DB is running: 500 Internal Server Error");
+      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
       expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
@@ -110,7 +110,7 @@ describe('TaskModel', () => {
     it('should handle seed error', async () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse(false, { error: 'Seed failed' }));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Database Fetch failed - make sure the DB is running: 500 Internal Server Error");
+      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
       expect(fetch).toHaveBeenCalledTimes(1);
     });
   });

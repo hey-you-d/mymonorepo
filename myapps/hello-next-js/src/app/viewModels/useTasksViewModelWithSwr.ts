@@ -1,15 +1,17 @@
 'use client';
 import { useMemo, useCallback, useEffect } from 'react';
-import { TaskModel } from '../models/TaskModel';
+import { TaskModel, swrFetcher } from '../models/TaskModel';
 import { Task } from '../types/Task';
 import useSWR, { mutate } from 'swr';
 import { DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
+import { TASKS_SQL_BASE_API_URL, TASKS_BFF_BASE_API_URL } from '../../../feature-flags/tasksBff';
 
 const fetcher = async () => {
-    const taskModel = new TaskModel();
-    const result: Task[] = await taskModel.getTasksDBRows();
+    return await swrFetcher();
+    //const taskModel = new TaskModel();
+    //const result: Task[] = await taskModel.getTasksDBRows();
 
-    return result;     
+    //return result;
 };
 
 export const useTaskViewModelWithSwr = () => {

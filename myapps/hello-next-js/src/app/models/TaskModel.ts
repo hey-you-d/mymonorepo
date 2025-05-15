@@ -2,6 +2,28 @@
 import { TASKS_BFF_BASE_API_URL } from "../../../feature-flags/tasksBff";
 import { Task } from "../types/Task";
 
+export const swrFetcher = async () => {
+  try {
+      const response = await fetch(`${TASKS_BFF_BASE_API_URL}/`, {
+          method: 'GET',
+          headers: {
+              "Content-Type": "application/json",
+          }
+      });
+
+      if (!response.ok) {
+          console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
+          throw new Error(`Database Fetch failed: ${response.status} ${response.statusText}`);
+      }
+      const result:Task[] = await response.json();
+  
+      return result;
+  } catch(error) {
+      console.error("Error fetching all rows: ", error );
+      throw error; // Important: propagate error to SWR
+  }
+}
+
 export class TaskModel {    
     constructor() {}
 
@@ -16,9 +38,9 @@ export class TaskModel {
         });
 
         if (!response.ok) {
-          console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
+          console.error("Error: JWT Fetch failed: ", `${response.status} - ${response.statusText}`);
           // If the response isn't OK, throw an error to be caught in the catch block
-          throw new Error(`JWT Fetch failed: ${response.status} ${response.statusText}`);
+          throw new Error(`Error: JWT Fetch failed: ${response.status} ${response.statusText}`);
         }
 
         const result:{ jwtSecret:string } = await response.json();
@@ -43,7 +65,7 @@ export class TaskModel {
         if (!response.ok) {
             console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
             // If the response isn't OK, throw an error to be caught in the catch block
-            throw new Error(`Database Fetch failed - make sure the DB is running: ${response.status} ${response.statusText}`);
+            throw new Error(`Error fetching all rows: ${response.status} ${response.statusText}`);
         }
 
         const result:Task[] = await response.json();

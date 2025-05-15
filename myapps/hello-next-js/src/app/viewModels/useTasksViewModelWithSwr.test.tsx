@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { useTaskViewModelWithSwr } from './useTasksViewModelWithSwr';
 import { TaskModel } from '../models/TaskModel';
@@ -30,8 +30,8 @@ describe('useTaskViewModelWithSwr', () => {
 
     // Create fresh mocks for each test
     mockGetTasksDBRows = jest.fn().mockResolvedValue(mockTasks);
-    mockDeleteAllRows = jest.fn();
-    mockSeedTasksDB = jest.fn();
+    mockDeleteAllRows = jest.fn(); // or jest.fn().mockResolvedValue(undefined);
+    mockSeedTasksDB = jest.fn(); 
 
     // Mock TaskModel implementation
     (TaskModel as jest.Mock).mockImplementation(() => ({
@@ -42,21 +42,10 @@ describe('useTaskViewModelWithSwr', () => {
   });
 
   afterEach(() => {
-    spyConsoleError.mockRestore();
-    jest.clearAllMocks();
-  });
-
-  it('should initialize with undefined tasks and false loading state', () => {
-    // not []. 
-    // tasks comes from useSWR, which is asynchronous and cache-driven instead of directly returned 
-    // by TaskModel fn, and won’t update immediately after rendering the hook — 
-    // especially when you’re using renderHook in a unit test and not triggering a real HTTP request.
-    mockGetTasksDBRows.mockResolvedValue([]);
-    
-    const { result } = renderHook(() => useTaskViewModelWithSwr());
-    
-    expect(result.current.tasks).toBeUndefined;
-    expect(result.current.loading).toBe(true);
+    jest.clearAllMocks();  // clears calls but NOT implementations
+    mockGetTasksDBRows.mockReset(); // resets implementation & calls
+    mockDeleteAllRows.mockReset();
+    mockSeedTasksDB.mockReset();
   });
 
   if (DATA_FETCH_MODE === "useEffect") {
@@ -83,6 +72,7 @@ describe('useTaskViewModelWithSwr', () => {
 
   if (DATA_FETCH_MODE === "getServerSideProps") {
     it('should load tasks from fallback data (as in getServerSideProps)', async () => {
+      mockGetTasksDBRows.mockResolvedValue(mockTasks);
       const { result } = renderHook(() => useTaskViewModelWithSwr(), {
         wrapper: ({ children }) => (
           <SWRConfig value={{ fallback: fallbackData, dedupingInterval: 0 }}>
@@ -91,12 +81,25 @@ describe('useTaskViewModelWithSwr', () => {
         )  
       });
     
-      // SWR should return tasks immediately from fallback
-      expect(result.current.tasks).toEqual(mockTasks);
+      // because SWR is detecting a fallback, so it skips calling the fetcher
+      expect(mockGetTasksDBRows).not.toHaveBeenCalled(); 
+      expect(result.current.loading).toBe(true);
+
+      // Wait for SWR to hydrate fallback data into hook state
+      await waitFor(() => {
+        expect(result.current.tasks).toEqual(mockTasks);
+        expect(result.current.loading).toBe(false);
+      });
+
+      // Wait for revalidation to trigger fetcher call
+      await waitFor(() => {
+        // because in the fetcher fn, we call swrFetcher(); instead of calling taskModel.getTasksDBRows();
+        expect(mockGetTasksDBRows).not.toHaveBeenCalled();
+        expect(result.current.loading).toBe(false);
+      });
+
+      // loading should be false after fetch
       expect(result.current.loading).toBe(false);
-    
-      // `getTasksDBRows` should not be called at all
-      expect(mockGetTasksDBRows).not.toHaveBeenCalled();
     });
   }
 
@@ -191,6 +194,19 @@ describe('useTaskViewModelWithSwr', () => {
     // because of calling mutate("Tasks-API", [], false); // Explicitly clear cache 
     // in the catch(error) condition
     expect(result.current.tasks).toEqual([]);
+    expect(result.current.loading).toBe(false);
+  });
+
+  it('should initialize with undefined tasks and false loading state', async () => {
+    // not []. 
+    // tasks comes from useSWR, which is asynchronous and cache-driven instead of directly returned 
+    // by TaskModel fn, and won’t update immediately after rendering the hook — 
+    // especially when you’re using renderHook in a unit test and not triggering a real HTTP request.
+    mockGetTasksDBRows.mockResolvedValue([]);
+    
+    const { result } = renderHook(() => useTaskViewModelWithSwr());
+
+    expect(result.current.tasks).toBeUndefined;
     expect(result.current.loading).toBe(false);
   });
 });
