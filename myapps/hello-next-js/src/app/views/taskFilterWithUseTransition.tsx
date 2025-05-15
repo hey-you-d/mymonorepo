@@ -33,8 +33,6 @@ export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId 
     const [search, setSearch] = useState("");
     const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks);
 
-    const filterInputField = useRef<HTMLInputElement>(null);    
-  
     if (isPending) return (<p>Is Pending...</p>);
 
     const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +45,6 @@ export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId 
             setFilteredTasks(
               tasks.filter(row => row.detail.toLowerCase().includes(value.toLowerCase()))
             );
-            filterInputField.current?.focus;
         }
       });
     };
