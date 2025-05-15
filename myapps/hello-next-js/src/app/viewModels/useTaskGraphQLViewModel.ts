@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { fetchGraphQL } from '../models/TaskGraphqlClient';
 import { Task } from '../types/Task';
-
+    
 export const useTaskGraphQLViewModel = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);

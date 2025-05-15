@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/bff/tasks/db_postgreSQL';
+import { CHECK_BFF_AUTHORIZATION } from '../../../../../global/common';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    await CHECK_BFF_AUTHORIZATION(req, res);
+    
     switch (req.method) {
         /**
          * @swagger
@@ -40,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const { title, detail } = req.body;
                 if (!title) return res.status(400).json({ error: 'Title is required' });
-                if (!title) return res.status(400).json({ error: 'Detail is required' });    
+                if (!detail) return res.status(400).json({ error: 'Detail is required' });    
                 const result = await db.query(
                     `INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *`,
                     [title, detail]

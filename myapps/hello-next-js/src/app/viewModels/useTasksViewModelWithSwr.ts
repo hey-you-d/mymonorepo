@@ -1,30 +1,17 @@
 'use client';
 import { useMemo, useCallback, useEffect } from 'react';
-import { TaskModel } from '../models/TaskModel';
+import { TaskModel, swrFetcher } from '../models/TaskModel';
 import { Task } from '../types/Task';
 import useSWR, { mutate } from 'swr';
-import { TASKS_BFF_BASE_API_URL, DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
+import { DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
 
 const fetcher = async () => {
-    try {
-        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/`, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-            }
-        });
+    return await swrFetcher();
+    // alternatively...
+    //const taskModel = new TaskModel();
+    //const result: Task[] = await taskModel.getTasksDBRows();
 
-        if (!response.ok) {
-            console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
-            throw new Error(`Database Fetch failed: ${response.status} ${response.statusText}`);
-        }
-        const result:Task[] = await response.json();
-
-        return result;
-    } catch(error) {
-        //console.error("Error fetching all rows: ", error );
-        throw error; // Important: propagate error to SWR
-    } 
+    //return result;
 };
 
 export const useTaskViewModelWithSwr = () => {

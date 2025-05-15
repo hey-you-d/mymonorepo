@@ -1,4 +1,4 @@
-import Layout from '../components/Layout';
+import Layout from '../pagesLayouts/Layout';
 import { ExampleComponent } from 'my-shared-ui'
 
 const ExampleMySharedUi = () => {

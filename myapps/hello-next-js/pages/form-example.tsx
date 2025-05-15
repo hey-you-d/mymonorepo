@@ -1,4 +1,4 @@
-import Layout from '../components/Layout';
+import Layout from '../pagesLayouts/Layout';
 import { FormExamplePage, GenericFormExamplePage } from '@/app/views/formExamplePage';
 
 const FormExample = () => {

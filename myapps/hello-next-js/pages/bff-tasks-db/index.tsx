@@ -1,4 +1,4 @@
-import Layout from '../../components/Layout';
+import Layout from "../../pagesLayouts/Layout";
 import { TaskPage } from '@/app/views/taskPage';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { SWRConfig } from 'swr';

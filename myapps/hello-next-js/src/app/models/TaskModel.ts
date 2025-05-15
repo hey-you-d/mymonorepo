@@ -2,8 +2,56 @@
 import { TASKS_BFF_BASE_API_URL } from "../../../feature-flags/tasksBff";
 import { Task } from "../types/Task";
 
+export const swrFetcher = async () => {
+  try {
+      const response = await fetch(`${TASKS_BFF_BASE_API_URL}/`, {
+          method: 'GET',
+          headers: {
+              "Content-Type": "application/json",
+          }
+      });
+
+      if (!response.ok) {
+          console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
+          throw new Error(`Database Fetch failed: ${response.status} ${response.statusText}`);
+      }
+      const result:Task[] = await response.json();
+  
+      return result;
+  } catch(error) {
+      console.error("Error fetching all rows: ", error );
+      throw error; // Important: propagate error to SWR
+  }
+}
+
 export class TaskModel {    
     constructor() {}
+
+    // for debugging only
+    async getJwt(): Promise<{jwtSecret: string}> {
+      try {
+        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/jwt`, {
+          method: 'GET',
+          headers: {
+              "Content-Type": "application/json",
+          }
+        });
+
+        if (!response.ok) {
+          console.error("Error: JWT Fetch failed: ", `${response.status} - ${response.statusText}`);
+          // If the response isn't OK, throw an error to be caught in the catch block
+          throw new Error(`Error: JWT Fetch failed: ${response.status} ${response.statusText}`);
+        }
+
+        const result:{ jwtSecret:string } = await response.json();
+      
+        return result;
+      } catch(error) {
+        console.error("Error fetching JWT: ", error );
+
+        throw error;
+      }
+    }
 
     async getTasksDBRows(): Promise<Task[]> {
       try {
@@ -17,7 +65,7 @@ export class TaskModel {
         if (!response.ok) {
             console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
             // If the response isn't OK, throw an error to be caught in the catch block
-            throw new Error(`Database Fetch failed - make sure the DB is running: ${response.status} ${response.statusText}`);
+            throw new Error(`Error fetching all rows: ${response.status} ${response.statusText}`);
         }
 
         const result:Task[] = await response.json();
@@ -42,7 +90,7 @@ export class TaskModel {
         if (!response.ok) {
             const errorText = await response.text(); // <- Just read as text
             console.error("Error deleting DB Table rows: ", `${response.status} - ${response.statusText} - ${errorText}`);
-            throw new Error(`Error fetching row: ${response.status}`);
+            throw new Error(`Error deleting DB Table rows: ${response.status}`);
         }
         
         const result: Task[] = await response.json();
@@ -66,7 +114,7 @@ export class TaskModel {
         if (!response.ok) {
             const errorText = await response.text(); // <- Just read as text
             console.error("Error seeding tasks DB: ", `${response.status} - ${response.statusText} - ${errorText}`);
-            throw new Error(`Error fetching row: ${response.status}`);
+            throw new Error(`Error seeding tasks DB: ${response.status}`);
         }
 
         const result = await response.json();

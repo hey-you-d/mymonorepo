@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/bff/tasks/db_postgreSQL';
+import { CHECK_BFF_AUTHORIZATION } from '../../../../../global/common';
 
 const tasks = [
     { title: 'Build Next.js CRUD', detail: 'Add full backend API layer to hello-next-js app' },
@@ -39,6 +40,8 @@ export const placeholders = tasks
  *         description: database error
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    await CHECK_BFF_AUTHORIZATION(req, res);
+    
     switch (req.method) {
         case "POST" :
             try { 

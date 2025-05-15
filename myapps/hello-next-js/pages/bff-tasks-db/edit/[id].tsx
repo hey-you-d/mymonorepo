@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import Layout from "../../../components/Layout";
+import Layout from "../../../pagesLayouts/Layout";
 import { TaskDetailPage } from "@/app/views/taskDetailPage";
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 

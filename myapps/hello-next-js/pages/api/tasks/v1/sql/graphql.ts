@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/bff/tasks/db_postgreSQL';
 import { Task } from "@/app/types/Task";
 import { values, placeholders } from "./seed-table";
+import { CHECK_BFF_AUTHORIZATION } from '../../../../../global/common';
 
 const typeDefs = gql`
     type Task {
@@ -72,6 +73,7 @@ const resolvers = {
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
+const startServer = server.start();
 
 export const config = {
     api: {
@@ -79,10 +81,14 @@ export const config = {
     }
 };
 
-const startServer = server.start();
+const handler = async(req: NextApiRequest, res: NextApiResponse) => {
+    await CHECK_BFF_AUTHORIZATION(req, res);
+    
+    await startServer;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await startServer;
-  const handler = server.createHandler({ path: '/api/tasks/v1/sql/graphql' });
-  return handler(req, res);
+    // set up graphql endpoint at /api/tasks/v1/sql/graphql
+    const graphqlHandler = server.createHandler({ path: '/api/tasks/v1/sql/graphql' });
+    return graphqlHandler(req, res);
 }
+
+export default handler;
