@@ -17,13 +17,15 @@ export async function fetchGraphQL(query: string, variables = {}) {
         body: JSON.stringify({ query, variables }),
     });
 
+    // capture http level error (http status code is not 2xx)
     if (!res.ok) {
-      const text = await res.text(); // or res.statusText
+      const text = await res.text();
       throw new Error(`HTTP error ${res.status}: ${text}`);
     }
-    
+
     const json = await res.json();
 
+    // capture graphql level error (http status code is still 200)
     if (json.errors) {
       const errorFn = (e: { message: string }) => {
         return e && e.message ? e.message : "error in TaskGraphQL model component";
