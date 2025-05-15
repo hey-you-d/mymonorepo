@@ -4,10 +4,10 @@ import { TaskModel, swrFetcher } from '../models/TaskModel';
 import { Task } from '../types/Task';
 import useSWR, { mutate } from 'swr';
 import { DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
-import { TASKS_SQL_BASE_API_URL, TASKS_BFF_BASE_API_URL } from '../../../feature-flags/tasksBff';
 
 const fetcher = async () => {
     return await swrFetcher();
+    // alternatively...
     //const taskModel = new TaskModel();
     //const result: Task[] = await taskModel.getTasksDBRows();
 

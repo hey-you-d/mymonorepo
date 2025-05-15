@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { TaskTable } from '../components/TaskTable';
 import { Task, TaskTableType } from '../types/Task';
+import Link from "next/link";
 
 // Dev note: experiment only - the useTransition feature doesn't seem to be suitable for this feature
 // gotcha #1: the input field losing focus after each keypress.
@@ -56,6 +57,8 @@ export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId 
           <h2>optimise the search/filter feature with useTransition</h2>
           <br/>
           <span>filter task description: </span><input value={search} onChange={searchHandler} placeholder="Filter detail..." />
+          <br/>
+          <Link href="/bff-tasks-db">button triggered Filter example</Link>
           <br/>
           <TaskTable tasks={filteredTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
         </>
