@@ -1,14 +1,14 @@
 'use client';
 // The View connects the ViewModel and UI component
 import { useState, useRef, useEffect } from "react";
-import { useTaskViewModel } from '@/app/viewModels/Task/use-client/useTasksViewModel';
-import { TaskSeedDB } from '@/app/components/TaskSeedDB';
-import { TaskTable } from '@/app/components/TaskTable';
-import { Task } from "@/app/types/Task";
+import { useTaskViewModelWithSwr } from '../../../viewModels/Task/use-client/useTasksViewModelWithSwr';
+import { TaskSeedDB } from '../../../components/TaskSeedDB';
+import { TaskTable } from '../../../components/TaskTable';
+import { Task } from "../../../types/Task";
 import Link from "next/link";
 
-export const TaskPage = () => {
-  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
+export const TaskWithSWRPage = () => {
+  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();
 
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
 

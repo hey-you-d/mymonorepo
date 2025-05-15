@@ -1,9 +1,10 @@
 import Layout from '../../../pagesLayouts/Layout';
+import { CLIENT_SIDE_FRONTEND_LAYOUT_TITLE } from "../../../pagesLayouts/layout-title";
 import { TaskGraphQLPage } from '@/app/views/Task/from-client/taskGraphQLPage';
 
 const BffTasksDB = () => {
   const body = (
-    <Layout title="hello-next-js - Next.JS API - Backend For Frontend (BFF) demo with Apollo GraphQL">
+    <Layout title={CLIENT_SIDE_FRONTEND_LAYOUT_TITLE}>
       <TaskGraphQLPage />                 
       <br />
     </Layout>
