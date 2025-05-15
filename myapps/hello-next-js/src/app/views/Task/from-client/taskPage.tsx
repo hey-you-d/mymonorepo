@@ -2,10 +2,10 @@
 // The View connects the ViewModel and UI component
 import { useState, useRef } from "react";
 //import { useTaskViewModel } from '../viewModels/useTasksViewModel'; // no Frontend caching 
-import { useTaskViewModelWithSwr } from '../viewModels/useTasksViewModelWithSwr';
-import { TaskSeedDB } from '../components/TaskSeedDB';
-import { TaskTable } from '../components/TaskTable';
-import { Task } from "../types/Task";
+import { useTaskViewModelWithSwr } from '../../../viewModels/Task/use-client/useTasksViewModelWithSwr';
+import { TaskSeedDB } from '../../../components/TaskSeedDB';
+import { TaskTable } from '../../../components/TaskTable';
+import { Task } from "../../../types/Task";
 import Link from "next/link";
 
 export const TaskPage = () => {

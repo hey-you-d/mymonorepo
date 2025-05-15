@@ -1,8 +1,8 @@
 'use client';
 // The View connects the ViewModel and UI component
 import { useState, useTransition } from 'react';
-import { TaskTable } from '../components/TaskTable';
-import { Task, TaskTableType } from '../types/Task';
+import { TaskTable } from '@/app/components/TaskTable';
+import { Task, TaskTableType } from '@/app/types/Task';
 import Link from "next/link";
 
 // Dev note: experiment only - the useTransition feature doesn't seem to be suitable for this feature

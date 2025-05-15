@@ -1,8 +1,8 @@
 import Layout from "../../pagesLayouts/Layout";
-import { TaskPage } from '@/app/views/taskPage';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { SWRConfig } from 'swr';
-import { TaskModel } from '@/app/models/TaskModel';
+import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
+import { TaskPage } from '@/app/views/Task/from-client/taskPage';
 //import { Task } from '@/app/types/Task';
 import { DATA_FETCH_MODE } from '../../feature-flags/tasksBff';
 

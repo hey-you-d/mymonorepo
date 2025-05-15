@@ -1,5 +1,5 @@
 import Layout from '../../../pagesLayouts/Layout';
-import { TaskGraphQLPage } from '@/app/views/taskGraphQLPage';
+import { TaskGraphQLPage } from '@/app/views/Task/from-client/taskGraphQLPage';
 
 const BffTasksDB = () => {
   const body = (

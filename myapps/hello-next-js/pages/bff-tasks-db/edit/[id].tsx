@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Layout from "../../../pagesLayouts/Layout";
-import { TaskDetailPage } from "@/app/views/taskDetailPage";
+import { TaskDetailPage } from "@/app/views/Task/from-client/taskDetailPage";
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 const BffTasksDB = ({}: InferGetServerSidePropsType<typeof getServerSideProps>) => {

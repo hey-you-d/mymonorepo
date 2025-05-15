@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, waitFor, act } from '@testing-library/react';
 import { useTaskGraphQLViewModel } from './useTaskGraphQLViewModel';
-import { fetchGraphQL } from '../models/TaskGraphqlClient';
+import { fetchGraphQL } from '@/app/models/Task/use-client/TaskGraphqlClient';
 
 // Mock the fetchGraphQL function
-jest.mock('../models/TaskGraphqlClient', () => ({
+jest.mock('../../../models/Task/use-client/TaskGraphqlClient', () => ({
   fetchGraphQL: jest.fn(),
 }));
 

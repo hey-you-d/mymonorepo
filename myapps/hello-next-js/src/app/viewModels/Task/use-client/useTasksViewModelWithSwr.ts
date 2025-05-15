@@ -1,9 +1,9 @@
 'use client';
 import { useMemo, useCallback, useEffect } from 'react';
-import { TaskModel, swrFetcher } from '../models/TaskModel';
-import { Task } from '../types/Task';
+import { TaskModel, swrFetcher } from '@/app/models/Task/use-client/TaskModel';
+import { Task } from '@/app/types/Task';
 import useSWR, { mutate } from 'swr';
-import { DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
+import { DATA_FETCH_MODE } from "../../../../../feature-flags/tasksBff";
 
 const fetcher = async () => {
     return await swrFetcher();

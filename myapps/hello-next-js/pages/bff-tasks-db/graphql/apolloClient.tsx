@@ -1,5 +1,5 @@
 import Layout from '../../../pagesLayouts/Layout';
-import { TaskApolloClientPage } from '@/app/views/taskApolloClientPage';
+import { TaskApolloClientPage } from '@/app/views/Task/from-client/taskApolloClientPage';
 
 const BffTasksDB = () => {
   const body = (

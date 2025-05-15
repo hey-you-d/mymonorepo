@@ -1,3 +1,4 @@
+"use client"
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 // dev note: absolute URI for SSR, relative (proper) or absolute (if no choice) URI for CSR

@@ -1,12 +1,12 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { useTaskViewModelWithSwr } from './useTasksViewModelWithSwr';
-import { TaskModel } from '../models/TaskModel';
-import { Task } from '../types/Task';
-import { DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
+import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
+import { Task } from '@/app/types/Task';
+import { DATA_FETCH_MODE } from "../../../../../feature-flags/tasksBff";
 
 // Mock the entire TaskModel module
-jest.mock('../models/TaskModel');
+jest.mock('../../../models/Task/use-client/TaskModel');
 
 const mockTasks: Task[] = [
   { id: 1, title: 'Task 1', detail: 'lorem ipsum', completed: false, created_at: '' },

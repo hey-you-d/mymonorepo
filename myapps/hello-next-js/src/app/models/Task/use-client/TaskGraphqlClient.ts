@@ -1,3 +1,4 @@
+"use client"
 export async function fetchGraphQL(query: string, variables = {}) {
     // dev note:
     // GraphQL does not use HTTP verbs to distinguish operations. Instead:

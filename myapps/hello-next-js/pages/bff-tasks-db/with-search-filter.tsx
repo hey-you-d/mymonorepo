@@ -1,9 +1,9 @@
 import Layout from "../../pagesLayouts/Layout";
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { TaskWithSearchFilterPage } from '@/app/views/taskWithSearchFilterPage';
+import { TaskWithSearchFilterPage } from '@/app/views/Task/from-client/taskWithSearchFilterPage';
 import { DATA_FETCH_MODE } from '../../feature-flags/tasksBff';
 import { SWRConfig } from 'swr';
-import { TaskModel } from '@/app/models/TaskModel';
+import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
 
 const TasksTableWithSearchFilter = ({ fallback }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const body = (

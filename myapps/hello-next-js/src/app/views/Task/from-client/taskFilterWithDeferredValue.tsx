@@ -1,8 +1,8 @@
 'use client';
 // The View connects the ViewModel and UI component
 import { useState, useMemo, useDeferredValue } from 'react';
-import { TaskTableType } from '../types/Task';
-import { TaskTable } from '../components/TaskTable';
+import { TaskTableType } from '@/app/types/Task';
+import { TaskTable } from '@/app/components/TaskTable';
 import Link from "next/link";
 
 // dev note - use-case scenario of useDeferredValue:

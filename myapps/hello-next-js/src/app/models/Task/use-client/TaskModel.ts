@@ -1,6 +1,7 @@
+"use client"
 // DEV NOTE: The Model manages the data and business logic of the app.
-import { TASKS_BFF_BASE_API_URL } from "../../../feature-flags/tasksBff";
-import { Task } from "../types/Task";
+import { TASKS_BFF_BASE_API_URL } from "../../../../../feature-flags/tasksBff";
+import { Task } from "../../../types/Task";
 
 export const swrFetcher = async () => {
   try {

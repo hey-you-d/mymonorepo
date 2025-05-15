@@ -1,9 +1,9 @@
 'use client';
 // The ViewModel manages state and business logic, bridging the model and the view. 
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { TaskModel } from '../models/TaskModel';
-import { Task } from '../types/Task';
-import { DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
+import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
+import { Task } from '../../../types/Task';
+import { DATA_FETCH_MODE } from "../../../../../feature-flags/tasksBff";
 
 export const useTaskViewModel = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

@@ -1,5 +1,5 @@
 import { TaskModel } from './TaskModel';
-import { DATA_FETCH_MODE, BASE_URL } from "../../../feature-flags/tasksBff";
+import { DATA_FETCH_MODE, BASE_URL } from "../../../../../feature-flags/tasksBff";
 
 // Define mock response type
 type MockResponse = {

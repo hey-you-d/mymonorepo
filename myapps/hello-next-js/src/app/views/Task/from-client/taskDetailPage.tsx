@@ -2,11 +2,11 @@
 // The View connects the ViewModel and UI component
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-//import { useTaskViewModel } from '../viewModels/useTasksViewModel';
-import { useTaskViewModelWithSwr } from '../viewModels/useTasksViewModelWithSwr';
-import { TaskDetail } from '../components/TaskDetail';
+//import { useTaskViewModel } from '@/app/viewModels/Task/use-client/useTasksViewModel';
+import { useTaskViewModelWithSwr } from '@/app/viewModels/Task/use-client/useTasksViewModelWithSwr';
+import { TaskDetail } from '@/app/components/TaskDetail';
 import { Task } from '@/app/types/Task';
-import { MONOREPO_PREFIX } from '../../../global/common';
+import { MONOREPO_PREFIX } from '../../../../../global/common';
 
 export const TaskDetailPage = ({id}: {id: number}) => {
   //const { tasks, loading, deleteRowFromId } = useTaskViewModel();
