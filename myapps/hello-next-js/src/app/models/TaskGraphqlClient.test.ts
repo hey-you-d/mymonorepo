@@ -18,14 +18,14 @@ describe('fetchGraphQL', () => {
 
     const result = await fetchGraphQL(query, variables);
 
-    expect(fetch).toHaveBeenCalledWith('/api/tasks/v1/sql/graphql', {
+    expect(fetch).toHaveBeenCalledWith('/api/tasks/v1/bff/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ query, variables }),
     });
-
+    
     expect(result).toEqual(mockData);
   });
 

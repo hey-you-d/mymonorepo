@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { fetchGraphQL } from '../models/TaskGraphqlClient';
 import { Task } from '../types/Task';
-import { TASKS_BFF_HEADER } from "../../../global/common";
     
 export const useTaskGraphQLViewModel = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -14,9 +13,6 @@ export const useTaskGraphQLViewModel = () => {
         const loadTasks = async () => {
             setError(null);
             setLoading(true);
-
-
-            console.log("HEADER ", await TASKS_BFF_HEADER());
         
             try {
                 const data = await fetchGraphQL(`
