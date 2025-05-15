@@ -23,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 const proxyResponse = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, { // V - correct
                 //const proxyResponse = await fetch(`${BASE_URL}/api/tasks/v1/sql/graphql`, {  // X - wrong
                     method: 'POST',
-                    headers: TASKS_BFF_HEADER,
+                    headers: await TASKS_BFF_HEADER(),
                     body: JSON.stringify({
                         query,
                         variables

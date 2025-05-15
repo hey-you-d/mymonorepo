@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/create-row`, {
                     method: 'POST',
-                    headers: TASKS_BFF_HEADER,
+                    headers: await TASKS_BFF_HEADER(),
                     body: JSON.stringify({
                         title,
                         detail

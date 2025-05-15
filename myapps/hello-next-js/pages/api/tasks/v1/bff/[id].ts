@@ -11,13 +11,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'GET',
-                    headers: TASKS_BFF_HEADER,
+                    headers: await TASKS_BFF_HEADER(),
                 });
 
                 if (!response.ok) {
                     console.error(`BFF Error get row for id ${id}: ${response.status} - ${response.statusText}`);
                     // If the response isn't OK, throw an error to be caught in the catch block
-                    throw new Error(`BFF Error get row for id ${id}: ${response.status} ${response.statusText}`);
+                    throw new Error(`BFF Error get row for id ${id}: ${response.status} - ${response.statusText}`);
                 }
         
                 const result:Task[] = await response.json();
@@ -36,10 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'PUT',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-api-key": "", // TODO
-                    },
+                    headers: await TASKS_BFF_HEADER(),
                     body: JSON.stringify({
                         title,
                         detail,
@@ -64,10 +61,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'DELETE',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-api-key": "", // TODO
-                    },
+                    headers: await TASKS_BFF_HEADER(),
                 });
 
                 if (!response.ok) {
@@ -89,10 +83,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/create-row`, {
                     method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-api-key": "", // TODO
-                    },
+                    headers: await TASKS_BFF_HEADER(),
                     body: JSON.stringify({
                         title,
                         detail

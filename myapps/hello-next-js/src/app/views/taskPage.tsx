@@ -19,7 +19,7 @@ export const TaskPage = () => {
   const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
-    
+
     if (tasks) {
         setFilteredTasks(
           tasks.filter(row => row.detail.toLowerCase().includes(value.toLowerCase()))

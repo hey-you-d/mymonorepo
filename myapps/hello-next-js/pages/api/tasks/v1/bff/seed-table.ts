@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/seed-table`, {
                     method: 'POST',
-                    headers: TASKS_BFF_HEADER,
+                    headers: await TASKS_BFF_HEADER(),
                 });
 
                 if (!response.ok) {

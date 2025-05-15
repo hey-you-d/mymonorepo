@@ -1,5 +1,6 @@
 import { SecretsManagerClient, GetSecretValueCommand, } from "@aws-sdk/client-secrets-manager";
 
+// can only be called on server-side only
 export const getSecret = async(secretName: string, region: string): Promise<string> => {
     const client = new SecretsManagerClient({
         region,
