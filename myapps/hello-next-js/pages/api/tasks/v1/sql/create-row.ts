@@ -1,7 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/bff/tasks/db_postgreSQL';
+import { CHECK_BFF_AUTHORIZATION } from '../../../../../global/common';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    await CHECK_BFF_AUTHORIZATION(req, res);
+    
     switch (req.method) {
         /**
          * @swagger
