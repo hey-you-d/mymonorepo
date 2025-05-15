@@ -30,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         
                 const result:Task[] = await response.json();
     
-                return res.status(200).json(result);
+                return res.status(201).json(result);
             } catch (err) {
                 console.error("BFF creating row - server error", err); // Log detailed error
                 return res.status(500).json({ error: "BFF creating row - server error" });

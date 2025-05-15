@@ -1,14 +1,14 @@
 // DEV NOTE: The Model manages the data and business logic of the app.
-import { TASKS_SQL_BASE_API_URL, TASKS_BFF_BASE_API_URL } from "../../../feature-flags/tasksBff";
+import { TASKS_BFF_BASE_API_URL } from "../../../feature-flags/tasksBff";
 import { Task } from "../types/Task";
 
 export class TaskModel {    
     constructor() {}
 
-    // for debug only
+    // for debugging only
     async getJwt(): Promise<{jwtSecret: string}> {
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/jwt`, {
+        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/jwt`, {
           method: 'GET',
           headers: {
               "Content-Type": "application/json",
@@ -106,7 +106,7 @@ export class TaskModel {
 
     async getRowFromId(id: number): Promise<Task[]> {
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
+        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
@@ -158,7 +158,7 @@ export class TaskModel {
 
     async updateRowFromId(id: number, title: string, detail: string, completed: boolean): Promise<void> {
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
+        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",
@@ -186,7 +186,7 @@ export class TaskModel {
 
     async deleteRowFromId(id: number): Promise<void> {
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
+        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",

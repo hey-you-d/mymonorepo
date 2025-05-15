@@ -30,8 +30,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     
                 return res.status(200).json(result);
             } catch(error) {
-                console.error("BFF seeding tasks DB - server error ", error ); // Log detailed error
-                return res.status(500).json({ error: "BFF seeding tasks DB - server error" });
+                console.error("BFF Error fetching all rows - server error ", error ); // Log detailed error
+                return res.status(500).json({ error: "BFF Error fetching all rows - server error" });
             } 
         case "POST" :
             // Frontend layer is not using it, hence its not necessary to create one  
