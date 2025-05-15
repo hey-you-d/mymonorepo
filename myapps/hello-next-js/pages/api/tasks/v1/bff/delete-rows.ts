@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/app/types/Task";
 import { BASE_URL } from "../../../../../feature-flags/tasksBff";
+import { TASKS_BFF_HEADER } from "../../../../../global/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
@@ -10,10 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/delete-rows`, {
                     method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-api-key": "", // TODO
-                    }
+                    headers: TASKS_BFF_HEADER,
                 });
 
                 if (!response.ok) {

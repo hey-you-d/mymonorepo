@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { DOMAIN_URL } from "../../../../../feature-flags/tasksBff";
+import { TASKS_BFF_HEADER } from "../../../../../global/common";
 
 export const config = {
     api: {
@@ -22,10 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 const proxyResponse = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, { // V - correct
                 //const proxyResponse = await fetch(`${BASE_URL}/api/tasks/v1/sql/graphql`, {  // X - wrong
                     method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-api-key": "", // TODO
-                    },
+                    headers: TASKS_BFF_HEADER,
                     body: JSON.stringify({
                         query,
                         variables
