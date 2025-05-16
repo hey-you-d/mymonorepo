@@ -32,8 +32,8 @@ yarn workspace hello-next-js lint
 ## Full-stack development Demo (/hello-next-js/task-crud-fullstack)
 
 ### Tech Stacks:
-1. Backend framework: Next.JS API
-2. Frontend framework: Next.JS & React.JS
+1. Backend framework: Next.JS ver.15 API 
+2. Frontend framework: Next.JS ver.15, and React.JS ver.9 + Typescript
 3. RDBMS: PostgreSQL DB
 4. Data Query Language: direct SQL and via Apollo GraphQL
 5. API Authentication: API Key & JWT-based auth
