@@ -29,20 +29,6 @@ export const TaskPage = () => {
 
   const confirmedTasks = isFiltering ? filteredTasks : tasks;
 
-  const searchHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setFilterText(filterText);
-    setFilteredTasks(
-      tasks.filter(task => task.detail.toLowerCase().includes(filterText.toLowerCase()))
-    );
-  };
-
-  const clearSearchHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setFilterText("");
-    setFilteredTasks(tasks);
-  } 
-
   if (loading) return <p>Loading...</p>;
 
   return tasks ? (
@@ -51,8 +37,6 @@ export const TaskPage = () => {
       <br/>
       <br/>
       <span>filter task description: </span><input onChange={(e) => setFilterText(e.target.value)} placeholder="Filter detail..." />
-      <button type="button" onClick={searchHandler}>Filter</button>
-      <button type="button" onClick={clearSearchHandler}>Clear</button> 
       <br/>
       <Link href={`${TASKS_CRUD}/with-search-filter`}>Dynamic Filter example</Link>
       <br/>
