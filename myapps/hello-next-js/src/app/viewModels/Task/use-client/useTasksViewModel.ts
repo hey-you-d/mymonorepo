@@ -1,5 +1,4 @@
-'use client';
-// The ViewModel manages state and business logic, bridging the model and the view. 
+'use client'; 
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
 import { Task } from '../../../types/Task';

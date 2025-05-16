@@ -3,7 +3,6 @@ import { CLIENT_SIDE_FRONTEND_LAYOUT_TITLE } from "../../pagesLayouts/layout-tit
 import { TaskPage } from '@/app/views/Task/use-client/taskPage';
 
 const TaskList = () => {
-  // 
   return (
     <Layout title={CLIENT_SIDE_FRONTEND_LAYOUT_TITLE}>
       <TaskPage />                 

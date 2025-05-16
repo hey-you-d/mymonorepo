@@ -1,5 +1,4 @@
 'use client';
-// The View connects the ViewModel and UI component
 import { useState, useTransition } from 'react';
 import { TaskTable } from '@/app/components/TaskTable';
 import { Task, TaskTableType } from '@/app/types/Task';

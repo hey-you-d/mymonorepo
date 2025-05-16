@@ -1,5 +1,4 @@
 'use client';
-// The View connects the ViewModel and UI component
 import { useState, useRef, useEffect } from "react";
 import { useTaskViewModelWithSwr } from '../../../viewModels/Task/use-client/useTasksViewModelWithSwr';
 import { TaskSeedDB } from '../../../components/TaskSeedDB';

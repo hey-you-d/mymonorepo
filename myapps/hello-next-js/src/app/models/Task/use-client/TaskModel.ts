@@ -1,6 +1,5 @@
 "use client"
-// DEV NOTE: The Model manages the data and business logic of the app.
-import { TASKS_BFF_BASE_API_URL } from "../../../../../feature-flags/tasksBff";
+import { TASKS_BFF_BASE_API_URL } from "../../../../../global/common";
 import { Task } from "../../../types/Task";
 
 export const swrFetcher = async () => {
@@ -54,9 +53,13 @@ export class TaskModel {
       }
     }
 
-    async getTasksDBRows(): Promise<Task[]> {
+    async getTasksDBRows(overrideFetchUrl?: string): Promise<Task[]> {
+      // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+      // In this case, we must supply an absolute URL  
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}/`;
+
       try {
-        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/`, {
+        const response = await fetch(finalUrl, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",

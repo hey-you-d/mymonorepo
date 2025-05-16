@@ -4,6 +4,13 @@ import { getSecret } from "./awsParameterStore";
 export const MONOREPO_PREFIX = "/hello-next-js";
 export const TASKS_CRUD = "/task-crud-fullstack";
 
+export const DOMAIN_URL = process.env.NODE_ENV === "production"
+    ? "https://www.yudimankwanmas.com"
+    : "http://localhost:3000";
+export const BASE_URL = `${DOMAIN_URL}/hello-next-js`;
+export const TASKS_BFF_BASE_API_URL = `${process.env.NODE_ENV === "production" ? BASE_URL : ""}/api/tasks/v1/bff`;
+export const TASKS_SQL_BASE_API_URL = `${process.env.NODE_ENV === "production" ? BASE_URL : ""}/api/tasks/v1/sql`;      
+        
 export const getInternalApiKey = async (): Promise<string | undefined> => {
     const secretId = `/${process.env.NODE_ENV === "production" ? "prod" : "dev"}/tasks/bff/x-api-key`;    
 
