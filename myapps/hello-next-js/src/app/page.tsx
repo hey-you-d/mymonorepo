@@ -15,8 +15,10 @@ export default function Home() {
     mvvmSagaRedux: { title: "MVVM Pattern/Redux Saga", href:"mvvm-redux-saga" },
     exampleMySharedUI: { title: "Example/My Shared UI package", href:"example-my-shared-ui" },
     formExample: { title: "Example/Form with useActionState", href:"form-example" },
-    TaskListFullStackDemoMVVMClient: { title: "FullstackDemo/Tasks CRUD with remote RDB - client-side MVVM with BFF", href:"task-list-fullstack" },
-    TaskListFullStackDemoGraphQLMVVMClient: { title: "FullstackDemo/Tasks CRUD with remote RDB (Apollo GraphqQL) - client-side MVVM with BFF", href:"task-list-fullstack/graphql" },   
+    // -WIP-
+    //TaskListFullStackDemoMVVMClient: { title: "FullstackDemo/Tasks CRUD with remote RDB - client-side MVVM with BFF", href:"task-list-fullstack" },
+    // -WIP-
+    //TaskListFullStackDemoGraphQLMVVMClient: { title: "FullstackDemo/Tasks CRUD with remote RDB (Apollo GraphqQL) - client-side MVVM with BFF", href:"task-list-fullstack/graphql" },   
   }
 
   const renderedLinks: ReactElement[] = [];
