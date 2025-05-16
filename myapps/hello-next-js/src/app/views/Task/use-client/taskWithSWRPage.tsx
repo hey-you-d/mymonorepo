@@ -13,49 +13,56 @@ export const TaskWithSWRPage = () => {
 
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
 
-  const filterInputField = useRef<HTMLInputElement>(null);
+  const filterInputRef = useRef<HTMLInputElement>(null); 
 
-  let confirmedTasks: Task[] | undefined = tasks;
+  const isFiltering = filterInputRef.current?.value?.trim() !== "";
+
   useEffect(() => {
-    const satisfiedConditions = tasks && tasks.length > 0 && filteredTasks.length < tasks.length;
-    confirmedTasks = satisfiedConditions ? filteredTasks : tasks; 
-  }, [tasks, filteredTasks]);
-  
-  if (loading) return <p>Loading...</p>;
-  
+    if (!isFiltering && tasks) {
+      setFilteredTasks(tasks);
+    }
+  }, [tasks, setFilteredTasks, isFiltering]);
+
+  const confirmedTasks = isFiltering
+    ? filteredTasks
+    : tasks ?? [];
+    
   const searchHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (tasks && filterInputField)  {
-        const value = filterInputField.current !== null ? filterInputField.current.value : ""; 
-        setFilteredTasks(
-          tasks.filter(row => row.detail.toLowerCase().includes(value.toLowerCase()))
-        );
+    const value = filterInputRef.current?.value ?? "";
+    if (tasks) {
+      setFilteredTasks(
+        tasks.filter(task => task.detail.toLowerCase().includes(value.toLowerCase()))
+      );
     }
   };
 
   const clearSearchHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     
-    if (tasks && filterInputField && filterInputField.current !== null )  {
-        filterInputField.current.value = "";
-        setFilteredTasks(tasks);
+    if (filterInputRef.current) {
+      filterInputRef.current.value = "";
+    }
+    if (tasks) {
+      setFilteredTasks(tasks);
     }
   } 
 
-  const filterInputFieldExistAndNotEmpty = filterInputField && filterInputField.current && filterInputField.current.value != "";
-  return tasks && confirmedTasks ? (
+  if (loading) return <p>Loading...</p>;
+
+  return tasks ? (
     <>
       <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
       <br/>
       <br/>
-      <span>filter task description: </span><input ref={filterInputField} placeholder="Filter detail..." />
+      <span>filter task description: </span><input ref={filterInputRef} placeholder="Filter detail..." />
       <button type="button" onClick={searchHandler}>Filter</button>
       <button type="button" onClick={clearSearchHandler}>Clear</button> 
       <br/>
       <Link href={`${TASKS_CRUD}/with-search-filter`}>Dynamic Filter example</Link>
       <br/>
-      <TaskTable tasks={filterInputFieldExistAndNotEmpty ? filteredTasks: confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
+      <TaskTable tasks={confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
     </>
   ) : (<></>);
 };

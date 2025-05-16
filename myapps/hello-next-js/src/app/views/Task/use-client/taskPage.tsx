@@ -1,6 +1,6 @@
 'use client';
 // The View connects the ViewModel and UI component
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTaskViewModel } from '@/app/viewModels/Task/use-client/useTasksViewModel';
 import { TaskSeedDB } from '@/app/components/TaskSeedDB';
 import { TaskTable } from '@/app/components/TaskTable';
@@ -11,51 +11,53 @@ import Link from "next/link";
 export const TaskPage = () => {
   const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
 
+  const [filterText, setFilterText] = useState("");
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
 
-  const filterInputField = useRef<HTMLInputElement>(null);
+  const isFiltering = filterText.trim() !== "";
 
-  let confirmedTasks: Task[] | undefined = tasks;
   useEffect(() => {
-    const satisfiedConditions = tasks && tasks.length > 0 && filteredTasks.length < tasks.length;
-    confirmedTasks = satisfiedConditions ? filteredTasks : tasks; 
-  }, [tasks, filteredTasks]);
-  
-  if (loading) return <p>Loading...</p>;
-  
+    if (tasks) {
+      setFilteredTasks(
+        isFiltering
+          ? tasks.filter(task =>
+              task.detail.toLowerCase().includes(filterText.toLowerCase())
+            )
+          : tasks
+      );
+    }
+  }, [tasks, setFilterText, isFiltering, filterText]);
+
+  const confirmedTasks = isFiltering ? filteredTasks : tasks;
+
   const searchHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    if (tasks && filterInputField)  {
-        const value = filterInputField.current !== null ? filterInputField.current.value : ""; 
-        setFilteredTasks(
-          tasks.filter(row => row.detail.toLowerCase().includes(value.toLowerCase()))
-        );
-    }
+    setFilterText(filterText);
+    setFilteredTasks(
+      tasks.filter(task => task.detail.toLowerCase().includes(filterText.toLowerCase()))
+    );
   };
 
   const clearSearchHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    
-    if (tasks && filterInputField && filterInputField.current !== null )  {
-        filterInputField.current.value = "";
-        setFilteredTasks(tasks);
-    }
+    setFilterText("");
+    setFilteredTasks(tasks);
   } 
 
-  const filterInputFieldExistAndNotEmpty = filterInputField && filterInputField.current && filterInputField.current.value != "";
-  return tasks && confirmedTasks ? (
+  if (loading) return <p>Loading...</p>;
+
+  return tasks ? (
     <>
       <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
       <br/>
       <br/>
-      <span>filter task description: </span><input ref={filterInputField} placeholder="Filter detail..." />
+      <span>filter task description: </span><input onChange={(e) => setFilterText(e.target.value)} placeholder="Filter detail..." />
       <button type="button" onClick={searchHandler}>Filter</button>
       <button type="button" onClick={clearSearchHandler}>Clear</button> 
       <br/>
       <Link href={`${TASKS_CRUD}/with-search-filter`}>Dynamic Filter example</Link>
       <br/>
-      <TaskTable tasks={filterInputFieldExistAndNotEmpty ? filteredTasks: confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
+      <TaskTable tasks={confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
     </>
   ) : (<></>);
 };
