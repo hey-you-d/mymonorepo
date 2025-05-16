@@ -81,7 +81,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_HELLO_REACT_JS_DEV }}
-          DOCKERFILE: "dockerfile_nginx"
+          DOCKERFILE: "dockerfile_helloreactjs_nginx"
         run: |
           echo "ECR_REGISTRY=$ECR_REGISTRY" >> $GITHUB_ENV
           echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
@@ -101,7 +101,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_HELLO_REACT_JS_PROD }}
-          DOCKERFILE: "dockerfile_nginx"
+          DOCKERFILE: "dockerfile_helloreactjs_nginx"
         run: |
           echo "ECR_REGISTRY=$ECR_REGISTRY" >> $GITHUB_ENV
           echo "ECR_REPOSITORY=$ECR_REPOSITORY" >> $GITHUB_ENV
