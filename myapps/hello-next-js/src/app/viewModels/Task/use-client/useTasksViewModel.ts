@@ -3,7 +3,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
 import { Task } from '../../../types/Task';
-import { DATA_FETCH_MODE } from "../../../../../feature-flags/tasksBff";
 
 export const useTaskViewModel = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -102,11 +101,9 @@ export const useTaskViewModel = () => {
     }
   }, [taskModel]);
   
-  // first ever call of getTasksDBRows to populate the tasks array
+  // CSR approach -> first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {
-    if (DATA_FETCH_MODE === "useEffect") {
-      getTasksDBRows();
-    }
+    getTasksDBRows();
   }, [getTasksDBRows]);
   
   return {

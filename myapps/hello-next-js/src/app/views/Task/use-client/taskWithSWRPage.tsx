@@ -1,14 +1,15 @@
 'use client';
 // The View connects the ViewModel and UI component
 import { useState, useRef, useEffect } from "react";
-import { useTaskViewModel } from '@/app/viewModels/Task/use-client/useTasksViewModel';
-import { TaskSeedDB } from '@/app/components/TaskSeedDB';
-import { TaskTable } from '@/app/components/TaskTable';
-import { Task } from "@/app/types/Task";
+import { useTaskViewModelWithSwr } from '../../../viewModels/Task/use-client/useTasksViewModelWithSwr';
+import { TaskSeedDB } from '../../../components/TaskSeedDB';
+import { TaskTable } from '../../../components/TaskTable';
+import { Task } from "../../../types/Task";
+import { TASKS_CRUD } from "../../../../../global/common";
 import Link from "next/link";
 
-export const TaskPage = () => {
-  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
+export const TaskWithSWRPage = () => {
+  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();
 
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
 
@@ -18,8 +19,6 @@ export const TaskPage = () => {
   useEffect(() => {
     const satisfiedConditions = tasks && tasks.length > 0 && filteredTasks.length < tasks.length;
     confirmedTasks = satisfiedConditions ? filteredTasks : tasks; 
-
-    console.log("CT ", confirmedTasks);
   }, [tasks, filteredTasks]);
   
   if (loading) return <p>Loading...</p>;
@@ -54,7 +53,7 @@ export const TaskPage = () => {
       <button type="button" onClick={searchHandler}>Filter</button>
       <button type="button" onClick={clearSearchHandler}>Clear</button> 
       <br/>
-      <Link href="/bff-tasks-db/with-search-filter">Dynamic Filter example</Link>
+      <Link href={`${TASKS_CRUD}/with-search-filter`}>Dynamic Filter example</Link>
       <br/>
       <TaskTable tasks={filterInputFieldExistAndNotEmpty ? filteredTasks: confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
     </>

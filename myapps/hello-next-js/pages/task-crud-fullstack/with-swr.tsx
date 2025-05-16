@@ -3,7 +3,7 @@ import { CLIENT_SIDE_FRONTEND_LAYOUT_TITLE } from "../../pagesLayouts/layout-tit
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { SWRConfig } from 'swr';
 import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
-import { TaskWithSWRPage } from '@/app/views/Task/from-client/taskWithSWRPage';
+import { TaskWithSWRPage } from '@/app/views/Task/use-client/taskWithSWRPage';
 
 // dev note: alternative function signature:
 //type Props = {

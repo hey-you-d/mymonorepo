@@ -4,7 +4,7 @@
 // responding to user actions passed in as props.
 import React, { useCallback, useRef } from 'react';
 import { Task } from "../types/Task";
-import { MONOREPO_PREFIX } from "../../../global/common";
+import { MONOREPO_PREFIX, TASKS_CRUD } from "../../../global/common";
 
 type TaskTableType = {
     tasks: Task[], 
@@ -29,7 +29,8 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
 
     const editTodoHandler = (e: React.MouseEvent, id: number) => {
         e.preventDefault();
-        window.location.replace( `${MONOREPO_PREFIX}/bff-tasks-db/edit/${id}`);
+
+        window.location.replace( `${MONOREPO_PREFIX}/${TASKS_CRUD}/edit/${id}`);
     }
 
     const addNewTodoHandler = useCallback((e: React.MouseEvent) => {

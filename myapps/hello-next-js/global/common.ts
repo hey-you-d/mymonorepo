@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSecret } from "./awsParameterStore";
 
 export const MONOREPO_PREFIX = "/hello-next-js";
+export const TASKS_CRUD = "/task-crud-fullstack";
 
 export const getInternalApiKey = async (): Promise<string | undefined> => {
     const secretId = `/${process.env.NODE_ENV === "production" ? "prod" : "dev"}/tasks/bff/x-api-key`;    

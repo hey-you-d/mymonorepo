@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { TaskTable } from '@/app/components/TaskTable';
 import { Task, TaskTableType } from '@/app/types/Task';
+import { TASKS_CRUD } from '../../../../../global/common';
 import Link from "next/link";
 
 // Dev note: experiment only - the useTransition feature doesn't seem to be suitable for this feature
@@ -57,7 +58,7 @@ export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId 
           <br/>
           <span>filter task description: </span><input value={search} onChange={searchHandler} placeholder="Filter detail..." />
           <br/>
-          <Link href="/bff-tasks-db">button triggered Filter example</Link>
+          <Link href={TASKS_CRUD}>button triggered Filter example</Link>
           <br/>
           <TaskTable tasks={confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
         </>

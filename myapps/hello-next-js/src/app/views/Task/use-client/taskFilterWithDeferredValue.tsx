@@ -3,6 +3,7 @@
 import { useState, useMemo, useDeferredValue } from 'react';
 import { TaskTableType } from '@/app/types/Task';
 import { TaskTable } from '@/app/components/TaskTable';
+import { TASKS_CRUD } from '../../../../../global/common';
 import Link from "next/link";
 
 // dev note - use-case scenario of useDeferredValue:
@@ -43,7 +44,7 @@ export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId 
           <br/>
           <span>filter task description: </span><input value={search} onChange={searchHandler} placeholder="Filter detail..." />
           <br/>
-          <Link href="/bff-tasks-db">button triggered Filter example</Link>
+          <Link href={TASKS_CRUD}>button triggered Filter example</Link>
           <br/>
           <TaskTable tasks={filteredByDeferredValue} createRow={createRow} updateRowFromId={updateRowFromId} />
         </>

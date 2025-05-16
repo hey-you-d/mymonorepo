@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useTaskViewModelWithSwr } from '@/app/viewModels/Task/use-client/useTasksViewModelWithSwr';
 import { TaskDetail } from '@/app/components/TaskDetail';
 import { Task } from '@/app/types/Task';
-import { MONOREPO_PREFIX } from '../../../../../global/common';
+import { MONOREPO_PREFIX, TASKS_CRUD } from '../../../../../global/common';
 
 export const TaskDetailPage = ({id}: {id: number}) => {
   //const { tasks, loading, deleteRowFromId } = useTaskViewModel();
@@ -28,7 +28,7 @@ export const TaskDetailPage = ({id}: {id: number}) => {
     ? <TaskDetail row={row} tasks={tasks} deleteRowFromId={deleteRowFromId} /> 
     : <p>{`The record ${id} is no longer exist`}</p>);
 
-  body.push(<div><Link href={`${MONOREPO_PREFIX}/bff-tasks-db`}>Back to the table page</Link></div>);  
+  body.push(<div><Link href={`${MONOREPO_PREFIX}/${TASKS_CRUD}`}>Back to the table page</Link></div>);  
 
   return body;
 };

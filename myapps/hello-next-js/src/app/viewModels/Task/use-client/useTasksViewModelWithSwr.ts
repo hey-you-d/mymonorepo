@@ -1,9 +1,8 @@
 'use client';
-import { useMemo, useCallback, useEffect } from 'react';
+import { useMemo, useCallback } from 'react';
 import { TaskModel, swrFetcher } from '@/app/models/Task/use-client/TaskModel';
 import { Task } from '@/app/types/Task';
 import useSWR, { mutate } from 'swr';
-import { DATA_FETCH_MODE } from "../../../../../feature-flags/tasksBff";
 
 const fetcher = async () => {
     return await swrFetcher();
@@ -101,12 +100,8 @@ export const useTaskViewModelWithSwr = () => {
     }
   }, [taskModel]);
 
-  // first ever call of getTasksDBRows to populate the tasks array
-  useEffect(() => {
-    if (DATA_FETCH_MODE === "useEffect") {
-      getTasksDBRows();
-    }
-  }, [getTasksDBRows]);
+  // SSR approach -> initial table population will come for the server side via getServerSideProps
+  // in pages/task-crud-fullstack/with-swr.tsx
 
   return {
     tasks,           // Managed by SWR
