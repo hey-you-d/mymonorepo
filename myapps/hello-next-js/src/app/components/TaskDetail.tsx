@@ -4,7 +4,7 @@
 // responding to user actions passed in as props.
 import React from 'react';
 import { Task } from "../types/Task";
-import { MONOREPO_PREFIX } from "../../../global/common";
+import { MONOREPO_PREFIX, TASKS_CRUD } from "../../../global/common";
 
 type TaskTableType = {
     row: Task,
@@ -19,7 +19,7 @@ export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
         // dev note: a delete row operation has just been performed by calling the deleteRowFromId().
         // recall, the deleteRowFromId will set the tasks state to [] upon successful delete op.
         // redirect back to the table page
-        window.location.href=`${MONOREPO_PREFIX}/bff-tasks-db`;
+        window.location.href=`${MONOREPO_PREFIX}${TASKS_CRUD}`;
     }
 
     return (

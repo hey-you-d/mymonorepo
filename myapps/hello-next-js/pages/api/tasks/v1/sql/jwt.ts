@@ -8,15 +8,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (req.method) {
         case "GET" :
-            if (!process.env.TASKS_API_JWT_SECRET_DEV_ID_DEV) {
-                throw new Error("JWT secret ID is missing");
-            }
             if (!process.env.AWS_REGION) {
                 throw new Error("AWS Region is missing");
             }
 
             const secret = await getSecret(
-                process.env.TASKS_API_JWT_SECRET_DEV_ID_DEV,
+                "dev/hello-next-js/jwt-secret", // or prod/hello-next-js/jwt-secret - they are stored in AWS Secret Manager
                 process.env.AWS_REGION
             );
 

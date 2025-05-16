@@ -29,25 +29,27 @@ To run the linter
 yarn workspace hello-next-js lint
 ```
 
-## React.js & Next.js-based Full-stack development Demo
+## Full-stack development Demo (/hello-next-js/task-crud-fullstack)
 
-### RESTFul API demo
-Covered Tech Stacks:
-1. Backend framework: Next.JS API
-2. RDBMS: PostgreSQL DB
-3. Data Query Language: direct SQL and via Apollo GraphQL
-4. API Authentication: API Key & JWT-based auth
-5. Client-side Caching: Vercel SWR (for non-graphql) and Apollo Client in-Memory cache
-6. Server-side Caching: To be determined. 
-7. Documentation: Swagger API Doc.
-8. Unit Test: Jest Testing Framework.
+### Tech Stacks:
+1. Backend framework: Next.JS ver.15 API 
+2. Frontend framework: Next.JS ver.15, and React.JS ver.9 + Typescript
+3. RDBMS: PostgreSQL DB
+4. Data Query Language: direct SQL and via Apollo GraphQL
+5. API Authentication: API Key & JWT-based auth
+6. Client-side Caching: Vercel SWR (for non-graphql) and Apollo Client in-Memory cache
+7. Server-side Caching: To be determined. 
+8. Documentation: Swagger API Doc.
+9. Unit Test: Jest Testing Framework.
 
 #### Localhost demo
-- **FRONTEND URL:** [http://localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
-- **FRONTEND GRAPHQL DEMO URL:** [http://localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql)
-- **FRONTEND CACHED GRAPHQL DEMO URL:** [http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient](http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient)
-- **API ENDPOINT URL**: [http://localhost:3000/hello-next-js/api/tasks/v1/sql](http://localhost:3000/hello-next-js/api/tasks/v1/sql)
-- **API DOC URL**: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger)
+- **FRONTEND URL:** [http://localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
+- **FRONTEND CACHED WITH VERCEL SWR:** [http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)
+- **FRONTEND GRAPHQL DEMO URL:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
+- **FRONTEND CACHED GRAPHQL DEMO URL:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)
+- **API ENDPOINT URL (PROTECTED BY API KEY)**: [http://localhost:3000/hello-next-js/api/tasks/v1/sql](http://localhost:3000/hello-next-js/api/tasks/v1/sql)
+- **API DOC URL**: [http://localhost:3000/hello-next-js/task-crud-fullstack/swagger](http://localhost:3000/hello-next-js/task-crud-fullstack/swagger)
+- **BFF ENDPOINT URL**: [http://localhost:3000/hello-next-js/api/tasks/v1/bff](http://localhost:3000/hello-next-js/api/tasks/v1/bff)
 
 - **Build with:** 
 ```bash
@@ -61,44 +63,43 @@ yarn workspace hello-next-js dev
     - endpoint URL: **/api/tasks/v1/bff**
     - endpoint module: [https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/tasks/v1/bff](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/tasks/v1/bff)
 3. Core Frontend implementation (no styling) with unit test - **STATUS: DONE**  
-    - Localhost URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
-    - MVVM - model component: [TaskModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/models/TaskModel.ts)
-    - MVVM - viewmodel component: [useTasksViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModel.ts)
-    - MVVM - view component: [taskPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskPage.tsx)
-    - MVVM - view component #2: [taskDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskDetailPage.tsx)
-    - Next.js SSR/CSR toggle flag: [tasksBff.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/feature-flags/tasksBff.ts)
+    - Localhost URL: [localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
+    - MVVM - model component: [TaskModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/models/Task/use-client/TaskModel.ts)
+    - MVVM - viewmodel component: [useTasksViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/Task/use-client/useTasksViewModel.ts)
+    - MVVM - view component: [taskPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/Task/use-client/taskPage.tsx)
+    - MVVM - view component #2: [taskDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/Task/use-client/taskDetailPage.tsx)
 4. User Login, authorization & API Authentication with JWT - **STATUS: TODO**
 5. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
 6. Frontend feature: Client-side Caching implementation with Vercel SWR - **STATUS: DONE**
-    - Localhost URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)  
+    - Localhost URL: [localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)  
     - Model component: reusing the default implementation
-    - ViewModel component: [useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTasksViewModelWithSwr.ts)
-    - View component: reusing the default implementation
+    - ViewModel component: [useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/Task/use-client/useTasksViewModelWithSwr.ts)
+    - MVVM - view component: [taskWithSWRPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/Task/use-client/taskWithSWRPage.tsx)
 7. Server-side Caching implementation with Redis - **STATUS: TODO** 
 8. Swagger Doc integration - **STATUS: DONE**  
-    - Localhost URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger)
+    - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/swagger](http://localhost:3000/hello-next-js/task-crud-fullstack/swagger)
     - Merged PR: [https://github.com/hey-you-d/mymonorepo/pull/37/files](https://github.com/hey-you-d/mymonorepo/pull/37/files)
 9. Frontend feature: Alternative data query with Apollo GraphQL Server **STATUS: DONE**  
-    - Localhost URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql)
-    - Model component: [TaskGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/models/TaskGraphqlClient.ts)
-    - Viewmodel component: [useTaskGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTaskGraphQLViewModel.ts)
-    - View component: [taskGraphQLPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskGraphQLPage.tsx)
+    - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
+    - Model component: [TaskGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/models/Task/use-client/TaskGraphqlClient.ts)
+    - Viewmodel component: [useTaskGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/Task/use-client/useTaskGraphQLViewModel.ts)
+    - View component: [taskGraphQLPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/Task/use-client/taskGraphQLPage.tsx)
 10. Frontend feature: Alternative GraphQL implementation with Apollo Client (with in-memory cache enabled)
-    - Localhost URL: [http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient](http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient)  
+    - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)  
     - Model component: reusing the default graphql implementation
-    - Viewmodel component: [useTaskApolloClientViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/useTaskApolloClientViewModel.ts)
-    - View component: [taskApolloClientPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskApolloClientPage.tsx)
+    - Viewmodel component: [useTaskApolloClientViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/Task/use-client/useTaskApolloClientViewModel.ts)
+    - View component: [taskApolloClientPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/Task/use-client/taskApolloClientPage.tsx)
 11. Frontend feature: dynamic table filter functionality optimised with React's useDeferredValue **STATUS: DONE**  
-    - Localhost URL: [http://localhost:3000/hello-next-js/bff-tasks-db/with-search-filter](http://localhost:3000/hello-next-js/bff-tasks-db/with-search-filter)
+    - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/with-search-filter](http://localhost:3000/hello-next-js/task-crud-fullstack/with-search-filter)
     - Model component: reusing the default implementation
     - Viewmodel component: reusing the default implementation
-    - View component: [taskWithSearchFilterPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/taskWithSearchFilterPage.tsx)
+    - View component: [taskWithSearchFilterPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/Task/use-client/taskWithSearchFilterPage.tsx)
 12. Frontend styling with Tailwind CSS **STATUS: TODO**
 13. (optional) A feature relying on an event-driven system using Apache Kafka - **STATUS: TODO**
 
 #### Remote site demo (Prod & Dev branches)
-- **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://www.yudimankwanmas.com/hello-next-js/bff-tasks-db) 
-- **Dev URL:** [https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db](https://dev.yudimankwanmas.com/hello-next-js/bff-tasks-db)
+- **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/task-crud-fullstack](https://www.yudimankwanmas.com/hello-next-js/task-crud-fullstack) 
+- **Dev URL:** [https://dev.yudimankwanmas.com/hello-next-js/task-crud-fullstack](https://dev.yudimankwanmas.com/hello-next-js/task-crud-fullstack)
 - **STATUS: NOT READY**
 Will commence after the localhost development is complete.
 Point of consideration for PROD build: 
@@ -145,11 +146,12 @@ docker start hellonextjs-postgresdb
 yarn workspace hello-next-js dev
 ```
 
-7. The URL: [localhost:3000/hello-next-js/bff-tasks-db](http://localhost:3000/hello-next-js/bff-tasks-db)
+7. The URL: [localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
 
-8. The GraphQL version URL: [localhost:3000/hello-next-js/bff-tasks-db/graphql](http://localhost:3000/hello-next-js/bff-tasks-db/graphql)
+8. Frontend caching with Vercel SWR: [localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)
 
-9. The GraphQL version with Apollo Client URL: [localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient](http://localhost:3000/hello-next-js/bff-tasks-db/graphql/apolloClient)
+9. The GraphQL version URL: [localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
 
+10. The GraphQL version with Apollo Client URL: [localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)
 
-10. The Swagger Doc URL: [http://localhost:3000/hello-next-js/bff-tasks-db/swagger](http://localhost:3000/hello-next-js/bff-tasks-db/swagger) 
+11. The Swagger Doc URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/swagger](http://localhost:3000/hello-next-js/task-crud-fullstack/swagger)

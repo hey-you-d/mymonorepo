@@ -1,14 +1,9 @@
 import path from 'path';
-import { DATA_FETCH_MODE } from '../../../feature-flags/tasksBff';
 
-const serversConfig = DATA_FETCH_MODE === "getServerSideProps"
-  ? {
-    url: '/hello-next-js',
-    description: 'Development server (localhost)',
-  } : {
-    url: 'http://localhost:3000',
-    description: 'Development server (localhost)',
-  }
+const serversConfig = {
+  url: 'http://localhost:3000',
+  description: 'Development server (localhost)',
+};
 
 export const swaggerDefinition = {
     openapi: '3.0.0',
@@ -18,6 +13,18 @@ export const swaggerDefinition = {
       description: 'A simple CRUD API using Next.js API feature',
     },
     servers: [serversConfig],
+    components: {
+      securitySchemes: {
+        ApiKeyAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'x-api-key',
+        },
+      },
+    },
+    security: [{
+      ApiKeyAuth: [],
+    },],
   };
 
 export const swaggerOptions = {

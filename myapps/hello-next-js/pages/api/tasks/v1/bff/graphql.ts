@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { DOMAIN_URL } from "../../../../../feature-flags/tasksBff";
+import { DOMAIN_URL } from "../../../../../global/common";
 import { TASKS_BFF_HEADER } from "../../../../../global/common";
 
 export const config = {

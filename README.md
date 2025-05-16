@@ -17,11 +17,12 @@
 6. CI/CD implementation with Github Action
 7. Demo front-end pages/projects (as part of the monorepo setup): Next.js, React.js with Vite, React.js with CRA 
 
-## Backend for Frontend (BFF) Demo with Next.js
+## FullStack CRUD Demo with Next.js and React.js
 Setup instruction (localhost) & Work Progress Log: [README](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md)
 
 ### Tech stacks
-1. Backend framework: Next.JS API
+1. Backend framework: Next.JS ver.15 API 
+2. Frontend framework: Next.JS ver.15, and React.JS ver.9 + Typescript
 2. RDBMS: PostgreSQL DB
 3. Data Query Language: direct SQL and via Apollo GraphQL
 4. API Authentication: JWT-based auth
@@ -29,8 +30,7 @@ Setup instruction (localhost) & Work Progress Log: [README](https://github.com/h
 6. Server-side Caching: To be determined. 
 7. Documentation: Swagger API Doc.
 8. Unit Test: Jest Testing Framework.
-9. Frontend: react.js, and Next.js 
-10. Frontend CSS Styling: Tailwind CSS
+9. Frontend CSS Styling: Tailwind CSS
 
 ## Links
 1. [Production site - hello-react-js](https://www.yudimankwanmas.com)
