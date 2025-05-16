@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import swaggerJSDoc from "swagger-jsdoc";
-import { swaggerOptions } from "@/bff/tasks/swaggerConfig";
+import { swaggerOptions } from "@/lib/api/swaggerConfig";
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 

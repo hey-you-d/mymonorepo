@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { tasks, Task } from '@/bff/tasks/db_inMemory';
+import { tasks, Task } from '@/lib/db/db_inMemory';
 import { v4 as uuidv4 } from 'uuid';
 
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
