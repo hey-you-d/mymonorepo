@@ -1,9 +1,9 @@
 'use client';
 import { useState, useRef, useEffect } from "react";
 import { useTaskViewModelWithSwr } from '../../../viewModels/Task/use-client/useTasksViewModelWithSwr';
-import { TaskSeedDB } from '../../../components/TaskSeedDB';
-import { TaskTable } from '../../../components/TaskTable';
-import { Task } from "../../../types/Task";
+import { TaskSeedDB } from '@/app/components/TaskSeedDB';
+import { TaskTable } from '@/app/components/TaskTable';
+import { Task } from "@/app/types/Task";
 import { TASKS_CRUD } from "../../../../../global/common";
 import Link from "next/link";
 
