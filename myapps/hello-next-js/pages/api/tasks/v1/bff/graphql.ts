@@ -4,7 +4,7 @@ import { TASKS_BFF_HEADER } from "../../../../../global/common";
 
 export const config = {
     api: {
-        bodyParser: true, // GraphQL body is JSON
+        bodyParser: true, // for reference: GraphQL body is JSON
     },
 };
 
@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 if (!query) return res.status(400).json({ error: 'BFF graphql proxy error - Query is required' });
                 if (!variables) return res.status(400).json({ error: 'BFF graphql proxy error - Variable is required' });  
 
-                // dev note:
+                // for reference:
                 // The GraphQL handler is registered under: /api/tasks/v1/sql/graphql
                 // and and Next.js API routes are not automatically prefixed with your basePath (like /hello-next-js) — that's 
                 // only used for page routes and static assets, not API routes.
@@ -32,11 +32,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 
                 if (!proxyResponse.ok) {
                     console.error(`BFF Error fetching data with graphql server: ${proxyResponse.status} - ${proxyResponse.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
+                    // for reference: If the response isn't OK, throw an error to be caught in the catch block
                     throw new Error(`BFF Error fetching data with graphql server: ${proxyResponse.status} ${proxyResponse.statusText}`);
                 }
 
-                // dev note:
+                // for reference:
                 // const rawBody = await proxyResponse.text(); // receive entire raw body
                 // res.status(proxyResponse.status).send(rawBody);
                 // -> you're Not parsing the data yourself. 
@@ -63,12 +63,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 if (contentType?.includes('application/json')) {
                     res.setHeader('Content-Type', 'application/json');
-                    res.send(rawBody); // forward raw response
+                    res.send(rawBody); // for reference: forward raw response
                 } else {
-                    res.send(rawBody); // fallback: text/plain, etc.
+                    res.send(rawBody); // for reference: fallback: text/plain, etc.
                 }
             } catch (err) {
-                console.error("BFF graphql proxy error", err); // Log detailed error
+                console.error("BFF graphql proxy error", err);  // Log detailed error
                 return res.status(500).json({ error: "BFF graphql proxy error" });
             } 
         default:

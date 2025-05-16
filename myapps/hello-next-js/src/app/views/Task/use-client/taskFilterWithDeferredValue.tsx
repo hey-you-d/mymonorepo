@@ -28,7 +28,7 @@ export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId 
       setSearch(value);
     };
 
-    // dev note: useDeferredValue will keep the filtering logic non-blocking as it defers the search state while 
+    // for reference: useDeferredValue will keep the filtering logic non-blocking as it defers the search state while 
     // the tasks remain the same. The filtering will remain smooth, but you'll avoid making state updates a non-blocking
     // operation 
     const filteredByDeferredValue = useMemo(() => {

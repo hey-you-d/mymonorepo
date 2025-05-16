@@ -78,7 +78,7 @@ export const useTaskApolloClientViewModel = () => {
     const [updateTask] = useMutation(UPDATE_A_TASK);
 
     // Run the query to populate the table
-    // dev note: with Apollo Client, to achieve "run once" behavior but still respond to query results is to 
+    // for reference: with Apollo Client, to achieve "run once" behavior but still respond to query results is to 
     // handle it inside the useQuery call, hence the purpose behind getAllTasksHandler obj. 
     // This technique can be used to replace the CSR with useEffect
     const getAllTasksHandler = {
@@ -100,7 +100,7 @@ export const useTaskApolloClientViewModel = () => {
         try {
             const { data: mutatedData } = await createTask({ variables: { title, detail } });
 
-            // dev note: createTaskError and createTaskLoading are from the initial hook state — 
+            // for reference: createTaskError and createTaskLoading are from the initial hook state — 
             // they don’t update after the mutation. Apollo mutation hook returns a result from 
             // await createTask(...), and the correct way to get errors or loading state after a mutation is 
             // from the result object, not the hook state. 
@@ -117,7 +117,7 @@ export const useTaskApolloClientViewModel = () => {
                 throw new Error('No task returned');
             }
 
-            // dev note: Use Functional setTasks to Avoid Stale State
+            // for reference: Use Functional setTasks to Avoid Stale State
             // This ensures the update works even if multiple tasks are added quickly, 
             // preventing race conditions from stale closures.
             setTasks(prev => [mutatedData.createTask, ...prev]);
@@ -134,7 +134,7 @@ export const useTaskApolloClientViewModel = () => {
         try {
             const { data: mutatedData } = await deleteTasks();
 
-            // dev note: check the dev note in the createRow function
+            // for reference: check the dev note in the createRow function
             /*
             if (deleteTasksError && deleteTasksError instanceof ApolloError) {
                 setErrorMsg(deleteTasksError.message);
@@ -163,7 +163,7 @@ export const useTaskApolloClientViewModel = () => {
         try {
             const { data: mutatedData } = await seedTasks();     
 
-            // dev note: check the dev note in the createRow function
+            // for reference: check the dev note in the createRow function
             /*
             if (seedTasksError && seedTasksError instanceof ApolloError) {
                 setErrorMsg(seedTasksError.message);
@@ -177,7 +177,7 @@ export const useTaskApolloClientViewModel = () => {
                 throw new Error('No task returned');
             }
 
-            // dev note: Use Functional setTasks to Avoid Stale State
+            // for reference: Use Functional setTasks to Avoid Stale State
             // This ensures the update works even if multiple tasks are added quickly, 
             // preventing race conditions from stale closures.
             // dev note 2: the returned data structure:
@@ -200,7 +200,7 @@ export const useTaskApolloClientViewModel = () => {
         try {
             const { data: mutatedData } = await updateTask({ variables: { id, title, detail, completed } });
 
-            // dev note: check the dev note in the createRow function
+            // for reference: check the dev note in the createRow function
             /*
             if (updateTaskError && updateTaskError instanceof ApolloError) {
                 setErrorMsg(updateTaskError.message);
@@ -214,7 +214,7 @@ export const useTaskApolloClientViewModel = () => {
                 throw new Error('No task returned');
             }
 
-            // dev note: update only the changed task in the list
+            // for reference: update only the changed task in the list
             setTasks(prev =>
                 prev.map(task => (task.id === mutatedData.updateTask.id ? mutatedData.updateTask : task))
             );

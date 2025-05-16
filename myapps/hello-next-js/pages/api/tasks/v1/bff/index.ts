@@ -1,4 +1,4 @@
-// dev note:
+// for reference:
 // The goal: to avoid exposing x-api-key to the frontend (via the model component). This will break BFF pattern/architecture.
 // Hence, implementing the "code-level" reverse-proxy approach (as opposed to the proper infra-based reverse-proxy). 
 // In essence, it's a BFF. 
@@ -20,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         
                 if (!response.ok) {
                     console.error(`BFF Error fetching all rows: ${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
+                    // for reference: If the response isn't OK, throw an error to be caught in the catch block
                     throw new Error(`BFF Error fetching all rows: ${response.status} ${response.statusText}`);
                 }
     
@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 return res.status(500).json({ error: "BFF Error fetching all rows - server error" });
             } 
         case "POST" :
-            // Frontend layer is not using it, hence its not necessary to create one  
+            // for reference: Frontend layer (client) is not using it, hence its not necessary to create one  
             res.setHeader('Allow', ['GET']);
             return res.status(405).end(`Method ${req.method} Not Allowed`);
         default:

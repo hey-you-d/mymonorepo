@@ -87,7 +87,7 @@ yarn workspace hello-next-js start
     - Model component: [TaskGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/models/Task/use-client/TaskGraphqlClient.ts)
     - Viewmodel component: [useTaskGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/Task/use-client/useTaskGraphQLViewModel.ts)
     - View component: [taskGraphQLPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/views/Task/use-client/taskGraphQLPage.tsx)
-10. Frontend feature: Alternative GraphQL implementation with Apollo Client (with in-memory cache enabled)
+10. Frontend feature: Alternative GraphQL implementation with Apollo Client (with in-memory cache enabled) **STATUS: DONE**
     - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)  
     - Model component: reusing the default graphql implementation
     - Viewmodel component: [useTaskApolloClientViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/app/viewModels/Task/use-client/useTaskApolloClientViewModel.ts)

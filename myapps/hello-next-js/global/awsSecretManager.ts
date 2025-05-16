@@ -1,6 +1,8 @@
 import { SecretsManagerClient, GetSecretValueCommand, } from "@aws-sdk/client-secrets-manager";
 
-// can only be called on server-side only
+// for reference: can only be called on server-side only
+// for reference: AWS credentials need to be set up first in .env / .env local:
+// AWS_SECRET_KEY_ID , AWS_SECRET_ACCESS_KEY & AWS_REGION
 export const getSecret = async(secretName: string, region: string): Promise<string> => {
     const client = new SecretsManagerClient({
         region,
@@ -19,7 +21,7 @@ export const getSecret = async(secretName: string, region: string): Promise<stri
             return buff.toString('ascii');
         }
     } catch (err) {
-        // for a list of exceptions thrown, see
+        // for reference: for a list of exceptions thrown, see
         // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         console.error("Failed to retrieve secret from the secret manager:", err);
         throw err;

@@ -5,7 +5,7 @@ import { useUserViewModel } from '../viewModels/useUserViewModel';
 import { UserProfile } from '../components/UserProfile';
 import axios, { AxiosInstance } from 'axios';
 
-// DEV NOTE: can be moved into a separate module
+// for reference: can be moved into a separate module
 const apiClient: AxiosInstance = axios.create({
   //baseURL: `https://${process.env.NEXT_PUBLIC_API_CLIENT_ID}.mockapi.io/api`,
   baseURL: "https://67e0cf0458cc6bf78522f5a9.mockapi.io/api",
