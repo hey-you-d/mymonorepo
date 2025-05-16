@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 if (!response.ok) {
                     console.error(`BFF Error seeding tasks DB: ${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
+                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
                     throw new Error(`BFF Error seeding tasks DB: ${response.status} ${response.statusText}`);
                 }
         

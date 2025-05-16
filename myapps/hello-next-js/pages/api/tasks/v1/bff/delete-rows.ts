@@ -6,6 +6,7 @@ import { TASKS_BFF_HEADER } from "../../../../../global/common";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "POST" :
+            // For reference: 
             // for the sake of demo, lets use POST instead of DELETE request type
             // to demonstrate its possible to use the POST request to send a DELETE request.
             try {
@@ -16,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 if (!response.ok) {
                     console.error(`BFF Error deleting all rows: ${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
+                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
                     throw new Error(`BFF Error deleting all rows: ${response.status} ${response.statusText}`);
                 }
         

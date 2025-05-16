@@ -4,7 +4,8 @@ import { getSecret } from "./awsParameterStore";
 export const MONOREPO_PREFIX = "/hello-next-js";
 export const TASKS_CRUD = "/task-crud-fullstack";
 
-// This works locally, in Docker, and in production (e.g., on Vercel or behind a reverse proxy).
+// for reference: This works locally, in Docker, and in production (e.g., on Vercel or behind a reverse proxy).
+// for reference: can only be called on server-side only
 export const isRunningLocally = (req: NextApiRequest) => {
     const isLocalhost = (hostname: string) => hostname === 'localhost' || hostname === '127.0.0.1';
 
@@ -15,9 +16,10 @@ export const isRunningLocally = (req: NextApiRequest) => {
     return isLocalhost(hostname);
 }
 
+// for reference: can only be called on server-side only
 export const DOMAIN_URL = process.env.NODE_ENV === "production"
     //? "https://www.yudimankwanmas.com"
-    ? "http://localhost:3000" // WIP - the table won't work on production
+    ? "http://localhost:3000" // [WIP] remote DB hasn't been created in the production environment
     : "http://localhost:3000";
 export const BASE_URL = `${DOMAIN_URL}/hello-next-js`;
 export const TASKS_BFF_BASE_API_URL = `${process.env.NODE_ENV === "production" ? BASE_URL : ""}/api/tasks/v1/bff`;
@@ -31,7 +33,7 @@ export const getInternalApiKey = async (): Promise<string | undefined> => {
     return xApiKey;
 }
 
-// can only be called on server-side only
+// for reference: can only be called on server-side only
 export const TASKS_BFF_HEADER = async () => {
     return {
         "Content-Type": "application/json",
@@ -40,6 +42,7 @@ export const TASKS_BFF_HEADER = async () => {
     }    
 }; 
 
+// for reference: can only be called on server-side only
 export const CHECK_BFF_AUTHORIZATION = async (req: NextApiRequest, res: NextApiResponse) => {
     const clientKey = req.headers["x-api-key"];
     const serverKey = await getInternalApiKey();

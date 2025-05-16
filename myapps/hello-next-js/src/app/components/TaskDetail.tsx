@@ -13,10 +13,10 @@ type TaskTableType = {
 }
 
 export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
-    // dev note: the if condition below only applies to the non-graphql row deletion op.
+    // for reference: the if condition below only applies to the non-graphql row deletion op.
     // the graphql version returns an updated tasks (sans the deleted row). 
     if (tasks && tasks.length <= 0) {
-        // dev note: a delete row operation has just been performed by calling the deleteRowFromId().
+        // for reference: a delete row operation has just been performed by calling the deleteRowFromId().
         // recall, the deleteRowFromId will set the tasks state to [] upon successful delete op.
         // redirect back to the table page
         window.location.href=`${MONOREPO_PREFIX}${TASKS_CRUD}`;

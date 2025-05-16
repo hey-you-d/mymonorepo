@@ -1,6 +1,6 @@
 'use client'
 
-// DEV NOTE: The View (presentation component) is a pure functional component focused on displaying data and 
+// for reference: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import React, { useCallback, useRef } from 'react';
 import { Task } from "../types/Task";
@@ -13,7 +13,7 @@ type TaskTableType = {
 }
 
 const isSafeInput = (str: string) => {
-    // DEV NOTE: To prevent SQL injection attack
+    // for reference: To prevent SQL injection attack
     // Only allow alphanumeric characters, basic punctuation, and whitespace
     const regex = /^[a-zA-Z0-9\s.,!?'"()\-_:;]{1,500}$/;
     return regex.test(str);

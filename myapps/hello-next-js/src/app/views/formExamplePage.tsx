@@ -15,7 +15,7 @@ export const GenericFormExamplePage = () => {
     const [password, setPassword] = useState("");
     const [validationMsg, setValidationMsg] = useState("");
 
-    // dev note: onSubmit works on the client-side. So it expects functions that actually will work on the client. 
+    // for reference: onSubmit works on the client-side. So it expects functions that actually will work on the client. 
     // We can't just give it a function that will work on the server. Thats why we use the "classic" action attribute 
     const handleSubmit = async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -47,7 +47,7 @@ export const GenericFormExamplePage = () => {
 }
 
 export const FormExamplePage = () => {
-    // dev note:
+    // for reference:
     // 1. We ideally want this control to be in both our frontend and backend, but never only on the frontend! 
     // Client-side validations can always be manipulated, so we never trust the data coming from users.
     // 2. We also want to show errors to the users if they put invalid input. And a loading state would be cool too 
@@ -62,7 +62,7 @@ export const FormExamplePage = () => {
         initialState
     );
 
-    // dev note: With NextJS 13+, the action attribute can take JavaScript functions, and this function can work on the server side 
+    // for reference: With NextJS 13+, the action attribute can take JavaScript functions, and this function can work on the server side 
     // with the "use server" directive. The action attribute will work even if JavaScript is disabled because it's not something that 
     // works on the client—it works on the server 
     // dev note 2: The "defaultValue" attributes in every input element was added so that they will not reset when 

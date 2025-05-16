@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 if (!response.ok) {
                     console.error(`BFF Error get row for id ${id}: ${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
+                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
                     throw new Error(`BFF Error get row for id ${id}: ${response.status} - ${response.statusText}`);
                 }
         
@@ -46,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 if (!response.ok) {
                     console.error(`BFF Error update row for id ${id}: ${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
+                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
                     throw new Error(`BFF Error update row for id ${id}: ${response.status} ${response.statusText}`);
                 }
         
@@ -66,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 if (!response.ok) {
                     console.error(`BFF Error delete row for id ${id}: ${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
+                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
                     throw new Error(`BFF Error delete row for id ${id}: ${response.status} ${response.statusText}`);
                 }
         
@@ -92,7 +92,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 if (!response.ok) {
                     console.error(`BFF Error creating row: ${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
+                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
                     throw new Error(`BFF Error creating row: ${response.status} ${response.statusText}`);
                 }
         

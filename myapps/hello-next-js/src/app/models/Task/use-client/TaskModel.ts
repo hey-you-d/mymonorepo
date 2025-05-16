@@ -174,7 +174,7 @@ export class TaskModel {
             throw new Error(`Error creating row: ${response.status}`);
         }
 
-        // DEV NOTE: returns nothing
+        // for reference: returns nothing
       } catch(error) {
         console.error("Error creating row: ", error );
 
@@ -202,7 +202,7 @@ export class TaskModel {
             throw new Error(`Error updating row: ${response.status}`);
         }
 
-        // DEV NOTE: returns nothing
+        // for reference: returns nothing
       } catch(error) {
         console.error(`Error updating row for id ${id}: `, error );
 
@@ -225,7 +225,7 @@ export class TaskModel {
             throw new Error(`Error deleting row: ${response.status}`);
         }
 
-        // DEV NOTE: to prevent receiving the following warning: 
+        // for reference: to prevent receiving the following warning: 
         // API handler should not return a value, received object.
         // make this fn returns void by comment out the return value below
         

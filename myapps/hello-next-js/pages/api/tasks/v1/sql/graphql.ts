@@ -78,7 +78,7 @@ const resolvers = {
     },
 };
 
-// dev note: about unbounded caching warning:
+// for reference: about unbounded caching warning:
 // "Persisted queries are enabled and are using an unbounded cache. Your server is vulnerable to denial of service attacks 
 // via memory exhaustion. Set `cache: "bounded"` or `persistedQueries: false` in your ApolloServer constructor...""
 // 

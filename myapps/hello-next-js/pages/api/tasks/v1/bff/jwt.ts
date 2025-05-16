@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         
                 if (!response.ok) {
                     console.error(`BFF Error check JWT: ${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
+                    // for reference: If the response isn't OK, throw an error to be caught in the catch block
                     throw new Error(`BFF Error check JWT: ${response.status} ${response.statusText}`);
                 }
     

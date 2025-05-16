@@ -5,7 +5,7 @@ import { Task, TaskTableType } from '@/app/types/Task';
 import { TASKS_CRUD } from '../../../../../global/common';
 import Link from "next/link";
 
-// Dev note: experiment only - the useTransition feature doesn't seem to be suitable for this feature
+// for reference: experiment only - the useTransition feature doesn't seem to be suitable for this feature
 // gotcha: the input field losing focus after each keypress.
 
 // under the hood:
@@ -18,7 +18,7 @@ import Link from "next/link";
 // resolution: 
 // save yourself from the potential headache, better rely on useDeferredValue
 export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId } : TaskTableType) => {
-    // dev note: 
+    // for reference: 
     // recall, react state updates are blocking
     // - react will process the state update immediately
     // - re-render synchronously
@@ -37,11 +37,11 @@ export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId 
 
     const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-      setSearch(value); // dev note: update immediately for the controlled input
+      setSearch(value); // for reference: update immediately for the controlled input
       
       startTransition(() => {
         if (tasks) {
-            // dev note: expensive update deferred - I want to set a state, and delay the state update
+            // for reference: expensive update deferred - I want to set a state, and delay the state update
             setFilteredTasks(
               tasks.filter(row => row.detail.toLowerCase().includes(value.toLowerCase()))
             );

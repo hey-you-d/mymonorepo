@@ -1,6 +1,6 @@
 "use client"
 export async function fetchGraphQL(query: string, variables = {}) {
-    // dev note:
+    // for reference:
     // GraphQL does not use HTTP verbs to distinguish operations. Instead:
     // All operations (query, mutation, or subscription) are typically sent via 
     // a single POST request to the GraphQL endpoint.

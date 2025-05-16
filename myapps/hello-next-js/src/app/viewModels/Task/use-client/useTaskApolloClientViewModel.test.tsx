@@ -53,7 +53,7 @@ const mockTasks = [
     { id: '2', title: 'Task 2', detail: 'Detail 2', completed: true },
 ];
 
-// dev note: Even though you're testing createRow, the useQuery(GET_ALL_TASKS) still runs when the hook initializes 
+// for reference: Even though you're testing createRow, the useQuery(GET_ALL_TASKS) still runs when the hook initializes 
 // and Apollo Client expects a mock for it.
 const getTasksMock = {
     request: {
@@ -149,7 +149,7 @@ describe('useTaskApolloClientViewModel', () => {
         );
 
         const button = getByText('Add Task');
-        // dev note: must use fireEvent otherwise act related warning will appear. 
+        // for reference: must use fireEvent otherwise act related warning will appear. 
         // however, don't use manual act. This is typically unnecessary and 
         // can even obscure errors — stick with waitFor() or findBy*() when possible.
         fireEvent.click(button);
@@ -308,7 +308,7 @@ describe('useTaskApolloClientViewModel', () => {
         );
 
         const button = getByText('Seed DB');
-        // dev note: must use fireEvent otherwise act related warning will appear. 
+        // for reference: must use fireEvent otherwise act related warning will appear. 
         // however, don't use manual act. This is typically unnecessary and 
         // can even obscure errors — stick with waitFor() or findBy*() when possible.
         fireEvent.click(button);

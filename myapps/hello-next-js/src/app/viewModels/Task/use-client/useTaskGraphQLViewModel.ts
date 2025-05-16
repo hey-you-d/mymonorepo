@@ -54,7 +54,7 @@ export const useTaskGraphQLViewModel = () => {
         try {
             const variables = { title, detail };
             const data = await fetchGraphQL(mutation, variables);
-            // dev note: Use Functional setTasks to Avoid Stale State
+            // for reference: Use Functional setTasks to Avoid Stale State
             // This ensures the update works even if multiple tasks are added quickly, 
             // preventing race conditions from stale closures.
             setTasks(prev => [data.createTask, ...prev]);
@@ -103,7 +103,7 @@ export const useTaskGraphQLViewModel = () => {
   
         try {
           const data = await fetchGraphQL(mutation);        
-          // dev note: Use Functional setTasks to Avoid Stale State
+          // for reference: Use Functional setTasks to Avoid Stale State
           // This ensures the update works even if multiple tasks are added quickly, 
           // preventing race conditions from stale closures.
           // dev note 2: the returned data structure:
@@ -136,7 +136,7 @@ export const useTaskGraphQLViewModel = () => {
         try {
           const variables = { id, title, detail, completed };
           const data = await fetchGraphQL(mutation, variables);
-          // dev note: update only the changed task in the list
+          // for reference: update only the changed task in the list
           setTasks(prev =>
             prev.map(task => (task.id === data.updateTask.id ? data.updateTask : task))
           );

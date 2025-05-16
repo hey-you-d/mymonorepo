@@ -6,7 +6,7 @@ import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
 import { TaskWithSWRPage } from '@/app/views/Task/use-client/taskWithSWRPage';
 import { BASE_URL } from "../../global/common";
 
-// dev note: alternative function signature:
+// for reference: alternative function signature:
 //type Props = {
 //  fallback: Record<string, Task[]>;
 //};
