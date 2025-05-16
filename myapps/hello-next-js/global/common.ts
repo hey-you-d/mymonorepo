@@ -4,8 +4,20 @@ import { getSecret } from "./awsParameterStore";
 export const MONOREPO_PREFIX = "/hello-next-js";
 export const TASKS_CRUD = "/task-crud-fullstack";
 
+// This works locally, in Docker, and in production (e.g., on Vercel or behind a reverse proxy).
+export const isRunningLocally = (req: NextApiRequest) => {
+    const isLocalhost = (hostname: string) => hostname === 'localhost' || hostname === '127.0.0.1';
+
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const fullUrl = `${protocol}://${req.headers.host}`;
+    const hostname = new URL(fullUrl).hostname;
+
+    return isLocalhost(hostname);
+}
+
 export const DOMAIN_URL = process.env.NODE_ENV === "production"
-    ? "https://www.yudimankwanmas.com"
+    //? "https://www.yudimankwanmas.com"
+    ? "http://localhost:3000" // WIP - the table won't work on production
     : "http://localhost:3000";
 export const BASE_URL = `${DOMAIN_URL}/hello-next-js`;
 export const TASKS_BFF_BASE_API_URL = `${process.env.NODE_ENV === "production" ? BASE_URL : ""}/api/tasks/v1/bff`;
