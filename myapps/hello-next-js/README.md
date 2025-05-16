@@ -53,9 +53,12 @@ yarn workspace hello-next-js lint
 
 - **Build with:** 
 ```bash
-yarn workspace hello-next-js dev
+yarn workspace hello-next-js build
+#followed by
+yarn workspace hello-next-js start
+#and then check the instruction at the bottom of this page to prepare & run the postgresql db for localhost env
 ```
-- **STATUS: WIP**
+- **PROGRESS:**
 1. Core API Endpoint implementation - real API that talks to remote DB (protected by API key) - **STATUS: DONE**  
     - endpoint URL: **/api/tasks/v1/sql** - check out the Swagger doc. 
     - endpoint module: [https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/sql](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/sql) 
@@ -100,7 +103,7 @@ yarn workspace hello-next-js dev
 #### Remote site demo (Prod & Dev branches)
 - **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/task-crud-fullstack](https://www.yudimankwanmas.com/hello-next-js/task-crud-fullstack) 
 - **Dev URL:** [https://dev.yudimankwanmas.com/hello-next-js/task-crud-fullstack](https://dev.yudimankwanmas.com/hello-next-js/task-crud-fullstack)
-- **STATUS: NOT READY**
+- **PROGRESS: NOT READY**
 Will commence after the localhost development is complete.
 Point of consideration for PROD build: 
 1. Determine the remote RDBMS (Candidate: AWS RDS or Supabase)
