@@ -5,6 +5,12 @@ import { Task } from "@/app/types/Task";
 import { values, placeholders } from "./seed-table";
 import { CHECK_BFF_AUTHORIZATION } from '../../../../../global/common';
 
+import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
+
+//import { KeyvAdapter } from '@apollo/utils.keyvadapter';
+//import Keyv from 'keyv'; 
+//import KeyvRedis from '@keyv/redis'; // Optional Redis adapter:
+
 const typeDefs = gql`
     type Task {
         id: ID!,
@@ -72,7 +78,29 @@ const resolvers = {
     },
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+// dev note: about unbounded caching warning:
+// "Persisted queries are enabled and are using an unbounded cache. Your server is vulnerable to denial of service attacks 
+// via memory exhaustion. Set `cache: "bounded"` or `persistedQueries: false` in your ApolloServer constructor...""
+// 
+// Apollo Server has persisted queries enabled with an unbounded in-memory cache, which can be exploited via a 
+// DoS attack that floods the server with unique queries, exhausting memory.
+// - By default, caches persisted queries in memory.
+// - By default, uses an unbounded Map as the cache unless you configure it.
+// - Hence, can be overwhelmed by attackers sending lots of unique hashes, consuming memory indefinitely.
+//
+// resolution:
+// option 1. You're using persisted queries intentionally (e.g. Apollo Client + persistedQueryLink) -> Use a bounded cache
+// option 2. You're not using persisted queries -> disable them
+// option 3. You're running in production, and want scalable, resilient, shared caching -> Use Redis or Memcached  
+
+const server = new ApolloServer({ 
+    typeDefs, 
+    resolvers,
+    cache: new InMemoryLRUCache(), // option 1 - This is a bounded in-memory cache
+    //persistedQueries: false, // option 2 - disable it
+    //cache: new KeyvAdapter(new KeyvRedis('redis://localhost:6379')); // or just new Keyv() for in-memory), // option 3 - redis or other keyv backends
+    //persistedQueries: { cache, }, // option 3, alternatively...
+});
 const startServer = server.start();
 
 export const config = {
