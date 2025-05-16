@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic';
-import { TASKS_SQL_BASE_API_URL, DATA_FETCH_MODE } from "../../../feature-flags/tasksBff";
+import { TASKS_SQL_BASE_API_URL } from "../../../global/common";
 
 // Dev note: This swagger-ui-react import will cause SSR to try loading the module
 // By importing swagger-ui-react eagerly at the top, it defeats the purpose of dynamic() with ssr: false. 
@@ -21,9 +21,5 @@ import 'swagger-ui-react/swagger-ui.css';
 const SwaggerDoc = dynamic(() => import('swagger-ui-react'), { ssr: false });
 
 export default function SwaggerPage() {
-  const url = DATA_FETCH_MODE === "getServerSideProps" 
-    ?  "/hello-next-js/api/tasks/v1/sql"
-    : `${TASKS_SQL_BASE_API_URL}`;
-
-  return <SwaggerDoc url={`${url}/swagger`} />;
+  return <SwaggerDoc url={`${TASKS_SQL_BASE_API_URL}/swagger`} />;
 }

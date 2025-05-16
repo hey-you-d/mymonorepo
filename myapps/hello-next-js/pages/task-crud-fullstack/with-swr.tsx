@@ -23,6 +23,7 @@ const TaskListWithSWR = ({ fallback }: InferGetServerSidePropsType<typeof getSer
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
+  // Inside getServerSideProps, we can't use a relative URL  
   const tasks = await (new TaskModel()).getTasksDBRows(`${BASE_URL}/api/tasks/v1/bff`);
   
   return {

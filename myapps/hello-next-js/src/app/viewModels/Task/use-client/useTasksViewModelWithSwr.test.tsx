@@ -3,7 +3,6 @@ import { SWRConfig } from 'swr';
 import { useTaskViewModelWithSwr } from './useTasksViewModelWithSwr';
 import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
 import { Task } from '@/app/types/Task';
-import { DATA_FETCH_MODE } from "../../../../../feature-flags/tasksBff";
 
 // Mock the entire TaskModel module
 jest.mock('../../../models/Task/use-client/TaskModel');
@@ -48,60 +47,36 @@ describe('useTaskViewModelWithSwr', () => {
     mockSeedTasksDB.mockReset();
   });
 
-  if (DATA_FETCH_MODE === "useEffect") {
-    it('should load tasks on mount', async () => {
-      mockGetTasksDBRows.mockResolvedValue(mockTasks);
-      
-      const { result } = renderHook(() => useTaskViewModelWithSwr());
-      
-      // Initial state
-      expect(result.current.tasks).toBeUndefined; 
-      expect(result.current.loading).toBe(false); // because getTasksDBRows() is called within useEffect to populate the table after init page load 
-      
-      // Wait for useEffect to complete
-      await act(async () => {
-        await Promise.resolve(); // Let the useEffect complete
-      });
-      
-      // After loading
+  it('should load tasks from fallback data (as in getServerSideProps)', async () => {
+    mockGetTasksDBRows.mockResolvedValue(mockTasks);
+    const { result } = renderHook(() => useTaskViewModelWithSwr(), {
+      wrapper: ({ children }) => (
+        <SWRConfig value={{ fallback: fallbackData, dedupingInterval: 0 }}>
+          {children}
+        </SWRConfig>
+      )  
+    });
+  
+    // because SWR is detecting a fallback, so it skips calling the fetcher
+    expect(mockGetTasksDBRows).not.toHaveBeenCalled(); 
+    expect(result.current.loading).toBe(true);
+
+    // Wait for SWR to hydrate fallback data into hook state
+    await waitFor(() => {
       expect(result.current.tasks).toEqual(mockTasks);
       expect(result.current.loading).toBe(false);
-      expect(mockGetTasksDBRows).toHaveBeenCalledTimes(1);
     });
-  }
 
-  if (DATA_FETCH_MODE === "getServerSideProps") {
-    it('should load tasks from fallback data (as in getServerSideProps)', async () => {
-      mockGetTasksDBRows.mockResolvedValue(mockTasks);
-      const { result } = renderHook(() => useTaskViewModelWithSwr(), {
-        wrapper: ({ children }) => (
-          <SWRConfig value={{ fallback: fallbackData, dedupingInterval: 0 }}>
-            {children}
-          </SWRConfig>
-        )  
-      });
-    
-      // because SWR is detecting a fallback, so it skips calling the fetcher
-      expect(mockGetTasksDBRows).not.toHaveBeenCalled(); 
-      expect(result.current.loading).toBe(true);
-
-      // Wait for SWR to hydrate fallback data into hook state
-      await waitFor(() => {
-        expect(result.current.tasks).toEqual(mockTasks);
-        expect(result.current.loading).toBe(false);
-      });
-
-      // Wait for revalidation to trigger fetcher call
-      await waitFor(() => {
-        // because in the fetcher fn, we call swrFetcher(); instead of calling taskModel.getTasksDBRows();
-        expect(mockGetTasksDBRows).not.toHaveBeenCalled();
-        expect(result.current.loading).toBe(false);
-      });
-
-      // loading should be false after fetch
+    // Wait for revalidation to trigger fetcher call
+    await waitFor(() => {
+      // because in the fetcher fn, we call swrFetcher(); instead of calling taskModel.getTasksDBRows();
+      expect(mockGetTasksDBRows).not.toHaveBeenCalled();
       expect(result.current.loading).toBe(false);
     });
-  }
+
+    // loading should be false after fetch
+    expect(result.current.loading).toBe(false);
+  });
 
   it('should seed tasks database', async () => {
     mockGetTasksDBRows.mockResolvedValue([]);
