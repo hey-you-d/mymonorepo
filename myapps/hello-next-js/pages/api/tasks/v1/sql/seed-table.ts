@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
-import { CHECK_BFF_AUTHORIZATION } from '@/global/common';
+import { CHECK_BFF_AUTHORIZATION } from '@/lib/app/common';
 
 const tasks = [
     { title: 'Build Next.js CRUD', detail: 'Add full backend API layer to hello-next-js app' },

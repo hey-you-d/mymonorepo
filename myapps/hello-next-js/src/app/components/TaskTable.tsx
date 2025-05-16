@@ -4,7 +4,7 @@
 // responding to user actions passed in as props.
 import React, { useCallback, useRef } from 'react';
 import { Task } from "@/app/types/Task";
-import { MONOREPO_PREFIX, TASKS_CRUD } from "@/global/common";
+import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
 type TaskTableType = {
     tasks: Task[], 

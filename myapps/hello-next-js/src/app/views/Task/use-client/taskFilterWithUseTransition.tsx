@@ -2,7 +2,7 @@
 import { useState, useTransition } from 'react';
 import { TaskTable } from '@/app/components/TaskTable';
 import { Task, TaskTableType } from '@/app/types/Task';
-import { TASKS_CRUD } from '@/global/common';
+import { TASKS_CRUD } from '@/lib/app/common';
 import Link from "next/link";
 
 // for reference: experiment only - the useTransition feature doesn't seem to be suitable for this feature
