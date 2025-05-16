@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { ApolloError, gql, useQuery, useMutation } from '@apollo/client';
-import { Task } from '../types/Task';
+import { Task } from "@/app/types/Task";
 
 export const GET_ALL_TASKS = gql`
     query {

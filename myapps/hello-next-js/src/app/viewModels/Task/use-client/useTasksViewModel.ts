@@ -1,7 +1,7 @@
 'use client'; 
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
-import { Task } from '../../../types/Task';
+import { Task } from '@/app/types/Task';
 
 export const useTaskViewModel = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
