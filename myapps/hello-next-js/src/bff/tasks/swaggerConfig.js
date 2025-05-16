@@ -13,6 +13,18 @@ export const swaggerDefinition = {
       description: 'A simple CRUD API using Next.js API feature',
     },
     servers: [serversConfig],
+    components: {
+      securitySchemes: {
+        ApiKeyAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'x-api-key',
+        },
+      },
+    },
+    security: [{
+      ApiKeyAuth: [],
+    },],
   };
 
 export const swaggerOptions = {
