@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { MONOREPO_PREFIX } from "../../global/common";
+import { MONOREPO_PREFIX } from "@/global/common";
 import HomepageLink from "../../pagesLayouts/HomepageLink";
 import { ReactElement } from "react";
 

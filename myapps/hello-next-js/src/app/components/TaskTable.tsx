@@ -3,8 +3,8 @@
 // for reference: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import React, { useCallback, useRef } from 'react';
-import { Task } from "../types/Task";
-import { MONOREPO_PREFIX, TASKS_CRUD } from "../../../global/common";
+import { Task } from "@/app/types/Task";
+import { MONOREPO_PREFIX, TASKS_CRUD } from "@/global/common";
 
 type TaskTableType = {
     tasks: Task[], 

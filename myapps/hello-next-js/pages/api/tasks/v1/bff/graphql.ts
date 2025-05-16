@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { DOMAIN_URL } from "../../../../../global/common";
-import { TASKS_BFF_HEADER } from "../../../../../global/common";
+import { DOMAIN_URL, TASKS_BFF_HEADER } from "@/global/common";
 
 export const config = {
     api: {

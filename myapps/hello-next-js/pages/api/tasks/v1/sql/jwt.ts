@@ -1,7 +1,7 @@
 // for testing @aws-sdk/client-secrets-manager
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getSecret } from '../../../../../global/awsSecretManager';
-import { CHECK_BFF_AUTHORIZATION } from '../../../../../global/common';  
+import { getSecret } from '@/global/awsSecretManager';
+import { CHECK_BFF_AUTHORIZATION } from '@/global/common';  
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     await CHECK_BFF_AUTHORIZATION(req, res);

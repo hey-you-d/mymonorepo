@@ -1,7 +1,7 @@
 import { memo } from "react";
 import Link from 'next/link';
 import Image from 'next/image';
-import { MONOREPO_PREFIX } from '../global/common';
+import { MONOREPO_PREFIX } from '@/global/common';
 import styles from "@/app/page.module.css";
 
 const HomepageLink = ({ href, title } : { href: string, title: string }) => {
