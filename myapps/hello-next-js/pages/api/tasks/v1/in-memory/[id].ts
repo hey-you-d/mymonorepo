@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { tasks } from '@/bff/tasks/db_inMemory';
+import { tasks } from '@/lib/db/db_inMemory';
 
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;

@@ -1,6 +1,6 @@
 "use client"
-import { TASKS_BFF_BASE_API_URL } from "../../../../../global/common";
-import { Task } from "../../../types/Task";
+import { TASKS_BFF_BASE_API_URL } from "@/lib/app/common";
+import { Task } from "@/app/types/Task";
 
 export const swrFetcher = async () => {
   try {

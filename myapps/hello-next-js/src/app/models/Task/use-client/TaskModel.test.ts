@@ -1,5 +1,5 @@
 import { TaskModel } from './TaskModel';
-import { BASE_URL } from "../../../../../global/common";
+import { BASE_URL } from "@/lib/app/common";
 
 // Define mock response type
 type MockResponse = {

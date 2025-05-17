@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic';
-import { TASKS_SQL_BASE_API_URL } from "../../../global/common";
+import { TASKS_SQL_BASE_API_URL } from "@/lib/app/common";
 
 // for reference: This swagger-ui-react import will cause SSR to try loading the module
 // By importing swagger-ui-react eagerly at the top, it defeats the purpose of dynamic() with ssr: false. 

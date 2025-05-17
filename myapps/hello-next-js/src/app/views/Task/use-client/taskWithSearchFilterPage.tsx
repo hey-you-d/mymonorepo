@@ -3,7 +3,7 @@ import { useTaskViewModelWithSwr } from '@/app/viewModels/Task/use-client/useTas
 import { TaskSeedDB } from '@/app/components/TaskSeedDB';
 import { TaskFilterWithDeferredValue } from './taskFilterWithDeferredValue';
 import { TaskFilterWithUseTransition } from './taskFilterWithUseTransition';
-import { TABLE_FILTER_OPTIMISATION as featureFlag } from "../../../../../global/featureFlags";
+import { TABLE_FILTER_OPTIMISATION as featureFlag } from "@/lib/app/featureFlags";
 
 export const TaskWithSearchFilterPage = () => {
     const { tasks, loading, error, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();

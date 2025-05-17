@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/app/types/Task";
-import { BASE_URL } from "../../../../../global/common";
-import { TASKS_BFF_HEADER } from "../../../../../global/common";
+import { BASE_URL, TASKS_BFF_HEADER } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {

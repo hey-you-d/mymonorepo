@@ -4,7 +4,7 @@ import { useTaskViewModel } from '@/app/viewModels/Task/use-client/useTasksViewM
 import { TaskSeedDB } from '@/app/components/TaskSeedDB';
 import { TaskTable } from '@/app/components/TaskTable';
 import { Task } from "@/app/types/Task";
-import { TASKS_CRUD } from "../../../../../global/common";
+import { TASKS_CRUD } from "@/lib/app/common";
 import Link from "next/link";
 
 export const TaskPage = () => {

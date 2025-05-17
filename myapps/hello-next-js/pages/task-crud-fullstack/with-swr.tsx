@@ -4,7 +4,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { SWRConfig } from 'swr';
 import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
 import { TaskWithSWRPage } from '@/app/views/Task/use-client/taskWithSWRPage';
-import { BASE_URL } from "../../global/common";
+import { BASE_URL } from "@/lib/app/common";
 
 // for reference: alternative function signature:
 //type Props = {
