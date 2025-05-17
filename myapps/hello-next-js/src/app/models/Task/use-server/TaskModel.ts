@@ -26,9 +26,13 @@ export class TaskModel {
     constructor() {}
 
     // for debugging only
-    async getJwt(): Promise<{jwtSecret: string}> {
+    async getJwt(overrideFetchUrl?: string): Promise<{jwtSecret: string}> {
+      // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+      // In this case, we must supply an absolute URL  
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
+
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/jwt`, {
+        const response = await fetch(`${finalUrl}/jwt`, {
           method: 'GET',
           headers: await TASKS_BFF_HEADER(),
         });
@@ -52,10 +56,10 @@ export class TaskModel {
     async getTasksDBRows(overrideFetchUrl?: string): Promise<Task[]> {
       // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
       // In this case, we must supply an absolute URL  
-      const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_SQL_BASE_API_URL}/`;
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
 
       try {
-        const response = await fetch(finalUrl, {
+        const response = await fetch(`${finalUrl}/`, {
             method: 'GET',
             headers: await TASKS_BFF_HEADER(),
         });
@@ -76,9 +80,13 @@ export class TaskModel {
       } 
     }
   
-    async deleteAllRows(): Promise<Task[]> {
+    async deleteAllRows(overrideFetchUrl?: string): Promise<Task[]> {
+      // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+      // In this case, we must supply an absolute URL  
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
+
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/delete-rows`, {
+        const response = await fetch(`${finalUrl}/delete-rows`, {
             method: 'POST',
             headers: await TASKS_BFF_HEADER(),
         });
@@ -98,9 +106,13 @@ export class TaskModel {
       } 
     }
 
-    async seedTasksDB(): Promise<Task[]> {
+    async seedTasksDB(overrideFetchUrl?: string): Promise<Task[]> {
+      // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+      // In this case, we must supply an absolute URL  
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
+      
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/seed-table`, {
+        const response = await fetch(`${finalUrl}/seed-table`, {
             method: 'POST',
             headers: await TASKS_BFF_HEADER(),
         });
@@ -120,9 +132,13 @@ export class TaskModel {
       } 
     }
 
-    async getRowFromId(id: number): Promise<Task[]> {
+    async getRowFromId(id: number, overrideFetchUrl?: string): Promise<Task[]> {
+      // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+      // In this case, we must supply an absolute URL  
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
+      
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
+        const response = await fetch(`${finalUrl}/${id}`, {
             method: 'GET',
             headers: await TASKS_BFF_HEADER(),
         });
@@ -143,9 +159,13 @@ export class TaskModel {
       } 
     }
 
-    async createRow(title: string, detail: string): Promise<void> {
+    async createRow(title: string, detail: string, overrideFetchUrl?: string): Promise<void> {
+      // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+      // In this case, we must supply an absolute URL  
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
+      
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/create-row`, {
+        const response = await fetch(`${finalUrl}/create-row`, {
             method: 'POST',
             headers: await TASKS_BFF_HEADER(),
             body: JSON.stringify({
@@ -168,9 +188,13 @@ export class TaskModel {
       } 
     }
 
-    async updateRowFromId(id: number, title: string, detail: string, completed: boolean): Promise<void> {
+    async updateRowFromId(id: number, title: string, detail: string, completed: boolean, overrideFetchUrl?: string): Promise<void> {
+      // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+      // In this case, we must supply an absolute URL  
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
+      
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
+        const response = await fetch(`${finalUrl}/${id}`, {
             method: 'PUT',
             headers: await TASKS_BFF_HEADER(),
             body: JSON.stringify({
@@ -194,9 +218,13 @@ export class TaskModel {
       } 
     }
 
-    async deleteRowFromId(id: number): Promise<void> {
+    async deleteRowFromId(id: number, overrideFetchUrl?: string): Promise<void> {
+      // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+      // In this case, we must supply an absolute URL  
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
+      
       try {
-        const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
+        const response = await fetch(`${finalUrl}/${id}`, {
             method: 'DELETE',
             headers: await TASKS_BFF_HEADER(),
         });

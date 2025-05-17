@@ -1,4 +1,4 @@
-'use server';
+'use client';
 import { useState } from 'react';
 import { ApolloError, gql, useQuery, useMutation } from '@apollo/client';
 import { Task } from "@/app/types/Task";
@@ -62,7 +62,7 @@ export const UPDATE_A_TASK = gql`
     }
 `;
 
-export const useTaskApolloClientViewModel = () => {
+export const getTaskApolloClientViewModel = async () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);

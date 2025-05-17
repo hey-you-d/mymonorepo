@@ -1,18 +1,22 @@
+const usersData = [{id: 1, name: "John Doe", email: "john.doe@email.com"}];
+
 import { runSaga } from 'redux-saga';
 import { fetchUsersSaga } from "./reduxSagaUserViewModel"; // saga worker
 import { fetchUsersSuccess, fetchUsersFailure } from '../models/ReduxSagaUserSlice';
-import { call } from "redux-saga/effects";
-import { fetchUsersApi, errorMsg } from './reduxSagaUserViewModel';
-
-// Mock API Call
-jest.mock('./reduxSagaUserViewModel', () => ({
-    ...jest.requireActual('./reduxSagaUserViewModel'),
-    fetchUsersApi: jest.fn()
-}));
-
-const usersData = [{id: 1, name: "John Doe", email: "john.doe@email.com"}];
+import { errorMsg } from './reduxSagaUserViewModel';
 
 describe("fetchUsersSaga", () => {
+    beforeAll(() => {
+        jest.resetModules(); // clear cached modules to allow mocking
+
+        jest.doMock('./reduxSagaUserViewModel', () => ({
+            ...jest.requireActual('./reduxSagaUserViewModel'),
+            fetchUsersApi: jest.fn().mockResolvedValue(usersData),
+        }));
+
+        
+    });
+
     beforeEach(() => {
         global.fetch = jest.fn().mockResolvedValueOnce({
             ok: true,
@@ -54,8 +58,6 @@ describe("fetchUsersSaga", () => {
     });
 
     it("should handle successful API Call ", async () => {
-        fetchUsersApi.mockResolvedValue(usersData);
-
         const dispatchedActions: any[] = [];
 
         // run the saga
