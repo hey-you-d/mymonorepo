@@ -1,9 +1,15 @@
 // for reference:
-// The goal: to avoid exposing x-api-key to the frontend (via the model component). This will break BFF pattern/architecture.
+// The goal: to avoid exposing x-api-key to the frontend (via the client-side model component). 
 // Hence, implementing the "code-level" reverse-proxy approach (as opposed to the proper infra-based reverse-proxy). 
 // In essence, it's a BFF. 
-// /pages/api/tasks/v1/sql/         ← real API that talks to DB (protected by key)
-// /pages/api/tasks/v1/bff/         ← safe route for frontend to hit (calls tasks/v1/sql)
+// /pages/api/tasks/v1/sql/   ← real API that talks to DB (protected by key)
+// /pages/api/tasks/v1/bff/   ← safe route for frontend to hit (calls tasks/v1/sql) - (TODO: protected behind user-login mechanism & JWT auth)
+
+// for reference #2:
+// other purposes of BFF:
+// - You need to aggregate data from multiple APIs.
+// - You want to add custom caching, throttling, or transformations.
+// - You still support a mixed environment with Client Components or CSR where secrets cannot be sent directly.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/app/types/Task";
 import { BASE_URL, TASKS_BFF_HEADER } from "@/lib/app/common";
