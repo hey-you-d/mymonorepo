@@ -4,6 +4,11 @@ import { getSecret } from "./awsParameterStore";
 export const MONOREPO_PREFIX = "/hello-next-js";
 export const TASKS_CRUD = "/task-crud-fullstack";
 
+export const checkRuntime = () => {
+    //export const runtime = "nodejs";
+    console.log('Runtime check:', typeof process !== 'undefined' ? 'Node.js' : 'Edge');
+}
+
 // for reference: This works locally, in Docker, and in production (e.g., on Vercel or behind a reverse proxy).
 // for reference: can only be called on server-side only
 export const isRunningLocally = (req: NextApiRequest) => {
