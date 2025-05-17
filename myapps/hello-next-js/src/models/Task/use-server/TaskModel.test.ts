@@ -12,8 +12,15 @@ type MockResponse = {
 };
 
 // Dynamically import AFTER mocks are in place
-let TaskModelModule: typeof import('./TaskModel');
-let taskModel: InstanceType<typeof import('./TaskModel').TaskModel>;
+import { 
+  getTasksDBRows,
+  deleteAllRows,
+  seedTasksDB,
+  getRowFromId,
+  createRow,
+  updateRowFromId,
+  deleteRowFromId,
+} from '@/models/Task/use-server/TaskModel';
 
 describe('TaskModel', () => {  
   let url: string = "";
@@ -38,8 +45,16 @@ describe('TaskModel', () => {
       BASE_URL: 'https://mock-base-url.com',
     }));
 
-    TaskModelModule = await import('./TaskModel');
-    taskModel = new TaskModelModule.TaskModel();
+    jest.doMock("../../../models/Task/use-server/TaskModel", () => ({
+      getTasksDBRows: jest.fn(),
+      deleteAllRows: jest.fn(),
+      seedTasksDB: jest.fn(),
+      getRowFromId: jest.fn(),
+      createRow: jest.fn(),
+      updateRowFromId: jest.fn(),
+      deleteRowFromId: jest.fn(),
+    }));
+
     global.fetch = jest.fn();
 
     // It has been mocked, so we can import it now
@@ -65,7 +80,7 @@ describe('TaskModel', () => {
       const mockData = [{ id: 1, task: 'Test task' }];
       (fetch as jest.Mock).mockResolvedValue(mockResponse(true, mockData));
 
-      const result = await taskModel.getTasksDBRows();
+      const result = await getTasksDBRows();
 
       // Check TASKS_BFF_HEADER was called
       const { TASKS_BFF_HEADER } = await import('../../../lib/app/common');
@@ -82,14 +97,14 @@ describe('TaskModel', () => {
     it('should handle fetch error', async () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse(false, { error: 'Server error' }));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
+      await expect(getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
       expect(fetch).toHaveBeenCalledTimes(1);
     });
 
     it('should handle network error', async () => {
       (fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow('Network error');
+      await expect(getTasksDBRows()).rejects.toThrow('Network error');
       expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
@@ -99,7 +114,7 @@ describe('TaskModel', () => {
       const mockData = { message: 'All rows deleted' };
       (fetch as jest.Mock).mockResolvedValue(mockResponse(true, mockData));
 
-      const result = await taskModel.deleteAllRows();
+      const result = await deleteAllRows();
 
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/delete-rows`, {
         method: 'POST',
@@ -111,7 +126,7 @@ describe('TaskModel', () => {
     it('should handle delete error', async () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse(false, { error: 'Delete failed' }));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
+      await expect(getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
       expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
@@ -121,7 +136,7 @@ describe('TaskModel', () => {
       const mockData = { rows: [{ id: 1, task: 'Seeded task' }] };
       (fetch as jest.Mock).mockResolvedValue(mockResponse(true, mockData));
 
-      const result = await taskModel.seedTasksDB();
+      const result = await seedTasksDB();
 
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/seed-table`, {
         method: 'POST',
@@ -133,7 +148,7 @@ describe('TaskModel', () => {
     it('should handle seed error', async () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse(false, { error: 'Seed failed' }));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
+      await expect(getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
       expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
@@ -148,7 +163,7 @@ describe('TaskModel', () => {
 
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const result = await taskModel.getRowFromId(1);
+      const result = await getRowFromId(1);
 
       // Check TASKS_BFF_HEADER was called
       const { TASKS_BFF_HEADER } = await import('../../../lib/app/common');
@@ -171,13 +186,13 @@ describe('TaskModel', () => {
   
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
   
-      await expect(taskModel.getRowFromId(999)).rejects.toThrow('Error fetching row: 404');
+      await expect(getRowFromId(999)).rejects.toThrow('Error fetching row: 404');
     });
 
     it('should throw error on fetch failure', async () => {
       (fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
   
-      await expect(taskModel.getRowFromId(2)).rejects.toThrow('Network error');
+      await expect(getRowFromId(2)).rejects.toThrow('Network error');
     });
   });
 
@@ -191,7 +206,7 @@ describe('TaskModel', () => {
 
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const result = await taskModel.createRow('test', 'test');
+      const result = await createRow('test', 'test');
       expect(result).toEqual(undefined); // the fn is a void function
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/create-row`, {
         method: 'POST',
@@ -210,13 +225,13 @@ describe('TaskModel', () => {
   
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
   
-      await expect(taskModel.createRow('test', 'test')).rejects.toThrow('Error creating row: 404');
+      await expect(createRow('test', 'test')).rejects.toThrow('Error creating row: 404');
     });
 
     it('should throw error on fetch failure', async () => {
       (fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
   
-      await expect(taskModel.createRow('test', 'test')).rejects.toThrow('Network error');
+      await expect(createRow('test', 'test')).rejects.toThrow('Network error');
     });
   });
 
@@ -230,7 +245,7 @@ describe('TaskModel', () => {
 
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const result = await taskModel.updateRowFromId(999, 'test', 'test', true);
+      const result = await updateRowFromId(999, 'test', 'test', true);
       expect(result).toEqual(undefined); // the fn is a void function
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/999`, {
         method: 'PUT',
@@ -249,13 +264,13 @@ describe('TaskModel', () => {
   
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
   
-      await expect(taskModel.updateRowFromId(999, 'test', 'test', false)).rejects.toThrow('Error updating row: 404');
+      await expect(updateRowFromId(999, 'test', 'test', false)).rejects.toThrow('Error updating row: 404');
     });
 
     it('should throw error on fetch failure', async () => {
       (fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
   
-      await expect(taskModel.updateRowFromId(999, 'test', 'test', false)).rejects.toThrow('Network error');
+      await expect(updateRowFromId(999, 'test', 'test', false)).rejects.toThrow('Network error');
     });
   });
 
@@ -268,7 +283,7 @@ describe('TaskModel', () => {
 
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
-      const result = await taskModel.deleteRowFromId(999);
+      const result = await deleteRowFromId(999);
       expect(result).toEqual(undefined); // the fn is a void function
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/999`, {
         method: 'DELETE',
@@ -286,13 +301,13 @@ describe('TaskModel', () => {
   
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
   
-      await expect(taskModel.deleteRowFromId(999)).rejects.toThrow('Error deleting row: 404');
+      await expect(deleteRowFromId(999)).rejects.toThrow('Error deleting row: 404');
     });
 
     it('should throw error on fetch failure', async () => {
       (fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
   
-      await expect(taskModel.deleteRowFromId(2)).rejects.toThrow('Network error');
+      await expect(deleteRowFromId(2)).rejects.toThrow('Network error');
     });
   });
 });
