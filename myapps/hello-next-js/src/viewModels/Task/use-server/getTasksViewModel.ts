@@ -30,7 +30,8 @@ export const seedTasksDB = async () => {
     const taskModel = new TaskModel();
   
     try {
-      const tasks: Task[] = await taskModel.seedTasksDB(`${BASE_URL}/api/tasks/v1/sql`);
+      await taskModel.seedTasksDB(`${BASE_URL}/api/tasks/v1/sql`);
+      //const tasks: Task[] = await taskModel.seedTasksDB(`${BASE_URL}/api/tasks/v1/sql`);
       //return { tasks };
     } catch (error) {
       console.error("Failed to seed tasks db:", error);
@@ -54,7 +55,8 @@ export const createRow = async (title: string, detail: string) => {
     try {
       await taskModel.createRow(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
       // then refresh the tasks state
-      const tasks: Task[] = await taskModel.getTasksDBRows();
+      await taskModel.getTasksDBRows();
+      //const tasks: Task[] = await taskModel.getTasksDBRows();
       //return { tasks }
     } catch (error) {
       console.error("Failed to create a new row in the db: ", error);
@@ -66,7 +68,8 @@ export const updateRowFromId = async (id: number, title: string, detail: string,
     try {
       await taskModel.updateRowFromId(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
       // then refresh the tasks state
-      const tasks: Task[] = await taskModel.getTasksDBRows();
+      await taskModel.getTasksDBRows();
+      //const tasks: Task[] = await taskModel.getTasksDBRows();
       //return { tasks };
     } catch (error) {
       console.error(`Failed to update row for id ${id}:`, error);

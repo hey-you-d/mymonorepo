@@ -9,7 +9,7 @@ describe('fetchGraphQL', () => {
   beforeAll(async () => {
     jest.resetModules();
 
-    jest.doMock('../../../../lib/app/common', () => ({
+    jest.doMock('../../../lib/app/common', () => ({
       TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
       TASKS_BFF_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
     }));
