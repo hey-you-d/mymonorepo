@@ -37,7 +37,6 @@ export const getInternalApiKey = async (): Promise<string | undefined> => {
 export const TASKS_BFF_HEADER = async () => {
     return {
         "Content-Type": "application/json",
-        "hello": "world",
         "x-api-key": await getInternalApiKey() ?? "",
     }    
 }; 
