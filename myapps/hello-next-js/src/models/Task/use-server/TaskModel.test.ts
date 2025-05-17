@@ -12,15 +12,13 @@ type MockResponse = {
 };
 
 // Dynamically import AFTER mocks are in place
-import { 
-  getTasksDBRows,
-  deleteAllRows,
-  seedTasksDB,
-  getRowFromId,
-  createRow,
-  updateRowFromId,
-  deleteRowFromId,
-} from '@/models/Task/use-server/TaskModel';
+let getTasksDBRows: typeof import('./TaskModel').getTasksDBRows;
+let deleteAllRows: typeof import('./TaskModel').deleteAllRows;
+let seedTasksDB: typeof import('./TaskModel').seedTasksDB;
+let getRowFromId: typeof import('./TaskModel').getRowFromId;
+let createRow: typeof import('./TaskModel').createRow;
+let updateRowFromId: typeof import('./TaskModel').updateRowFromId;
+let deleteRowFromId: typeof import('./TaskModel').deleteRowFromId;
 
 describe('TaskModel', () => {  
   let url: string = "";
@@ -45,15 +43,14 @@ describe('TaskModel', () => {
       BASE_URL: 'https://mock-base-url.com',
     }));
 
-    jest.doMock("../../../models/Task/use-server/TaskModel", () => ({
-      getTasksDBRows: jest.fn(),
-      deleteAllRows: jest.fn(),
-      seedTasksDB: jest.fn(),
-      getRowFromId: jest.fn(),
-      createRow: jest.fn(),
-      updateRowFromId: jest.fn(),
-      deleteRowFromId: jest.fn(),
-    }));
+    // Re-import AFTER mocks are in place
+    getTasksDBRows = (await import('./TaskModel')).getTasksDBRows;
+    deleteAllRows = (await import('./TaskModel')).deleteAllRows;
+    seedTasksDB = (await import('./TaskModel')).seedTasksDB;
+    getRowFromId = (await import('./TaskModel')).getRowFromId;
+    createRow = (await import('./TaskModel')).createRow;
+    updateRowFromId = (await import('./TaskModel')).updateRowFromId;
+    deleteRowFromId = (await import('./TaskModel')).deleteRowFromId;
 
     global.fetch = jest.fn();
 
