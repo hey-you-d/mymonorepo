@@ -1,6 +1,6 @@
 'use client';
 import { useState, useTransition } from 'react';
-import { TaskTable } from '@/components/TaskTable';
+import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task, TaskTableType } from '@/types/Task';
 import { TASKS_CRUD } from '@/lib/app/common';
 import Link from "next/link";

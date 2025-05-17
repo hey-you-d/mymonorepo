@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from "react";
 import { useTaskViewModel } from '@/viewModels/Task/use-client/useTasksViewModel';
-import { TaskSeedDB } from '@/components/TaskSeedDB';
-import { TaskTable } from '@/components/TaskTable';
+import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
+import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
 import { TASKS_CRUD } from "@/lib/app/common";
 import Link from "next/link";

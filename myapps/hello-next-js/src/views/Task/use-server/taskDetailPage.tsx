@@ -1,8 +1,10 @@
 'use client';
+// for reference: don't let the folder name mislead you, a view component cannot be a server component.
+// the uniform folder name is for the sake of consistency
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getRowFromId, deleteRowFromId, getTasksDBRows } from '@/viewModels/Task/use-server/getTasksViewModel';
-import { TaskDetail } from '@/components/TaskDetail';
+import { TaskDetail } from '@/components/Task/use-server/TaskDetail';
 import { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 

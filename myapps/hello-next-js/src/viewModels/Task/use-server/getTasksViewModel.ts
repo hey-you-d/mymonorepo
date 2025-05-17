@@ -23,7 +23,8 @@ export const getTasksDBRows = async () => {
 
 export const deleteAllRows = async () => {
     try {
-      await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      const tasks: Task[] = await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      return { tasks: tasks };
     } catch (error) {
       console.error("Failed to delete tasks db rows:", error);
       throw error;
@@ -32,9 +33,9 @@ export const deleteAllRows = async () => {
 
 export const seedTasksDB = async () => {
     try {
-      await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
-      //const tasks: Task[] = await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
-      //return { tasks };
+      //await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      const tasks: Task[] = await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      return { tasks: tasks };
     } catch (error) {
       console.error("Failed to seed tasks db:", error);
       throw error;
@@ -54,10 +55,10 @@ export const getRowFromId = async (id: number) => {
 export const createRow = async (title: string, detail: string) => {
     try {
       await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
-      // then refresh the tasks state
-      await getTasksDBRowsTaskModel();
-      //const tasks: Task[] = await getTasksDBRowsTaskModel();
-      //return { tasks }
+      // for reference: createRowTaskModel returns the a single task only (the newly created one), 
+      // we need the updated tasks to rehydrate the client component
+      const tasks: Task[] = await getTasksDBRowsTaskModel();
+      return { tasks }
     } catch (error) {
       console.error("Failed to create a new row in the db: ", error);
       throw error;

@@ -1,7 +1,7 @@
 'use client';
 import { useTaskApolloClientViewModel } from '@/viewModels/Task/use-client/useTaskApolloClientViewModel';
-import { TaskSeedDB } from '@/components/TaskSeedDB';
-import { TaskTable } from '@/components/TaskTable';
+import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
+import { TaskTable } from '@/components/Task/use-client/TaskTable';
 
 export const TaskApolloClientPage = () => {
     const { tasks, loading, error, seedTaskDB, deleteAllRows, createRow, updateRowFromId } = useTaskApolloClientViewModel();

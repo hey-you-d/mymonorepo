@@ -1,6 +1,6 @@
 'use client';
 import { useTaskViewModelWithSwr } from '@/viewModels/Task/use-client/useTasksViewModelWithSwr'; 
-import { TaskSeedDB } from '@/components/TaskSeedDB';
+import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
 import { TaskFilterWithDeferredValue } from './taskFilterWithDeferredValue';
 import { TaskFilterWithUseTransition } from './taskFilterWithUseTransition';
 import { TABLE_FILTER_OPTIMISATION as featureFlag } from "@/lib/app/featureFlags";

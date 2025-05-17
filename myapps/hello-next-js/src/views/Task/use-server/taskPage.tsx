@@ -1,5 +1,6 @@
 'use client';
-
+// for reference: don't let the folder name mislead you, a view component cannot be a server component.
+// the uniform folder name is for the sake of consistency
 import { useState, useEffect } from "react";
 import {
   createRow,
@@ -8,11 +9,11 @@ import {
   getTasksDBRows,
   seedTasksDB
 } from '@/viewModels/Task/use-server/getTasksViewModel';
-import { TaskSeedDB } from '@/components/TaskSeedDB';
-import { TaskTable } from '@/components/TaskTable';
+import { TaskSeedDB } from '@/components/Task/use-server/TaskSeedDB';
+import { TaskTable } from '@/components/Task/use-server/TaskTable';
 import { Task } from "@/types/Task";
-import { TASKS_CRUD } from "@/lib/app/common";
-import Link from "next/link";
+//import { TASKS_CRUD } from "@/lib/app/common";
+//import Link from "next/link";
 
 export const TaskPage = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -25,6 +26,7 @@ export const TaskPage = () => {
       setLoading(true);
       try {
         const { tasks } = await getTasksDBRows();
+        console.log("Task Page tasks - getTaskDBRows #1 ", tasks);
         setTasks(tasks);
       } catch (err) {
         console.error("Error fetching tasks:", err);
@@ -44,11 +46,12 @@ export const TaskPage = () => {
     : tasks;
 
   if (loading) return <p>Loading...</p>;
-
+  console.log("Task Page tasks - getTaskDBRows #2 ", tasks);    
   return (
     <>
       <TaskSeedDB
-        totalRows={tasks.length}
+        tasks={tasks}
+        setTasks={setTasks}
         seedTaskDB={seedTasksDB}
         deleteAllRows={deleteAllRows}
       />
@@ -59,12 +62,15 @@ export const TaskPage = () => {
         placeholder="Filter detail..."
       />
       <br />
+      {/* TODO
       <Link href={`${TASKS_CRUD}/use-server/with-search-filter`}>
         Dynamic Filter example
       </Link>
+      */}
       <br />
       <TaskTable
         tasks={confirmedTasks}
+        setTasks={setTasks}
         createRow={createRow}
         updateRowFromId={updateRowFromId}
       />

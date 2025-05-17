@@ -1,7 +1,7 @@
 'use client';
 import { useState, useMemo, useDeferredValue } from 'react';
 import { TaskTableType } from '@/types/Task';
-import { TaskTable } from '@/components/TaskTable';
+import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { TASKS_CRUD } from '@/lib/app/common';
 import Link from "next/link";
 
