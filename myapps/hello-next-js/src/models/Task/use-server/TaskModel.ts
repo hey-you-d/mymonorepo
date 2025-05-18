@@ -100,7 +100,7 @@ export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[]> =>
   } 
 }
 
-export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promise<Task> => {
+export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promise<Task | null> => {
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -111,13 +111,18 @@ export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promi
         headers: await TASKS_BFF_HEADER(),
     });
 
+    console.log("MODEL - getRowFromId response ", response);
+
     if (!response.ok) {
+        if (response.status == 404) {
+          return null;
+        }
         const errorText = await response.text(); // <- Just read as text
-        throw new Error(`Error fetching row: ${response.status}`);
+        throw new Error(`Error fetching row: ${response.status} - ${response.statusText} - ${errorText}`);
       }
 
-    const result: Task = await response.json();  
-    return result;
+    const result: Task | null = await response.json();   
+    return result;  
   } catch(error) {
     console.error(`Error fetching row for id ${id}: `, error );
 
@@ -173,8 +178,8 @@ export const updateRowFromId = async  (id: number, title: string, detail: string
     });
 
     if (!response.ok) {
-        //const errorText = await response.text(); // <- Just read as text
-        console.error(`Error updating row for id ${id}: ${response.status} - ${response.statusText}`);
+        const errorText = await response.text(); // <- Just read as text
+        console.error(`Error updating row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
         throw new Error(`Error updating row: ${response.status}`);
     }
 
@@ -199,9 +204,11 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
         headers: await TASKS_BFF_HEADER(),
     });
 
+    console.log("MODEL - deleteRowFromId response ", response);
+
     if (!response.ok) {
-        //const errorText = await response.text(); // <- Just read as text
-        console.error(`Error deleting row for id ${id}: ${response.status} - ${response.statusText}`);
+        const errorText = await response.text(); // <- Just read as text
+        console.error(`Error deleting row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
         throw new Error(`Error deleting row: ${response.status}`);
     }
 

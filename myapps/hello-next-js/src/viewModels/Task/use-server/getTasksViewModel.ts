@@ -33,7 +33,6 @@ export const deleteAllRows = async (): Promise<{ tasks: Task[] }> => {
 
 export const seedTasksDB = async (): Promise<{ tasks: Task[] }> => {
     try {
-      //await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       const tasks: Task[] = await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       return { tasks: tasks };
     } catch (error) {
@@ -42,9 +41,10 @@ export const seedTasksDB = async (): Promise<{ tasks: Task[] }> => {
     } 
 };
 
-export const getRowFromId = async (id: number): Promise<{ task: Task }> => {
+export const getRowFromId = async (id: number): Promise<{ task: Task | null }> => {
     try {
       const task = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
+      console.log("VIEWMODEL getRowFromId ", id, task);
       return { task: task };
     } catch (error) {
       console.error(`Failed to get row for id ${id}:`, error);
@@ -78,14 +78,14 @@ export const updateRowFromId = async (id: number, title: string, detail: string,
     }
 };
 
-export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] }> => {
+export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | null }> => {
     try {
       await deleteRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
       // for reference: createRowTaskModel returns the a single task only (the deleted one), 
       // we need the updated tasks to rehydrate the client component
-      const tasks = await getTasksDBRowsTaskModel();
-      console.log("VIEWMODEL - delete row - ", tasks);
-      return { tasks };
+      //const tasks = await getTasksDBRowsTaskModel();
+      //console.log("VIEWMODEL - delete row - ", tasks);
+      return { tasks: null };
     } catch (error) {
       console.error(`Failed to delete row for id ${id}:`, error);
       throw error;
