@@ -1,4 +1,4 @@
-import SwaggerPage from "@/app/components/TaskSwagger";
+import SwaggerPage from "@/components/Task/use-client/TaskSwagger";
 
 const BffTasksDBSwaggerDoc = () => {
     return (<SwaggerPage />);

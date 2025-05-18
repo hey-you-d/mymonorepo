@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import Layout from "../../../pagesLayouts/Layout";
 import { CLIENT_SIDE_FRONTEND_LAYOUT_TITLE } from "../../../pagesLayouts/layout-title";
-import { TaskDetailPage } from "@/app/views/Task/use-client/taskDetailPage";
+import { TaskDetailPage } from "@/views/Task/use-client/taskDetailPage";
 
 const TaskDetailNextJSPage = () => {
     const router = useRouter();

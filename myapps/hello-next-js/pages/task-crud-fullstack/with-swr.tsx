@@ -2,8 +2,8 @@ import Layout from "../../pagesLayouts/Layout";
 import { CLIENT_SIDE_FRONTEND_LAYOUT_TITLE } from "../../pagesLayouts/layout-title";
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { SWRConfig } from 'swr';
-import { TaskModel } from '@/app/models/Task/use-client/TaskModel';
-import { TaskWithSWRPage } from '@/app/views/Task/use-client/taskWithSWRPage';
+import { TaskModel } from '@/models/Task/use-client/TaskModel';
+import { TaskWithSWRPage } from '@/views/Task/use-client/taskWithSWRPage';
 import { BASE_URL } from "@/lib/app/common";
 
 // for reference: alternative function signature:

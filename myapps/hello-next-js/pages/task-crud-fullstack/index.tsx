@@ -1,6 +1,6 @@
 import Layout from "../../pagesLayouts/Layout";
 import { CLIENT_SIDE_FRONTEND_LAYOUT_TITLE } from "../../pagesLayouts/layout-title";
-import { TaskPage } from '@/app/views/Task/use-client/taskPage';
+import { TaskPage } from '@/views/Task/use-client/taskPage';
 
 const TaskList = () => {
   return (

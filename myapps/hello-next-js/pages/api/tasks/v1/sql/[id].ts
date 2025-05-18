@@ -124,7 +124,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const delResult = await db.query('DELETE FROM tasks WHERE id = $1 RETURNING *', [numericId]);
                 if (!delResult.rows.length) return res.status(404).json({ error: 'Task not found' });
                 
-                return res.status(204).end();
+                //return res.status(204).end();
+                return res.status(200).json(delResult.rows[0]);
             } catch (err) {
                 console.error('Database error:', err); // Log detailed error
                 return res.status(500).json({ error: 'Database error' });

@@ -1,5 +1,5 @@
 import Layout from '../pagesLayouts/Layout';
-import { FormExamplePage, GenericFormExamplePage } from '@/app/views/formExamplePage';
+import { FormExamplePage, GenericFormExamplePage } from '@/views/formExamplePage';
 
 const FormExample = () => {
     return ( 

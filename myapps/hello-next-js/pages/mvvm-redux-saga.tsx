@@ -1,5 +1,5 @@
 import Layout from '../pagesLayouts/Layout';
-import ReduxSagaExamplePage from '@/app/views/reduxSagaExamplePage';
+import ReduxSagaExamplePage from '@/views/reduxSagaExamplePage';
 
 // for reference:
 // Redux-Saga is a middleware for Redux, not a replacement for Redux itself. 

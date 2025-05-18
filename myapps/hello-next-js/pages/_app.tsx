@@ -1,8 +1,8 @@
 import React from "react";
 import { ApolloProvider } from '@apollo/client';
 import { Provider } from 'react-redux';
-import { reduxSagaWrapper } from "@/app/reduxSagaStore";
-import apolloClient from "@/app/models/Task/use-client/TaskGraphqlApolloClient";
+import { reduxSagaWrapper } from "@/reduxSagaStore";
+import apolloClient from "@/models/Task/use-client/TaskGraphqlApolloClient";
 import type { AppProps } from 'next/app';
 
 const MyNextApp = ({ Component, pageProps } : AppProps) => {
