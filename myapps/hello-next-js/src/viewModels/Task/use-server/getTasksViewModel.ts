@@ -11,7 +11,7 @@ import {
 import { Task } from '@/types/Task';
 import { BASE_URL } from '@/lib/app/common';
 
-export const getTasksDBRows = async () => {
+export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
     try {
       const tasks: Task[] = await getTasksDBRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       return { tasks };
@@ -21,7 +21,7 @@ export const getTasksDBRows = async () => {
     } 
 };
 
-export const deleteAllRows = async () => {
+export const deleteAllRows = async (): Promise<{ tasks: Task[] }> => {
     try {
       const tasks: Task[] = await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       return { tasks: tasks };
@@ -31,7 +31,7 @@ export const deleteAllRows = async () => {
     } 
 };
 
-export const seedTasksDB = async () => {
+export const seedTasksDB = async (): Promise<{ tasks: Task[] }> => {
     try {
       //await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       const tasks: Task[] = await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
@@ -42,17 +42,17 @@ export const seedTasksDB = async () => {
     } 
 };
 
-export const getRowFromId = async (id: number) => {
+export const getRowFromId = async (id: number): Promise<{ task: Task }> => {
     try {
-      const tasks: Task[] = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
-      return { tasks };
+      const task = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
+      return { task: task };
     } catch (error) {
       console.error(`Failed to get row for id ${id}:`, error);
       throw error;
     }
 };
 
-export const createRow = async (title: string, detail: string) => {
+export const createRow = async (title: string, detail: string): Promise<{ tasks: Task[] }> => {
     try {
       await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
       // for reference: createRowTaskModel returns the a single task only (the newly created one), 
@@ -65,22 +65,27 @@ export const createRow = async (title: string, detail: string) => {
     } 
 };
 
-export const updateRowFromId = async (id: number, title: string, detail: string, completed: boolean) => {
+export const updateRowFromId = async (id: number, title: string, detail: string, completed: boolean): Promise<{ tasks: Task[] }> => {
     try {
       await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
-      // then refresh the tasks state
-      await getTasksDBRowsTaskModel();
-      //const tasks: Task[] = await taskModel.getTasksDBRows();
-      //return { tasks };
+      // for reference: createRowTaskModel returns the a single task only (the newly updated one), 
+      // we need the updated tasks to rehydrate the client component
+      const tasks: Task[] = await getTasksDBRowsTaskModel();
+      return { tasks };
     } catch (error) {
       console.error(`Failed to update row for id ${id}:`, error);
       throw error;
     }
 };
 
-export const deleteRowFromId = async (id: number) => {
+export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] }> => {
     try {
       await deleteRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
+      // for reference: createRowTaskModel returns the a single task only (the deleted one), 
+      // we need the updated tasks to rehydrate the client component
+      const tasks = await getTasksDBRowsTaskModel();
+      console.log("VIEWMODEL - delete row - ", tasks);
+      return { tasks };
     } catch (error) {
       console.error(`Failed to delete row for id ${id}:`, error);
       throw error;

@@ -5,14 +5,18 @@
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
+import { useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
+// for reference: 
+// ** ->: the viewmodel fn returns the promise of updated Tasks, not 
+// the promise of a single task (either a newly created one or newly updated one) 
 type TaskTableType = {
     tasks: Task[],
     setTasks: Dispatch<SetStateAction<Task[]>>, 
-    createRow: (title: string, detail: string)=> Promise<{ tasks: Task[] }>,
-    updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void>
+    createRow: (title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
+    updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
 }
 
 const isSafeInput = (str: string) => {
@@ -23,17 +27,18 @@ const isSafeInput = (str: string) => {
 };
 
 export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : TaskTableType) => {
+    const appRouter = useRouter();
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
-    const chkBoxHandler = (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
-        updateRowFromId(id, title, detail, !isCurrentlySelected);
+    const chkBoxHandler = async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
+        const result: { tasks: Task[] } = await updateRowFromId(id, title, detail, !isCurrentlySelected);
+        setTasks(result.tasks);
     }
 
     const editTodoHandler = (e: React.MouseEvent, id: number) => {
         e.preventDefault();
-
-        window.location.replace( `${MONOREPO_PREFIX}/${TASKS_CRUD}/edit/${id}`);
+        appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}`);
     }
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
@@ -43,7 +48,6 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
                 const result: { tasks: Task[] } = await createRow(inputTitleRef.current.value, inputDetailRef.current.value);
-                console.log("TaskTable - addNewTodoHandler - createRow return value: ", result.tasks);
                 
                 inputTitleRef.current.value = "";
                 inputDetailRef.current.value = "";
@@ -52,7 +56,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
-    }, [createRow]);
+    }, [createRow, setTasks]);
 
     const tBody = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {

@@ -5,24 +5,13 @@
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import { Task } from "@/types/Task";
-import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
 type TaskTableType = {
     row: Task,
-    tasks: Task[] | undefined,
-    deleteRowFromId: (id: number) => Promise<void>,
+    deleteRowFromId: (id: number) => Promise<{ tasks: Task[] }>,
 }
 
-export const TaskDetail = ({ row, tasks, deleteRowFromId } : TaskTableType) => {
-    // for reference: the if condition below only applies to the non-graphql row deletion op.
-    // the graphql version returns an updated tasks (sans the deleted row). 
-    if (tasks && tasks.length <= 0) {
-        // for reference: a delete row operation has just been performed by calling the deleteRowFromId().
-        // recall, the deleteRowFromId will set the tasks state to [] upon successful delete op.
-        // redirect back to the table page
-        window.location.href=`${MONOREPO_PREFIX}${TASKS_CRUD}`;
-    }
-
+export const TaskDetail = ({ row, deleteRowFromId } : TaskTableType) => {
     return (
         <>
             <p>id: {row.id}</p>

@@ -3,40 +3,44 @@
 // the uniform folder name is for the sake of consistency
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getRowFromId, deleteRowFromId, getTasksDBRows } from '@/viewModels/Task/use-server/getTasksViewModel';
+import { getRowFromId, deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
 import { TaskDetail } from '@/components/Task/use-server/TaskDetail';
 import { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 
 export const TaskDetailPage = ({id}: {id: number}) => {
-  const [task, setTask] = useState<Task | undefined>(undefined);
-  const [tasks, setTasks] = useState<Task[] | undefined>(undefined);
+  const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchTask = async () => {
       setLoading(true);
 
-      const { tasks } = await getRowFromId(1);
-      setTask(tasks[0]);
-
-      const result = await getTasksDBRows();
-      setTasks(result.tasks)
-      
-      setLoading(false);
+      try {
+        const result = await getRowFromId(id);
+        setTask(result.task);
+      } catch (err) {
+        console.error("Failed to fetch task:", err);
+        setTask(task);
+      } finally {
+        setLoading(false);
+      }
     };
     
     fetchTask();
-  }, [id]);
+  }, []);
 
   if (loading) return <p>Loading...</p>;
 
-  const body: React.ReactElement[] = []
+  const body: React.ReactElement[] = [];
   body.push(task 
-    ? <TaskDetail row={task} tasks={tasks} deleteRowFromId={deleteRowFromId} /> 
+    ? <TaskDetail row={task} deleteRowFromId={deleteRowFromId} /> 
     : <p>{`The record ${id} is no longer exist`}</p>);
-
-  body.push(<div><Link href={`${MONOREPO_PREFIX}/${TASKS_CRUD}`}>Back to the table page</Link></div>);  
+  body.push(
+    <div>
+      <Link href={`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server`}>Back to the table page</Link>
+    </div>
+  );  
 
   return body;
 };

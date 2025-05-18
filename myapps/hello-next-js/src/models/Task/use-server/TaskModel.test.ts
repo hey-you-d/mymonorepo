@@ -1,3 +1,5 @@
+import { Task } from  "@/types/Task";
+
 const mockApiHeader = {
   'Content-Type': 'application/json',
   'x-api-key': 'dummy-test-key',
@@ -166,7 +168,7 @@ describe('TaskModel', () => {
       const { TASKS_BFF_HEADER } = await import('../../../lib/app/common');
       expect(TASKS_BFF_HEADER).toHaveBeenCalled();
 
-      expect(result).toEqual(mockData);
+      expect(result).toEqual({rows: mockData});
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/1`,  {
         method: 'GET',
         headers: mockApiHeader
@@ -204,7 +206,7 @@ describe('TaskModel', () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
       const result = await createRow('test', 'test');
-      expect(result).toEqual(undefined); // the fn is a void function
+      expect(result).toEqual(mockData); // the fn returns the newly created row
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/create-row`, {
         method: 'POST',
         headers: mockApiHeader,
@@ -243,7 +245,7 @@ describe('TaskModel', () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
       const result = await updateRowFromId(999, 'test', 'test', true);
-      expect(result).toEqual(undefined); // the fn is a void function
+      expect(result).toEqual(mockData); // the fn returns the updated row
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/999`, {
         method: 'PUT',
         headers: mockApiHeader,
@@ -273,15 +275,16 @@ describe('TaskModel', () => {
 
   describe('deleteRowFromId', () => {
     it('should delete an existing row successfully', async () => {
+      const mockData: Task[] = [];
       const mockResponse = {
         ok: true,
-        json: jest.fn().mockResolvedValue({ rows: [] }),
+        json: jest.fn().mockResolvedValue({ rows: mockData }),
       };
 
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
       const result = await deleteRowFromId(999);
-      expect(result).toEqual(undefined); // the fn is a void function
+      expect(result).toEqual(mockData); // the fn returns the deleted row
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/999`, {
         method: 'DELETE',
         headers: mockApiHeader

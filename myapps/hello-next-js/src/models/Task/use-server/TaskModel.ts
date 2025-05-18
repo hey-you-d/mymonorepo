@@ -100,7 +100,7 @@ export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[]> =>
   } 
 }
 
-export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promise<Task[]> => {
+export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promise<Task> => {
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -113,13 +113,11 @@ export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promi
 
     if (!response.ok) {
         const errorText = await response.text(); // <- Just read as text
-        console.error(`Error fetching row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
         throw new Error(`Error fetching row: ${response.status}`);
       }
 
-    const result = await response.json();
-
-    return result.rows;
+    const result: Task = await response.json();  
+    return result;
   } catch(error) {
     console.error(`Error fetching row for id ${id}: `, error );
 
@@ -175,12 +173,14 @@ export const updateRowFromId = async  (id: number, title: string, detail: string
     });
 
     if (!response.ok) {
-        const errorText = await response.text(); // <- Just read as text
-        console.error(`Error updating row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
+        //const errorText = await response.text(); // <- Just read as text
+        console.error(`Error updating row for id ${id}: ${response.status} - ${response.statusText}`);
         throw new Error(`Error updating row: ${response.status}`);
     }
 
-    // for reference: returns nothing
+    const result = await response.json();
+
+    return result.rows;
   } catch(error) {
     console.error(`Error updating row for id ${id}: `, error );
 
@@ -200,17 +200,14 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
     });
 
     if (!response.ok) {
-        const errorText = await response.text(); // <- Just read as text
-        console.error(`Error deleting row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
+        //const errorText = await response.text(); // <- Just read as text
+        console.error(`Error deleting row for id ${id}: ${response.status} - ${response.statusText}`);
         throw new Error(`Error deleting row: ${response.status}`);
     }
 
-    // for reference: to prevent receiving the following warning: 
-    // API handler should not return a value, received object.
-    // make this fn returns void by comment out the return value below
-    
-    //const result = await response.json();
-    //return result.rows;
+    const result = await response.json();
+    console.log("MODE - delete row - ", result);
+    return result.rows;
   } catch(error) {
     console.error(`Error fetching row for id ${id}: `, error );
 
@@ -218,7 +215,6 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
   } 
 }
 
-// for debugging only
 export const getJwt = async (overrideFetchUrl?: string): Promise<{jwtSecret: string}> => {
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  

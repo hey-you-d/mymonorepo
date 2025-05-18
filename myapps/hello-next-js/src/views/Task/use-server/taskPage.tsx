@@ -26,7 +26,6 @@ export const TaskPage = () => {
       setLoading(true);
       try {
         const { tasks } = await getTasksDBRows();
-        console.log("Task Page tasks - getTaskDBRows #1 ", tasks);
         setTasks(tasks);
       } catch (err) {
         console.error("Error fetching tasks:", err);
@@ -46,7 +45,7 @@ export const TaskPage = () => {
     : tasks;
 
   if (loading) return <p>Loading...</p>;
-  console.log("Task Page tasks - getTaskDBRows #2 ", tasks);    
+   
   return (
     <>
       <TaskSeedDB
