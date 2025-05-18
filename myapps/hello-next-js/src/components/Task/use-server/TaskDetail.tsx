@@ -17,8 +17,8 @@ export const TaskDetail = ({ row, setTask, deleteRowFromId } : TaskTableType) =>
     const onClickHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
+        //const result = await deleteRowFromId(Number(row.id));
         await deleteRowFromId(Number(row.id));
-
         setTask(null);
     }
 
@@ -28,7 +28,7 @@ export const TaskDetail = ({ row, setTask, deleteRowFromId } : TaskTableType) =>
             <p>title: {row.title}</p>
             <p>detail: {row.detail}</p>
             <p>completed? {row.completed ? "yes" : "no"}</p>
-            <div><button type="button" onClick={(e) => onClickHandler}>Delete this record</button></div>
+            <div><button type="button" onClick={(e) => onClickHandler(e)}>Delete this record</button></div>
         </>
     );    
 };

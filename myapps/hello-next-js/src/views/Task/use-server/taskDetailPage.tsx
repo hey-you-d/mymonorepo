@@ -18,11 +18,9 @@ export const TaskDetailPage = ({id}: {id: number}) => {
 
       try {
         const result = await getRowFromId(id);
-        console.log("views/use-server/taskDetailPage ", result);
         setTask(result.task);
       } catch (err) {
         console.error("Failed to fetch task:", err);
-        //setTask(task);
         setTask(null);
       } finally {
         setLoading(false);
@@ -35,8 +33,7 @@ export const TaskDetailPage = ({id}: {id: number}) => {
   if (loading) return <p>Loading...</p>;
   
   const body: React.ReactElement[] = [];
-  console.log("VIEW - BEFORE RENDER ", task);
-  body.push(task
+  body.push(task && task !== null
     ? <TaskDetail row={task} setTask={setTask} deleteRowFromId={deleteRowFromId} /> 
     : <p>{`The record ${id} is no longer exist`}</p>);
   body.push(

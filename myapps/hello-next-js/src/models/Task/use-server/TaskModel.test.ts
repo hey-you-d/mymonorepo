@@ -175,7 +175,7 @@ describe('TaskModel', () => {
       });
     });
 
-    it('should throw error on non-OK response', async () => {
+    it('should return null on non-OK 404 response', async () => {
       const mockResponse = {
         ok: false,
         status: 404,
@@ -185,7 +185,9 @@ describe('TaskModel', () => {
   
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
   
-      await expect(getRowFromId(999)).rejects.toThrow('Error fetching row: 404');
+      // for reference: 404 shouldn't throw an error 
+      //await expect(getRowFromId(999)).rejects.toThrow('Error fetching row: 404');
+      await expect(getRowFromId(999)).resolves.toEqual(null);
     });
 
     it('should throw error on fetch failure', async () => {

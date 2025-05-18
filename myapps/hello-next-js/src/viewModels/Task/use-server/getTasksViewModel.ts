@@ -44,7 +44,6 @@ export const seedTasksDB = async (): Promise<{ tasks: Task[] }> => {
 export const getRowFromId = async (id: number): Promise<{ task: Task | null }> => {
     try {
       const task = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
-      console.log("VIEWMODEL getRowFromId ", id, task);
       return { task: task };
     } catch (error) {
       console.error(`Failed to get row for id ${id}:`, error);

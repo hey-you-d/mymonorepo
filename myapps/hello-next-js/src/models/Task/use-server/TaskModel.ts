@@ -111,8 +111,6 @@ export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promi
         headers: await TASKS_BFF_HEADER(),
     });
 
-    console.log("MODEL - getRowFromId response ", response);
-
     if (!response.ok) {
         if (response.status == 404) {
           return null;
@@ -204,8 +202,6 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
         headers: await TASKS_BFF_HEADER(),
     });
 
-    console.log("MODEL - deleteRowFromId response ", response);
-
     if (!response.ok) {
         const errorText = await response.text(); // <- Just read as text
         console.error(`Error deleting row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
@@ -213,7 +209,6 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
     }
 
     const result = await response.json();
-    console.log("MODE - delete row - ", result);
     return result.rows;
   } catch(error) {
     console.error(`Error fetching row for id ${id}: `, error );
