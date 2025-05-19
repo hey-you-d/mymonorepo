@@ -5,6 +5,7 @@
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import { Dispatch, SetStateAction } from 'react';
+import { mutate } from 'swr';
 import { Task } from '@/types/Task';
 
 type TaskSeedDBType = {
@@ -14,10 +15,14 @@ type TaskSeedDBType = {
     deleteAllRows: () => Promise<{ tasks: Task[]}>,
 }
 
-export const TaskSeedDB = ({ tasks, setTasks, seedTaskDB, deleteAllRows } : TaskSeedDBType) => {
+export const TaskSeedDBWithSwr = ({ tasks, setTasks, seedTaskDB, deleteAllRows } : TaskSeedDBType) => {
     const onClickHandler = async (e: React.FormEvent) => {
         e.preventDefault();  
-        const updatedTasks = tasks.length <= 0 ? await seedTaskDB() : await deleteAllRows();        
+        const updatedTasks = tasks.length <= 0 ? await seedTaskDB() : await deleteAllRows();
+        
+        // Trigger client-side revalidation after server action completes
+        mutate("Tasks-API-USE-SWR");
+        
         setTasks(updatedTasks.tasks);
     }
      
