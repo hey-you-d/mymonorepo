@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
-import { BASE_URL, TASKS_BFF_HEADER  } from "@/lib/app/common";
+import { BASE_URL, TASKS_API_HEADER  } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'GET',
-                    headers: await TASKS_BFF_HEADER(),
+                    headers: await TASKS_API_HEADER(),
                 });
 
                 if (!response.ok) {
@@ -35,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'PUT',
-                    headers: await TASKS_BFF_HEADER(),
+                    headers: await TASKS_API_HEADER(),
                     body: JSON.stringify({
                         title,
                         detail,
@@ -60,7 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'DELETE',
-                    headers: await TASKS_BFF_HEADER(),
+                    headers: await TASKS_API_HEADER(),
                 });
 
                 if (!response.ok) {
@@ -82,7 +82,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/create-row`, {
                     method: 'POST',
-                    headers: await TASKS_BFF_HEADER(),
+                    headers: await TASKS_API_HEADER(),
                     body: JSON.stringify({
                         title,
                         detail

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
-import { BASE_URL, TASKS_BFF_HEADER } from "@/lib/app/common";
+import { BASE_URL, TASKS_API_HEADER } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/seed-table`, {
                     method: 'POST',
-                    headers: await TASKS_BFF_HEADER(),
+                    headers: await TASKS_API_HEADER(),
                 });
 
                 if (!response.ok) {

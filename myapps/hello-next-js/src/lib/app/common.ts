@@ -31,7 +31,9 @@ export const TASKS_BFF_BASE_API_URL = `${process.env.NODE_ENV === "production" ?
 export const TASKS_SQL_BASE_API_URL = `${process.env.NODE_ENV === "production" ? BASE_URL : ""}/api/tasks/v1/sql`;      
         
 export const getInternalApiKey = async (): Promise<string | undefined> => {
-    const secretId = `/${process.env.NODE_ENV === "production" ? "prod" : "dev"}/tasks/bff/x-api-key`;    
+    // [WIP] remote DB hasn't been created in the production environment
+    //const secretId = `/${process.env.NODE_ENV === "production" ? "prod" : "dev"}/tasks/bff/x-api-key`;    
+    const secretId = "/dev/tasks/bff/x-api-key";
 
     const xApiKey = await getSecret(secretId);
     
@@ -39,7 +41,7 @@ export const getInternalApiKey = async (): Promise<string | undefined> => {
 }
 
 // for reference: can only be called on server-side only
-export const TASKS_BFF_HEADER = async () => {
+export const TASKS_API_HEADER = async () => {
     return {
         "Content-Type": "application/json",
         "x-api-key": await getInternalApiKey() ?? "",
@@ -47,7 +49,7 @@ export const TASKS_BFF_HEADER = async () => {
 }; 
 
 // for reference: can only be called on server-side only
-export const CHECK_BFF_AUTHORIZATION = async (req: NextApiRequest, res: NextApiResponse) => {
+export const CHECK_API_KEY = async (req: NextApiRequest, res: NextApiResponse) => {
     const clientKey = req.headers["x-api-key"];
     const serverKey = await getInternalApiKey();
   

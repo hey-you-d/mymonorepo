@@ -1,5 +1,5 @@
 "use server"
-import { TASKS_BFF_HEADER } from "@/lib/app/common";
+import { TASKS_API_HEADER } from "@/lib/app/common";
 
 export async function fetchGraphQL(query: string, variables?: Record<string, unknown>) {
     // for reference:
@@ -14,7 +14,7 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
     // note: can't be prepended with "/hello-next-js/" 
     const res = await fetch(`/api/tasks/v1/sql/graphql`, {
         method: 'POST',
-        headers: await TASKS_BFF_HEADER(),
+        headers: await TASKS_API_HEADER(),
         body: JSON.stringify({ query, variables }),
     });
 

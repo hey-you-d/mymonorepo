@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { Task } from "@/types/Task";
 import { values, placeholders } from "./seed-table";
-import { CHECK_BFF_AUTHORIZATION } from '@/lib/app/common';
+import { CHECK_API_KEY } from '@/lib/app/common';
 
 import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
 
@@ -110,7 +110,7 @@ export const config = {
 };
 
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
-    await CHECK_BFF_AUTHORIZATION(req, res);
+    await CHECK_API_KEY(req, res);
     
     await startServer;
 

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { DOMAIN_URL, TASKS_BFF_HEADER } from "@/lib/app/common";
+import { DOMAIN_URL, TASKS_API_HEADER } from "@/lib/app/common";
 
 export const config = {
     api: {
@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 const proxyResponse = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, { // V - correct
                 //const proxyResponse = await fetch(`${BASE_URL}/api/tasks/v1/sql/graphql`, {  // X - wrong
                     method: 'POST',
-                    headers: await TASKS_BFF_HEADER(),
+                    headers: await TASKS_API_HEADER(),
                     body: JSON.stringify({
                         query,
                         variables

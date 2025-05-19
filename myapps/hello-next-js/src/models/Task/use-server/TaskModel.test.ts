@@ -41,7 +41,7 @@ describe('TaskModel', () => {
     // Must go before any imports
     jest.doMock('../../../lib/app/common', () => ({
       TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
-      TASKS_BFF_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
+      TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
       BASE_URL: 'https://mock-base-url.com',
     }));
 
@@ -81,9 +81,9 @@ describe('TaskModel', () => {
 
       const result = await getTasksDBRows();
 
-      // Check TASKS_BFF_HEADER was called
-      const { TASKS_BFF_HEADER } = await import('../../../lib/app/common');
-      expect(TASKS_BFF_HEADER).toHaveBeenCalled();
+      // Check TASKS_API_HEADER was called
+      const { TASKS_API_HEADER } = await import('../../../lib/app/common');
+      expect(TASKS_API_HEADER).toHaveBeenCalled();
 
       expect(result).toEqual(mockData);
 
@@ -164,9 +164,9 @@ describe('TaskModel', () => {
 
       const result = await getRowFromId(1);
 
-      // Check TASKS_BFF_HEADER was called
-      const { TASKS_BFF_HEADER } = await import('../../../lib/app/common');
-      expect(TASKS_BFF_HEADER).toHaveBeenCalled();
+      // Check TASKS_API_HEADER was called
+      const { TASKS_API_HEADER } = await import('../../../lib/app/common');
+      expect(TASKS_API_HEADER).toHaveBeenCalled();
 
       expect(result).toEqual({rows: mockData});
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/1`,  {
