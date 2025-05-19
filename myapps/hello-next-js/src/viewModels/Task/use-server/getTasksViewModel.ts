@@ -83,7 +83,6 @@ export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | nul
       // for reference: createRowTaskModel returns the a single task only (the deleted one), 
       // we need the updated tasks to rehydrate the client component
       //const tasks = await getTasksDBRowsTaskModel();
-      //console.log("VIEWMODEL - delete row - ", tasks);
       return { tasks: null };
     } catch (error) {
       console.error(`Failed to delete row for id ${id}:`, error);
