@@ -101,7 +101,7 @@ yarn workspace hello-next-js start
         - Model component: [TaskGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-client/TaskGraphqlClient.ts)
         - Viewmodel component: [useTaskGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTaskGraphQLViewModel.ts)
         - View component: [taskGraphQLPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskGraphQLPage.tsx)
-    - [Client-side components variant - is served via Next.js Page router] **STATUS: WIP**
+    - [Server-side components variant - is served via Next.js App router] **STATUS: WIP**
         - Localhost URL: tba
         - Model component: tba
         - Viewmodel component: tba
