@@ -11,7 +11,7 @@ describe('fetchGraphQL', () => {
 
     jest.doMock('../../../lib/app/common', () => ({
       TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
-      TASKS_BFF_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
+      TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
     }));
 
     // Re-import AFTER mocks are in place

@@ -86,11 +86,17 @@ yarn workspace hello-next-js start
         - Next.js App router: [/task-crud-fullstack/use-server](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server)    
 4. User Login, authorization & API Authentication with JWT - **STATUS: TODO**
 5. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
-6. Frontend feature [Client-side components variant only]: Client-side Caching implementation with Vercel SWR - **STATUS: DONE**
-    - Localhost URL: [localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)  
-    - Model component: reusing the default implementation
-    - ViewModel component: [useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTasksViewModelWithSwr.ts)
-    - MVVM - view component: [taskWithSWRPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskWithSWRPage.tsx)
+6. Frontend feature [Client-side components variant only]: Client-side Caching implementation with Vercel SWR  
+    - [Client-side components variant - is served via Next.js Page router] **STATUS: DONE**
+        - Localhost URL: [localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)  
+        - Model component: reusing the default implementation
+        - ViewModel component: [useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTasksViewModelWithSwr.ts)
+        - MVVM - view component: [taskWithSWRPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskWithSWRPage.tsx)
+    - [Server-side components variant - is served via Next.js App router] **STATUS: WIP**
+        - Localhost URL: tba
+        - Model component: tba
+        - Viewmodel component: tba
+        - View component: tba
 7. Server-side Caching implementation with Redis - **STATUS: TODO** 
 8. Swagger Doc integration - **STATUS: DONE**  
     - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/swagger](http://localhost:3000/hello-next-js/task-crud-fullstack/swagger)

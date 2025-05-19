@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
-import { CHECK_BFF_AUTHORIZATION } from '@/lib/app/common';
+import { CHECK_API_KEY } from '@/lib/app/common';
 
 /**
  * @swagger
@@ -88,7 +88,7 @@ import { CHECK_BFF_AUTHORIZATION } from '@/lib/app/common';
  *               $ref: '#/components/schemas/Task'
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    await CHECK_BFF_AUTHORIZATION(req, res);
+    await CHECK_API_KEY(req, res);
     
     const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
     const numericId = parseInt(id || '', 10);

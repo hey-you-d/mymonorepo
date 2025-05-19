@@ -1,12 +1,12 @@
 "use server"
-import { TASKS_SQL_BASE_API_URL, TASKS_BFF_HEADER } from "@/lib/app/common";
+import { TASKS_SQL_BASE_API_URL, TASKS_API_HEADER } from "@/lib/app/common";
 import { Task } from "@/types/Task";
 
 export const swrFetcher = async () => {
   try {
       const response = await fetch(`${TASKS_SQL_BASE_API_URL}/`, {
           method: 'GET',
-          headers: await TASKS_BFF_HEADER(),
+          headers: await TASKS_API_HEADER(),
       });
 
       if (!response.ok) {
@@ -30,7 +30,7 @@ export const getTasksDBRows = async (overrideFetchUrl?: string): Promise<Task[]>
   try {
     const response = await fetch(`${finalUrl}/`, {
         method: 'GET',
-        headers: await TASKS_BFF_HEADER(),
+        headers: await TASKS_API_HEADER(),
     });
 
     if (!response.ok) {
@@ -56,7 +56,7 @@ export const deleteAllRows = async (overrideFetchUrl?: string): Promise<Task[]> 
   try {
     const response = await fetch(`${finalUrl}/delete-rows`, {
         method: 'POST',
-        headers: await TASKS_BFF_HEADER(),
+        headers: await TASKS_API_HEADER(),
     });
 
     if (!response.ok) {
@@ -82,7 +82,7 @@ export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[]> =>
   try {
     const response = await fetch(`${finalUrl}/seed-table`, {
         method: 'POST',
-        headers: await TASKS_BFF_HEADER(),
+        headers: await TASKS_API_HEADER(),
     });
 
     if (!response.ok) {
@@ -108,7 +108,7 @@ export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promi
   try {
     const response = await fetch(`${finalUrl}/${id}`, {
         method: 'GET',
-        headers: await TASKS_BFF_HEADER(),
+        headers: await TASKS_API_HEADER(),
     });
 
     if (!response.ok) {
@@ -136,7 +136,7 @@ export const createRow = async (title: string, detail: string, overrideFetchUrl?
   try {
     const response = await fetch(`${finalUrl}/create-row`, {
         method: 'POST',
-        headers: await TASKS_BFF_HEADER(),
+        headers: await TASKS_API_HEADER(),
         body: JSON.stringify({
           title,
           detail
@@ -167,7 +167,7 @@ export const updateRowFromId = async  (id: number, title: string, detail: string
   try {
     const response = await fetch(`${finalUrl}/${id}`, {
         method: 'PUT',
-        headers: await TASKS_BFF_HEADER(),
+        headers: await TASKS_API_HEADER(),
         body: JSON.stringify({
           title,
           detail,
@@ -199,7 +199,7 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
   try {
     const response = await fetch(`${finalUrl}/${id}`, {
         method: 'DELETE',
-        headers: await TASKS_BFF_HEADER(),
+        headers: await TASKS_API_HEADER(),
     });
 
     if (!response.ok) {
@@ -225,7 +225,7 @@ export const getJwt = async (overrideFetchUrl?: string): Promise<{jwtSecret: str
   try {
     const response = await fetch(`${finalUrl}/jwt`, {
       method: 'GET',
-      headers: await TASKS_BFF_HEADER(),
+      headers: await TASKS_API_HEADER(),
     });
 
     if (!response.ok) {

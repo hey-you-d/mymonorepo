@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
-import { CHECK_BFF_AUTHORIZATION } from '@/lib/app/common';
+import { CHECK_API_KEY } from '@/lib/app/common';
 
 /**
  * @swagger
@@ -64,7 +64,7 @@ import { CHECK_BFF_AUTHORIZATION } from '@/lib/app/common';
  *               $ref: '#/components/schemas/Task'
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    await CHECK_BFF_AUTHORIZATION(req, res);
+    await CHECK_API_KEY(req, res);
 
     switch (req.method) {
       case "GET" :
