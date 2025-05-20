@@ -38,7 +38,7 @@ export const useTaskGraphQLViewModel = () => {
         loadTasks();
     }, []);
 
-    const createRow = async(title: string, detail: string) => {
+    const createRow = async(_: Task[], title: string, detail: string) => {
         const mutation = `
             mutation CreateTask($title: String!, $detail: String!) {
                 createTask(title: $title, detail: $detail) {

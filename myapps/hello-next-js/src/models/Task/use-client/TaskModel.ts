@@ -155,7 +155,7 @@ export class TaskModel {
       } 
     }
 
-    async createRow(title: string, detail: string): Promise<void> {
+    async createRow(title: string, detail: string): Promise<Task[]> {
       try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/create-row`, {
             method: 'POST',
@@ -174,7 +174,9 @@ export class TaskModel {
             throw new Error(`Error creating row: ${response.status}`);
         }
 
-        // for reference: returns nothing
+        const result = await response.json();
+        
+        return result.rows;
       } catch(error) {
         console.error("Error creating row: ", error );
 

@@ -96,7 +96,7 @@ export const useTaskApolloClientViewModel = () => {
     //const { loading: getTasksLoading } = useQuery(GET_ALL_TASKS, getAllTasksHandler);
     useQuery(GET_ALL_TASKS, getAllTasksHandler);
 
-    const createRow = async(title: string, detail: string) => {    
+    const createRow = async(_: Task[], title: string, detail: string) => {    
         try {
             const { data: mutatedData } = await createTask({ variables: { title, detail } });
 

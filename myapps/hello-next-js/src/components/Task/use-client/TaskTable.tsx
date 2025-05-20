@@ -2,13 +2,13 @@
 
 // for reference: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
 type TaskTableType = {
     tasks: Task[], 
-    createRow: (title: string, detail: string)=> Promise<void>,
+    createRow: (tasks: Task[], title: string, detail: string)=> Promise<void>,
     updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void>
 }
 
@@ -33,15 +33,16 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
         window.location.replace( `${MONOREPO_PREFIX}/${TASKS_CRUD}/edit/${id}`);
     }
 
-    const addNewTodoHandler = useCallback((e: React.MouseEvent) => {
+    const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
         if (inputTitleRef.current && inputDetailRef.current && 
             inputTitleRef.current.value.length > 0 && 
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
-                createRow(inputTitleRef.current.value, inputDetailRef.current.value);
                 inputTitleRef.current.value = "";
                 inputDetailRef.current.value = "";
+
+                await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
@@ -52,7 +53,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
             const output:React.ReactElement[] = [];
             
             tasks.forEach(aTask => {
-                // make checkbox uncontrolled
+                // make checkbox an uncontrolled react component
                 const checkbox = (
                     <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
                             onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />);
