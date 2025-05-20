@@ -40,13 +40,13 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
                 await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
-                
+
                 inputTitleRef.current.value = "";
                 inputDetailRef.current.value = "";
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
-    }, [createRow]);
+    }, [createRow, tasks]);
 
     const tBody = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {

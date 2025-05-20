@@ -41,7 +41,7 @@ export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
 
 export const deleteAllRows = async (): Promise<void> => {
     try {
-      const tasks: Task[] = await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
@@ -53,7 +53,7 @@ export const deleteAllRows = async (): Promise<void> => {
 
 export const seedTasksDB = async (): Promise<void> => {
     try {
-      const tasks: Task[] = await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
 
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");

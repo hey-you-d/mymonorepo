@@ -166,7 +166,7 @@ describe('TaskModel', () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
       const result = await taskModel.createRow('test', 'test');
-      expect(result).toEqual(undefined); // the fn is a void function
+      expect(result).toEqual(mockData);
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/bff/create-row`, {
         method: 'POST',
         headers: {
@@ -207,7 +207,7 @@ describe('TaskModel', () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
       const result = await taskModel.updateRowFromId(999, 'test', 'test', true);
-      expect(result).toEqual(undefined); // the fn is a void function
+      expect(result).toEqual({"rows": [{"id": 1, "name": "Test task"}]});
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/bff/999`, {
         method: 'PUT',
         headers: {
