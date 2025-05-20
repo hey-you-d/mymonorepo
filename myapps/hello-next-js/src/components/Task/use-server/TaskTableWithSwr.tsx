@@ -4,7 +4,7 @@
 
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
+import { useCallback, useRef } from 'react';
 import { mutate } from 'swr';
 import { useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
@@ -15,7 +15,6 @@ import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 // the promise of a single task (either a newly created one or newly updated one) 
 type TaskTableType = {
     tasks: Task[],
-    setTasks: Dispatch<SetStateAction<Task[]>>, 
     createRow: (title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
     updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
 }
@@ -27,18 +26,16 @@ const isSafeInput = (str: string) => {
     return regex.test(str);
 };
 
-export const TaskTableWithSwr = ({ tasks, setTasks, createRow, updateRowFromId } : TaskTableType) => {
+export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId } : TaskTableType) => {
     const appRouter = useRouter();
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
     const chkBoxHandler = async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
-        const result: { tasks: Task[] } = await updateRowFromId(id, title, detail, !isCurrentlySelected);
+        await updateRowFromId(id, title, detail, !isCurrentlySelected);
         
         // Trigger client-side revalidation after server action completes
         mutate("Tasks-API-USE-SWR");
-        
-        setTasks(result.tasks);
     }
 
     const editTodoHandler = (e: React.MouseEvent, id: number) => {
@@ -52,19 +49,17 @@ export const TaskTableWithSwr = ({ tasks, setTasks, createRow, updateRowFromId }
             inputTitleRef.current.value.length > 0 && 
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
-                const result: { tasks: Task[] } = await createRow(inputTitleRef.current.value, inputDetailRef.current.value);
-                
-                // Trigger client-side revalidation after server action completes
-                mutate("Tasks-API-USE-SWR");
+                await createRow(inputTitleRef.current.value, inputDetailRef.current.value);
 
                 inputTitleRef.current.value = "";
                 inputDetailRef.current.value = "";
-                
-                setTasks(result.tasks);
+
+                // Trigger client-side revalidation after server action completes
+                mutate("Tasks-API-USE-SWR");
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
-    }, [createRow, setTasks]);
+    }, [createRow]);
 
     const tBody = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {

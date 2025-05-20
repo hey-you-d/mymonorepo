@@ -35,7 +35,7 @@ export const TaskPage = () => {
     };
 
     fetchTasks();
-  }, []);
+  }, []); // run once only
 
   const isFiltering = filterText.trim() !== "";
   const confirmedTasks = isFiltering

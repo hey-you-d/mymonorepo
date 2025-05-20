@@ -7,7 +7,6 @@ import {
   createRow,
   updateRowFromId,
   deleteAllRows,
-  //getTasksDBRows,
   seedTasksDB
 } from '@/viewModels/Task/use-server/getTasksViewModelWithSwr';
 import { TaskSeedDBWithSwr } from '@/components/Task/use-server/TaskSeedDBWithSwr';
@@ -16,6 +15,7 @@ import { Task } from "@/types/Task";
 import useSWR from 'swr';
 import { TASKS_CRUD } from "@/lib/app/common";
 import Link from "next/link";
+import { strictDeepEqual } from 'fast-equals';
 
 export const TaskWithSwrPage = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -23,58 +23,43 @@ export const TaskWithSwrPage = () => {
     const [filterText, setFilterText] = useState("");
 
     // Use SWR to automatically fetch tasks (no need to set up the tasks state, and loading state)
-    const { data, error, isLoading } = useSWR<Task[]>("Tasks-API-USE-SWR", fetcher);
+    const { data: swrData, error: swrError, isLoading: swrLoading } = useSWR<Task[]>("Tasks-API-USE-SWR", fetcher);
 
-    if (isLoading) <p>from SWR - loading...</p>
-    if (error) <p>from SWR - error...</p>
-
-    // Fetch tasks on mount
     useEffect(() => {
-        /*
-        const fetchTasks = async () => {
-            setLoading(true);
-            try {
-                const { tasks } = await getTasksDBRows();
-                setTasks(tasks);
-            } catch (err) {
-                console.error("Error fetching tasks:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTasks();
-        */
         const fetchCachedTasks = async () => {
             setLoading(true);
             try {
-                if (data) {
-                    setTasks(data);
+                if (swrData) {
+                    setTasks(swrData);
                 }
             } catch (err) {
-                console.error("Error fetching tasks:", err);
+                console.error("Error fetching cached tasks:", err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchCachedTasks();
-    }, []);
+        // for reference: ensure the fn is not called whenever this component is re-hydrated
+        if (!swrLoading && !strictDeepEqual(tasks, swrData)) {
+            fetchCachedTasks();
+        }
+    }, [tasks, swrData, swrLoading, setTasks, setLoading]);
 
     const isFiltering = filterText.trim() !== "";
-    const confirmedTasks = isFiltering
-        ? tasks.filter(task =>
+    const confirmedTasks = swrData && isFiltering
+        ? swrData.filter(task =>
             task.detail.toLowerCase().includes(filterText.toLowerCase())
         )
-        : tasks;
+        : swrData ;
 
     if (loading) return <p>Loading...</p>;
+    if (swrLoading) return <p>from SWR - loading...</p>
+    if (swrError) return <p>from SWR - error...</p>
     
-    return (
+    return swrData  && confirmedTasks ? (
         <>
         <TaskSeedDBWithSwr
-            tasks={tasks}
-            setTasks={setTasks}
+            tasks={swrData }
             seedTaskDB={seedTasksDB}
             deleteAllRows={deleteAllRows}
         />
@@ -91,10 +76,9 @@ export const TaskWithSwrPage = () => {
         <br />
         <TaskTableWithSwr
             tasks={confirmedTasks}
-            setTasks={setTasks}
             createRow={createRow}
             updateRowFromId={updateRowFromId}
         />
         </>
-    );
+    ) : (<></>);
 };
