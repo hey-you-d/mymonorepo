@@ -51,6 +51,10 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
     }
 };
 
+// TODO: refactor: goal: avoid calling getTasksDBRowsTaskModel after calling createRowTaskModel  
+// 1. fn signature: const createRow = async (tasks: Task[], title: string, detail: string)
+// 2. then, const result = await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
+// 3. return value would be tasks appended/prepended with result
 export const createRow = async (title: string, detail: string): Promise<{ tasks: Task[] }> => {
     try {
       await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
@@ -64,6 +68,10 @@ export const createRow = async (title: string, detail: string): Promise<{ tasks:
     } 
 };
 
+// TODO: refactor: goal: avoid calling getTasksDBRowsTaskModel after calling createRowTaskModel  
+// 1. fn signature: const createRow = async (tasks: Task[], ...<the rest params>...)
+// 2. then, const result = await updateRowFromIdTaskModel(...<identical params>...);
+// 3. return value would be tasks with a single row updated with result
 export const updateRowFromId = async (id: number, title: string, detail: string, completed: boolean): Promise<{ tasks: Task[] }> => {
     try {
       await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
