@@ -228,13 +228,6 @@ export class TaskModel {
             console.error(`Error deleting row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
             throw new Error(`Error deleting row: ${response.status}`);
         }
-
-        // for reference: to prevent receiving the following warning: 
-        // API handler should not return a value, received object.
-        // make this fn returns void by comment out the return value below
-        
-        //const result = await response.json();
-        //return result.rows;
       } catch(error) {
         console.error(`Error fetching row for id ${id}: `, error );
 

@@ -100,8 +100,8 @@ export const useTaskViewModelWithSwr = () => {
   const deleteRowFromId = useCallback(async (id: number) => {
     try {
       await taskModel.deleteRowFromId(id);
-      const result: Task[] = await taskModel.getTasksDBRows();  // Get updated tasks
-      mutate("Tasks-API", result, false);  // Update SWR cache
+
+      mutate("Tasks-API", [], false);  // Update SWR cache
     } catch (error) {
       console.error(`Failed to delete task for id ${id}:`, error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
