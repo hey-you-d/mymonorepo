@@ -184,7 +184,7 @@ export class TaskModel {
       } 
     }
 
-    async updateRowFromId(id: number, title: string, detail: string, completed: boolean): Promise<void> {
+    async updateRowFromId(id: number, title: string, detail: string, completed: boolean): Promise<Task> {
       try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
             method: 'PUT',
@@ -204,7 +204,9 @@ export class TaskModel {
             throw new Error(`Error updating row: ${response.status}`);
         }
 
-        // for reference: returns nothing
+        const result = await response.json();
+
+        return result;
       } catch(error) {
         console.error(`Error updating row for id ${id}: `, error );
 

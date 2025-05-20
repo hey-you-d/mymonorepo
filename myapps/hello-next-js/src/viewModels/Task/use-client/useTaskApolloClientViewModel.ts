@@ -196,7 +196,7 @@ export const useTaskApolloClientViewModel = () => {
         }
     }
 
-    const updateRowFromId = async(id: number, title: string, detail: string, completed: boolean) => {  
+    const updateRowFromId = async(_: Task[], id: number, title: string, detail: string, completed: boolean) => {  
         try {
             const { data: mutatedData } = await updateTask({ variables: { id, title, detail, completed } });
 

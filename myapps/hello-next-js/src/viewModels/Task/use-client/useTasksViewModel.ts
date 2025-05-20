@@ -75,14 +75,16 @@ export const useTaskViewModel = () => {
     }
   }, [taskModel]);
 
-  //  TODO: refactor
-  const updateRowFromId = useCallback(async (id: number, title: string, detail: string, completed: boolean) => {
+  const updateRowFromId = useCallback(async (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => {
     setLoading(true);
     try {
-      await taskModel.updateRowFromId(id, title, detail, completed);
-      // then refresh the tasks state
-      const result: Task[] = await taskModel.getTasksDBRows();
-      setTasks(result);
+      const updatedRow: Task = await taskModel.updateRowFromId(id, title, detail, completed);
+
+      const updatedTasks = tasks.map((item, index) => 
+        tasks[index].id === updatedRow.id ? updatedRow : item
+      );
+
+      setTasks(updatedTasks);
     } catch (error) {
       console.error(`Failed to update row for id ${id}:`, error);
     } finally {

@@ -11,5 +11,5 @@ export type DataFetchModeType = "getStaticPaths" | "getStaticProps" | "getServer
 export type TaskTableType = {
     tasks: Task[], 
     createRow: (tasks: Task[], title: string, detail: string)=> Promise<void>,
-    updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void>
+    updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<void>
 }

@@ -120,7 +120,7 @@ export const useTaskGraphQLViewModel = () => {
       }
     }
 
-    const updateRowFromId = async(id: number, title: string, detail: string, completed: boolean) => {
+    const updateRowFromId = async(_: Task[], id: number, title: string, detail: string, completed: boolean) => {
         const mutation = `
           mutation UpdateTask($id: ID!, $title: String!, $detail: String!, $completed: Boolean!) {
             updateTask(id: $id, title: $title, detail: $detail, completed: $completed) {

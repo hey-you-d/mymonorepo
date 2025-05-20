@@ -9,7 +9,7 @@ import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 type TaskTableType = {
     tasks: Task[], 
     createRow: (tasks: Task[], title: string, detail: string)=> Promise<void>,
-    updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void>
+    updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<void>
 }
 
 const isSafeInput = (str: string) => {
@@ -24,7 +24,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
     const chkBoxHandler = (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
-        updateRowFromId(id, title, detail, !isCurrentlySelected);
+        updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
     }
 
     const editTodoHandler = (e: React.MouseEvent, id: number) => {
@@ -39,10 +39,10 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId } : TaskTableType)
             inputTitleRef.current.value.length > 0 && 
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
+                await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
+                
                 inputTitleRef.current.value = "";
                 inputDetailRef.current.value = "";
-
-                await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
         } else {
             // TODO: visual indicator - e.g. red border styling
         }

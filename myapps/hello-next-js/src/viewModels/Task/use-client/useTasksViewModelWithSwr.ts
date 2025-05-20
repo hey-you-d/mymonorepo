@@ -78,13 +78,17 @@ export const useTaskViewModelWithSwr = () => {
     }
   }, [taskModel]);
 
-  // TODO: REFACTOR
   // Function to update a task and update SWR cache
-  const updateRowFromId = useCallback(async (id: number, title: string, detail: string, completed: boolean) => {
+  const updateRowFromId = useCallback(async (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => {
     try {
-      await taskModel.updateRowFromId(id, title, detail, completed);
-      const result: Task[] = await taskModel.getTasksDBRows();  // Get updated tasks
-      mutate("Tasks-API", result, false);  // Update SWR cache
+      console.log("vm ", completed);
+      const updatedRow: Task = await taskModel.updateRowFromId(id, title, detail, completed);
+
+      const updatedTasks = tasks.map((item, index) => 
+        tasks[index].id === updatedRow.id ? updatedRow : item
+      );
+
+      mutate("Tasks-API", updatedTasks, false);  // Update SWR cache
     } catch (error) {
       console.error(`Failed to update task for id ${id}:`, error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
