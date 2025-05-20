@@ -46,11 +46,12 @@ yarn workspace hello-next-js lint
 ##### [Frontend layer - Client-side components variant - is served via Next.js Page router] 
 - **DEFAULT PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
 - **CACHED WITH VERCEL SWR PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)
-- **FRONTEND GRAPHQL DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
-- **FRONTEND CACHED GRAPHQL DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)
+- **GRAPHQL DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
+- **CACHED GRAPHQL DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)
 - **BFF ENDPOINT URL**: [http://localhost:3000/hello-next-js/api/tasks/v1/bff](http://localhost:3000/hello-next-js/api/tasks/v1/bff)
 ##### [Frontend layer - Server-side components variant - is served via Next.js App router]
 - **DEFAULT PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server)
+- **CACHED WITH VERCEL SWR PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/with-swr)
 ##### [Backend layer]
 - **API ENDPOINT URL (PROTECTED BY API KEY)**: [http://localhost:3000/hello-next-js/api/tasks/v1/sql](http://localhost:3000/hello-next-js/api/tasks/v1/sql)
 - **API DOC URL**: [http://localhost:3000/hello-next-js/task-crud-fullstack/swagger](http://localhost:3000/hello-next-js/task-crud-fullstack/swagger)
@@ -83,7 +84,8 @@ yarn workspace hello-next-js start
         - MVVM - viewmodel component: [getTasksViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksViewModel.ts)
         - MVVM - view component: [taskPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskPage.tsx)
         - MVVM - view component #2: [taskDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskDetailPage.tsx)
-        - Next.js App router: [/task-crud-fullstack/use-server](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server)    
+        - Next.js App router: [/task-crud-fullstack/use-server/page.tsx](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/page.tsx)
+        - Next.js App router #2: [/task-crud-fullstack/use-server/edit/[id]](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/edit/[id]/page.tsx)    
 4. User Login, authorization & API Authentication with JWT - **STATUS: TODO**
 5. API Authorization (role-based access control (RBAC) or attribute-based access (ABAC)) - **STATUS: TODO**
 6. Frontend feature [Client-side components variant only]: Client-side Caching implementation with Vercel SWR  
@@ -92,11 +94,14 @@ yarn workspace hello-next-js start
         - Model component: reusing the default implementation
         - ViewModel component: [useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTasksViewModelWithSwr.ts)
         - MVVM - view component: [taskWithSWRPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskWithSWRPage.tsx)
-    - [Server-side components variant - is served via Next.js App router] **STATUS: WIP**
-        - Localhost URL: tba
-        - Model component: tba
-        - Viewmodel component: tba
-        - View component: tba
+    - [Server-side components variant - is served via Next.js App router] **STATUS: DONE**
+        - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/with-swr)
+        - MVVM - model component: reusing the default use-server component implementation
+        - MVVM - viewmodel component: [getTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksViewModelWithSwr.ts)
+        - MVVM - view component: [taskWithSwrPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskWithSwrPage.tsx)
+        - MVVM - view component #2: [taskWithSwrDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskWithSwrDetailPage.tsx)
+        - Next.js App router: [/task-crud-fullstack/use-server/with-swr](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/with-swr/page.tsx)
+        - Next.js App router #2: [/task-crud-fullstack/use-server/edit/with-swr/[id]](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/edit/with-swr/[id]/page.tsx)
 7. Server-side Caching implementation with Redis - **STATUS: TODO** 
 8. Swagger Doc integration - **STATUS: DONE**  
     - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/swagger](http://localhost:3000/hello-next-js/task-crud-fullstack/swagger)
@@ -178,10 +183,4 @@ yarn workspace hello-next-js dev
 
 8. The URL (Server components MVVM): [localhost:3000/hello-next-js/task-crud-fullstack/use-server](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server)
 
-9. Frontend caching with Vercel SWR (Client components MVVM): [localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)
-
-10. The GraphQL version URL (Client components MVVM): [localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
-
-11. The GraphQL version with Apollo Client URL (Client components MVVM): [localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)
-
-12. The Swagger Doc URL (Backend): [http://localhost:3000/hello-next-js/task-crud-fullstack/swagger](http://localhost:3000/hello-next-js/task-crud-fullstack/swagger)
+9. For the rest of demo pages: [localhost demo](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md#localhost-demo)

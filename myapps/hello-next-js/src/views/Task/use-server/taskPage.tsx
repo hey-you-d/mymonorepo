@@ -12,8 +12,8 @@ import {
 import { TaskSeedDB } from '@/components/Task/use-server/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-server/TaskTable';
 import { Task } from "@/types/Task";
-//import { TASKS_CRUD } from "@/lib/app/common";
-//import Link from "next/link";
+import { TASKS_CRUD } from "@/lib/app/common";
+import Link from "next/link";
 
 export const TaskPage = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -61,11 +61,9 @@ export const TaskPage = () => {
         placeholder="Filter detail..."
       />
       <br />
-      {/* TODO
-      <Link href={`${TASKS_CRUD}/use-server/with-search-filter`}>
-        Dynamic Filter example
+      <Link href={`${TASKS_CRUD}/use-server/with-swr`}>
+        Example - Frontend caching with SWR page
       </Link>
-      */}
       <br />
       <TaskTable
         tasks={confirmedTasks}
