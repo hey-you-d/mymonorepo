@@ -65,11 +65,13 @@ export const useTaskViewModelWithSwr = () => {
   }, [taskModel]);
 
   // Function to create a task and update SWR cache
-  const createRow = useCallback(async (title: string, detail: string) => {
+  const createRow = useCallback(async (tasks: Task[], title: string, detail: string) => {
     try {
-      await taskModel.createRow(title, detail);
-      const result: Task[] = await taskModel.getTasksDBRows();  // Get updated tasks
-      mutate("Tasks-API", result, false);  // Update SWR cache
+      const result: Task[] = await taskModel.createRow(title, detail);
+
+      const updatedTasksDescOrder = [result[0], ...tasks].sort((a, b) => b.id - a.id);
+
+      mutate("Tasks-API", updatedTasksDescOrder, false);  // Update SWR cache
     } catch (error) {
       console.error("Failed to create a task:", error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
@@ -77,23 +79,29 @@ export const useTaskViewModelWithSwr = () => {
   }, [taskModel]);
 
   // Function to update a task and update SWR cache
-  const updateRowFromId = useCallback(async (id: number, title: string, detail: string, completed: boolean) => {
+  const updateRowFromId = useCallback(async (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => {
     try {
-      await taskModel.updateRowFromId(id, title, detail, completed);
-      const result: Task[] = await taskModel.getTasksDBRows();  // Get updated tasks
-      mutate("Tasks-API", result, false);  // Update SWR cache
+      console.log("vm ", completed);
+      const updatedRow: Task = await taskModel.updateRowFromId(id, title, detail, completed);
+
+      const updatedTasks = tasks.map((item, index) => 
+        tasks[index].id === updatedRow.id ? updatedRow : item
+      );
+
+      mutate("Tasks-API", updatedTasks, false);  // Update SWR cache
     } catch (error) {
       console.error(`Failed to update task for id ${id}:`, error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
     }
   }, [taskModel]);
 
+  // TODO: REFACTOR
   // Function to delete a task and update SWR cache
   const deleteRowFromId = useCallback(async (id: number) => {
     try {
       await taskModel.deleteRowFromId(id);
-      const result: Task[] = await taskModel.getTasksDBRows();  // Get updated tasks
-      mutate("Tasks-API", result, false);  // Update SWR cache
+
+      mutate("Tasks-API", [], false);  // Update SWR cache
     } catch (error) {
       console.error(`Failed to delete task for id ${id}:`, error);
       mutate("Tasks-API", [], false); // Explicitly clear cache

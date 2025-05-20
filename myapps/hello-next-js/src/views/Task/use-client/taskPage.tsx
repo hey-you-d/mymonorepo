@@ -38,8 +38,10 @@ export const TaskPage = () => {
       <br/>
       <span>filter task description: </span><input onChange={(e) => setFilterText(e.target.value)} placeholder="Filter detail..." />
       <br/>
-      <Link href={`${TASKS_CRUD}/with-search-filter`}>Dynamic Filter example</Link>
+      <Link href={`${TASKS_CRUD}/with-swr`}>Cached With SWR example</Link>
       <br/>
+      <Link href={`${TASKS_CRUD}/with-search-filter`}>Dynamic Filter example</Link>
+      <br />
       <TaskTable tasks={confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
     </>
   ) : (<></>);

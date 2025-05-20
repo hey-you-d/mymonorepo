@@ -26,10 +26,10 @@ const TestComponent = ({mode = "get"}: {mode: OpType}) => {
             <button onClick={seedTaskDB}>Seed DB</button>
         }
         {mode === "create" &&
-            <button onClick={() => createRow('Test Task', 'Test Detail')}>Add Task</button>
+            <button onClick={() => createRow(tasks, 'Test Task', 'Test Detail')}>Add Task</button>
         }    
         {mode === "update" && 
-            <button onClick={() => updateRowFromId(999, 'Updated Title', 'Updated Detail', true)}>
+            <button onClick={() => updateRowFromId(tasks, 999, 'Updated Title', 'Updated Detail', true)}>
                 Update Task
             </button>
         }

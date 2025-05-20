@@ -155,7 +155,7 @@ export class TaskModel {
       } 
     }
 
-    async createRow(title: string, detail: string): Promise<void> {
+    async createRow(title: string, detail: string): Promise<Task[]> {
       try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/create-row`, {
             method: 'POST',
@@ -174,7 +174,9 @@ export class TaskModel {
             throw new Error(`Error creating row: ${response.status}`);
         }
 
-        // for reference: returns nothing
+        const result = await response.json();
+        
+        return result.rows;
       } catch(error) {
         console.error("Error creating row: ", error );
 
@@ -182,7 +184,7 @@ export class TaskModel {
       } 
     }
 
-    async updateRowFromId(id: number, title: string, detail: string, completed: boolean): Promise<void> {
+    async updateRowFromId(id: number, title: string, detail: string, completed: boolean): Promise<Task> {
       try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
             method: 'PUT',
@@ -202,7 +204,9 @@ export class TaskModel {
             throw new Error(`Error updating row: ${response.status}`);
         }
 
-        // for reference: returns nothing
+        const result = await response.json();
+
+        return result;
       } catch(error) {
         console.error(`Error updating row for id ${id}: `, error );
 
@@ -224,13 +228,6 @@ export class TaskModel {
             console.error(`Error deleting row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
             throw new Error(`Error deleting row: ${response.status}`);
         }
-
-        // for reference: to prevent receiving the following warning: 
-        // API handler should not return a value, received object.
-        // make this fn returns void by comment out the return value below
-        
-        //const result = await response.json();
-        //return result.rows;
       } catch(error) {
         console.error(`Error fetching row for id ${id}: `, error );
 

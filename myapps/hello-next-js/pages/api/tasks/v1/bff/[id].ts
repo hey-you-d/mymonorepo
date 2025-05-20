@@ -30,8 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             const { title, detail, completed } = req.body;
             if (!title) return res.status(400).json({ error: `BFF Error updating row ${id} - Title is required` });
             if (!detail) return res.status(400).json({ error: `BFF Error updating row ${id} - Detail is required` });  
-            if (!completed) return res.status(400).json({ error: `BFF Error updating row ${id} - Completed is required` });
-
+            
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'PUT',
