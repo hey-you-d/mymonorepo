@@ -39,28 +39,24 @@ export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
     } 
 };
 
-export const deleteAllRows = async (): Promise<{ tasks: Task[] }> => {
+export const deleteAllRows = async (): Promise<void> => {
     try {
       const tasks: Task[] = await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
-      
-      return { tasks: tasks };
     } catch (error) {
       console.error("Failed to delete tasks db rows:", error);
       throw error;
     } 
 };
 
-export const seedTasksDB = async (): Promise<{ tasks: Task[] }> => {
+export const seedTasksDB = async (): Promise<void> => {
     try {
       const tasks: Task[] = await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
 
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
-
-      return { tasks: tasks };
     } catch (error) {
       console.error("Failed to seed tasks db:", error);
       throw error;
@@ -81,34 +77,24 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
     }
 };
 
-export const createRow = async (title: string, detail: string): Promise<{ tasks: Task[] }> => {
+export const createRow = async (title: string, detail: string): Promise<void> => {
     try {
       await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
-      // for reference: createRowTaskModel returns the a single task only (the newly created one), 
-      // we need the updated tasks to rehydrate the client component
-      const tasks: Task[] = await getTasksDBRowsTaskModel();
-
+      
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
-
-      return { tasks }
     } catch (error) {
       console.error("Failed to create a new row in the db: ", error);
       throw error;
     } 
 };
 
-export const updateRowFromId = async (id: number, title: string, detail: string, completed: boolean): Promise<{ tasks: Task[] }> => {
+export const updateRowFromId = async (id: number, title: string, detail: string, completed: boolean): Promise<void> => {
     try {
       await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
-      // for reference: createRowTaskModel returns the a single task only (the newly updated one), 
-      // we need the updated tasks to rehydrate the client component
-      const tasks: Task[] = await getTasksDBRowsTaskModel();
-
+      
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
-
-      return { tasks };
     } catch (error) {
       console.error(`Failed to update row for id ${id}:`, error);
       throw error;
@@ -118,10 +104,7 @@ export const updateRowFromId = async (id: number, title: string, detail: string,
 export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | null }> => {
     try {
       await deleteRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
-      // for reference: createRowTaskModel returns the a single task only (the deleted one), 
-      // we need the updated tasks to rehydrate the client component
-      //const tasks = await getTasksDBRowsTaskModel();
-
+      
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");  
 

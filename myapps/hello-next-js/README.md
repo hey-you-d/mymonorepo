@@ -99,7 +99,7 @@ yarn workspace hello-next-js start
         - MVVM - model component: reusing the default use-server component implementation
         - MVVM - viewmodel component: [getTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksViewModelWithSwr.ts)
         - MVVM - view component: [taskWithSwrPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskWithSwrPage.tsx)
-        - MVVM - view component #2: [taskWithSwrDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskWithSwrDetailPage.tsx)
+        - MVVM - view component #2: [taskDetailWithSwrPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskDetailWithSwrPage.tsx)
         - Next.js App router: [/task-crud-fullstack/use-server/with-swr](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/with-swr/page.tsx)
         - Next.js App router #2: [/task-crud-fullstack/use-server/edit/with-swr/[id]](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/edit/with-swr/[id]/page.tsx)
 7. Server-side Caching implementation with Redis - **STATUS: TODO** 

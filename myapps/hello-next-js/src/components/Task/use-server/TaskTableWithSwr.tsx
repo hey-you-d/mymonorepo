@@ -9,14 +9,14 @@ import { mutate } from 'swr';
 import { useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
+ 
 
-// for reference: 
-// ** ->: the viewmodel fn returns the promise of updated Tasks, not 
-// the promise of a single task (either a newly created one or newly updated one) 
+// For reference: **
+// the viewmodel fn will call revalidateTag to refresh the tasks array instead of returning the updated tasks array
 type TaskTableType = {
     tasks: Task[],
-    createRow: (title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
-    updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
+    createRow: (title: string, detail: string)=> Promise<void>, // **
+    updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void> // **
 }
 
 const isSafeInput = (str: string) => {

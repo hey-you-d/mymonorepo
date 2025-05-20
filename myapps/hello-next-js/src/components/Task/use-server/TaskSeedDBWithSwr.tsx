@@ -7,10 +7,13 @@
 import { mutate } from 'swr';
 import { Task } from '@/types/Task';
 
+
+// For reference: **
+// the viewmodel fn will call revalidateTag to refresh the tasks array instead of returning the updated tasks array
 type TaskSeedDBType = {
     tasks: Task[],
-    seedTaskDB: () => Promise<{ tasks: Task[] }>,
-    deleteAllRows: () => Promise<{ tasks: Task[]}>,
+    seedTaskDB: () => Promise<void>, // **
+    deleteAllRows: () => Promise<void>, // **
 }
 
 export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows } : TaskSeedDBType) => {

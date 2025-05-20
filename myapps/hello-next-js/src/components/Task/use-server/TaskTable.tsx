@@ -15,8 +15,8 @@ import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 type TaskTableType = {
     tasks: Task[],
     setTasks: Dispatch<SetStateAction<Task[]>>, 
-    createRow: (title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
-    updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
+    createRow: (tasks: Task[], title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
+    updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
 }
 
 const isSafeInput = (str: string) => {
@@ -32,7 +32,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
     const chkBoxHandler = async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
-        const result: { tasks: Task[] } = await updateRowFromId(id, title, detail, !isCurrentlySelected);
+        const result: { tasks: Task[] } = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
         setTasks(result.tasks);
     }
 
@@ -47,8 +47,8 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
             inputTitleRef.current.value.length > 0 && 
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
-                const result: { tasks: Task[] } = await createRow(inputTitleRef.current.value, inputDetailRef.current.value);
-                
+                const result: { tasks: Task[] } = await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
+
                 inputTitleRef.current.value = "";
                 inputDetailRef.current.value = "";
                 
@@ -56,7 +56,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
-    }, [createRow, setTasks]);
+    }, [createRow, setTasks, tasks]);
 
     const tBody = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {

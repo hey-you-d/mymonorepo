@@ -51,34 +51,28 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
     }
 };
 
-// TODO: refactor: goal: avoid calling getTasksDBRowsTaskModel after calling createRowTaskModel  
-// 1. fn signature: const createRow = async (tasks: Task[], title: string, detail: string)
-// 2. then, const result = await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
-// 3. return value would be tasks appended/prepended with result
-export const createRow = async (title: string, detail: string): Promise<{ tasks: Task[] }> => {
+export const createRow = async (tasks: Task[], title: string, detail: string): Promise<{ tasks: Task[] }> => {
     try {
-      await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
-      // for reference: createRowTaskModel returns the a single task only (the newly created one), 
-      // we need the updated tasks to rehydrate the client component
-      const tasks: Task[] = await getTasksDBRowsTaskModel();
-      return { tasks }
+      const result: Task[] = await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
+      
+      const updatedTasksDescOrder = [result[0], ...tasks].sort((a, b) => b.id - a.id);
+      
+      return { tasks: updatedTasksDescOrder }
     } catch (error) {
       console.error("Failed to create a new row in the db: ", error);
       throw error;
     } 
 };
 
-// TODO: refactor: goal: avoid calling getTasksDBRowsTaskModel after calling createRowTaskModel  
-// 1. fn signature: const createRow = async (tasks: Task[], ...<the rest params>...)
-// 2. then, const result = await updateRowFromIdTaskModel(...<identical params>...);
-// 3. return value would be tasks with a single row updated with result
-export const updateRowFromId = async (id: number, title: string, detail: string, completed: boolean): Promise<{ tasks: Task[] }> => {
+export const updateRowFromId = async (tasks: Task[], id: number, title: string, detail: string, completed: boolean): Promise<{ tasks: Task[] }> => {
     try {
-      await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
-      // for reference: createRowTaskModel returns the a single task only (the newly updated one), 
-      // we need the updated tasks to rehydrate the client component
-      const tasks: Task[] = await getTasksDBRowsTaskModel();
-      return { tasks };
+      const updatedRow: Task = await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
+
+      const updatedTasks = tasks.map((item, index) => 
+        tasks[index].id === updatedRow.id ? updatedRow : item
+      );
+
+      return { tasks: updatedTasks };
     } catch (error) {
       console.error(`Failed to update row for id ${id}:`, error);
       throw error;
