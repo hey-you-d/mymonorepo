@@ -1,6 +1,6 @@
 import * as TaskModel from '../../../models/Task/use-server/TaskModel';
 import { Task } from '@/types/Task';
-import { deleteRowFromId, seedTasksDB, updateRowFromId } from './getTasksViewModel';
+import { BASE_URL } from '@/lib/app/common';
 
 jest.mock('../../../models/Task/use-server/TaskModel', () => ({
     getTasksDBRows: jest.fn(),
@@ -12,14 +12,32 @@ jest.mock('../../../models/Task/use-server/TaskModel', () => ({
     updateRowFromId: jest.fn(),
 }));
 
+import { 
+    getTasksDBRows,
+    deleteAllRows, 
+    seedTasksDB,
+    createRow,
+    getRowFromId,
+    deleteRowFromId,
+    updateRowFromId,
+} from './getTasksViewModel';
+
 describe('getTaskViewModel', () => {
     const mockTasks: Task[] = [
         { id: 1, title: 'Test Task 1', detail: 'Task 1 detail', completed: false, created_at: "" },
         { id: 2, title: 'Test Task 2', detail: 'Task 2 detail', completed: true, created_at: "" },
     ];
 
+    let spyConsoleError: jest.SpyInstance<any, any>;
+
     beforeEach(() => {
+        // suppress console.error to reduce noise
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
         jest.clearAllMocks();
+    });
+
+    afterEach(() => {
+        spyConsoleError.mockRestore();
     });
 
     it('[getTasksDBRows] - should return tasks from TaskModel', async () => {
@@ -27,11 +45,11 @@ describe('getTaskViewModel', () => {
         (TaskModel.getTasksDBRows as jest.Mock).mockResolvedValue(mockTasks);
 
         // act
-        const result = await TaskModel.getTasksDBRows();
+        const result = await getTasksDBRows();
 
         // assert
         expect(TaskModel.getTasksDBRows).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(mockTasks);
+        expect(result).toEqual({ tasks: mockTasks });
     });
 
     it('[getTasksDBRows] - should throw and log an error if TaskModel fails', async () => {
@@ -40,7 +58,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.getTasksDBRows as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(TaskModel.getTasksDBRows()).rejects.toThrow(mockError);
+        await expect(getTasksDBRows()).rejects.toThrow(mockError);
 
         // assert
         expect(TaskModel.getTasksDBRows).toHaveBeenCalledTimes(1);
@@ -51,11 +69,11 @@ describe('getTaskViewModel', () => {
         (TaskModel.deleteAllRows as jest.Mock).mockResolvedValue([]);
 
         // act
-        const result = await TaskModel.deleteAllRows();
+        const result = await deleteAllRows();
 
         // assert
         expect(TaskModel.deleteAllRows).toHaveBeenCalledTimes(1);
-        expect(result).toEqual([]);
+        expect(result).toEqual({ tasks: [] });
     });
 
     it('[deleteAllRows] - should throw and log an error if TaskModel fails', async () => {
@@ -64,7 +82,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.deleteAllRows as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(TaskModel.deleteAllRows()).rejects.toThrow(mockError);
+        await expect(deleteAllRows()).rejects.toThrow(mockError);
 
         // assert
         expect(TaskModel.deleteAllRows).toHaveBeenCalledTimes(1);
@@ -75,11 +93,11 @@ describe('getTaskViewModel', () => {
         (TaskModel.seedTasksDB as jest.Mock).mockResolvedValue(mockTasks);
 
         // act
-        const result = await TaskModel.seedTasksDB();
+        const result = await seedTasksDB();
 
         // assert
         expect(TaskModel.seedTasksDB).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(mockTasks);
+        expect(result).toEqual({ tasks: mockTasks });
     });
 
     it('[seedTaskDB] - should throw and log an error if TaskModel fails', async () => {
@@ -88,23 +106,25 @@ describe('getTaskViewModel', () => {
         (TaskModel.seedTasksDB as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(TaskModel.seedTasksDB()).rejects.toThrow(mockError);
+        await expect(seedTasksDB()).rejects.toThrow(mockError);
 
         // assert
         expect(TaskModel.seedTasksDB).toHaveBeenCalledTimes(1);
     });
 
+    // TODO: wait until getTaskViewModel refactor has been performed
     it('[createRow] - should return an mockdata from TaskModel', async () => {
         // arrange
         (TaskModel.createRow as jest.Mock).mockResolvedValue(mockTasks[0]);
+        (TaskModel.getTasksDBRows as jest.Mock).mockResolvedValue(mockTasks);
 
         // act
-        const result = await TaskModel.createRow("x", "y");
+        const result = await createRow("x", "y");
 
         // assert
         expect(TaskModel.createRow).toHaveBeenCalledTimes(1);
-        expect(TaskModel.createRow).toHaveBeenCalledWith("x", "y");
-        expect(result).toEqual(mockTasks[0]);
+        expect(TaskModel.createRow).toHaveBeenCalledWith("x", "y", `${BASE_URL}/api/tasks/v1/sql`);
+        expect(result).toEqual({ tasks: mockTasks });
     });
 
     it('[createRow] - should throw and log an error if TaskModel fails', async () => {
@@ -113,7 +133,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.createRow as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(TaskModel.createRow).rejects.toThrow(mockError);
+        await expect(createRow).rejects.toThrow(mockError);
 
         // assert
         expect(TaskModel.createRow).toHaveBeenCalledTimes(1);
@@ -124,12 +144,12 @@ describe('getTaskViewModel', () => {
         (TaskModel.getRowFromId as jest.Mock).mockResolvedValue(mockTasks[0]);
 
         // act
-        const result = await TaskModel.getRowFromId(mockTasks[0].id);
+        const result = await getRowFromId(mockTasks[0].id);
 
         // assert
         expect(TaskModel.getRowFromId).toHaveBeenCalledTimes(1);
-        expect(TaskModel.getRowFromId).toHaveBeenCalledWith(mockTasks[0].id);
-        expect(result).toEqual(mockTasks[0]);
+        expect(TaskModel.getRowFromId).toHaveBeenCalledWith(mockTasks[0].id, `${BASE_URL}/api/tasks/v1/sql`);
+        expect(result).toEqual({ task: mockTasks[0] });
     });
 
     it('[getRowFromId] - should throw and log an error if TaskModel fails', async () => {
@@ -138,7 +158,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.getRowFromId as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(TaskModel.getRowFromId).rejects.toThrow(mockError);
+        await expect(getRowFromId).rejects.toThrow(mockError);
 
         // assert
         expect(TaskModel.getRowFromId).toHaveBeenCalledTimes(1);
@@ -149,11 +169,11 @@ describe('getTaskViewModel', () => {
         (TaskModel.deleteRowFromId as jest.Mock).mockResolvedValue({ tasks: null });
 
         // act
-        const result = await TaskModel.deleteRowFromId(mockTasks[0].id);
+        const result = await deleteRowFromId(mockTasks[0].id);
 
         // assert
         expect(TaskModel.deleteRowFromId).toHaveBeenCalledTimes(1);
-        expect(TaskModel.deleteRowFromId).toHaveBeenCalledWith(mockTasks[0].id);
+        expect(TaskModel.deleteRowFromId).toHaveBeenCalledWith(mockTasks[0].id, `${BASE_URL}/api/tasks/v1/sql`);
         expect(result).toEqual({ tasks: null });
     });
 
@@ -163,25 +183,33 @@ describe('getTaskViewModel', () => {
         (TaskModel.deleteRowFromId as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(TaskModel.deleteRowFromId).rejects.toThrow(mockError);
+        await expect(deleteRowFromId).rejects.toThrow(mockError);
 
         // assert
         expect(TaskModel.deleteRowFromId).toHaveBeenCalledTimes(1);
     });
 
+    // TODO: wait until getTaskViewModel refactor has been performed
     it('[updateRowFromId] - should return an mockdata from TaskModel', async () => {
         // arrange
         const mockUpdatedData = {
             id: 1, title: "updated title", detail: mockTasks[0].detail, completed: true, created_at: ""
         };
         (TaskModel.updateRowFromId as jest.Mock).mockResolvedValue(mockUpdatedData);
+        (TaskModel.getTasksDBRows as jest.Mock).mockResolvedValue([mockUpdatedData, mockTasks[1]]);
 
         // act
-        const result = await TaskModel.updateRowFromId(mockTasks[0].id, "updated title", mockTasks[0].detail, true);
+        const result = await updateRowFromId(
+            mockUpdatedData.id, mockUpdatedData.title, mockUpdatedData.detail, mockUpdatedData.completed
+        );
 
         // assert
         expect(TaskModel.updateRowFromId).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(mockUpdatedData);
+        expect(TaskModel.updateRowFromId).toHaveBeenCalledWith(
+            mockUpdatedData.id, mockUpdatedData.title, mockUpdatedData.detail, mockUpdatedData.completed,
+            `${BASE_URL}/api/tasks/v1/sql`
+        );
+        expect(result).toEqual({ tasks: [mockUpdatedData, mockTasks[1]] });
     });
 
     it('[updateRowFromId] - should throw and log an error if TaskModel fails', async () => {
@@ -190,7 +218,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.updateRowFromId as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(TaskModel.updateRowFromId).rejects.toThrow(mockError);
+        await expect(updateRowFromId).rejects.toThrow(mockError);
 
         // assert
         expect(TaskModel.updateRowFromId).toHaveBeenCalledTimes(1);

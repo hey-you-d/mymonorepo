@@ -2,11 +2,12 @@
 import { TASKS_SQL_BASE_API_URL, TASKS_API_HEADER } from "@/lib/app/common";
 import { Task } from "@/types/Task";
 
-export const swrFetcher = async () => {
+export const swrFetcher = async (): Promise<Task[]> => {
   try {
       const response = await fetch(`${TASKS_SQL_BASE_API_URL}/`, {
           method: 'GET',
           headers: await TASKS_API_HEADER(),
+          next: { tags: ["tasks-api-swr-tag"] }, // for the swr's mutate fn - to facilitate client and server comm 
       });
 
       if (!response.ok) {
