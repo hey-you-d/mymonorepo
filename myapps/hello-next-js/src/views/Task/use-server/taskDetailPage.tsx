@@ -28,7 +28,7 @@ export const TaskDetailPage = ({id}: {id: number}) => {
     };
     
     fetchTask();
-  }, []);
+  }, []); // run once only
 
   if (loading) return <p>Loading...</p>;
   

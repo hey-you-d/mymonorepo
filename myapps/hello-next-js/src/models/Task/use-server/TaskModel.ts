@@ -129,7 +129,7 @@ export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promi
   } 
 }
 
-export const createRow = async (title: string, detail: string, overrideFetchUrl?: string): Promise<Task []> => {
+export const createRow = async (title: string, detail: string, overrideFetchUrl?: string): Promise<Task[]> => {
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -151,8 +151,8 @@ export const createRow = async (title: string, detail: string, overrideFetchUrl?
     }
 
     const result = await response.json();
-
-    return result.rows;
+    
+    return result.rows satisfies Task[];
   } catch(error) {
     console.error("Error creating row: ", error );
 
@@ -160,7 +160,7 @@ export const createRow = async (title: string, detail: string, overrideFetchUrl?
   } 
 }
 
-export const updateRowFromId = async  (id: number, title: string, detail: string, completed: boolean, overrideFetchUrl?: string): Promise<void> => {
+export const updateRowFromId = async  (id: number, title: string, detail: string, completed: boolean, overrideFetchUrl?: string): Promise<Task> => {
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;

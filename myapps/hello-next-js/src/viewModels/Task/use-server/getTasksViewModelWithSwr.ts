@@ -81,6 +81,7 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
     }
 };
 
+// TODO: refactor
 export const createRow = async (title: string, detail: string): Promise<{ tasks: Task[] }> => {
     try {
       await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
@@ -98,6 +99,7 @@ export const createRow = async (title: string, detail: string): Promise<{ tasks:
     } 
 };
 
+// TODO: refactor
 export const updateRowFromId = async (id: number, title: string, detail: string, completed: boolean): Promise<{ tasks: Task[] }> => {
     try {
       await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
@@ -118,10 +120,7 @@ export const updateRowFromId = async (id: number, title: string, detail: string,
 export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | null }> => {
     try {
       await deleteRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
-      // for reference: createRowTaskModel returns the a single task only (the deleted one), 
-      // we need the updated tasks to rehydrate the client component
-      //const tasks = await getTasksDBRowsTaskModel();
-
+      
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");  
 

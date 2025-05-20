@@ -112,19 +112,19 @@ describe('getTaskViewModel', () => {
         expect(TaskModel.seedTasksDB).toHaveBeenCalledTimes(1);
     });
 
-    // TODO: wait until getTaskViewModel refactor has been performed
     it('[createRow] - should return an mockdata from TaskModel', async () => {
         // arrange
-        (TaskModel.createRow as jest.Mock).mockResolvedValue(mockTasks[0]);
-        (TaskModel.getTasksDBRows as jest.Mock).mockResolvedValue(mockTasks);
-
+        const newRow: Task = { id: 3, title: "new title", detail: "new detail", completed: false, created_at: "" };
+        (TaskModel.createRow as jest.Mock).mockResolvedValue([newRow]);
+        
         // act
-        const result = await createRow("x", "y");
+        const result = await createRow(mockTasks, newRow.title, newRow.detail);
 
         // assert
         expect(TaskModel.createRow).toHaveBeenCalledTimes(1);
-        expect(TaskModel.createRow).toHaveBeenCalledWith("x", "y", `${BASE_URL}/api/tasks/v1/sql`);
-        expect(result).toEqual({ tasks: mockTasks });
+        expect(TaskModel.createRow).toHaveBeenCalledWith("new title", "new detail", `${BASE_URL}/api/tasks/v1/sql`);
+        const updatedMockTasksDescOrder = [...mockTasks, newRow].sort((a, b) => b.id - a.id);
+        expect(result).toEqual({ tasks: updatedMockTasksDescOrder });
     });
 
     it('[createRow] - should throw and log an error if TaskModel fails', async () => {
@@ -189,18 +189,16 @@ describe('getTaskViewModel', () => {
         expect(TaskModel.deleteRowFromId).toHaveBeenCalledTimes(1);
     });
 
-    // TODO: wait until getTaskViewModel refactor has been performed
     it('[updateRowFromId] - should return an mockdata from TaskModel', async () => {
         // arrange
         const mockUpdatedData = {
             id: 1, title: "updated title", detail: mockTasks[0].detail, completed: true, created_at: ""
         };
         (TaskModel.updateRowFromId as jest.Mock).mockResolvedValue(mockUpdatedData);
-        (TaskModel.getTasksDBRows as jest.Mock).mockResolvedValue([mockUpdatedData, mockTasks[1]]);
 
         // act
         const result = await updateRowFromId(
-            mockUpdatedData.id, mockUpdatedData.title, mockUpdatedData.detail, mockUpdatedData.completed
+            mockTasks, mockUpdatedData.id, mockUpdatedData.title, mockUpdatedData.detail, mockUpdatedData.completed
         );
 
         // assert
