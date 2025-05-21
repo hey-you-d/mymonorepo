@@ -4,7 +4,8 @@ import { getSecret } from '@/lib/app/awsSecretManager';
 import { CHECK_API_KEY } from '@/lib/app/common';  
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    await CHECK_API_KEY(req, res);
+    const isAuthorized = await CHECK_API_KEY(req, res);
+    if (!isAuthorized) return res.status(401).json({ error: "Unauthorized access: invalid API key" });
 
     switch (req.method) {
         case "GET" :

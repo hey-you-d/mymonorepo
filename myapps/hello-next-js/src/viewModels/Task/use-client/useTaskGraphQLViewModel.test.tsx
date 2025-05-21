@@ -2,6 +2,7 @@ import React from 'react';
 import { render, waitFor, act } from '@testing-library/react';
 import { useTaskGraphQLViewModel } from './useTaskGraphQLViewModel';
 import { fetchGraphQL } from '@/models/Task/use-client/TaskGraphqlClient';
+import { tasks } from '@/lib/db/db_inMemory';
 
 // Mock the fetchGraphQL function
 jest.mock('../../../models/Task/use-client/TaskGraphqlClient', () => ({
@@ -9,7 +10,7 @@ jest.mock('../../../models/Task/use-client/TaskGraphqlClient', () => ({
 }));
 
 const mockTasks = [
-  { id: 1, title: 'Test Task', detail: 'Details', completed: false }
+  { id: 1, title: 'Test Task', detail: 'Details', completed: false, created_at: "" }
 ];
 
 // Test component to expose the hook
@@ -23,7 +24,7 @@ describe('useTaskGraphQLViewModel', () => {
   let spyConsoleError: jest.SpyInstance<any, any>;
 
   beforeEach(() => {
-    // suppress console.error to reduce noise
+    // hide console.error to reduce noise on the console output
     spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
   });
 
@@ -71,7 +72,7 @@ describe('useTaskGraphQLViewModel', () => {
     await waitFor(() => {
       expect(viewModel.loading).toBe(false);
       
-      viewModel.createRow('New', 'New Detail');
+      viewModel.createRow(mockTasks, 'New', 'New Detail');
     });
 
     await waitFor(() => {
@@ -90,7 +91,7 @@ describe('useTaskGraphQLViewModel', () => {
     render(<TestComponent onRender={(vm) => (viewModel = vm)} />);
     await waitFor(() => { 
       expect(viewModel.loading).toBe(false)
-      viewModel.updateRowFromId(1, 'Updated', 'Details', true);
+      viewModel.updateRowFromId(mockTasks, 1, 'Updated', 'Details', true);
     });
   
     await waitFor(() => {

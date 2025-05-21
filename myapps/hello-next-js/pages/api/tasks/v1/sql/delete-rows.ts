@@ -11,23 +11,24 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
 
+/**
+ * @swagger
+ * /api/tasks/v1/sql/delete-rows:
+ *   post:
+ *     summary: delete all rows in the database 
+ *     tags:
+ *       - Tasks
+ *     responses:
+ *       200:
+ *         description: an empty array 
+ *       500:
+ *         description: database error
+ */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    await CHECK_API_KEY(req, res);
-    
+    const isAuthorized = await CHECK_API_KEY(req, res);
+    if (!isAuthorized) return res.status(401).json({ error: "Unauthorized access: invalid API key" });
+
     switch (req.method) {
-        /**
-         * @swagger
-         * /api/tasks/v1/sql/delete-rows:
-         *   post:
-         *     summary: delete all rows in the database 
-         *     tags:
-         *       - Tasks
-         *     responses:
-         *       200:
-         *         description: an empty array 
-         *       500:
-         *         description: database error
-         */
         // for the sake of demo, lets use POST instead of DELETE request type
         // to demonstrate its possible to use the POST request to send a DELETE request.
         case "POST" :

@@ -49,11 +49,9 @@ export const TASKS_API_HEADER = async () => {
 }; 
 
 // for reference: can only be called on server-side only
-export const CHECK_API_KEY = async (req: NextApiRequest, res: NextApiResponse) => {
+export const CHECK_API_KEY = async (req: NextApiRequest, _: NextApiResponse) => {
     const clientKey = req.headers["x-api-key"];
     const serverKey = await getInternalApiKey();
-  
-    if (clientKey !== serverKey) {
-      return res.status(401).json({ error: "Unauthorized access: invalid API key" });
-    }
+
+    return clientKey === serverKey; 
 }

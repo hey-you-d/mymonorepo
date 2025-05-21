@@ -110,8 +110,9 @@ export const config = {
 };
 
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
-    await CHECK_API_KEY(req, res);
-    
+    const isAuthorized = await CHECK_API_KEY(req, res);
+    if (!isAuthorized) return res.status(401).json({ error: "Unauthorized access: invalid API key" });
+
     await startServer;
 
     // set up graphql endpoint at /api/tasks/v1/sql/graphql
