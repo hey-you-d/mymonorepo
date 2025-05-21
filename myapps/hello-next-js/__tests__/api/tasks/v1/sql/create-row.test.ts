@@ -12,33 +12,12 @@ jest.mock('../../../../../src/lib/app/common', () => (
 ));
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createMocks } from 'node-mocks-http';
-import handler from '../../../../../pages/api/tasks/v1/sql';
+import handler from '../../../../../pages/api/tasks/v1/sql/create-row';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
+import { mockRequestResponse } from './index.test';
 
-// helper function to create mock request/response objects
-type ApiMethodType = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-export const mockRequestResponse = (method: ApiMethodType, body = {}, query = {}) => {
-    const { req, res } = createMocks(
-        {
-            method,
-            body,
-            query,
-        }
-    );
-
-    // add jest spy methods to track response methods
-    // for reference: mockReturnThis creates a mock function that returns the this context of the object
-    res.status = jest.fn().mockReturnThis();
-    res.json = jest.fn().mockReturnThis();
-    res.setHeader = jest.fn().mockReturnThis();
-    res.end = jest.fn().mockReturnThis();
-
-    return { req, res };
-};
-
-describe ("Tasks API handler - index.ts", () => {
+describe ("Tasks API handler - create-row.ts", () => {
     let spyConsoleError: jest.SpyInstance<any, any>;
     
     beforeEach(() => {
@@ -53,7 +32,10 @@ describe ("Tasks API handler - index.ts", () => {
             // Set up the CHECK_API_KEY mock to return success response
             (CHECK_API_KEY as jest.Mock).mockReturnValue(true);
       
-            const { req, res } = mockRequestResponse('GET', {}, { 'x-api-key': 'valid-key' });
+            const { req, res } = mockRequestResponse('POST', 
+                { title: 'New Task', detail: 'New Detail' }, 
+                { 'x-api-key': 'valid-key' }
+            );
       
             await handler(req as NextApiRequest, res as NextApiResponse);
       
@@ -80,56 +62,25 @@ describe ("Tasks API handler - index.ts", () => {
         });
     });
 
-    describe("GET request", () => {
-        it('should return tasks from the database', async () => {
-            const mockTasks = [
-                { id: 2, title: 'Task 2' },
-                { id: 1, title: 'Task 1' },
-            ];
-
-            // Set up the CHECK_API_KEY mock to return success response
-            (CHECK_API_KEY as jest.Mock).mockReturnValue(true);
-            
-            (db.query as jest.Mock).mockResolvedValueOnce({ rows: mockTasks });
-
-            const { req, res } = mockRequestResponse('GET', {}, { 'x-api-key': 'whatever' });
-            await handler(req as NextApiRequest, res as NextApiResponse);
-            
-            expect(db.query).toHaveBeenCalledWith('SELECT * FROM tasks ORDER BY id DESC');
-            expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith(mockTasks);
-        });
-
-        it('should handle database errors', async () => {
-            const dbError = new Error('Connection error');
-            (db.query as jest.Mock).mockRejectedValueOnce(dbError);
-            
-            const { req, res } = mockRequestResponse('GET', {}, { 'x-api-key': 'whatever' });
-                        
-            await handler(req, res);
-
-            expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
-        });
-    }); 
-
     describe("POST request", () => {
         it('should create a new task', async () => {
             // Set up the CHECK_API_KEY mock to return success response
             (CHECK_API_KEY as jest.Mock).mockReturnValue(true);
             
-            const newTask = { id: 3, title: 'New Task' };
+            const newTask = { id: 3, title: 'New Task', detail: 'New Detail' };
             (db.query as jest.Mock).mockResolvedValueOnce({ rows: [newTask] });
             
-            const { req, res } = mockRequestResponse('POST', { title: 'New Task' });
+            const { req, res } = mockRequestResponse('POST', 
+                { title: 'New Task', detail: 'New Detail' },
+                { 'x-api-key': 'valid-key' });
             await handler(req, res);
             
             expect(db.query).toHaveBeenCalledWith(
-                'INSERT INTO tasks (title) VALUES ($1) RETURNING *',
-                ['New Task']
+                'INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *',
+                ['New Task', 'New Detail']
             );
             expect(res.status).toHaveBeenCalledWith(201);
-            expect(res.json).toHaveBeenCalledWith(newTask);
+            expect(res.json).toHaveBeenCalledWith({ rows: [newTask] });
             });
 
         it('should handle database error', async () => {
@@ -137,7 +88,8 @@ describe ("Tasks API handler - index.ts", () => {
             (db.query as jest.Mock).mockRejectedValueOnce(dbError);
             
             const { req, res } = mockRequestResponse('POST', 
-                { 'title': 'whatever' }, { 'x-api-key': 'whatever' }
+                { title: 'whatever', detail: 'whatever' }, 
+                { 'x-api-key': 'whatever' }
             );
                         
             await handler(req, res);
@@ -159,7 +111,19 @@ describe ("Tasks API handler - index.ts", () => {
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Title is required' });
         });
+
+        it('should handle error 400 bad request', async () => {
+            const dbError = new Error('Connection error');
+            (db.query as jest.Mock).mockRejectedValueOnce(dbError);
+            
+            const { req, res } = mockRequestResponse('POST', 
+                { title: 'whatever' }, { 'x-api-key': 'whatever' }
+            );
+                        
+            await handler(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Detail is required' });
+        });
     });
 });
-
-

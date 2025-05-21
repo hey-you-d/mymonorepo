@@ -42,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "POST" :
             try {
-                const { title, detail } = req.body;
+                const { title, detail } : { title: string, detail: string } = req.body;
                 if (!title) return res.status(400).json({ error: 'Title is required' });
                 if (!detail) return res.status(400).json({ error: 'Detail is required' });    
                 const result = await db.query(
