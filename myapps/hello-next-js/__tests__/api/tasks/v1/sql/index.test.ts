@@ -19,14 +19,19 @@ import { CHECK_API_KEY } from '@/lib/app/common';
 
 // helper function to create mock request/response objects
 type ApiMethodType = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-export const mockRequestResponse = (method: ApiMethodType, body = {}, query = {}) => {
+export const mockRequestResponse = (method: ApiMethodType, body = {}, headers = {}, query?: {}) => {
     const { req, res } = createMocks(
         {
             method,
             body,
-            query,
+            headers,
         }
     );
+
+    if (query) {
+        // Add query parameters
+        req.query = query;
+    }
 
     // add jest spy methods to track response methods
     // for reference: mockReturnThis creates a mock function that returns the this context of the object
@@ -34,7 +39,8 @@ export const mockRequestResponse = (method: ApiMethodType, body = {}, query = {}
     res.json = jest.fn().mockReturnThis();
     res.setHeader = jest.fn().mockReturnThis();
     res.end = jest.fn().mockReturnThis();
-
+    res.send = jest.fn().mockReturnThis();
+    
     return { req, res };
 };
 
