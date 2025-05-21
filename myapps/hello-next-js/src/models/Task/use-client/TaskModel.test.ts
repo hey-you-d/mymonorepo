@@ -24,7 +24,7 @@ describe('TaskModel', () => {
   });
 
   beforeEach(() => {
-    // suppress console.error to reduce noise
+    // hide console.error to reduce noise on the console output
     spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
 
     taskModel = new TaskModel();

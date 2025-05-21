@@ -18,7 +18,7 @@ describe('useTaskViewModel', () => {
   let spyConsoleError: jest.SpyInstance<any, any>;
 
   beforeEach(() => {
-    // suppress console.error to reduce noise
+    // hide console.error to reduce noise on the console output
     spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
     // Create fresh mocks for each test
     mockGetTasksDBRows = jest.fn();
