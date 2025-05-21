@@ -88,8 +88,9 @@ import { CHECK_API_KEY } from '@/lib/app/common';
  *               $ref: '#/components/schemas/Task'
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    await CHECK_API_KEY(req, res);
-    
+    const isAuthorized = await CHECK_API_KEY(req, res);
+    if (!isAuthorized) return res.status(401).json({ error: "Unauthorized access: invalid API key" });
+
     const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
     const numericId = parseInt(id || '', 10);
     if (isNaN(numericId)) return res.status(400).json({ error: 'Invalid ID' });
