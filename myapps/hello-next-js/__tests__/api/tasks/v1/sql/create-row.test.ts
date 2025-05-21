@@ -11,11 +11,10 @@ jest.mock('../../../../../src/lib/app/common', () => (
     }
 ));
 
-import { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../../pages/api/tasks/v1/sql/create-row';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
-import { mockRequestResponse } from './index.test';
+import { mockRequestResponse, apiKeyAuthorizationTestSuite } from './index.test';
 
 describe ("Tasks API handler - create-row.ts", () => {
     let spyConsoleError: jest.SpyInstance<any, any>;
@@ -27,40 +26,7 @@ describe ("Tasks API handler - create-row.ts", () => {
         jest.clearAllMocks();
     });
 
-    describe("API Key Authorization", () => {
-        it("should call CHECK_API_KEY on request", async () => {
-            // Set up the CHECK_API_KEY mock to return success response
-            (CHECK_API_KEY as jest.Mock).mockReturnValue(true);
-      
-            const { req, res } = mockRequestResponse('POST', 
-                { title: 'New Task', detail: 'New Detail' }, 
-                { 'x-api-key': 'valid-key' }
-            );
-      
-            await handler(req as NextApiRequest, res as NextApiResponse);
-      
-            expect(CHECK_API_KEY).toHaveReturnedWith(true);
-            expect(CHECK_API_KEY).toHaveBeenCalledWith(req, res);
-
-            expect(db.query).toHaveBeenCalled();
-        });
-
-        it('should not proceed if CHECK_API_KEY fails', async () => {
-            // Configure the mock to simulate failed authentication
-            (CHECK_API_KEY as jest.Mock).mockReturnValue(false);
-            
-            const { req, res } = mockRequestResponse('GET', {}, { 'x-api-key': 'invalid-key' });
-            await handler(req as NextApiRequest, res as NextApiResponse);
-      
-            expect(CHECK_API_KEY).toHaveReturnedWith(false);
-            expect(CHECK_API_KEY).toHaveBeenCalledWith(req, res);
-            expect(res.status).toHaveBeenCalledWith(401);
-            expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized access: invalid API key" });
-      
-            // Database query should NOT be called if authentication fails
-            expect(db.query).not.toHaveBeenCalled();
-        });
-    });
+    apiKeyAuthorizationTestSuite();
 
     describe("POST request", () => {
         it('should create a new task', async () => {
@@ -84,6 +50,9 @@ describe ("Tasks API handler - create-row.ts", () => {
             });
 
         it('should handle database error', async () => {
+            // Set up the CHECK_API_KEY mock to return success response
+            (CHECK_API_KEY as jest.Mock).mockReturnValue(true);
+            
             const dbError = new Error('Connection error');
             (db.query as jest.Mock).mockRejectedValueOnce(dbError);
             
@@ -99,6 +68,9 @@ describe ("Tasks API handler - create-row.ts", () => {
         });
         
         it('should handle error 400 bad request', async () => {
+            // Set up the CHECK_API_KEY mock to return success response
+            (CHECK_API_KEY as jest.Mock).mockReturnValue(true);
+            
             const dbError = new Error('Connection error');
             (db.query as jest.Mock).mockRejectedValueOnce(dbError);
             
@@ -113,6 +85,9 @@ describe ("Tasks API handler - create-row.ts", () => {
         });
 
         it('should handle error 400 bad request', async () => {
+            // Set up the CHECK_API_KEY mock to return success response
+            (CHECK_API_KEY as jest.Mock).mockReturnValue(true);
+
             const dbError = new Error('Connection error');
             (db.query as jest.Mock).mockRejectedValueOnce(dbError);
             

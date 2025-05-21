@@ -99,7 +99,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case "GET" :
             try {
                 const getResult = await db.query('SELECT * FROM tasks WHERE id = $1', [numericId]);
-                if (!getResult.rows.length) return res.status(404).json({ error: 'Task not found' });
+                if (getResult.rows.length == 0) return res.status(404).json({ error: 'Task not found' });
                 
                 return res.status(200).json(getResult.rows[0]);
             } catch (err) {
@@ -113,7 +113,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     'UPDATE tasks SET title = $1, detail = $2, completed = $3 WHERE id = $4 RETURNING *',
                     [title, detail, completed, numericId]
                 );
-                if (!putResult.rows.length) return res.status(404).json({ error: 'Task not found' });
+                if (putResult.rows.length == 0) return res.status(404).json({ error: 'Task not found' });
                 
                 return res.status(200).json(putResult.rows[0]);
             } catch (err) {
@@ -123,7 +123,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case "DELETE" :
             try {
                 const delResult = await db.query('DELETE FROM tasks WHERE id = $1 RETURNING *', [numericId]);
-                if (!delResult.rows.length) return res.status(404).json({ error: 'Task not found' });
+                if (delResult.rows.length == 0) return res.status(404).json({ error: 'Task not found' });
                 
                 //return res.status(204).end();
                 return res.status(200).json(delResult.rows[0]);
