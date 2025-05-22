@@ -11,16 +11,26 @@ type TaskTableType = {
     row: Task,
     setTask: Dispatch<SetStateAction<Task | null>>, 
     deleteRowFromId: (id: number) => Promise<{ tasks: Task[] |  null }>,
+    buttonDisabled: boolean,
+    setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
 
-export const TaskDetail = ({ row, setTask, deleteRowFromId } : TaskTableType) => {
+export const TaskDetail = ({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
     const onClickHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
+        setButtonDisabled(true);
+        
         //const result = await deleteRowFromId(Number(row.id));
         await deleteRowFromId(Number(row.id));
         setTask(null);
+
+        setButtonDisabled(false);
     }
+
+    const renderButton = buttonDisabled 
+        ? <button type="button" disabled>Delete this record</button>
+        : <button type="button" onClick={(e) => onClickHandler(e)}>Delete this record</button>
 
     return (
         <>
@@ -28,7 +38,7 @@ export const TaskDetail = ({ row, setTask, deleteRowFromId } : TaskTableType) =>
             <p>title: {row.title}</p>
             <p>detail: {row.detail}</p>
             <p>completed? {row.completed ? "yes" : "no"}</p>
-            <div><button type="button" onClick={(e) => onClickHandler(e)}>Delete this record</button></div>
+            <div>{renderButton}</div>
         </>
     );    
 };

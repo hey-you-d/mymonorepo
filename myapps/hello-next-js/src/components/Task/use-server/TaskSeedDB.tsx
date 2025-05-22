@@ -12,21 +12,36 @@ type TaskSeedDBType = {
     setTasks: Dispatch<SetStateAction<Task[]>>, 
     seedTaskDB: () => Promise<{ tasks: Task[] }>,
     deleteAllRows: () => Promise<{ tasks: Task[]}>,
+    buttonDisabled: boolean,
+    setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
 
-export const TaskSeedDB = ({ tasks, setTasks, seedTaskDB, deleteAllRows } : TaskSeedDBType) => {
+export const TaskSeedDB = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled } : TaskSeedDBType) => {
     const onClickHandler = async (e: React.FormEvent) => {
-        e.preventDefault();  
+        e.preventDefault();
+        
+        setButtonDisabled(true);
+        
         const updatedTasks = tasks.length <= 0 ? await seedTaskDB() : await deleteAllRows();        
         setTasks(updatedTasks.tasks);
+        
+        setButtonDisabled(false);
     }
+
+    const renderButton: React.ReactElement = buttonDisabled ? (
+        <button type="button" disabled>
+            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+        </button>
+    ) : (
+        <button type="button" onClick={onClickHandler}>
+            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+        </button>
+    );
      
     return (
         <>
             <p>{`Currently, there are ${tasks.length} rows in the Tasks table.`}</p>
-            <button onClick={onClickHandler}>
-                {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-            </button>
+            {renderButton}
         </>
     );
 };

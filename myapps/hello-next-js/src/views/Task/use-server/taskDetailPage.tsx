@@ -11,6 +11,7 @@ import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 export const TaskDetailPage = ({id}: {id: number}) => {
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTask = async () => {
@@ -34,7 +35,13 @@ export const TaskDetailPage = ({id}: {id: number}) => {
   
   const body: React.ReactElement[] = [];
   body.push(task && task !== null
-    ? <TaskDetail row={task} setTask={setTask} deleteRowFromId={deleteRowFromId} /> 
+    ? <TaskDetail 
+          row={task} 
+          setTask={setTask} 
+          deleteRowFromId={deleteRowFromId} 
+          buttonDisabled={buttonDisabled}
+          setButtonDisabled={setButtonDisabled} 
+      /> 
     : <p>{`The record ${id} is no longer exist`}</p>);
   body.push(
     <div>

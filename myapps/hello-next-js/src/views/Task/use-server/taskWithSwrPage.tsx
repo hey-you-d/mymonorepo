@@ -21,6 +21,7 @@ export const TaskWithSwrPage = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [filterText, setFilterText] = useState("");
+    const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
     // Use SWR to automatically fetch tasks (no need to set up the tasks state, and loading state)
     const { data: swrData, error: swrError, isLoading: swrLoading } = useSWR<Task[]>("Tasks-API-USE-SWR", fetcher);
@@ -28,9 +29,11 @@ export const TaskWithSwrPage = () => {
     useEffect(() => {
         const fetchCachedTasks = async () => {
             setLoading(true);
+            setButtonDisabled(true);
             try {
                 if (swrData) {
                     setTasks(swrData);
+                    setButtonDisabled(false);
                 }
             } catch (err) {
                 console.error("Error fetching cached tasks:", err);
@@ -44,6 +47,10 @@ export const TaskWithSwrPage = () => {
             fetchCachedTasks();
         }
     }, [tasks, swrData, swrLoading, setTasks, setLoading]);
+
+    useEffect(() => {
+        setButtonDisabled(filterText.trim().length > 0);
+    }, [setButtonDisabled, filterText])
 
     const isFiltering = filterText.trim() !== "";
     const confirmedTasks = swrData && isFiltering
@@ -62,6 +69,8 @@ export const TaskWithSwrPage = () => {
             tasks={swrData }
             seedTaskDB={seedTasksDB}
             deleteAllRows={deleteAllRows}
+            buttonDisabled={buttonDisabled}
+            setButtonDisabled={setButtonDisabled}
         />
         <br />
         <span>Filter task description: </span>
@@ -78,6 +87,8 @@ export const TaskWithSwrPage = () => {
             tasks={confirmedTasks}
             createRow={createRow}
             updateRowFromId={updateRowFromId}
+            buttonDisabled={buttonDisabled}
+            setButtonDisabled={setButtonDisabled}
         />
         </>
     ) : (<></>);
