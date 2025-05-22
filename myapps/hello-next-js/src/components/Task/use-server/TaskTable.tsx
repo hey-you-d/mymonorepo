@@ -17,8 +17,8 @@ type TaskTableType = {
     setTasks: Dispatch<SetStateAction<Task[]>>, 
     createRow: (tasks: Task[], title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
     updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
-    buttonDisabled?: boolean,
-    setButtonDisabled?: Dispatch<SetStateAction<boolean>>,
+    buttonDisabled: boolean,
+    setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
 
 const isSafeInput = (str: string) => {
@@ -49,9 +49,8 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
             inputTitleRef.current.value.length > 0 && 
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
-                if (setButtonDisabled) {
-                    setButtonDisabled(true);
-                }
+                setButtonDisabled(true);
+                
                 
                 const result: { tasks: Task[] } = await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
 
@@ -60,9 +59,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
                 
                 setTasks(result.tasks);
                 
-                if (setButtonDisabled) {
-                    setButtonDisabled(false);
-                }
+                setButtonDisabled(false);
         } else {
             // TODO: visual indicator - e.g. red border styling
         }

@@ -12,21 +12,20 @@ type TaskSeedDBType = {
     setTasks: Dispatch<SetStateAction<Task[]>>, 
     seedTaskDB: () => Promise<{ tasks: Task[] }>,
     deleteAllRows: () => Promise<{ tasks: Task[]}>,
-    buttonDisabled?: boolean,
-    setButtonDisabled?: Dispatch<SetStateAction<boolean>>,
+    buttonDisabled: boolean,
+    setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
 
 export const TaskSeedDB = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled } : TaskSeedDBType) => {
     const onClickHandler = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (setButtonDisabled) {
-            setButtonDisabled(true);
-        }
+        
+        setButtonDisabled(true);
+        
         const updatedTasks = tasks.length <= 0 ? await seedTaskDB() : await deleteAllRows();        
         setTasks(updatedTasks.tasks);
-        if (setButtonDisabled) {
-            setButtonDisabled(false);
-        }
+        
+        setButtonDisabled(false);
     }
 
     const renderButton: React.ReactElement = buttonDisabled ? (
