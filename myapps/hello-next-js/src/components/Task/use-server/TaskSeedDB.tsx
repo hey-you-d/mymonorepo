@@ -29,11 +29,11 @@ export const TaskSeedDB = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonD
     }
 
     const renderButton: React.ReactElement = buttonDisabled ? (
-        <button onClick={onClickHandler} disabled>
+        <button type="button" disabled>
             {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
         </button>
     ) : (
-        <button onClick={onClickHandler}>
+        <button type="button" onClick={onClickHandler}>
             {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
         </button>
     );

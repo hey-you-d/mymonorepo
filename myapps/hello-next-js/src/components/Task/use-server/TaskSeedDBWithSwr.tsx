@@ -4,6 +4,7 @@
 
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
+import { Dispatch, SetStateAction } from 'react';
 import { mutate } from 'swr';
 import { Task } from '@/types/Task';
 
@@ -14,11 +15,15 @@ type TaskSeedDBType = {
     tasks: Task[],
     seedTaskDB: () => Promise<void>, // **
     deleteAllRows: () => Promise<void>, // **
+    buttonDisabled: boolean,
+    setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
 
-export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows } : TaskSeedDBType) => {
+export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled } : TaskSeedDBType) => {
     const onClickHandler = async (e: React.FormEvent) => {
         e.preventDefault();  
+
+        setButtonDisabled(true);
         
         if (tasks.length <= 0) {
             await seedTaskDB()
@@ -28,14 +33,24 @@ export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows } : TaskSee
         
         // Trigger client-side revalidation after server action completes
         mutate("Tasks-API-USE-SWR");
+
+        setButtonDisabled(false);
     }
+
+    const renderButton: React.ReactElement = buttonDisabled ? (
+        <button type="button" disabled>
+            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+        </button>
+    ) : (
+        <button type="button" onClick={onClickHandler}>
+            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+        </button>
+    );
      
     return (
         <>
             <p>{`Currently, there are ${tasks.length} rows in the Tasks table.`}</p>
-            <button onClick={onClickHandler}>
-                {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-            </button>
+            { renderButton }
         </>
     );
 };

@@ -13,6 +13,7 @@ import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 export const TaskDetailWithSwrPage = ({id}: {id: number}) => {
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
   // Use SWR to automatically fetch tasks (no need to set up the tasks state, and loading state)
   const { data: swrData, error: swrError, isLoading: swrLoading } = useSWR<Task[]>("Tasks-API-USE-SWR", fetcher);
@@ -45,7 +46,7 @@ export const TaskDetailWithSwrPage = ({id}: {id: number}) => {
   
   const body: React.ReactElement[] = [];
   body.push(task && task !== null
-    ? <TaskDetailWithSwr row={task} setTask={setTask} deleteRowFromId={deleteRowFromId} /> 
+    ? <TaskDetailWithSwr row={task} setTask={setTask} deleteRowFromId={deleteRowFromId} buttonDisabled={buttonDisabled} setButtonDisabled={setButtonDisabled} /> 
     : <p>{`The record ${id} is no longer exist`}</p>);
   body.push(
     <div>

@@ -51,7 +51,6 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
             isSafeInput(inputDetailRef.current.value)) {
                 setButtonDisabled(true);
                 
-                
                 const result: { tasks: Task[] } = await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
 
                 inputTitleRef.current.value = "";
@@ -111,7 +110,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
        const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
         const button = !isDisabled
             ? <button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button>
-            : <button disabled type="button">add</button>;
+            : <button type="button" disabled>add</button>;
 
         return ([
             <>
@@ -135,7 +134,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
                         <td>{tasks.length}</td>
                     </tr>
                     <tr key="add-row-disabled">
-                        {renderAddRowForm(buttonDisabled ? true : false)}
+                        {renderAddRowForm(buttonDisabled)}
                     </tr>
                 </>
             ];
@@ -150,7 +149,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
                     <td>0</td>
                 </tr>
                 <tr key="add-row-enabled">
-                    {renderAddRowForm(buttonDisabled ? true : true)}
+                    {renderAddRowForm(true)}
                 </tr>
             </>
         ];
