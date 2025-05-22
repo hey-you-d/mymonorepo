@@ -17,6 +17,8 @@ type TaskTableType = {
     setTasks: Dispatch<SetStateAction<Task[]>>, 
     createRow: (tasks: Task[], title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
     updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
+    buttonDisabled?: boolean,
+    setButtonDisabled?: Dispatch<SetStateAction<boolean>>,
 }
 
 const isSafeInput = (str: string) => {
@@ -26,7 +28,7 @@ const isSafeInput = (str: string) => {
     return regex.test(str);
 };
 
-export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : TaskTableType) => {
+export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
     const appRouter = useRouter();
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
@@ -47,12 +49,20 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
             inputTitleRef.current.value.length > 0 && 
             isSafeInput(inputTitleRef.current.value) &&
             isSafeInput(inputDetailRef.current.value)) {
+                if (setButtonDisabled) {
+                    setButtonDisabled(true);
+                }
+                
                 const result: { tasks: Task[] } = await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
 
                 inputTitleRef.current.value = "";
                 inputDetailRef.current.value = "";
                 
                 setTasks(result.tasks);
+                
+                if (setButtonDisabled) {
+                    setButtonDisabled(false);
+                }
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
@@ -67,8 +77,12 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
                 const checkbox = (
                     <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
                             onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />);
-                
-                const button = (<button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>);    
+                    
+                const button = buttonDisabled ? (
+                    <button type="button" disabled onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>        
+                ) : (
+                    <button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>
+                );    
 
                 output.push(
                     <tr key={aTask.id}>
@@ -96,14 +110,8 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
     }
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
-        const inputForTitle = !isDisabled
-            ? <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />
-            : <input type="text" placeholder="Title" defaultValue="" disabled></input>;
-
-        const inputForDetail = !isDisabled
-            ? <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />
-            : <input type="text" placeholder="Description" defaultValue="" disabled></input>;
-
+       const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
+       const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
         const button = !isDisabled
             ? <button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button>
             : <button disabled type="button">add</button>;
@@ -130,7 +138,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
                         <td>{tasks.length}</td>
                     </tr>
                     <tr key="add-row-disabled">
-                        {renderAddRowForm(false)}
+                        {renderAddRowForm(buttonDisabled ? true : false)}
                     </tr>
                 </>
             ];
@@ -145,7 +153,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId } : Task
                     <td>0</td>
                 </tr>
                 <tr key="add-row-enabled">
-                    {renderAddRowForm(true)}
+                    {renderAddRowForm(buttonDisabled ? true : true)}
                 </tr>
             </>
         ];

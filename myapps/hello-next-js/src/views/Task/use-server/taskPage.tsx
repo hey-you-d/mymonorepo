@@ -19,14 +19,17 @@ export const TaskPage = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [filterText, setFilterText] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
   // Fetch tasks on mount
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
+      setButtonDisabled(true);
       try {
         const { tasks } = await getTasksDBRows();
         setTasks(tasks);
+        setButtonDisabled(false);
       } catch (err) {
         console.error("Error fetching tasks:", err);
       } finally {
@@ -36,6 +39,10 @@ export const TaskPage = () => {
 
     fetchTasks();
   }, []); // run once only
+
+  useEffect(() => {
+    setButtonDisabled(filterText.trim().length > 0);
+  }, [setButtonDisabled, filterText]);
 
   const isFiltering = filterText.trim() !== "";
   const confirmedTasks = isFiltering
@@ -53,6 +60,8 @@ export const TaskPage = () => {
         setTasks={setTasks}
         seedTaskDB={seedTasksDB}
         deleteAllRows={deleteAllRows}
+        buttonDisabled={buttonDisabled}
+        setButtonDisabled={setButtonDisabled}
       />
       <br />
       <span>Filter task description: </span>
@@ -70,6 +79,8 @@ export const TaskPage = () => {
         setTasks={setTasks}
         createRow={createRow}
         updateRowFromId={updateRowFromId}
+        buttonDisabled={buttonDisabled}
+        setButtonDisabled={setButtonDisabled}
       />
     </>
   );
