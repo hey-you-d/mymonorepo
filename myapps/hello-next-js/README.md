@@ -128,7 +128,9 @@ yarn workspace hello-next-js start
     - Viewmodel component: reusing the default implementation
     - View component: [taskWithSearchFilterPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskWithSearchFilterPage.tsx)
 12. Frontend styling with Tailwind CSS **STATUS: TODO**
-13. (optional) A feature relying on an event-driven system using Apache Kafka - **STATUS: TODO**
+13. BFF <-> API communication protocol with RESTful API (API v1) - **STATUS: DONE**
+14. (optional) BFF <-> API communication protocol with gRPC (API v2) - **STATUS: TODO**
+15. (optional) BFF <-> API communication protocol with event-driven-system using Apache Kafka (API v3) - **STATUS: TODO**
 
 #### Remote site demo (Prod & Dev branches)
 - **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/task-crud-fullstack](https://www.yudimankwanmas.com/hello-next-js/task-crud-fullstack) 
