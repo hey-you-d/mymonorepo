@@ -19,7 +19,7 @@ type TaskTableWithSwrType = {
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
-type TaskTableType = TaskTableWithSwrType;
+export type TaskTableType = TaskTableWithSwrType;
 
 const isSafeInput = (str: string) => {
     // for reference: To prevent SQL injection attack
