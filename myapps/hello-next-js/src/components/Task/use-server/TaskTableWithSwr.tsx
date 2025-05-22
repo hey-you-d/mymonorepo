@@ -7,19 +7,19 @@
 import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
 import { mutate } from 'swr';
 import { useRouter } from 'next/navigation';
-import { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
- 
+import { Task } from "@/types/Task"; 
 
 // For reference: **
 // the viewmodel fn will call revalidateTag to refresh the tasks array instead of returning the updated tasks array
-type TaskTableType = {
+type TaskTableWithSwrType = {
     tasks: Task[],
     createRow: (title: string, detail: string)=> Promise<void>, // **
     updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void> // **
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
+type TaskTableType = TaskTableWithSwrType;
 
 const isSafeInput = (str: string) => {
     // for reference: To prevent SQL injection attack

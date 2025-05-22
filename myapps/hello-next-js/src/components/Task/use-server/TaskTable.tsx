@@ -12,7 +12,7 @@ import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 // for reference: 
 // ** ->: the viewmodel fn returns the promise of updated Tasks, not 
 // the promise of a single task (either a newly created one or newly updated one) 
-type TaskTableType = {
+type TaskTableDefaultType = {
     tasks: Task[],
     setTasks: Dispatch<SetStateAction<Task[]>>, 
     createRow: (tasks: Task[], title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
@@ -20,6 +20,7 @@ type TaskTableType = {
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
+export type TaskTableType = TaskTableDefaultType;
 
 const isSafeInput = (str: string) => {
     // for reference: To prevent SQL injection attack
