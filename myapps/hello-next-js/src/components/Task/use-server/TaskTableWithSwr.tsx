@@ -65,7 +65,7 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
-    }, [createRow]);
+    }, [createRow, setButtonDisabled]);
 
     const tBody = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
