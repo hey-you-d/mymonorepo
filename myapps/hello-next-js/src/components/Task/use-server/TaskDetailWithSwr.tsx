@@ -20,17 +20,21 @@ export const TaskDetailWithSwr = ({ row, setTask, deleteRowFromId, buttonDisable
     const onClickHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        setButtonDisabled(true);
-
-        //const result = await deleteRowFromId(Number(row.id));
-        await deleteRowFromId(Number(row.id));
-
-        // Trigger client-side revalidation after server action completes
-        mutate("Tasks-API-USE-SWR");
-
-        setTask(null);
-
-        setButtonDisabled(false);
+        try { 
+            setButtonDisabled(true);
+            
+            //const result = await deleteRowFromId(Number(row.id));
+            await deleteRowFromId(Number(row.id));
+            
+            // Trigger client-side revalidation after server action completes
+            mutate("Tasks-API-USE-SWR");
+            
+            setTask(null);
+    
+            setButtonDisabled(false);
+        } catch(e) {
+            throw new Error(`Delete row ${row.id} failed: ${e}`);
+        }
     }
 
     const renderButton = buttonDisabled 
