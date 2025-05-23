@@ -12,7 +12,7 @@ import { Task } from "@/types/Task";
 
 // For reference: **
 // the viewmodel fn will call revalidateTag to refresh the tasks array instead of returning the updated tasks array
-type TaskTableWithSwrType = {
+export type TaskTableWithSwrType = {
     tasks: Task[],
     createRow: (title: string, detail: string)=> Promise<void>, // **
     updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void> // **
