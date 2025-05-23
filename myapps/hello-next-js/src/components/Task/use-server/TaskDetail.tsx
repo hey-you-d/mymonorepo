@@ -21,11 +21,15 @@ export const TaskDetail = ({ row, setTask, deleteRowFromId, buttonDisabled, setB
 
         setButtonDisabled(true);
         
-        //const result = await deleteRowFromId(Number(row.id));
-        await deleteRowFromId(Number(row.id));
-        setTask(null);
-
-        setButtonDisabled(false);
+        try { 
+            //const result = await deleteRowFromId(Number(row.id));
+            await deleteRowFromId(Number(row.id));
+            setTask(null);
+    
+            setButtonDisabled(false);
+        } catch(e) {
+            throw new Error(`Delete row ${row.id} failed: ${e}`);
+        }
     }
 
     const renderButton = buttonDisabled 

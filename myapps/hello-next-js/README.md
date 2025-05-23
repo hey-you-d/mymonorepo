@@ -34,20 +34,21 @@ yarn workspace hello-next-js lint
 ### Tech Stacks:
 1. Backend framework: Next.JS ver.15 API 
 2. Frontend framework: Next.JS ver.15, and React.JS ver.9 + Typescript
-3. RDBMS: PostgreSQL DB
-4. Data Query Language: direct SQL and via Apollo GraphQL
-5. API Authentication: API Key & JWT-based auth
-6. Client-side Caching: Vercel SWR (for non-graphql) and Apollo Client in-Memory cache
-7. Server-side Caching: To be determined. 
-8. Documentation: Swagger API Doc.
-9. Unit Test: Jest Testing Framework.
+2. RDBMS: PostgreSQL DB
+3. Data Query Language: direct SQL and via Apollo GraphQL (Server & Client)
+4. Restful API Authentication: API-key x-api-key via http header & JWT-based auth
+5. Client-side Caching: Vercel SWR (for non-graphql) and Apollo Client in-Memory cache
+6. Server-side Caching: To be determined. 
+7. Documentation: Swagger API Doc.
+8. Unit Test: Jest Testing Framework.
+9. Frontend CSS Styling: Tailwind CSS
 
 #### Localhost demo
 ##### [Frontend layer - Client-side components variant - is served via Next.js Page router] 
 - **DEFAULT PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
 - **CACHED WITH VERCEL SWR PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)
-- **GRAPHQL DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
-- **CACHED GRAPHQL DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)
+- **GRAPHQL SERVER DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
+- **GRAPHQL CLIENT + SERVER DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)
 - **BFF ENDPOINT URL**: [http://localhost:3000/hello-next-js/api/tasks/v1/bff](http://localhost:3000/hello-next-js/api/tasks/v1/bff)
 ##### [Frontend layer - Server-side components variant - is served via Next.js App router]
 - **DEFAULT PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server)
@@ -128,18 +129,16 @@ yarn workspace hello-next-js start
     - Viewmodel component: reusing the default implementation
     - View component: [taskWithSearchFilterPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskWithSearchFilterPage.tsx)
 12. Frontend styling with Tailwind CSS **STATUS: TODO**
-13. (optional) A feature relying on an event-driven system using Apache Kafka - **STATUS: TODO**
+13. BFF <-> API communication protocol with RESTful API (API v1) - **STATUS: DONE**
+14. BFF <-> API communication protocol with gRPC (API v2) - **STATUS: TODO**
+15. BFF <-> API communication protocol with event-driven-system using Apache Kafka (API v3) - **STATUS: TODO**
 
 #### Remote site demo (Prod & Dev branches)
 - **Prod URL:** [https://www.yudimankwanmas.com/hello-next-js/task-crud-fullstack](https://www.yudimankwanmas.com/hello-next-js/task-crud-fullstack) 
 - **Dev URL:** [https://dev.yudimankwanmas.com/hello-next-js/task-crud-fullstack](https://dev.yudimankwanmas.com/hello-next-js/task-crud-fullstack)
 - **PROGRESS: NOT READY**
 Will commence after the localhost development is complete.
-Point of consideration for PROD build: 
-1. Determine the remote RDBMS (Candidate: AWS RDS or Supabase)
-2. Set CORS to expose the API for external use (e.g hello-react-js as the client)
-3. Rate limiting as a protection layer (redis based?). 
-4. Secure Networking (HTTPS + ALB).s
+Point of consideration for PROD build: Determine the remote RDBMS (Candidates: AWS RDS or Supabase)
 
 ### Step by step instruction to set up the localhost DB for the Tasks API demo
 1. For DEV env sql db, Use Docker - Quick, isolated, no OS clutter. To build & run postgres db from scratch (internet connection is needed) 

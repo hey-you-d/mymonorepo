@@ -1,12 +1,12 @@
-# MyMonorepo Side Project
+# MyMonorepo: Javascript based fullstack web app demo
 
 ## Objectives
 1. Explore cloud-based serverless deployment automation (CI/CD) with AWS Copilot (Fargate launch type), dockerized container for ECR, and CI/CD implementation with Github Action 
 **-- STATUS: FULFILLED**
-2. Explore the current-trend of microservice architecture, and backend / server-side API development with Node.JS (Next.JS) 
-**-- STATUS: WIP**
-3. Explore the current-trend of microservice architecture, and backend / server-side API development with non-Node.JS based framework (candidate: .NET Core) 
-**-- STATUS: TODO**   
+2. Demonstrate server-side (App Router) & client-side (Page Router) frontend development with Node.JS (Next.JS), React.JS & Backend to Frontend (BFF) **-- STATUS: IN PROGRESS**
+3. Demonstrate backend 2 backend API development with Node.JS (Next.JS) & RESTful API protocol **-- STATUS: FULFILLED**
+2. Explore backend 2 backend API development with Node.JS (Next.JS) & gRPC protocol **-- STATUS: TODO**
+2. Explore backend 2 backend API development with Node.JS (Next.JS) & Kafka event-driven-system **-- STATUS: TODO**
 
 ## Infrastructure
 ### Tech stacks
@@ -24,8 +24,8 @@ Setup instruction (localhost) & Work Progress Log: [README](https://github.com/h
 1. Backend framework: Next.JS ver.15 API 
 2. Frontend framework: Next.JS ver.15, and React.JS ver.9 + Typescript
 2. RDBMS: PostgreSQL DB
-3. Data Query Language: direct SQL and via Apollo GraphQL
-4. API Authentication: JWT-based auth
+3. Data Query Language: direct SQL and via Apollo GraphQL (Server & Client)
+4. Restful API Authentication: API-key x-api-key via http header & JWT-based auth
 5. Client-side Caching: Vercel SWR (for non-graphql) and Apollo Client in-Memory cache
 6. Server-side Caching: To be determined. 
 7. Documentation: Swagger API Doc.
