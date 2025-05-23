@@ -40,8 +40,7 @@ export const TaskDetailWithSwrPage = ({id}: {id: number}) => {
     }
   }, []); // run once only
 
-  if (loading) return <p>Loading...</p>;
-  if (swrLoading) return <p>from SWR - loading...</p>
+  if (loading || swrLoading) return <p>Loading...</p>;
   if (swrError) return <p>from SWR - error...</p>
   
   const body: React.ReactElement[] = [];

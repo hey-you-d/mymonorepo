@@ -8,15 +8,15 @@ import { Task } from "@/types/Task";
 import { Dispatch, SetStateAction, MouseEvent } from "react";
 import { mutate } from "swr";
 
-type TaskTableType = {
+export type TaskDetailWithSwrType = {
     row: Task,
     setTask: Dispatch<SetStateAction<Task | null>>, 
     deleteRowFromId: (id: number) => Promise<{ tasks: Task[] |  null }>,
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
-}
+};
 
-export const TaskDetailWithSwr = ({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
+export const TaskDetailWithSwr = ({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDisabled } : TaskDetailWithSwrType) => {
     const onClickHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
