@@ -11,7 +11,7 @@ import { Task } from '@/types/Task';
 
 // For reference: **
 // the viewmodel fn will call revalidateTag to refresh the tasks array instead of returning the updated tasks array
-type TaskSeedDBType = {
+export type TaskSeedDBType = {
     tasks: Task[],
     seedTaskDB: () => Promise<void>, // **
     deleteAllRows: () => Promise<void>, // **

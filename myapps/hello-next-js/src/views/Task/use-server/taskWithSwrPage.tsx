@@ -59,37 +59,36 @@ export const TaskWithSwrPage = () => {
         )
         : swrData ;
 
-    if (loading) return <p>Loading...</p>;
-    if (swrLoading) return <p>from SWR - loading...</p>
+    if (loading || swrLoading) return <p>Loading...</p>;
     if (swrError) return <p>from SWR - error...</p>
     
     return swrData  && confirmedTasks ? (
         <>
-        <TaskSeedDBWithSwr
-            tasks={swrData }
-            seedTaskDB={seedTasksDB}
-            deleteAllRows={deleteAllRows}
-            buttonDisabled={buttonDisabled}
-            setButtonDisabled={setButtonDisabled}
-        />
-        <br />
-        <span>Filter task description: </span>
-        <input
-            onChange={(e) => setFilterText(e.target.value)}
-            placeholder="Filter detail..."
-        />
-        <br />
-        <Link href={`${TASKS_CRUD}/use-server/`}>
-            Back to the default use-server Task Page
-        </Link>
-        <br />
-        <TaskTableWithSwr
-            tasks={confirmedTasks}
-            createRow={createRow}
-            updateRowFromId={updateRowFromId}
-            buttonDisabled={buttonDisabled}
-            setButtonDisabled={setButtonDisabled}
-        />
+            <TaskSeedDBWithSwr
+                tasks={swrData }
+                seedTaskDB={seedTasksDB}
+                deleteAllRows={deleteAllRows}
+                buttonDisabled={buttonDisabled}
+                setButtonDisabled={setButtonDisabled}
+            />
+            <br />
+            <span>Filter task description: </span>
+            <input
+                onChange={(e) => setFilterText(e.target.value)}
+                placeholder="Filter detail..."
+            />
+            <br />
+            <Link href={`${TASKS_CRUD}/use-server/`}>
+                Back to the default use-server Task Page
+            </Link>
+            <br />
+            <TaskTableWithSwr
+                tasks={confirmedTasks}
+                createRow={createRow}
+                updateRowFromId={updateRowFromId}
+                buttonDisabled={buttonDisabled}
+                setButtonDisabled={setButtonDisabled}
+            />
         </>
     ) : (<></>);
 };
