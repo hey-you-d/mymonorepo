@@ -69,7 +69,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             } catch (err) {
                 console.error("BFF graphql proxy error", err);  // Log detailed error
                 return res.status(500).json({ error: "BFF graphql proxy error" });
-            } 
+            }
+            
+            break;
         default:
             res.setHeader('Allow', ['POST']);
             res.status(405).end(`Method ${req.method} Not Allowed`);          
