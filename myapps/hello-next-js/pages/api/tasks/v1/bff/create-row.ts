@@ -6,9 +6,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "POST" :
             try {
-                const { title, detail } = req.body;
-                if (!title) return res.status(400).json({ error: 'BFF Error creating row - Title is required' });
-                if (!detail) return res.status(400).json({ error: 'BFF Error creating row - Detail is required' });  
+                const { title, detail } : { title: string, detail: string } = req.body;
+                if (!title || title.trim().length < 1) return res.status(400).json({ error: 'BFF Error creating row - Title is required' });
+                if (!detail || detail.trim().length < 1) return res.status(400).json({ error: 'BFF Error creating row - Detail is required' });  
 
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/create-row`, {
                     method: 'POST',
