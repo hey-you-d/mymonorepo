@@ -1,7 +1,6 @@
 // for reference:
 // The goal: to avoid exposing x-api-key to the frontend (via the client-side model component). 
 // Hence, implementing the "code-level" reverse-proxy approach (as opposed to the proper infra-based reverse-proxy). 
-// In essence, it's a BFF. 
 // /pages/api/tasks/v1/sql/   ← real API that talks to DB (protected by key)
 // /pages/api/tasks/v1/bff/   ← safe route for frontend to hit (calls tasks/v1/sql) - (TODO: protected behind user-login mechanism & JWT auth)
 
