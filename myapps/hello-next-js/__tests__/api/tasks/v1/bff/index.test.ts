@@ -1,6 +1,6 @@
 import handler from '../../../../../pages/api/tasks/v1/bff';
 import { createMocks, RequestMethod } from 'node-mocks-http';
-import { BASE_URL, TASKS_API_HEADER } from '@/lib/app/common';
+import { TASKS_API_HEADER } from '@/lib/app/common';
 
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({

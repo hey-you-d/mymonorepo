@@ -72,34 +72,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             } catch(err) {
                 console.error(`BFF delete row for id ${id} - server error`, err); // Log detailed error
                 return res.status(500).json({ error: `BFF delete row for id ${id} - server error` });
-            }
-        case "POST" :
-            try {
-                const { title, detail } = req.body;
-                if (!title) return res.status(400).json({ error: 'BFF Error creating row - Title is required' });
-                if (!detail) return res.status(400).json({ error: 'BFF Error creating row - Detail is required' });  
-
-                const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/create-row`, {
-                    method: 'POST',
-                    headers: await TASKS_API_HEADER(),
-                    body: JSON.stringify({
-                        title,
-                        detail
-                    }),
-                });
-
-                if (!response.ok) {
-                    console.error(`BFF Error creating row: ${response.status} - ${response.statusText}`);
-                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
-                    throw new Error(`BFF Error creating row: ${response.status} ${response.statusText}`);
-                }
-        
-                const result:Task[] = await response.json();
-    
-                return res.status(200).json(result);
-            } catch (err) {
-                console.error("BFF creating row - server error", err); // Log detailed error
-                return res.status(500).json({ error: "BFF creating row - server error" });
             } 
         default:
             res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);

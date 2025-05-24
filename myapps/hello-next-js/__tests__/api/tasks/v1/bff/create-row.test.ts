@@ -13,8 +13,7 @@ global.fetch = jest.fn();
 
 describe('/api/tasks/v1/bff/create-row handler', () => {
     const mockHeaders = { 'Content-Type': 'application/json', 'x-api-key': 'valid key' };
-    const mockTaskResponse = [{ id: 1, title: 'Test Task', detail: 'Test Detail', completed: false, created_at: "" }];
-
+    
     beforeEach(() => {
         jest.clearAllMocks();
         (TASKS_API_HEADER as jest.Mock).mockResolvedValue(mockHeaders);

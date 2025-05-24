@@ -22,8 +22,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
 
         // Setup default mock for TASKS_API_HEADER
         (TASKS_API_HEADER as jest.Mock).mockResolvedValue({
-        'Content-Type': 'application/json',
-        'x-api-key': 'valid key'
+            'Content-Type': 'application/json',
+            'x-api-key': 'valid key'
         });
     });
 
