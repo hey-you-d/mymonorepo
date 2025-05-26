@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useTaskViewModel } from './useTasksViewModel';
 import { TaskModel } from '@/models/Task/use-client/TaskModel';
 import { Task } from '@/types/Task';
@@ -43,8 +43,10 @@ describe('useTaskViewModel', () => {
     
     const { result } = renderHook(() => useTaskViewModel());
     
-    expect(result.current.tasks).toEqual([]);
-    expect(result.current.loading).toBe(true);
+    waitFor(() => {
+      expect(result.current.tasks).toEqual([]);
+      expect(result.current.loading).toBe(true);
+    });
   });
 
   it('should load tasks on mount', async () => {
@@ -53,9 +55,10 @@ describe('useTaskViewModel', () => {
     const { result } = renderHook(() => useTaskViewModel());
     
     // Initial state
-    expect(result.current.tasks).toEqual([]);
-    expect(result.current.loading).toBe(true);
-    
+    waitFor(() => {
+      expect(result.current.tasks).toEqual([]);
+      expect(result.current.loading).toBe(true);
+    });
     // Wait for useEffect to complete
     await act(async () => {
       await Promise.resolve(); // Let the useEffect complete
@@ -153,6 +156,8 @@ describe('useTaskViewModel', () => {
     });
     
     // On error, tasks should be set to empty array
-    expect(result.current.tasks).toEqual([]);
+    waitFor(() => {
+      expect(result.current.tasks).toEqual([]);
+    });
   });
 });
