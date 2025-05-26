@@ -55,6 +55,7 @@ export const TaskPage = () => {
    
   return (
     <>
+      <h2>Default example: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
       <TaskSeedDB
         tasks={tasks}
         setTasks={setTasks}

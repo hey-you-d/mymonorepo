@@ -4,13 +4,12 @@ import { useTaskViewModelWithSwr } from '@/viewModels/Task/use-client/useTasksVi
 import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
-import { TASKS_CRUD } from "@/lib/app/common";
-import Link from "next/link";
 
 export const TaskWithSWRPage = () => {
   const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();
 
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
   const filterInputRef = useRef<HTMLInputElement>(null); 
 
@@ -22,6 +21,10 @@ export const TaskWithSWRPage = () => {
     }
   }, [tasks, setFilteredTasks, isFiltering]);
 
+  useEffect(() => {
+    setButtonDisabled(filteredTasks.length != tasks?.length);
+  }, [setButtonDisabled, filteredTasks, tasks]);
+
   const confirmedTasks = isFiltering
     ? filteredTasks
     : tasks ?? [];
@@ -31,9 +34,11 @@ export const TaskWithSWRPage = () => {
 
     const value = filterInputRef.current?.value ?? "";
     if (tasks) {
+      setButtonDisabled(true);
       setFilteredTasks(
         tasks.filter(task => task.detail.toLowerCase().includes(value.toLowerCase()))
       );
+      setButtonDisabled(false);
     }
   };
 
@@ -44,7 +49,9 @@ export const TaskWithSWRPage = () => {
       filterInputRef.current.value = "";
     }
     if (tasks) {
+      setButtonDisabled(true);
       setFilteredTasks(tasks);
+      setButtonDisabled(false);
     }
   } 
 
@@ -52,16 +59,27 @@ export const TaskWithSWRPage = () => {
 
   return tasks ? (
     <>
-      <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
+      <h2>Frontend cached with Vercel SWR: MVVM client-side components rendered with Next.js App Router</h2>
+      <TaskSeedDB 
+        totalRows={tasks.length} 
+        seedTaskDB={seedTasksDB} 
+        deleteAllRows={deleteAllRows} 
+        buttonDisabled={buttonDisabled}
+        setButtonDisabled={setButtonDisabled}
+      />
       <br/>
       <br/>
       <span>filter task description: </span><input ref={filterInputRef} placeholder="Filter detail..." />
       <button type="button" onClick={searchHandler}>Filter</button>
       <button type="button" onClick={clearSearchHandler}>Clear</button> 
       <br/>
-      <Link href={`${TASKS_CRUD}/with-search-filter`}>Dynamic Filter example</Link>
-      <br/>
-      <TaskTable tasks={confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
+      <TaskTable 
+        tasks={confirmedTasks} 
+        createRow={createRow} 
+        updateRowFromId={updateRowFromId} 
+        buttonDisabled={buttonDisabled}
+        setButtonDisabled={setButtonDisabled}  
+      />
     </>
   ) : (<></>);
 };

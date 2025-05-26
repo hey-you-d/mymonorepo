@@ -3,7 +3,7 @@
 ## Objectives
 1. Explore cloud-based serverless deployment automation (CI/CD) with AWS Copilot (Fargate launch type), dockerized container for ECR, and CI/CD implementation with Github Action 
 **-- STATUS: FULFILLED**
-2. Demonstrate server-side (App Router) & client-side (Page Router) frontend development with Node.JS (Next.JS), React.JS & Backend to Frontend (BFF) **-- STATUS: IN PROGRESS**
+2. Demonstrate server-side (App Router) & client-side (Page Router) frontend development with Node.JS (Next.JS), React.JS & Backend to Frontend (BFF) **-- STATUS: ONGOING**
 3. Demonstrate backend 2 backend API development with Node.JS (Next.JS) & RESTful API protocol **-- STATUS: FULFILLED**
 2. Explore backend 2 backend API development with Node.JS (Next.JS) & gRPC protocol **-- STATUS: TODO**
 2. Explore backend 2 backend API development with Node.JS (Next.JS) & Kafka event-driven-system **-- STATUS: TODO**

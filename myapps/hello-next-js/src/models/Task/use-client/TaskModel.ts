@@ -177,6 +177,18 @@ export class TaskModel {
         const result = await response.json();
         
         return result.rows;
+        
+        /*
+        return [
+          {
+            id: 9999,
+            title: "fake title",
+            detail: "fake detail",
+            completed: false,
+            created_at: "",
+          }
+        ];
+        */
       } catch(error) {
         console.error("Error creating row: ", error );
 

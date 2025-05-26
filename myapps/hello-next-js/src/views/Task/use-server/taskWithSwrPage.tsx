@@ -64,6 +64,7 @@ export const TaskWithSwrPage = () => {
     
     return swrData  && confirmedTasks ? (
         <>
+            <h2>Frontend cached with Vercel SWR: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
             <TaskSeedDBWithSwr
                 tasks={swrData }
                 seedTaskDB={seedTasksDB}

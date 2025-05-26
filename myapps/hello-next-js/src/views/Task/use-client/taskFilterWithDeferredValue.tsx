@@ -1,9 +1,7 @@
 'use client';
-import { useState, useMemo, useDeferredValue } from 'react';
+import { useEffect, useState, useMemo, useDeferredValue } from 'react';
 import { TaskTableType } from '@/types/Task';
 import { TaskTable } from '@/components/Task/use-client/TaskTable';
-import { TASKS_CRUD } from '@/lib/app/common';
-import Link from "next/link";
 
 // dev note - use-case scenario of useDeferredValue:
 // Imagine you're running a live product search on an e-commerce site
@@ -18,10 +16,15 @@ import Link from "next/link";
 // Cancelability:	No explicit control	-vs- Fully controllable (timeout can be cleared)
 // Use case:	Optimizing rendering in concurrent React	-vs- Delaying function calls like API requests
 // Timing:	Not configurable — React decides -vs-	Configurable (setTimeout, e.g. 300ms debounce)
-export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId } : TaskTableType) => {
+export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
     const [search, setSearch] = useState("");
+    
     const deferredSearch = useDeferredValue(search);
     
+    useEffect(() => {
+        setButtonDisabled(search.trim().length > 0);
+    }, [setButtonDisabled, search]);
+
     const searchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       
@@ -39,13 +42,16 @@ export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId 
 
     return tasks ? (
         <>
-          <h2>optimise the search/filter with useDeferredValue</h2>
           <br/>
           <span>filter task description: </span><input value={search} onChange={searchHandler} placeholder="Filter detail..." />
           <br/>
-          <Link href={TASKS_CRUD}>button triggered Filter example</Link>
-          <br/>
-          <TaskTable tasks={filteredByDeferredValue} createRow={createRow} updateRowFromId={updateRowFromId} />
+          <TaskTable 
+            tasks={filteredByDeferredValue} 
+            createRow={createRow} 
+            updateRowFromId={updateRowFromId} 
+            buttonDisabled={buttonDisabled}
+            setButtonDisabled={setButtonDisabled} 
+          />
         </>
     ) : (<></>);
 };

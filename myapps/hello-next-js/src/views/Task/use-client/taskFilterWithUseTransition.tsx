@@ -17,7 +17,7 @@ import Link from "next/link";
 
 // resolution: 
 // save yourself from the potential headache, better rely on useDeferredValue
-export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId } : TaskTableType) => {
+export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
     // for reference: 
     // recall, react state updates are blocking
     // - react will process the state update immediately
@@ -59,7 +59,13 @@ export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId 
           <br/>
           <Link href={TASKS_CRUD}>button triggered Filter example</Link>
           <br/>
-          <TaskTable tasks={confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
+          <TaskTable 
+            tasks={confirmedTasks} 
+            createRow={createRow} 
+            updateRowFromId={updateRowFromId} 
+            buttonDisabled={buttonDisabled}
+            setButtonDisabled={setButtonDisabled} 
+          />
         </>
     ) : (<p>Is Pending...</p>);
 };

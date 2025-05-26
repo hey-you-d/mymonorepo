@@ -71,9 +71,12 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
             
             tasks.forEach(aTask => {
                 // for reference: make checkbox an uncontrolled react component
-                const checkbox = (
+                const checkbox = !buttonDisabled ? (
                     <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
-                            onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />);
+                            onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />
+                ) : (
+                    <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />
+                );
                     
                 const button = buttonDisabled ? (
                     <button type="button" disabled onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>        
