@@ -4,8 +4,6 @@ import { useTaskViewModelWithSwr } from '@/viewModels/Task/use-client/useTasksVi
 import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
-import { TASKS_CRUD } from "@/lib/app/common";
-import Link from "next/link";
 
 export const TaskWithSWRPage = () => {
   const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();
@@ -52,14 +50,13 @@ export const TaskWithSWRPage = () => {
 
   return tasks ? (
     <>
+      <h2>Frontend cached with Vercel SWR: MVVM client-side components rendered with Next.js App Router</h2>
       <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
       <br/>
       <br/>
       <span>filter task description: </span><input ref={filterInputRef} placeholder="Filter detail..." />
       <button type="button" onClick={searchHandler}>Filter</button>
       <button type="button" onClick={clearSearchHandler}>Clear</button> 
-      <br/>
-      <Link href={`${TASKS_CRUD}/with-search-filter`}>Dynamic Filter example</Link>
       <br/>
       <TaskTable tasks={confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
     </>

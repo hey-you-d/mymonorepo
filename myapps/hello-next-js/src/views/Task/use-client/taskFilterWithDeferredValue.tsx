@@ -39,8 +39,6 @@ export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId 
 
     return tasks ? (
         <>
-          <h2>optimise the search/filter with useDeferredValue</h2>
-          <br/>
           <span>filter task description: </span><input value={search} onChange={searchHandler} placeholder="Filter detail..." />
           <br/>
           <Link href={TASKS_CRUD}>button triggered Filter example</Link>

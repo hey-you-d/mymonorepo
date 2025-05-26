@@ -11,6 +11,7 @@ export const TaskGraphQLPage = () => {
 
     return tasks ? (
         <>
+            <h2>Data fetching & querying with Apollo Graphql Server</h2>
             <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTaskDB} deleteAllRows={deleteAllRows} />
             <TaskTable tasks={tasks} createRow={createRow} updateRowFromId={updateRowFromId} />
         </>

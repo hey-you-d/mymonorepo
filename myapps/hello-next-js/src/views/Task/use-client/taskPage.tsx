@@ -4,8 +4,6 @@ import { useTaskViewModel } from '@/viewModels/Task/use-client/useTasksViewModel
 import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
-import { TASKS_CRUD } from "@/lib/app/common";
-import Link from "next/link";
 
 export const TaskPage = () => {
   const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
@@ -33,15 +31,8 @@ export const TaskPage = () => {
 
   return tasks ? (
     <>
+      <h2>Default example: MVVM client-side components rendered with Next.js Page Router</h2>
       <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
-      <br/>
-      <br/>
-      <span>filter task description: </span><input onChange={(e) => setFilterText(e.target.value)} placeholder="Filter detail..." />
-      <br/>
-      <Link href={`${TASKS_CRUD}/with-swr`}>Cached With SWR example</Link>
-      <br/>
-      <Link href={`${TASKS_CRUD}/with-search-filter`}>Dynamic Filter example</Link>
-      <br />
       <TaskTable tasks={confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
     </>
   ) : (<></>);

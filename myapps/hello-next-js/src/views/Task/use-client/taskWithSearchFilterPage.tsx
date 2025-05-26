@@ -13,6 +13,7 @@ export const TaskWithSearchFilterPage = () => {
 
     return tasks ? (
         <>
+          <h2>Table filtering feature optimised with React hook useDeferredValue</h2>
           <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
           {featureFlag.withUseDeferredValue && 
             <TaskFilterWithDeferredValue tasks={tasks} createRow={createRow} updateRowFromId={updateRowFromId} />

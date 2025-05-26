@@ -30,7 +30,7 @@ export const useTaskViewModel = () => {
       setTasks(result);
     } catch (error) {
       console.error("Failed to delete tasks db rows:", error);
-      setTasks([]);
+      setTasks(tasks);
     } finally {
       setLoading(false);
     }
@@ -43,6 +43,7 @@ export const useTaskViewModel = () => {
       setTasks(result);
     } catch (error) {
       console.error("Failed to seed tasks db:", error);
+      setTasks([]);
     } finally {
       setLoading(false);
     }
@@ -55,6 +56,7 @@ export const useTaskViewModel = () => {
       setTasks(result);
     } catch (error) {
       console.error(`Failed to get row for id ${id}:`, error);
+      setTasks([]);
     } finally {
       setLoading(false);
     }
@@ -67,6 +69,7 @@ export const useTaskViewModel = () => {
       setTasks([result[0], ...tasks]);
     } catch (error) {
       console.error("Failed to create a new row in the db: ", error);
+      setTasks(tasks);
     } finally {
       setLoading(false);
     }
@@ -84,6 +87,7 @@ export const useTaskViewModel = () => {
       setTasks(updatedTasks);
     } catch (error) {
       console.error(`Failed to update row for id ${id}:`, error);
+      setTasks(tasks);
     } finally {
       setLoading(false);
     }
@@ -96,6 +100,7 @@ export const useTaskViewModel = () => {
       setTasks([]);
     } catch (error) {
       console.error(`Failed to delete row for id ${id}:`, error);
+      setTasks(tasks);
     } finally {
       setLoading(false);
     }
@@ -103,8 +108,11 @@ export const useTaskViewModel = () => {
   
   // CSR approach -> first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {
-    getTasksDBRows();
-  }, [getTasksDBRows]);
+    // only required to populate the data after inital page load (run once only)
+    if (tasks.length <= 0) {
+      getTasksDBRows();
+    }
+  }, [tasks, getTasksDBRows]);
   
   return {
     tasks,
