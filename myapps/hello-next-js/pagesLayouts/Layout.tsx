@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode } from 'react';
 import Link from 'next/link';
 import Footer from './Footer';
-import { TASKS_CRUD } from '@/lib/app/common';
+import { TASKS_CRUD, DOMAIN_URL } from '@/lib/app/common';
 
 const Layout = ({ children, title } : { children:ReactNode | ReactElement, title: string }) => {
     return (
@@ -22,6 +22,12 @@ const Layout = ({ children, title } : { children:ReactNode | ReactElement, title
                 <ul>
                     <li><Link href={`${TASKS_CRUD}/use-server`}>Default example page</Link></li>
                     <li><Link href={`${TASKS_CRUD}/use-server/with-swr`}>Cached With Vercel SWR example page</Link></li>
+                </ul>
+                <h3>[Backend layer]</h3>
+                <ul>
+                    <li><Link href={`${TASKS_CRUD}/swagger`}>Swagger Doc Page</Link></li>
+                    <li><Link href={`${DOMAIN_URL}/api/tasks/v1/sql`}>Tasks API Endpoints</Link></li>
+                    <li><Link href={`${DOMAIN_URL}/api/tasks/v1/bff`}>Tasks BFF Endpoints (used by the client-side Model component)</Link></li>
                 </ul>
                 <hr/>
                 {children}
