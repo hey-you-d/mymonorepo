@@ -69,9 +69,7 @@ export const useTaskViewModelWithSwr = () => {
     try {
       const result: Task[] = await taskModel.createRow(title, detail);
 
-      const updatedTasksDescOrder = [result[0], ...tasks].sort((a, b) => b.id - a.id);
-
-      mutate("Tasks-API", updatedTasksDescOrder, false);  // Update SWR cache
+      mutate("Tasks-API", [result[0], ...tasks], false);  // Update SWR cache
     } catch (error) {
       console.error("Failed to create a task:", error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
@@ -95,7 +93,6 @@ export const useTaskViewModelWithSwr = () => {
     }
   }, [taskModel]);
 
-  // TODO: REFACTOR
   // Function to delete a task and update SWR cache
   const deleteRowFromId = useCallback(async (id: number) => {
     try {

@@ -64,10 +64,7 @@ export const useTaskViewModel = () => {
     setLoading(true);
     try {
       const result: Task[] = await taskModel.createRow(title, detail);
-      
-      const updatedTasksDescOrder = [result[0], ...tasks].sort((a, b) => b.id - a.id);
-
-      setTasks(updatedTasksDescOrder);
+      setTasks([result[0], ...tasks]);
     } catch (error) {
       console.error("Failed to create a new row in the db: ", error);
     } finally {
