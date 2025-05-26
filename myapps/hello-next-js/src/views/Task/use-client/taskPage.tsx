@@ -8,12 +8,12 @@ import { Task } from "@/types/Task";
 export const TaskPage = () => {
   const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
 
-  const [filterText, setFilterText] = useState("");
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
+  //const [filterText, setFilterText] = useState("");
+  //const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
-  const isFiltering = filterText.trim() !== "";
-
+  //const isFiltering = filterText.trim() !== "";
+  /*
   useEffect(() => {
     if (tasks) {
       setFilteredTasks(
@@ -29,9 +29,9 @@ export const TaskPage = () => {
   useEffect(() => {
     setButtonDisabled(filterText.trim().length > 0);
   }, [setButtonDisabled, filterText]);
-
+  
   const confirmedTasks = isFiltering ? filteredTasks : tasks;
-
+  */
   if (loading) return <p>Loading...</p>;
 
   return tasks ? (
@@ -45,7 +45,7 @@ export const TaskPage = () => {
         setButtonDisabled={setButtonDisabled}
       />
       <TaskTable 
-        tasks={confirmedTasks} 
+        tasks={tasks} // confirmedTasks 
         createRow={createRow} 
         updateRowFromId={updateRowFromId} 
         buttonDisabled={buttonDisabled}

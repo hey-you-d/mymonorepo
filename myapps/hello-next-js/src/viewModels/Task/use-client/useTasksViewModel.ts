@@ -4,7 +4,7 @@ import { TaskModel } from '@/models/Task/use-client/TaskModel';
 import { Task } from '@/types/Task';
 
 export const useTaskViewModel = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[] | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   
   // Memoize userModel so it is created only once unless apiEndpoint changes
@@ -109,7 +109,7 @@ export const useTaskViewModel = () => {
   // CSR approach -> first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {
     // only required to populate the data after inital page load (run once only)
-    if (tasks.length <= 0) {
+    if (!tasks) {
       getTasksDBRows();
     }
   }, [tasks, getTasksDBRows]);
