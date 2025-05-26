@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export type Task = {
     id: number,
     title: string,
@@ -12,4 +14,6 @@ export type TaskTableType = {
     tasks: Task[], 
     createRow: (tasks: Task[], title: string, detail: string)=> Promise<void>,
     updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<void>
+    buttonDisabled: boolean,
+    setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }

@@ -10,6 +10,7 @@ export const TaskPage = () => {
 
   const [filterText, setFilterText] = useState("");
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
   const isFiltering = filterText.trim() !== "";
 
@@ -25,6 +26,10 @@ export const TaskPage = () => {
     }
   }, [tasks, setFilterText, isFiltering, filterText]);
 
+  useEffect(() => {
+    setButtonDisabled(filterText.trim().length > 0);
+  }, [setButtonDisabled, filterText]);
+
   const confirmedTasks = isFiltering ? filteredTasks : tasks;
 
   if (loading) return <p>Loading...</p>;
@@ -32,8 +37,20 @@ export const TaskPage = () => {
   return tasks ? (
     <>
       <h2>Default example: MVVM client-side components rendered with Next.js Page Router</h2>
-      <TaskSeedDB totalRows={tasks.length} seedTaskDB={seedTasksDB} deleteAllRows={deleteAllRows} />
-      <TaskTable tasks={confirmedTasks} createRow={createRow} updateRowFromId={updateRowFromId} />
+      <TaskSeedDB 
+        totalRows={tasks.length} 
+        seedTaskDB={seedTasksDB} 
+        deleteAllRows={deleteAllRows} 
+        buttonDisabled={buttonDisabled}
+        setButtonDisabled={setButtonDisabled}
+      />
+      <TaskTable 
+        tasks={confirmedTasks} 
+        createRow={createRow} 
+        updateRowFromId={updateRowFromId} 
+        buttonDisabled={buttonDisabled}
+        setButtonDisabled={setButtonDisabled}
+      />
     </>
   ) : (<></>);
 };
