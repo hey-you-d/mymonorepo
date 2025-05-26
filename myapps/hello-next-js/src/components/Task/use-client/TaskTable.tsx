@@ -2,7 +2,7 @@
 
 // for reference: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
+import { useState, useCallback, useRef, Dispatch, SetStateAction } from 'react';
 import { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
@@ -22,9 +22,9 @@ const isSafeInput = (str: string) => {
 };
 
 export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
-    const inputTitleRef = useRef<HTMLInputElement>(null);
-    const inputDetailRef = useRef<HTMLInputElement>(null);
-    
+    const [title, setTitle] = useState("");
+    const [detail, setDetail] = useState("");
+
     const chkBoxHandler = (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
     }
@@ -37,20 +37,17 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
-        if (inputTitleRef.current && inputDetailRef.current && 
-            inputTitleRef.current.value.length > 0 && 
-            inputDetailRef.current.value.length > 0 &&
-            isSafeInput(inputTitleRef.current.value) &&
-            isSafeInput(inputDetailRef.current.value)) {
-                setButtonDisabled(true);
-                await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
-                inputTitleRef.current.value = "";
-                inputDetailRef.current.value = "";
-                setButtonDisabled(false);                
+        
+        if (title.length > 0 && detail.length > 0 && isSafeInput(title) && isSafeInput(detail)) {
+            setButtonDisabled(true);
+            await createRow(tasks, title, detail);
+            setTitle("");
+            setDetail("");
+            setButtonDisabled(false);
         } else {
             // TODO: visual indicator - e.g. red border styling
-        }
-    }, [createRow, tasks]);
+        }    
+    }, [createRow, tasks, title, detail]);
 
     const tBody = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
@@ -97,6 +94,8 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
     }
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement => {
+        const inputTitle = <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />;
+        const inputDetail = <input type="text" placeholder="Description" value={detail} onChange={e => setDetail(e.target.value)} />;
         const button = !isDisabled
             ? <button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button>
             : <button type="button" disabled>add</button>;
@@ -104,17 +103,13 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
         return (
             <tr key="add-new-row">
                 <td>Add new task:</td>
-                <td>
-                    <input type="text" ref={inputTitleRef} placeholder="Title" />
-                </td>
-                <td>
-                    <input type="text" ref={inputDetailRef} placeholder="Description" />
-                </td>
+                <td>{inputTitle}</td>
+                <td>{inputDetail}</td>
                 <td></td>
                 <td>{button}</td>
             </tr>
         );
-    }, [addNewTodoHandler]);
+    }, [addNewTodoHandler, title, detail]);
 
     const tFooter = (): React.ReactElement => {
         if (Array.isArray(tasks) && tasks.length > 0) {
