@@ -2,14 +2,16 @@ import { ReactElement, ReactNode } from 'react';
 import Link from 'next/link';
 import Footer from './Footer';
 import { TASKS_CRUD, DOMAIN_URL } from '@/lib/app/common';
+import "@/app/globals.css";
+import styles from "@/app/page.module.css";
 
 const Layout = ({ children, title } : { children:ReactNode | ReactElement, title: string }) => {
     return (
-        <>
+        <section className={styles.page}>
             <header>
                 <h1>{title}</h1>
             </header>
-            <main>
+            <main className={styles.main}>
                 <h3>[Pure Client components MVVM variant example pages]</h3>
                 <ul>
                     <li><Link href={`${TASKS_CRUD}`}>Default example page</Link></li>    
@@ -33,7 +35,7 @@ const Layout = ({ children, title } : { children:ReactNode | ReactElement, title
                 {children}
             </main>
             <Footer />
-        </>
+        </section>
     );
 }
 
