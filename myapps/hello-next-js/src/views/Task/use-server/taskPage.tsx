@@ -71,10 +71,6 @@ export const TaskPage = () => {
         placeholder="Filter detail..."
       />
       <br />
-      <Link href={`${TASKS_CRUD}/use-server/with-swr`}>
-        Example - Frontend caching with SWR page
-      </Link>
-      <br />
       <TaskTable
         tasks={confirmedTasks}
         setTasks={setTasks}

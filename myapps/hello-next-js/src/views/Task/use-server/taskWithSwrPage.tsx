@@ -79,10 +79,6 @@ export const TaskWithSwrPage = () => {
                 placeholder="Filter detail..."
             />
             <br />
-            <Link href={`${TASKS_CRUD}/use-server/`}>
-                Back to the default use-server Task Page
-            </Link>
-            <br />
             <TaskTableWithSwr
                 tasks={confirmedTasks}
                 createRow={createRow}
