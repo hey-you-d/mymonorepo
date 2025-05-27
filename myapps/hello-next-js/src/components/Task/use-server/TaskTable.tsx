@@ -131,8 +131,6 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
 
     const tFooter = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
-            const output:React.ReactElement[] = [];
-            
             return [
                 <>
                     <tr key="some-total-rows">

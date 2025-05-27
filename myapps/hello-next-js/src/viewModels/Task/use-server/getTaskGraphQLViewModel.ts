@@ -66,9 +66,10 @@ export const deleteAllRows = async() => {
     `;
 
     try {
-        const data: { deleteTasks: Task[] }  = await fetchGraphQL(mutation);
         // for reference: instead of returning all deleted records, returns an empty array
+        //const data: { deleteTasks: Task[] }  = await fetchGraphQL(mutation);
         //return data.deleteTasks;
+        await fetchGraphQL(mutation);
         return [] as Task[];
     } catch (e) {
         if (e instanceof Error) {
