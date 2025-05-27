@@ -17,7 +17,6 @@ export const getTasksDBRows = async () => {
     
     try {
         const data: { tasks: Task[] } = await fetchGraphQL(query);
-        console.log("getTaskGraphQLViewModel | getTasksDBRows : ", data);
         return data.tasks;
     } catch (e) {
         if (e instanceof Error) {
@@ -42,8 +41,8 @@ export const createRow = async(_: Task[], title: string, detail: string) => {
 
     try {
         const variables = { title, detail };
-        const data = await fetchGraphQL(mutation, variables);
-        console.log("getTaskGraphQLViewModel | createRow : ", data);
+        const data: { createTask: Task } = await fetchGraphQL(mutation, variables);
+
         return data.createTask;
     } catch (e) {
         if (e instanceof Error) {
@@ -68,7 +67,6 @@ export const deleteAllRows = async() => {
 
     try {
         const data: { deleteTasks: Task[] }  = await fetchGraphQL(mutation);
-        console.log("getTaskGraphQLViewModel | deleteAllRows : ", data);
         // for reference: instead of returning all deleted records, returns an empty array
         //return data.deleteTasks;
         return [] as Task[];
@@ -95,7 +93,6 @@ export const seedTaskDB = async() => {
 
     try {
         const data: { seedTasks: Task[] } = await fetchGraphQL(mutation);        
-        console.log("getTaskGraphQLViewModel | seedTaskDB : ", data);
         return data.seedTasks;
     } catch (e) {
         if (e instanceof Error) {
@@ -120,8 +117,8 @@ export const updateRowFromId = async(_: Task[], id: number, title: string, detai
 
     try {
         const variables = { id, title, detail, completed };
-        const data = await fetchGraphQL(mutation, variables);
-        console.log("getTaskGraphQLViewModel | updateRowFromId : ", data);    
+        const data: { updateTask: Task } = await fetchGraphQL(mutation, variables);
+  
         return data.updateTask;
     } catch (e) {
         if (e instanceof Error) {

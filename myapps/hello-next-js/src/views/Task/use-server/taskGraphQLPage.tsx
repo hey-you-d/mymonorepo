@@ -10,7 +10,7 @@ import {
     seedTaskDB
 } from '@/viewModels/Task/use-server/getTaskGraphQLViewModel';
 import { TaskSeedDBGraphQL } from '@/components/Task/use-server/TaskSeedDBGraphQL';
-import { TaskTable } from '@/components/Task/use-server/TaskTable';
+import { TaskTableGraphQL } from '@/components/Task/use-server/TaskTableGraphQL';
 import { Task } from "@/types/Task";
 
 export const TaskGraphQLPage = () => {
@@ -55,7 +55,7 @@ export const TaskGraphQLPage = () => {
             buttonDisabled={buttonDisabled}
             setButtonDisabled={setButtonDisabled}
           />
-          <TaskTable
+          <TaskTableGraphQL
             tasks={tasks}
             setTasks={setTasks}
             createRow={createRow}

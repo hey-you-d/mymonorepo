@@ -23,7 +23,7 @@ export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, 
         setButtonDisabled(true);
         
         const updatedTasks = tasks.length <= 0 ? await seedTaskDB() : await deleteAllRows();        
-        console.log("TaskSeedDB updatedTasks ", updatedTasks);
+
         if (updatedTasks) {
             setTasks(updatedTasks);
         }

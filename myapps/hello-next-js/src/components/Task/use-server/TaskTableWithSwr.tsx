@@ -34,10 +34,12 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
     const chkBoxHandler = async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
+        setButtonDisabled(true);
         await updateRowFromId(id, title, detail, !isCurrentlySelected);
         
         // Trigger client-side revalidation after server action completes
         mutate("Tasks-API-USE-SWR");
+        setButtonDisabled(false);
     }
 
     const editTodoHandler = (e: React.MouseEvent, id: number) => {
