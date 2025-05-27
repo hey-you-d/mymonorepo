@@ -9,14 +9,11 @@ import { useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
-// for reference: 
-// ** ->: the viewmodel fn returns the promise of updated Tasks, not 
-// the promise of a single task (either a newly created one or newly updated one) 
 type TaskTableDefaultType = {
     tasks: Task[],
     setTasks: Dispatch<SetStateAction<Task[]>>, 
-    createRow: (tasks: Task[], title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
-    updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
+    createRow: (tasks: Task[], title: string, detail: string) => Promise<Task | undefined>, // !!! different return value from TaskSeedDBType
+    updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<Task | undefined>, // !!! different return value from TaskSeedDBType
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
@@ -29,15 +26,23 @@ const isSafeInput = (str: string) => {
     return regex.test(str);
 };
 
-export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
+export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
     const appRouter = useRouter();
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
     const chkBoxHandler = async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         setButtonDisabled(true);
-        const result: { tasks: Task[] } = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
-        setTasks(result.tasks);
+        const result = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
+        
+        if (result) {
+            // for reference: updateRowFromId returns an array containing the updated row, so we update the state with tasks instead
+            // to trigger re-render
+            const updatedTasks = tasks.map((item, index) => 
+                tasks[index].id === result.id ? result : item
+            );
+            setTasks(updatedTasks);
+        }
         setButtonDisabled(false);
     }
 
@@ -54,12 +59,16 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
             isSafeInput(inputDetailRef.current.value)) {
                 setButtonDisabled(true);
                 
-                const result: { tasks: Task[] } = await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
+                const result = await createRow(tasks, inputTitleRef.current.value, inputDetailRef.current.value);
 
                 inputTitleRef.current.value = "";
                 inputDetailRef.current.value = "";
                 
-                setTasks(result.tasks);
+                if (result) {
+                    // for reference: createRow returns an array of a newly created row, so we update the state with tasks instead
+                    // to trigger re-render
+                    setTasks([result,...tasks]);
+                }
                 
                 setButtonDisabled(false);
         } else {

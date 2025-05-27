@@ -1,3 +1,5 @@
+import { DOMAIN_URL } from '@/lib/app/common';
+
 describe('fetchGraphQL', () => {
   const mockApiHeader = {
     'Content-Type': 'application/json',
@@ -12,6 +14,7 @@ describe('fetchGraphQL', () => {
     jest.doMock('../../../lib/app/common', () => ({
       TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
       TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
+      DOMAIN_URL: 'http://localhost:3000',
     }));
 
     // Re-import AFTER mocks are in place
@@ -38,7 +41,7 @@ describe('fetchGraphQL', () => {
 
     const result = await fetchGraphQL(query, variables);
 
-    expect(fetch).toHaveBeenCalledWith('/api/tasks/v1/sql/graphql', {
+    expect(fetch).toHaveBeenCalledWith(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, {
       method: 'POST',
       headers: mockApiHeader,
       body: JSON.stringify({ query, variables }),
