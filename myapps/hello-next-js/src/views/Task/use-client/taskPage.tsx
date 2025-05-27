@@ -32,7 +32,10 @@ export const TaskPage = () => {
   
   const confirmedTasks = isFiltering ? filteredTasks : (tasks ? tasks : []);
   
-  if (loading) return <p>Loading...</p>;
+  // for reference: ideally, render a skeleton image, but for now comment out 
+  // the line below in order to visually demonstrate react component rehydration
+  // after clicking the add-row button 
+  //if (loading) return <p>Loading...</p>;
 
   return tasks ? (
     <>
