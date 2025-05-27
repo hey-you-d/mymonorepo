@@ -117,7 +117,7 @@ yarn workspace hello-next-js start
     - [Server-side components variant - is served via Next.js App router] **STATUS: DONE**
         - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/graphql)
         - Model component: [TaskGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-server/TaskGraphqlClient.ts)
-        - Viewmodel component: [getTasksGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksGraphQLViewModel.ts)
+        - Viewmodel component: [getTaskGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTaskGraphQLViewModel.ts)
         - View component: [taskGraphQLPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskGraphQLPage.tsx)
 10. Frontend feature: Alternative GraphQL implementation with Apollo Client (with in-memory cache enabled) **STATUS: DONE**
     - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)  
