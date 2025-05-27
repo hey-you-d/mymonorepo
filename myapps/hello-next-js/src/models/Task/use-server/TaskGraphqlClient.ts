@@ -1,5 +1,6 @@
 "use server"
 import { TASKS_API_HEADER } from "@/lib/app/common";
+import { DOMAIN_URL } from "@/lib/app/common";
 
 export async function fetchGraphQL(query: string, variables?: Record<string, unknown>) {
     // for reference:
@@ -12,7 +13,7 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
     // SSR: 'http://localhost:3000/api/tasks/v1/sql/graphql'
     // CSR: '/api/tasks/v1/sql/graphql'
     // note: can't be prepended with "/hello-next-js/" 
-    const res = await fetch(`/api/tasks/v1/sql/graphql`, {
+    const res = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, {
         method: 'POST',
         headers: await TASKS_API_HEADER(),
         body: JSON.stringify({ query, variables }),

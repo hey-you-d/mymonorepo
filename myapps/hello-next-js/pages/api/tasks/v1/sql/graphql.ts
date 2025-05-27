@@ -2,6 +2,7 @@ import { ApolloServer, gql } from 'apollo-server-micro';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { Task } from "@/types/Task";
+import { DOMAIN_URL } from '@/lib/app/common';
 import { values, placeholders } from "./seed-table";
 import { CHECK_API_KEY } from '@/lib/app/common';
 
