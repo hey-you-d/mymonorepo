@@ -34,7 +34,7 @@ export const useTaskViewModel = () => {
     } finally {
       setLoading(false);
     }
-  }, [taskModel]);
+  }, [taskModel, tasks]);
   
   const seedTasksDB = useCallback(async () => {
     setLoading(true);
@@ -104,7 +104,7 @@ export const useTaskViewModel = () => {
     } finally {
       setLoading(false);
     }
-  }, [taskModel]);
+  }, [taskModel, tasks]);
   
   // CSR approach -> first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {

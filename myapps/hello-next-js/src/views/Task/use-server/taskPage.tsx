@@ -12,8 +12,6 @@ import {
 import { TaskSeedDB } from '@/components/Task/use-server/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-server/TaskTable';
 import { Task } from "@/types/Task";
-import { TASKS_CRUD } from "@/lib/app/common";
-import Link from "next/link";
 
 export const TaskPage = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -70,10 +68,6 @@ export const TaskPage = () => {
         onChange={(e) => setFilterText(e.target.value)}
         placeholder="Filter detail..."
       />
-      <br />
-      <Link href={`${TASKS_CRUD}/use-server/with-swr`}>
-        Example - Frontend caching with SWR page
-      </Link>
       <br />
       <TaskTable
         tasks={confirmedTasks}

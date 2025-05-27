@@ -299,18 +299,6 @@ describe('TaskPage Component', () => {
             expect(screen.getByTestId('create-task-button')).toBeInTheDocument();
             expect(screen.getByText('3 tasks')).toBeInTheDocument();
         });
-
-        it('renders SWR link with correct href', async () => {
-            render(<TaskPage />);
-            
-            await waitFor(() => {
-                expect(screen.getByTestId('swr-link')).toBeInTheDocument();
-            });
-            
-            const link = screen.getByTestId('swr-link');
-            expect(link).toHaveAttribute('href', '/tasks-crud/use-server/with-swr');
-            expect(link).toHaveTextContent('Example - Frontend caching with SWR page');
-        });
     });
 
     describe('State Management', () => {

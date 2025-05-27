@@ -13,8 +13,6 @@ import { TaskSeedDBWithSwr } from '@/components/Task/use-server/TaskSeedDBWithSw
 import { TaskTableWithSwr } from '@/components/Task/use-server/TaskTableWithSwr';
 import { Task } from "@/types/Task";
 import useSWR from 'swr';
-import { TASKS_CRUD } from "@/lib/app/common";
-import Link from "next/link";
 import { strictDeepEqual } from 'fast-equals';
 
 export const TaskWithSwrPage = () => {
@@ -78,10 +76,6 @@ export const TaskWithSwrPage = () => {
                 onChange={(e) => setFilterText(e.target.value)}
                 placeholder="Filter detail..."
             />
-            <br />
-            <Link href={`${TASKS_CRUD}/use-server/`}>
-                Back to the default use-server Task Page
-            </Link>
             <br />
             <TaskTableWithSwr
                 tasks={confirmedTasks}

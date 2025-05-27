@@ -2,7 +2,7 @@
 
 // for reference: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { useState, useCallback, useRef, Dispatch, SetStateAction } from 'react';
+import { useState, useCallback, Dispatch, SetStateAction } from 'react';
 import { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
@@ -47,7 +47,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
         } else {
             // TODO: visual indicator - e.g. red border styling
         }    
-    }, [createRow, tasks, title, detail]);
+    }, [createRow, tasks, title, detail, setButtonDisabled]);
 
     const tBody = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
