@@ -146,15 +146,6 @@ describe('TaskWithSwrPage', () => {
                 expect(screen.getByText('Update user interface')).toBeInTheDocument();
             });
         });
-
-        it('renders navigation link correctly', async () => {
-            render(<TaskWithSwrPage />);
-            
-            await waitFor(() => {
-                const link = screen.getByText('Back to the default use-server Task Page');
-                expect(link.closest('a')).toHaveAttribute('href', '/tasks-crud/use-server/');
-            });
-        });
     });
 
     describe('Filtering Functionality', () => {

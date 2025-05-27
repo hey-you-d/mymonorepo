@@ -13,8 +13,6 @@ import { TaskSeedDBWithSwr } from '@/components/Task/use-server/TaskSeedDBWithSw
 import { TaskTableWithSwr } from '@/components/Task/use-server/TaskTableWithSwr';
 import { Task } from "@/types/Task";
 import useSWR from 'swr';
-import { TASKS_CRUD } from "@/lib/app/common";
-import Link from "next/link";
 import { strictDeepEqual } from 'fast-equals';
 
 export const TaskWithSwrPage = () => {

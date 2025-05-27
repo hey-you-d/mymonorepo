@@ -12,8 +12,6 @@ import {
 import { TaskSeedDB } from '@/components/Task/use-server/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-server/TaskTable';
 import { Task } from "@/types/Task";
-import { TASKS_CRUD } from "@/lib/app/common";
-import Link from "next/link";
 
 export const TaskPage = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

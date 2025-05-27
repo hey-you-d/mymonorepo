@@ -6,7 +6,7 @@ import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
 
 export const TaskPage = () => {
-  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
+  const { tasks, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
 
   const [filterText, setFilterText] = useState("");
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
