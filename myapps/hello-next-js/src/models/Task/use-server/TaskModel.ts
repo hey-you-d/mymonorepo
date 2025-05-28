@@ -19,7 +19,8 @@ export const swrFetcher = async (): Promise<Task[]> => {
       return result;
   } catch(error) {
       console.error("Error fetching all rows: ", error );
-      throw error; // Important: propagate error to SWR
+      
+      throw error;
   }
 }
 
