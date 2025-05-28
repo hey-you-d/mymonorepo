@@ -152,7 +152,7 @@ describe('TaskDetailPage', () => {
                     buttonDisabled: false,
                     setButtonDisabled: expect.any(Function),
                 }), undefined
-                // react context is undefined instead of {} because we mock the component with jest.fn() hence 
+                // for reference: react context is undefined instead of {} because we mock the component with jest.fn() hence 
                 // no context passed 
             );
         });
