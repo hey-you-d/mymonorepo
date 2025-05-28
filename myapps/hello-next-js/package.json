@@ -58,7 +58,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "node-mocks-http": "^1.17.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "whatwg-fetch": "^3.6.20"
   },
   "scarfSettings": {
     "enabled": false
