@@ -4,7 +4,7 @@
 1. Explore cloud-based serverless deployment automation (CI/CD) with AWS Copilot (Fargate launch type), dockerized container for ECR, and CI/CD implementation with Github Action 
 **-- STATUS: FULFILLED**
 2. Demonstrate server-side (App Router) & client-side (Page Router) frontend development with Node.JS (Next.JS), React.JS & Backend to Frontend (BFF) **-- STATUS: FULFILLED**
-3. Demonstrate knowledge in various Frontend features (data querying with graphQL, user register/login, JWT auth,  client-side caching, unit testing with Jest, styling with Tailwind CSS, etc.) **-- STATUS: ONGOING**
+3. Demonstrate knowledge of various Frontend features (data querying with graphQL, user register/login, JWT auth,  client-side caching, unit testing with Jest, styling with Tailwind CSS, etc.) **-- STATUS: ONGOING**
 4. Demonstrate backend 2 backend API development with Node.JS (Next.JS) & RESTful API protocol **-- STATUS: FULFILLED**
 5. Explore backend 2 backend API development with Node.JS (Next.JS) & gRPC protocol **-- STATUS: TODO**
 6. Explore backend 2 backend API development with Node.JS (Next.JS) & Kafka event-driven-system **-- STATUS: TODO**
