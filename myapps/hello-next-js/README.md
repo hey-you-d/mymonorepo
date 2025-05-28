@@ -46,7 +46,7 @@ yarn workspace hello-next-js lint
 #### Localhost demo
 ##### [Frontend layer - Client-side components variant - is served via Next.js Page router] 
 - **DEFAULT PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
-- **CACHED WITH VERCEL SWR PAGE (leverage Page router's getServerSideProps):** [http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)
+- **CACHED WITH VERCEL SWR PAGE (leveraging Page router's getServerSideProps):** [http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)
 - **GRAPHQL SERVER DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
 - **GRAPHQL CLIENT + SERVER DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)
 - **Optimised filtering feature with React's useDeferredValue:** [http://localhost:3000/hello-next-js/task-crud-fullstack/with-search-filter](http://localhost:3000/hello-next-js/task-crud-fullstack/with-search-filter)
