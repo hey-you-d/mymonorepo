@@ -19,10 +19,8 @@ export const getTasksDBRows = async () => {
         const data: { tasks: Task[] } = await fetchGraphQL(query);
         return data.tasks;
     } catch (e) {
-        if (e instanceof Error) {
-            console.error("getTaskGraphQLViewModel | Failed to fetch tasks db rows:", e?.message);
-            throw e;
-        }
+        console.error("getTaskGraphQLViewModel | Failed to fetch tasks db rows:", e);
+        throw e;
     }
 };
 
@@ -45,10 +43,8 @@ export const createRow = async(_: Task[], title: string, detail: string) => {
 
         return data.createTask;
     } catch (e) {
-        if (e instanceof Error) {
-            console.error("getTaskGraphQLViewModel | Failed to create a new row:", e?.message);
-            throw e;
-        }
+        console.error("getTaskGraphQLViewModel | Failed to create a new row:", e);
+        throw e;
     }
 }
 
@@ -72,10 +68,8 @@ export const deleteAllRows = async() => {
         await fetchGraphQL(mutation);
         return [] as Task[];
     } catch (e) {
-        if (e instanceof Error) {
-            console.error("getTaskGraphQLViewModel | Failed to delete all rows:", e?.message);
-            throw e;
-        }
+        console.error("getTaskGraphQLViewModel | Failed to delete all rows:", e);
+        throw e;
     }
 }
 
@@ -96,10 +90,8 @@ export const seedTaskDB = async() => {
         const data: { seedTasks: Task[] } = await fetchGraphQL(mutation);        
         return data.seedTasks;
     } catch (e) {
-        if (e instanceof Error) {
-            console.error("getTaskGraphQLViewModel | Failed to seed db table:", e?.message);
-            throw e;
-        }
+        console.error("getTaskGraphQLViewModel | Failed to seed db table:", e);
+        throw e;
     }
 }
 
@@ -122,9 +114,7 @@ export const updateRowFromId = async(_: Task[], id: number, title: string, detai
   
         return data.updateTask;
     } catch (e) {
-        if (e instanceof Error) {
-            console.error(`getTaskGraphQLViewModel | Failed update row with id ${id}:`, e?.message);
-            throw e;
-        }
+        console.error(`getTaskGraphQLViewModel | Failed update row with id ${id}:`, e);
+        throw e;
     }
 }

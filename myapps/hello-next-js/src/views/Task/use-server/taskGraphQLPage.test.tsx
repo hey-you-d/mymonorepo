@@ -179,8 +179,7 @@ describe('TaskGraphQLPage', () => {
         });
     });
     describe('Error Handling', () => {
-      // !! ATTENTION !!
-      it.skip('logs error message when getTasksDBRows fails', async () => {
+      it('logs error message when getTasksDBRows fails', async () => {
           const errorMessage = 'Failed to connect to database';
           const mockError = new Error(errorMessage);
           (getTasksDBRows as jest.Mock).mockRejectedValue(mockError);
@@ -188,23 +187,17 @@ describe('TaskGraphQLPage', () => {
           // The component throws the error, so we need to catch it
           const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-          try {
-              render(<TaskGraphQLPage />);
-              await waitFor(() => {
-                  expect(consoleSpy).toHaveBeenCalledWith(
-                      'taskGraphQLPage | Failed to fetch tasks db rows:',
-                      errorMessage
-                  );
-              });
-          } catch (error) {
-              // Expected to throw
-              expect(error).toBe(mockError);
-          }
+          render(<TaskGraphQLPage />);
+          await waitFor(() => {
+              expect(consoleSpy).toHaveBeenCalledWith(
+                  'taskGraphQLPage | Failed to fetch tasks db rows:',
+                  errorMessage
+              );
+          });          
 
           consoleSpy.mockRestore();
       });
-      // !! ATTENTION !!
-      it.skip('sets loading to false even when error occurs', async () => {
+      it('sets loading to false even when error occurs', async () => {
           const mockError = new Error('Database error');
           (getTasksDBRows as jest.Mock).mockRejectedValue(mockError);
 

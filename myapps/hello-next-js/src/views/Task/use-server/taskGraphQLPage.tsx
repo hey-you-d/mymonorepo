@@ -32,7 +32,6 @@ export const TaskGraphQLPage = () => {
             } catch (e) {
                 if (e instanceof Error) {
                     console.error("taskGraphQLPage | Failed to fetch tasks db rows:", e?.message);
-                    throw e;
                 }
             } finally {
                 setLoading(false);
