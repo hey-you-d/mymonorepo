@@ -3,10 +3,11 @@
 ## Objectives
 1. Explore cloud-based serverless deployment automation (CI/CD) with AWS Copilot (Fargate launch type), dockerized container for ECR, and CI/CD implementation with Github Action 
 **-- STATUS: FULFILLED**
-2. Demonstrate server-side (App Router) & client-side (Page Router) frontend development with Node.JS (Next.JS), React.JS & Backend to Frontend (BFF) **-- STATUS: ONGOING**
-3. Demonstrate backend 2 backend API development with Node.JS (Next.JS) & RESTful API protocol **-- STATUS: FULFILLED**
-2. Explore backend 2 backend API development with Node.JS (Next.JS) & gRPC protocol **-- STATUS: TODO**
-2. Explore backend 2 backend API development with Node.JS (Next.JS) & Kafka event-driven-system **-- STATUS: TODO**
+2. Demonstrate server-side (App Router) & client-side (Page Router) frontend development with Node.JS (Next.JS), React.JS & Backend to Frontend (BFF) **-- STATUS: FULFILLED**
+3. Demonstrate knowledge of various Frontend features (data querying with graphQL, user register/login, authentication & authorization with JWT,  client-side caching, unit testing with Jest, styling with Tailwind CSS, etc.) **-- STATUS: ONGOING**
+4. Demonstrate backend 2 backend API development with Node.JS (Next.JS) & RESTful API protocol **-- STATUS: FULFILLED**
+5. Explore backend 2 backend API development with Node.JS (Next.JS) & gRPC protocol **-- STATUS: TODO**
+6. Explore backend 2 backend API development with Node.JS (Next.JS) & Kafka event-driven-system **-- STATUS: TODO**
 
 ## Infrastructure
 ### Tech stacks
@@ -15,7 +16,6 @@
 3. CDN Service with AWS Cloudfront
 4. DNS with Cloudflare
 6. CI/CD implementation with Github Action
-7. Demo front-end pages/projects (as part of the monorepo setup): Next.js, React.js with Vite, React.js with CRA 
 
 ## FullStack CRUD Demo with Next.js and React.js
 Setup instruction (localhost) & Work Progress Log: [README](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md)
