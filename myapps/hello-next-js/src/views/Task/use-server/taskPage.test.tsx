@@ -5,6 +5,12 @@ import userEvent from '@testing-library/user-event';
 import { TaskPage } from './taskPage';
 import { Task } from "@/types/Task";
 
+const mockTasks: Task[] = [
+    { id: 1, title: 'title 1', detail: 'Complete project documentation', completed: true, created_at: "" },
+    { id: 2, title: 'title 2', detail: 'Review code changes', completed: true, created_at: "" },
+    { id: 3, title: 'title 3', detail: 'Update test cases', completed: true, created_at: "" }
+];
+
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
     useRouter: jest.fn(),
@@ -37,7 +43,9 @@ jest.mock('../../../components/Task/use-server/TaskSeedDB', () => ({
         disabled={buttonDisabled}
         onClick={() => {
           setButtonDisabled(true);
-          seedTaskDB().then(() => setButtonDisabled(false));
+          seedTaskDB().then(() => {
+            setButtonDisabled(false)
+          });
         }}
       >
         Seed DB
@@ -48,7 +56,7 @@ jest.mock('../../../components/Task/use-server/TaskSeedDB', () => ({
         onClick={() => {
           setButtonDisabled(true);
           deleteAllRows().then(() => {
-            setTasks([]);
+            //setTasks([]);
             setButtonDisabled(false);
           });
         }}
@@ -97,12 +105,6 @@ import {
 } from '@/viewModels/Task/use-server/getTasksViewModel';
 
 describe('TaskPage Component', () => {
-    const mockTasks = [
-        { id: 1, detail: 'Complete project documentation' },
-        { id: 2, detail: 'Review code changes' },
-        { id: 3, detail: 'Update test cases' }
-    ];
-
     beforeEach(() => {
         jest.clearAllMocks();
         // Default successful response
@@ -302,7 +304,7 @@ describe('TaskPage Component', () => {
     });
 
     describe('State Management', () => {
-        it('updates tasks state when new task is created', async () => {
+        it('calls createRowfn when new task is created', async () => {
             const newTask = { id: 4, detail: 'New Task' };
             (createRow as jest.Mock).mockResolvedValue(newTask);
             
@@ -323,13 +325,14 @@ describe('TaskPage Component', () => {
             });
         });
 
-        it('clears tasks when delete all is clicked', async () => {
+        it('calls deleteAllRows fn when delete all is clicked', async () => {
             (deleteAllRows as jest.Mock).mockResolvedValue([]);
             
             render(<TaskPage />);
             
             await waitFor(() => {
                 expect(screen.getByTestId('task-table')).toBeInTheDocument();
+                expect(screen.getByTestId('task-count').innerHTML).toEqual("3 tasks");
             });
             
             const deleteAllButton = screen.getByTestId('delete-all-button');
@@ -340,6 +343,27 @@ describe('TaskPage Component', () => {
             
             await waitFor(() => {
                 expect(deleteAllRows).toHaveBeenCalled();
+            });
+        });
+
+        it('calls seedTaskDB fn when seed db is clicked', async () => {
+            (seedTasksDB as jest.Mock).mockResolvedValue(mockTasks);
+            
+            render(<TaskPage />);
+            
+            await waitFor(() => {
+                expect(screen.getByTestId('task-table')).toBeInTheDocument();
+                expect(screen.getByTestId('task-count').innerHTML).toEqual("3 tasks");
+            });
+            
+            const seedDbButton = screen.getByTestId('seed-button');
+            
+            await act(async () => {
+                fireEvent.click(seedDbButton);
+            });
+            
+            await waitFor(() => {
+                expect(seedTasksDB).toHaveBeenCalled();
             });
         });
     });
