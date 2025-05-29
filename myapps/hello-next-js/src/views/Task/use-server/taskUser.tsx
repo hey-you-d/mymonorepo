@@ -1,27 +1,12 @@
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 import styles from "@/app/page.module.css";
 
+type TaskUserType = {
+    userAuthenticated: boolean,
+    setUserAuthenticated: Dispatch<SetStateAction<boolean>>,
+}
 
-/*
-if (rawData.password.length < 6 || rawData.password.length > 20) {
-        return {
-          success: false,  
-          message: "Server validation: Password must be between 6 and 20 characters.",
-          inputs: rawData,
-        };
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(rawData.email)) {
-        return {
-            success: false,
-            message: "Server validation: Please enter a valid email address.",
-            inputs: rawData,
-        };
-    }
-*/
-
-export const TaskUser = () => {
+export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [emailMessage, setEmailMessage] = useState<string>("");
@@ -53,7 +38,17 @@ export const TaskUser = () => {
         if (isEmailOK && isPasswordOK) {
             // TODO: GET request from backend, obtain JWT, and store JWT in cookie
             setFormMessage("logging in...");
+            setEmail("");
+            setPassword("");
+            if (!userAuthenticated) {
+                setUserAuthenticated(true);
+            }
         }
+    };
+
+    const userLogoutHandler = async () => {
+        // TODO: delete the stored cookie containing the JWT
+        setUserAuthenticated(false);
     };
 
     const userRegisterHandler = async () => {
@@ -62,10 +57,15 @@ export const TaskUser = () => {
         if (isEmailOK && isPasswordOK) {
             // TODO: POST request to backend, generate JWT, store in db, and return JWT + store it in cookie 
             setFormMessage("registering...");
+            setEmail("");
+            setPassword("");
+            if (!userAuthenticated) {
+                setUserAuthenticated(true);
+            }
         }
     };
 
-    return (
+    return !userAuthenticated ? (
         <div className={styles.tasksUserForm}>
             <div className={styles.tasksLabelEmail}>Email</div>
             <div className={styles.tasksLabelPassword}>Password</div>
@@ -96,5 +96,10 @@ export const TaskUser = () => {
                 {formMessage}
             </div>
         </div>
-    )
+   ) : (
+    <div className={styles.tasksUserForm}>
+        <span>{"You are logged in  "}</span>
+        <span><button type="button" onClick={(e) => userLogoutHandler()}>Logout</button></span>
+    </div>
+   );
 }

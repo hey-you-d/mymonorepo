@@ -19,6 +19,7 @@ export const TaskPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [filterText, setFilterText] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
   // Fetch tasks on mount
   useEffect(() => {
@@ -55,7 +56,7 @@ export const TaskPage = () => {
   return (
     <>
       <h2>Default example: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
-      <TaskUser />
+      <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <TaskSeedDB
         tasks={tasks}
         setTasks={setTasks}

@@ -175,6 +175,7 @@ a.secondary {
     grid-template-columns: 0.15fr 0.3fr 0.3fr;
     grid-template-rows: repeat(2, 0.1fr);
     gap: 8px;
+    min-height: 85px;
 }
 
 .tasksLabelPassword, .tasksFieldPassword, .tasksMessagePassword {
