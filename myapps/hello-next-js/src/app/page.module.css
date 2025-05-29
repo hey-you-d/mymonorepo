@@ -168,3 +168,23 @@ a.secondary {
     filter: invert();
   }
 }
+
+/* temp styling: Tasks User Form module */
+.tasksUserForm {
+    display: grid;
+    grid-template-columns: 0.15fr 0.3fr 0.3fr;
+    grid-template-rows: repeat(2, 0.1fr);
+    gap: 8px;
+}
+
+.tasksLabelPassword, .tasksFieldPassword, .tasksMessagePassword {
+  grid-row-start: 2;
+}
+
+.tasksFormButtons {
+  grid-row-start: 3;
+}
+
+.tasksFieldPassword > input, .tasksFieldEmail > input {
+  width: 100%;
+}
