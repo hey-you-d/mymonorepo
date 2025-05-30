@@ -2,7 +2,10 @@ type AppEnvType = "LIVE" | "LOCAL";
 type EnvModeType = {
     apiKeyId: string,
     domain: string,
-    base: string,
+    base: {
+        clientSide: string,
+        serverSide: string,
+    },
     cookie: {
         secure: boolean,
         path: string,
@@ -18,7 +21,10 @@ export const APP_ENV: AppEnvType = "LOCAL"; // Temporary flag until the prod db 
 export const LIVE_SITE_MODE: EnvModeType = {
     apiKeyId: "/prod/tasks/bff/x-api-key",
     domain: "https://www.yudimankwanmas.com",
-    base: "https://www.yudimankwanmas.com/hello-next-js",
+    base: {
+        clientSide: "https://www.yudimankwanmas.com/hello-next-js",
+        serverSide: "https://www.yudimankwanmas.com/hello-next-js",
+    },
     cookie: {
         secure: true,
         path: "/hello-next-js", // only accessible by /hello-next-js site
@@ -32,7 +38,10 @@ export const LIVE_SITE_MODE: EnvModeType = {
 export const LOCALHOST_MODE: EnvModeType = {
     apiKeyId: "/dev/tasks/bff/x-api-key",
     domain: "http://localhost:3000",
-    base: "",
+    base: {
+        clientSide: "", // can be a relative url
+        serverSide: "http://localhost:3000", // must be an absolute url
+    },
     cookie: {
         secure: false,
         path: "/",

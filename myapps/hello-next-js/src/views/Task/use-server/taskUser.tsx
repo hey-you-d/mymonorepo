@@ -1,6 +1,6 @@
 import { useState, Dispatch, SetStateAction, MouseEvent } from "react";
 import styles from "@/app/page.module.css";
-//import { registerUser, logoutUser } from "@/viewModels/Task/use-server/getTasksUserViewModel";
+import { registerUser, loginUser, logoutUser } from "@/viewModels/Task/use-server/getTasksUserViewModel";
 
 type TaskUserType = {
     userAuthenticated: boolean,
@@ -39,12 +39,18 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         const isEmailOK = validateEmail();
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
-            // TODO: GET request from backend, obtain JWT, and store JWT in cookie
             setFormMessage("logging in...");
             setEmail("");
             setPassword("");
-            if (!userAuthenticated) {
-                setUserAuthenticated(true);
+
+            const outcome = await loginUser(email, password);
+            if (outcome) {
+                setFormMessage("");
+                setUserAuthenticated(outcome);
+            } else {
+                setFormMessage("Login failed: either wrong email or password"); 
+                // just to be safe...
+                if (userAuthenticated) setUserAuthenticated(false); 
             }
         }
     };
@@ -52,8 +58,14 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
     const userLogoutHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        // TODO: delete the stored cookie containing the JWT
-        setUserAuthenticated(false);
+        const outcome = await logoutUser();
+        if (outcome) {
+            setUserAuthenticated(!outcome);
+        } else {
+            setFormMessage("User Logout attempt failed");
+            // just to be safe...
+            if (userAuthenticated) setUserAuthenticated(false);  
+        }
     };
 
     const userRegisterHandler = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -62,12 +74,17 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         const isEmailOK = validateEmail();
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
-            // TODO: POST request to backend, generate JWT, store in db, and return JWT + store it in cookie 
             setFormMessage("registering...");
             setEmail("");
             setPassword("");
-            if (!userAuthenticated) {
-                setUserAuthenticated(true);
+            const outcome = await registerUser(email, password);
+            if (outcome) {
+                setFormMessage("");
+                setUserAuthenticated(outcome);
+            } else {
+                setFormMessage("User Registration attempt failed");  
+                // just to be safe...
+                if (userAuthenticated) setUserAuthenticated(false);
             }
         }
     };

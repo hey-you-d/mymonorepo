@@ -23,14 +23,14 @@ export const isRunningLocally = (req: NextApiRequest) => {
 }
 
 // for reference: can only be called on server-side only
-export const DOMAIN_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.domain : LOCALHOST_MODE.domain; // [WIP] remote DB hasn't been created in the production environment  
-export const BASE_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.base : LOCALHOST_MODE.base; // [WIP] remote DB hasn't been created in the production environment
+export const DOMAIN_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.domain : LOCALHOST_MODE.domain;
+export const BASE_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.base.serverSide : LOCALHOST_MODE.base.serverSide;
+export const BASE_URL_CLIENT_COMP = APP_ENV === "LIVE" ? LIVE_SITE_MODE.base.clientSide : LOCALHOST_MODE.base.clientSide;
 export const TASKS_BFF_BASE_API_URL = `${BASE_URL}/api/tasks/v1/bff`;
 export const TASKS_SQL_BASE_API_URL = `${BASE_URL}/api/tasks/v1/sql`;      
         
 export const getInternalApiKey = async (): Promise<string | undefined> => {
-    const secretId = LOCALHOST_MODE.apiKeyId; // [WIP] remote DB hasn't been created in the production environment  
-
+    const secretId = APP_ENV === "LIVE" ? LIVE_SITE_MODE.apiKeyId : LOCALHOST_MODE.apiKeyId; 
     const xApiKey = await getSecret(secretId);
     
     return xApiKey;
