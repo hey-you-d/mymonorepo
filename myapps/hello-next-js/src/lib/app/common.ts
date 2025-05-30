@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSecret } from "./awsParameterStore";
+import { LOCALHOST_MODE, LIVE_SITE_MODE, APP_ENV } from './featureFlags';
 
 export const MONOREPO_PREFIX = "/hello-next-js";
 export const TASKS_CRUD = "/task-crud-fullstack";
@@ -22,18 +23,13 @@ export const isRunningLocally = (req: NextApiRequest) => {
 }
 
 // for reference: can only be called on server-side only
-export const DOMAIN_URL = process.env.NODE_ENV === "production"
-    //? "https://www.yudimankwanmas.com"
-    ? "http://localhost:3000" // [WIP] remote DB hasn't been created in the production environment
-    : "http://localhost:3000";
-export const BASE_URL = `${DOMAIN_URL}/hello-next-js`;
-export const TASKS_BFF_BASE_API_URL = `${process.env.NODE_ENV === "production" ? BASE_URL : ""}/api/tasks/v1/bff`;
-export const TASKS_SQL_BASE_API_URL = `${process.env.NODE_ENV === "production" ? BASE_URL : ""}/api/tasks/v1/sql`;      
+export const DOMAIN_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.domain : LOCALHOST_MODE.domain; // [WIP] remote DB hasn't been created in the production environment  
+export const BASE_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.base : LOCALHOST_MODE.base; // [WIP] remote DB hasn't been created in the production environment
+export const TASKS_BFF_BASE_API_URL = `${BASE_URL}/api/tasks/v1/bff`;
+export const TASKS_SQL_BASE_API_URL = `${BASE_URL}/api/tasks/v1/sql`;      
         
 export const getInternalApiKey = async (): Promise<string | undefined> => {
-    // [WIP] remote DB hasn't been created in the production environment
-    //const secretId = `/${process.env.NODE_ENV === "production" ? "prod" : "dev"}/tasks/bff/x-api-key`;    
-    const secretId = "/dev/tasks/bff/x-api-key";
+    const secretId = LOCALHOST_MODE.apiKeyId; // [WIP] remote DB hasn't been created in the production environment  
 
     const xApiKey = await getSecret(secretId);
     

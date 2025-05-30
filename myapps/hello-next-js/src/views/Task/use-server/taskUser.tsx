@@ -1,5 +1,6 @@
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState, Dispatch, SetStateAction, MouseEvent } from "react";
 import styles from "@/app/page.module.css";
+//import { registerUser, logoutUser } from "@/viewModels/Task/use-server/getTasksUserViewModel";
 
 type TaskUserType = {
     userAuthenticated: boolean,
@@ -32,7 +33,9 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         return true;
     }
 
-    const userLoginHandler = async () => {
+    const userLoginHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
         const isEmailOK = validateEmail();
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
@@ -46,12 +49,16 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         }
     };
 
-    const userLogoutHandler = async () => {
+    const userLogoutHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
         // TODO: delete the stored cookie containing the JWT
         setUserAuthenticated(false);
     };
 
-    const userRegisterHandler = async () => {
+    const userRegisterHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        
         const isEmailOK = validateEmail();
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
@@ -81,13 +88,13 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
             <div className={styles.tasksMessagePassword}>{passwordMessage}</div>
             <div className={styles.tasksFormButtons}>
                 <span>
-                    <button type="button" onClick={(e) => userLoginHandler()}>
+                    <button type="button" onClick={(e) => userLoginHandler(e)}>
                         Login
                     </button>
                 </span>
                 <span>{" -or- "}</span>
                 <span>
-                    <button type="button" onClick={(e) => userRegisterHandler()}>
+                    <button type="button" onClick={(e) => userRegisterHandler(e)}>
                         Register
                     </button>
                 </span>
@@ -99,7 +106,7 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
    ) : (
     <div className={styles.tasksUserForm}>
         <span>{"You are logged in  "}</span>
-        <span><button type="button" onClick={(e) => userLogoutHandler()}>Logout</button></span>
+        <span><button type="button" onClick={(e) => userLogoutHandler(e)}>Logout</button></span>
     </div>
    );
 }
