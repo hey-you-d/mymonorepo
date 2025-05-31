@@ -1,4 +1,5 @@
 import { Task } from  "@/types/Task";
+import { APP_ENV } from "@/lib/app/featureFlags";
 
 const mockApiHeader = {
   'Content-Type': 'application/json',
@@ -42,7 +43,7 @@ describe('TaskModel', () => {
     jest.doMock('../../../lib/app/common', () => ({
       TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
       TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
-      BASE_URL: 'https://mock-base-url.com',
+      BASE_URL: APP_ENV === "LIVE" ? 'https://mock-base-url.com' : "",
     }));
 
     // Re-import AFTER mocks are in place
@@ -56,9 +57,7 @@ describe('TaskModel', () => {
 
     global.fetch = jest.fn();
 
-    // It has been mocked, so we can import it now
-    const { BASE_URL } = await import('../../../lib/app/common'); 
-    url = process.env.NODE_ENV === 'production' ? BASE_URL : '';
+    url = APP_ENV === "LIVE" ? "https://mock-base-url.com" : "";
   });
 
   beforeEach(() => {

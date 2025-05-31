@@ -3,7 +3,7 @@ import { SecretsManagerClient, GetSecretValueCommand, } from "@aws-sdk/client-se
 // for reference: can only be called on server-side only
 // for reference: AWS credentials need to be set up first in .env / .env local:
 // AWS_SECRET_KEY_ID , AWS_SECRET_ACCESS_KEY & AWS_REGION
-export const getSecret = async(secretName: string, region: string): Promise<string> => {
+export const getSecret = async(secretName: string, region: string): Promise<{ jwtSecret: string }> => {
     const client = new SecretsManagerClient({
         region,
     });
@@ -18,7 +18,7 @@ export const getSecret = async(secretName: string, region: string): Promise<stri
         } else {
             // For binary secrets
             const buff = Buffer.from(response.SecretBinary as unknown as string, 'base64');
-            return buff.toString('ascii');
+            return buff.toString('ascii') as unknown as { jwtSecret: string };
         }
     } catch (err) {
         // for reference: for a list of exceptions thrown, see

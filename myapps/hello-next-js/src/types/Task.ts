@@ -8,6 +8,7 @@ export type Task = {
     created_at: string
 }
 
+// For Page router only 
 export type DataFetchModeType = "getStaticPaths" | "getStaticProps" | "getServerSideProps" | "useEffect";
 
 export type TaskTableType = {
@@ -16,4 +17,12 @@ export type TaskTableType = {
     updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<void>
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
+}
+
+export type UserModelType = {
+    email?: string,
+    password?: string,
+    jwt?: string,
+    error: boolean,
+    message: string,
 }

@@ -11,6 +11,7 @@ import {
 } from '@/viewModels/Task/use-server/getTasksViewModel';
 import { TaskSeedDB } from '@/components/Task/use-server/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-server/TaskTable';
+import { TaskUser } from "./taskUser";
 import { Task } from "@/types/Task";
 
 export const TaskPage = () => {
@@ -18,6 +19,7 @@ export const TaskPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [filterText, setFilterText] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
   // Fetch tasks on mount
   useEffect(() => {
@@ -54,6 +56,7 @@ export const TaskPage = () => {
   return (
     <>
       <h2>Default example: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
+      <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <TaskSeedDB
         tasks={tasks}
         setTasks={setTasks}
@@ -62,6 +65,7 @@ export const TaskPage = () => {
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
       />
+      
       <br />
       <span>Filter task description: </span>
       <input
