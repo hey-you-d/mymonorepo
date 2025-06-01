@@ -8,7 +8,7 @@ type TaskUserType = {
 }
 
 export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
-    const [email, setEmail] = useState<string>("");
+    const [email, setEmail] = useState<string>(sessionStorage.getItem("email") ?? "");
     const [password, setPassword] = useState<string>("");
     const [emailMessage, setEmailMessage] = useState<string>("");
     const [passwordMessage, setPasswordMessage] = useState<string>("");
@@ -33,6 +33,13 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         return true;
     }
 
+    const emailOnChangeHandler = (keyedInEmail: string) => {
+        setEmail(keyedInEmail);
+        // to handle use case scenario where an user accidentally refresh the page.
+        // of course, password input field is exempt. 
+        sessionStorage.setItem("email", keyedInEmail);
+    }
+
     const userLoginHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
@@ -46,6 +53,7 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
             const outcome = await loginUser(email, password);
             if (outcome) {
                 setFormMessage("");
+                sessionStorage.removeItem("email");
                 setUserAuthenticated(outcome);
             } else {
                 setFormMessage("Login failed: either wrong email or password"); 
@@ -80,6 +88,7 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
             const outcome = await registerUser(email, password);
             if (outcome) {
                 setFormMessage("");
+                sessionStorage.removeItem("email");
                 setUserAuthenticated(outcome);
             } else {
                 setFormMessage("User Registration attempt failed");  
@@ -95,7 +104,7 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
             <div className={styles.tasksLabelPassword}>Password</div>
             <div className={styles.tasksFieldEmail}>
                 <input type="field" placeholder="Email" name="email" value={email}
-                        onChange={(e) => setEmail(e.target.value)} />
+                        onChange={(e) => emailOnChangeHandler(e.target.value)} />
             </div>
             <div className={styles.tasksFieldPassword}>
                 <input type="password" placeholder="Password" name="password" value={password}
