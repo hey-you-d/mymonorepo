@@ -51,8 +51,20 @@ const createAuthCookie = async (jwt: string) => {
     return token && token.value === jwt;
 }
 
-// TODO: a logic to abort user registration if entered email has already existed in the DB
 export const registerUser = async (email: string, password: string) => {
+    // lookup email in the db
+    try {
+        const outcome: UserModelType = await logInUserModel(email, `${BASE_URL}/api/tasks/v1/sql`);
+        if(!outcome.error && outcome.email && outcome.password && outcome.jwt) {
+            // this email can't be used for registration, it has already existed in the DB
+            return false;
+        }
+    } catch (error) {
+        console.error("Failed to lookup the entered email in the DB as part of the user registration process: ", error);
+
+        throw error;
+    } 
+    
     // generate salted & hashed password string  with argon2id encryption.
     // for reference: just like bcrypt, Argon2 hashes include salt & parameters inside the hash string,
     // so we don't need to store those separately
@@ -100,7 +112,7 @@ export const loginUser = async (email: string, password: string) =>  {
         // check backend if the credential exists, and return jwt if confirmed to be exist
         const outcome: UserModelType = await logInUserModel(email, `${BASE_URL}/api/tasks/v1/sql`);
         // confirm the site visitor entered the correct password
-        if (outcome.password) {
+        if (!outcome.error && outcome.email && outcome.password && outcome.jwt) {
             const hashedPwd = outcome.password;
             const pwdOk = await argon2.verify(hashedPwd, password);
             if (pwdOk && outcome.jwt) {
