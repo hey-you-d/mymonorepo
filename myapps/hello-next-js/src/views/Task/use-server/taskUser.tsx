@@ -1,6 +1,6 @@
-import { useState, Dispatch, SetStateAction, MouseEvent } from "react";
+import { useEffect, useState, Dispatch, SetStateAction, MouseEvent } from "react";
 import styles from "@/app/page.module.css";
-import { registerUser, loginUser, logoutUser } from "@/viewModels/Task/use-server/getTasksUserViewModel";
+import { registerUser, loginUser, logoutUser, checkAuthTokenCookieExist } from "@/viewModels/Task/use-server/getTasksUserViewModel";
 
 type TaskUserType = {
     userAuthenticated: boolean,
@@ -13,6 +13,23 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
     const [emailMessage, setEmailMessage] = useState<string>("");
     const [passwordMessage, setPasswordMessage] = useState<string>("");
     const [formMessage, setFormMessage] = useState<string>("");
+
+    useEffect(() => {
+        const checkUserLoggedIn = async () => {
+            // for reference: the http only auth_token cookie is not accessible from the client-side
+            const authTokenCookieExist = await checkAuthTokenCookieExist();
+            if (authTokenCookieExist && !userAuthenticated) {
+                setUserAuthenticated(true);
+            }
+            if (!authTokenCookieExist && userAuthenticated) {
+                setUserAuthenticated(false);
+
+                // TODO: a modal popup that says "you have been logged out"
+            }
+        };
+
+        checkUserLoggedIn();
+    }, [setUserAuthenticated, userAuthenticated]);
 
     const validatePassword = () => {
         if (password.trim().length < 6) {

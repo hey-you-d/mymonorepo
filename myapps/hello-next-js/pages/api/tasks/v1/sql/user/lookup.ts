@@ -1,7 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-//import { db } from '@/lib/db/db_postgreSQL';
+import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
-import { UserModelType } from '@/types/Task';
+
+type UsersDbQueryResultType = {
+    id: number,
+    auth_type: "basic_auth" | "basic_auth_refresh_token",
+    email: string,
+    hashed_pwd: string,
+    jwt: string,
+    admin_access: boolean,
+    created_at: typeof Date,
+    updated_at: typeof Date,
+}
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
@@ -12,27 +22,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         try {
           const { email } = req.body;
 
-          /*
-          const { rows } = await db.query('SELECT * FROM users ORDER BY id DESC');
-          return res.status(200).json(rows);
-          */
-
-          if (email === "user@notexist.com") {
-            const payload: UserModelType = {
-              error: true,
-              message: "provided email does not exist in the db",
-            };
-            return res.status(201).json(payload);
-          }
-            
-          // password: 1234567
-          const payload: UserModelType = {
-            email: "yudiman@kwanmas.com", 
-            password: "$argon2id$v=19$m=65536,t=5,p=1$Q3mQEKY6fT8ECMDWYRTfeA$uiHc/ijlO7mPlkk7KjiqBF+zu3LrSSkrO2U4Fund8CA", 
-            jwt: "abcdefg", 
+          const { rows } : { rows: UsersDbQueryResultType[] } = await db.query(`SELECT * FROM users WHERE email = '${email}'`);
+          
+          const payload = rows.length > 0 && rows[0].email === email ? {
+            email: rows[0].email, 
+            password: rows[0].hashed_pwd, 
+            jwt: rows[0].jwt,
+            admin: rows[0].admin_access,
             error: false, 
             message: "successful email lookup"
-          }
+          } : {
+            error: true, 
+            message: "provided email does not exist in the db"
+          };
+          
           return res.status(201).json(payload);
         } catch (err) {
           console.error('Database error:', err); // Log detailed error

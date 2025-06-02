@@ -23,6 +23,7 @@ export type UserModelType = {
     email?: string,
     password?: string,
     jwt?: string,
+    admin?: boolean,
     error: boolean,
     message: string,
 }

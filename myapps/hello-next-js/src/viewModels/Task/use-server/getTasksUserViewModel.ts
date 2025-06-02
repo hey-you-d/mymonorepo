@@ -149,3 +149,16 @@ export const logoutUser = async () => {
         throw error;
     }
 }
+
+export const checkAuthTokenCookieExist = async () => {
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get("auth_token");
+
+        return token && token.value.length > 0;
+    } catch (error) {
+        console.error("Failed to check auth cookie : ", error);
+
+        throw error;
+    }
+}

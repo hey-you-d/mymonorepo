@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-//import { db } from '@/lib/db/db_postgreSQL';
+import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -14,11 +14,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           if (!password) return res.status(400).json({ error: 'Hashed Password is required' });
           if (!jwt) return res.status(400).json({ error: 'JWT is required' });  
           
+          const result = await db.query(`
+            INSERT INTO users (title, hashed_pwd, auth_type, admin_access, jwt) 
+            VALUES ($1, $2, $3, $4, $5) RETURNING *`, 
+            [email, password, "basic_auth", false, jwt]
+          );
+          return res.status(201).json(result);
+    
           /*
-          const result = await db.query('INSERT INTO tasks (title) VALUES ($1) RETURNING *', [title]);
-          return res.status(201).json(result.rows[0]);
-          */
-
           return res.status(201).json(
             { 
                 email: "yudiman@kwanmas.com", 
@@ -27,7 +30,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 error: false, 
                 message: "successful registration" 
             }
-          );     
+          );
+          */     
         } catch (err) {
           console.error('Database error:', err); // Log detailed error
           return res.status(500).json({ error: 'Database error' });
