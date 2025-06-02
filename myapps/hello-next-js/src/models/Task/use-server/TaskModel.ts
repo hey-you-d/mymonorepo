@@ -185,7 +185,7 @@ export const updateRowFromId = async  (id: number, title: string, detail: string
 
     const result = await response.json();
 
-    return result.rows;
+    return result;
   } catch(error) {
     console.error(`Error updating row for id ${id}: `, error );
 

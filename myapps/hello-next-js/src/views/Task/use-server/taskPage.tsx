@@ -53,6 +53,16 @@ export const TaskPage = () => {
 
   if (loading) return <p>Loading...</p>;
    
+  const renderFilterField = userAuthenticated
+    ? <input
+        onChange={(e) => setFilterText(e.target.value)}
+        placeholder="Filter detail..."
+      />
+    : <input
+        placeholder="Filter detail..."
+        disabled
+      />  
+
   return (
     <>
       <h2>Default example: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
@@ -64,14 +74,12 @@ export const TaskPage = () => {
         deleteAllRows={deleteAllRows}
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
+        userAuthenticated={userAuthenticated}
       />
       
       <br />
       <span>Filter task description: </span>
-      <input
-        onChange={(e) => setFilterText(e.target.value)}
-        placeholder="Filter detail..."
-      />
+      {renderFilterField}
       <br />
       <TaskTable
         tasks={confirmedTasks}
@@ -80,6 +88,7 @@ export const TaskPage = () => {
         updateRowFromId={updateRowFromId}
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
+        userAuthenticated={userAuthenticated}
       />
     </>
   );

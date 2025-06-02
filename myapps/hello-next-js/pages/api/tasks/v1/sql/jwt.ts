@@ -19,12 +19,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 process.env.AWS_REGION
             );
 
-            return res.status(200).json(jwtSecret);
-        case "POST" :
-            // create a cookie that stores newly generated JWT after the registration process
-            return res.status(200).json(JSON.stringify({todo: true}));         
+            return res.status(200).json(jwtSecret);     
         default:
-            res.setHeader('Allow', ['GET', 'POST']);
+            res.setHeader('Allow', ['GET']);
             res.status(405).end(`Method ${req.method} Not Allowed`);      
     }
 }
