@@ -27,3 +27,14 @@ export type UserModelType = {
     error: boolean,
     message: string,
 }
+
+export type UsersDbQueryResultType = {
+    id: number,
+    auth_type: "basic_auth" | "basic_auth_refresh_token",
+    email: string,
+    hashed_pwd: string,
+    jwt: string,
+    admin_access: boolean,
+    created_at: typeof Date,
+    updated_at: typeof Date,
+}

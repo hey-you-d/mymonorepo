@@ -5,6 +5,8 @@ import { LOCALHOST_MODE, LIVE_SITE_MODE, APP_ENV } from './featureFlags';
 export const MONOREPO_PREFIX = "/hello-next-js";
 export const TASKS_CRUD = "/task-crud-fullstack";
 
+export const JWT_TOKEN_COOKIE_NAME = "auth_token";
+
 export const checkRuntime = () => {
     //export const runtime = "nodejs";
     console.log('Runtime check:', typeof process !== 'undefined' ? 'Node.js' : 'Edge');

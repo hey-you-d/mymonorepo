@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import { getSecret } from '@/lib/app/awsSecretManager';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
-import { BASE_URL } from '@/lib/app/common';
+import { JWT_TOKEN_COOKIE_NAME, TASKS_SQL_BASE_API_URL  } from '@/lib/app/common';
 import { 
     registerUser as registerUserModel, 
     logInUser as logInUserModel,
@@ -34,7 +34,7 @@ export const getJwtSecret = async () => {
 const createAuthCookie = async (jwt: string) => {
     const cookieStore = await cookies();
 
-    cookieStore.set("auth_token", jwt, {
+    cookieStore.set(JWT_TOKEN_COOKIE_NAME, jwt, {
         httpOnly: true, // always set to true to prevent XSS attacks
         secure: APP_ENV == "LIVE" 
             ? LIVE_SITE_MODE.cookie.secure
@@ -47,14 +47,14 @@ const createAuthCookie = async (jwt: string) => {
     });
 
     // verify cookie creation is successful before returning 
-    const token = cookieStore.get("auth_token");
+    const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
     return token && token.value === jwt;
 }
 
 export const registerUser = async (email: string, password: string) => {
     // lookup email in the db
     try {
-        const outcome: UserModelType = await logInUserModel(email, `${BASE_URL}/api/tasks/v1/sql`);
+        const outcome: UserModelType = await logInUserModel(email, TASKS_SQL_BASE_API_URL);
         if(!outcome.error && outcome.email && outcome.password && outcome.jwt) {
             // this email can't be used for registration, it has already existed in the DB
             return false;
@@ -85,7 +85,7 @@ export const registerUser = async (email: string, password: string) => {
     
     // call model component to POST request to store credentials in DB
     try {
-        const outcome: UserModelType = await registerUserModel(email, hashedPwd, jwtToken, `${BASE_URL}/api/tasks/v1/sql`);
+        const outcome: UserModelType = await registerUserModel(email, hashedPwd, jwtToken, TASKS_SQL_BASE_API_URL);
         
         // store JWT in a cookie
         // for reference: since the cookie is meant for storing a sensitive data (JWT), then we have to create the cookie
@@ -110,7 +110,7 @@ export const registerUser = async (email: string, password: string) => {
 export const loginUser = async (email: string, password: string) =>  {
     try {
         // check backend if the credential exists, and return jwt if confirmed to be exist
-        const outcome: UserModelType = await logInUserModel(email, `${BASE_URL}/api/tasks/v1/sql`);
+        const outcome: UserModelType = await logInUserModel(email, TASKS_SQL_BASE_API_URL);
         // confirm the site visitor entered the correct password
         if (!outcome.error && outcome.email && outcome.password && outcome.jwt) {
             const hashedPwd = outcome.password;
@@ -136,10 +136,10 @@ export const loginUser = async (email: string, password: string) =>  {
 export const logoutUser = async () => {
     try {
         const cookieStore = await cookies();
-        cookieStore.delete("auth_token");
+        cookieStore.delete(JWT_TOKEN_COOKIE_NAME);
         
         // verify cookie deletion is successful before returning 
-        const token = cookieStore.get("auth_token");
+        const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
         // if token is either undefined or its value is an empty string, 
         // then it's no longer exist in the client browser, which what we want
         return token && token.value.length > 0 ? false : true;
@@ -153,7 +153,7 @@ export const logoutUser = async () => {
 export const checkAuthTokenCookieExist = async () => {
     try {
         const cookieStore = await cookies();
-        const token = cookieStore.get("auth_token");
+        const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
 
         return token && token.value.length > 0;
     } catch (error) {

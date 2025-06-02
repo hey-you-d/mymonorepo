@@ -1,17 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
-
-type UsersDbQueryResultType = {
-    id: number,
-    auth_type: "basic_auth" | "basic_auth_refresh_token",
-    email: string,
-    hashed_pwd: string,
-    jwt: string,
-    admin_access: boolean,
-    created_at: typeof Date,
-    updated_at: typeof Date,
-}
+import { UsersDbQueryResultType } from '@/types/Task';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
@@ -38,8 +28,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           
           return res.status(201).json(payload);
         } catch (err) {
-          console.error('Database error:', err); // Log detailed error
-          return res.status(500).json({ error: 'Database error' });
+          console.error('User Login - Database related error: ', err); // Log detailed error
+          return res.status(500).json({ error: 'User Login - Database related error' });
         }
       default:
         res.setHeader('Allow', ['POST']);

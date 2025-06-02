@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
+import { UsersDbQueryResultType } from '@/types/Task';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
@@ -14,27 +15,28 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           if (!password) return res.status(400).json({ error: 'Hashed Password is required' });
           if (!jwt) return res.status(400).json({ error: 'JWT is required' });  
           
-          const result = await db.query(`
-            INSERT INTO users (title, hashed_pwd, auth_type, admin_access, jwt) 
+          const { rows } : { rows: UsersDbQueryResultType[] } = await db.query(`
+            INSERT INTO users (email, hashed_pwd, auth_type, admin_access, jwt) 
             VALUES ($1, $2, $3, $4, $5) RETURNING *`, 
             [email, password, "basic_auth", false, jwt]
           );
-          return res.status(201).json(result);
-    
-          /*
-          return res.status(201).json(
-            { 
-                email: "yudiman@kwanmas.com", 
-                password: "$argon2id$v=19$m=65536,t=5,p=1$Q3mQEKY6fT8ECMDWYRTfeA$uiHc/ijlO7mPlkk7KjiqBF+zu3LrSSkrO2U4Fund8CA", 
-                jwt: "abcdefg", 
-                error: false, 
-                message: "successful registration" 
-            }
-          );
-          */     
+
+          const payload = rows.length > 0 && rows[0].email === email ? {
+            email: rows[0].email, 
+            password: rows[0].hashed_pwd, 
+            jwt: rows[0].jwt,
+            admin: rows[0].admin_access,
+            error: false, 
+            message: "successful email lookup"
+          } : {
+            error: true, 
+            message: "provided email does not exist in the db"
+          };
+          
+          return res.status(201).json(payload);   
         } catch (err) {
-          console.error('Database error:', err); // Log detailed error
-          return res.status(500).json({ error: 'Database error' });
+          console.error('User Registration - Database related error: ', err); // Log detailed error
+          return res.status(500).json({ error: 'User Registration - Database related error' });
         }
       default:
         res.setHeader('Allow', ['POST']);
