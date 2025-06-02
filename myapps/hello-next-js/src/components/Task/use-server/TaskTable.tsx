@@ -35,17 +35,17 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
-    const chkBoxHandler = async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
+    const chkBoxHandler = useCallback(async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         setButtonDisabled(true);
         const result: { tasks: Task[] } = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
         setTasks(result.tasks);
         setButtonDisabled(false);
-    }
+    }, [setButtonDisabled, setTasks, updateRowFromId]);
 
-    const editTodoHandler = (e: React.MouseEvent, id: number) => {
+    const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
         appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}`);
-    }
+    }, []);
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -69,6 +69,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     }, [createRow, setTasks, tasks, setButtonDisabled]);
 
     const tBody = (): React.ReactElement[] => {
+        console.log("tbody ", buttonDisabled, userAuthenticated);
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
             
@@ -121,8 +122,10 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     }
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
-       const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
-       const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
+        console.log('renderAddRowForm ', isDisabled, userAuthenticated);
+
+        const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
+        const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
         const buttonTriggeredByIsDisabled = !isDisabled
             ? <button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button>
             : <button type="button" disabled>add</button>;
@@ -140,9 +143,10 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
                 <td>{button}</td>
             </>
         ]);
-    }, [addNewTodoHandler]);
+    }, [addNewTodoHandler, userAuthenticated]);
 
     const tFooter = (): React.ReactElement[] => {
+        console.log("tfooter ", buttonDisabled, userAuthenticated);
         if (Array.isArray(tasks) && tasks.length > 0) {
             return [
                 <>
