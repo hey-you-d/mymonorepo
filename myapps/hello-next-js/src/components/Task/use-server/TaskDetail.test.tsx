@@ -3,6 +3,17 @@ import '@testing-library/jest-dom';
 import { TaskDetail } from './TaskDetail';
 import { Task } from '@/types/Task';
 
+jest.mock('next/headers', () => ({
+    cookies: jest.fn(() => ({
+        get: (name: string) => {
+        if (name === 'auth_token') {
+            return { value: 'mocked-token' };
+        }
+        return undefined;
+        },
+    })),
+}));
+
 // Mock the Task type if needed
 const mockTask: Task = {
     id: 1,

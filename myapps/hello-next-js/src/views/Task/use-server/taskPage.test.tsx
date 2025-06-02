@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -14,6 +14,17 @@ const mockTasks: Task[] = [
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
     useRouter: jest.fn(),
+}));
+
+jest.mock('next/headers', () => ({
+    cookies: jest.fn(() => ({
+        get: (name: string) => {
+            if (name === 'auth_token') {
+                return { value: 'mocked-token' };
+            }
+            return undefined;
+        },
+    })),
 }));
 
 // Mock the external dependencies
@@ -36,7 +47,7 @@ jest.mock('next/link', () => {
 });
 
 jest.mock('../../../components/Task/use-server/TaskSeedDB', () => ({
-  TaskSeedDB: jest.fn(({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled }) => (
+  TaskSeedDB: jest.fn(({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated }) => (
     <div data-testid="task-seed-db">
       <button 
         data-testid="seed-button" 
@@ -68,32 +79,44 @@ jest.mock('../../../components/Task/use-server/TaskSeedDB', () => ({
 }));
 
 jest.mock('../../../components/Task/use-server/TaskTable', () => ({
-  TaskTable: jest.fn(({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled }) => (
-    <div data-testid="task-table">
-      <div data-testid="task-count">{tasks.length} tasks</div>
-      {tasks.map((task: Task, index: number) => (
-        <div key={index} data-testid={`task-${index}`}>
-          {task.detail}
+  TaskTable: jest.fn(({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated }) => {
+    userAuthenticated = true;
+    
+    return (
+        <div data-testid="task-table">
+        <div data-testid="task-count">{tasks.length} tasks</div>
+        {tasks.map((task: Task, index: number) => (
+            <div key={index} data-testid={`task-${index}`}>
+            {task.detail}
+            </div>
+        ))}
+        <button 
+            data-testid="create-task-button" 
+            disabled={buttonDisabled}
+            onClick={() => {
+            setButtonDisabled(true);
+            const newTask = { id: Date.now(), detail: 'New Task' };
+            createRow(newTask).then(() => {
+                setTasks((prev: Task[]) => [...prev, newTask]);
+                setButtonDisabled(false);
+            });
+            }}
+        >
+            Create Task
+        </button>
         </div>
-      ))}
-      <button 
-        data-testid="create-task-button" 
-        disabled={buttonDisabled}
-        onClick={() => {
-          setButtonDisabled(true);
-          const newTask = { id: Date.now(), detail: 'New Task' };
-          createRow(newTask).then(() => {
-            setTasks((prev: Task[]) => [...prev, newTask]);
-            setButtonDisabled(false);
-          });
-        }}
-      >
-        Create Task
-      </button>
-    </div>
-  ))
-}));
+    );
+})}));
 
+jest.mock('./taskUser', () => ({
+  TaskUser: ({ setUserAuthenticated }: { setUserAuthenticated: (v: boolean) => void }) => {
+    useEffect(() => {
+      setUserAuthenticated(true);
+    }, [setUserAuthenticated]);
+
+    return <div data-testid="task-user">Mocked TaskUser</div>;
+  }
+}));
 
 // Import the mocked functions
 import {
@@ -104,11 +127,20 @@ import {
   seedTasksDB,
 } from '@/viewModels/Task/use-server/getTasksViewModel';
 
+let spyConsoleError: jest.SpyInstance<any, any>;
+
 describe('TaskPage Component', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         // Default successful response
         (getTasksDBRows as jest.Mock).mockResolvedValue({ tasks: mockTasks });
+        // hide console.error to reduce noise on the console output
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+    });
+
+    afterEach(() => {
+        spyConsoleError.mockRestore();
+        jest.clearAllMocks();
     });
 
     describe('Initial Render and Loading', () => {
@@ -255,9 +287,11 @@ describe('TaskPage Component', () => {
                 await userEvent.type(filterInput, 'test');
             });
             
-            expect(screen.getByTestId('seed-button')).toBeDisabled();
-            expect(screen.getByTestId('delete-all-button')).toBeDisabled();
-            expect(screen.getByTestId('create-task-button')).toBeDisabled();
+            waitFor(() => {
+                expect(screen.getByTestId('seed-button')).toBeDisabled();
+                expect(screen.getByTestId('delete-all-button')).toBeDisabled();
+                expect(screen.getByTestId('create-task-button')).toBeDisabled();
+            });
         });
 
         it('buttons are enabled when filter text is only whitespace', async () => {
@@ -394,8 +428,10 @@ describe('TaskPage Component', () => {
                 await userEvent.type(filterInput, 'nonexistent');
             });
             
-            // Should show 0 tasks when no matches
-            expect(screen.getByText('0 tasks')).toBeInTheDocument();
+            waitFor(() => {
+                // Should show 0 tasks when no matches
+                expect(screen.getByText('0 tasks')).toBeInTheDocument();
+            });
         });
     });
 });

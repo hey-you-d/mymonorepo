@@ -52,16 +52,13 @@ export const TaskPage = () => {
     : tasks;
 
   if (loading) return <p>Loading...</p>;
-   
-  const renderFilterField = userAuthenticated
-    ? <input
+
+  const renderFilterField = ( 
+      <input
         onChange={(e) => setFilterText(e.target.value)}
         placeholder="Filter detail..."
-      />
-    : <input
-        placeholder="Filter detail..."
-        disabled
-      />  
+      />    
+  );
 
   return (
     <>

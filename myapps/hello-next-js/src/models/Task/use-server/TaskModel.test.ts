@@ -40,6 +40,17 @@ describe('TaskModel', () => {
     jest.resetModules(); // clear cached modules to allow mocking
 
     // Must go before any imports
+    jest.doMock('next/headers', () => ({
+      cookies: jest.fn(() => ({
+        get: (name: string) => {
+          if (name === 'auth_token') {
+            return { value: 'mocked-token' };
+          }
+          return undefined;
+        },
+      })),
+    }));
+
     jest.doMock('../../../lib/app/common', () => ({
       TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
       TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
@@ -246,7 +257,7 @@ describe('TaskModel', () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
       const result = await updateRowFromId(999, 'test', 'test', true);
-      expect(result).toEqual(mockData); // the fn returns the updated row
+      expect(result).toEqual({ rows: mockData }); // the fn returns the updated row
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/999`, {
         method: 'PUT',
         headers: mockApiHeader,

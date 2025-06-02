@@ -5,6 +5,17 @@ import { useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
 import { TaskTable, TaskTableType } from './TaskTable';
 
+jest.mock('next/headers', () => ({
+    cookies: jest.fn(() => ({
+        get: (name: string) => {
+        if (name === 'auth_token') {
+            return { value: 'mocked-token' };
+        }
+        return undefined;
+        },
+    })),
+}));
+
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
     useRouter: jest.fn(),
@@ -62,6 +73,7 @@ describe('TaskTable Component', () => {
         updateRowFromId: mockUpdateRowFromId as TaskTableType["updateRowFromId"],
         buttonDisabled: false,
         setButtonDisabled: mockSetButtonDisabled as Dispatch<SetStateAction<boolean>>,
+        userAuthenticated: true,
     };
 
     describe('Rendering', () => {

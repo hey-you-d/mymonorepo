@@ -40,12 +40,12 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
         const result: { tasks: Task[] } = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
         setTasks(result.tasks);
         setButtonDisabled(false);
-    }, [setButtonDisabled, setTasks, updateRowFromId]);
+    }, [setButtonDisabled, setTasks, updateRowFromId, tasks]);
 
     const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
         appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}`);
-    }, []);
+    }, [appRouter]);
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -69,7 +69,6 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     }, [createRow, setTasks, tasks, setButtonDisabled]);
 
     const tBody = (): React.ReactElement[] => {
-        console.log("tbody ", buttonDisabled, userAuthenticated);
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
             
@@ -122,8 +121,6 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     }
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
-        console.log('renderAddRowForm ', isDisabled, userAuthenticated);
-
         const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
         const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
         const buttonTriggeredByIsDisabled = !isDisabled
@@ -146,7 +143,6 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     }, [addNewTodoHandler, userAuthenticated]);
 
     const tFooter = (): React.ReactElement[] => {
-        console.log("tfooter ", buttonDisabled, userAuthenticated);
         if (Array.isArray(tasks) && tasks.length > 0) {
             return [
                 <>

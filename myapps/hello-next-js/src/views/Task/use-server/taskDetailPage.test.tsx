@@ -10,10 +10,25 @@ jest.mock('next/link', () => {
     };
 });
 
+jest.mock('next/headers', () => ({
+    cookies: jest.fn(() => ({
+        get: (name: string) => {
+        if (name === 'auth_token') {
+            return { value: 'mocked-token' };
+        }
+        return undefined;
+        },
+    })),
+}));
+
 // Mock the view model functions
 jest.mock('../../../viewModels/Task/use-server/getTasksViewModel', () => ({
     getRowFromId: jest.fn(),
     deleteRowFromId: jest.fn(),
+}));
+
+jest.mock('../../../viewModels/Task/use-server/getTasksUserViewModel', () => ({
+  checkAuthTokenCookieExist: jest.fn(() => true),
 }));
 
 // Mock the TaskDetail component

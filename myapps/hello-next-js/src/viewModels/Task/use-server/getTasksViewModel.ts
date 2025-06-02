@@ -67,7 +67,7 @@ export const createRow = async (tasks: Task[], title: string, detail: string): P
 export const updateRowFromId = async (tasks: Task[], id: number, title: string, detail: string, completed: boolean): Promise<{ tasks: Task[] }> => {
     try {
       const updatedRow: Task = await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
-      console.log("getTasksViewModel ", updatedRow);
+
       const updatedTasks = tasks.map((item, index) => 
         tasks[index].id === updatedRow.id ? updatedRow : item
       );
