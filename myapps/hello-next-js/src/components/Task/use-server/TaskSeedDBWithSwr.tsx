@@ -17,9 +17,10 @@ export type TaskSeedDBType = {
     deleteAllRows: () => Promise<void>, // **
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
+    userAuthenticated: boolean,
 }
 
-export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled } : TaskSeedDBType) => {
+export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBType) => {
     const onClickHandler = async (e: React.FormEvent) => {
         e.preventDefault();  
 
@@ -37,7 +38,7 @@ export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisa
         setButtonDisabled(false);
     }
 
-    const renderButton: React.ReactElement = buttonDisabled ? (
+    const renderButtonTriggeredByButtonDisabled: React.ReactElement = buttonDisabled ? (
         <button type="button" disabled>
             {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
         </button>
@@ -46,6 +47,12 @@ export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisa
             {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
         </button>
     );
+
+    const renderButton: React.ReactElement = userAuthenticated 
+    ? renderButtonTriggeredByButtonDisabled
+    : ( <button type="button" disabled>
+            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+        </button> );
      
     return (
         <>

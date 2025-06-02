@@ -16,6 +16,8 @@ jest.mock('next/navigation', () => ({
     useRouter: jest.fn(),
 }));
 
+// mock the http only auth_token cookie. 
+// The presence of this cookie indicates that the user has logged in
 jest.mock('next/headers', () => ({
     cookies: jest.fn(() => ({
         get: (name: string) => {

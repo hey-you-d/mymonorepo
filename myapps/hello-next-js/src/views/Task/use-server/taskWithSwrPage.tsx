@@ -11,6 +11,7 @@ import {
 } from '@/viewModels/Task/use-server/getTasksViewModelWithSwr';
 import { TaskSeedDBWithSwr } from '@/components/Task/use-server/TaskSeedDBWithSwr';
 import { TaskTableWithSwr } from '@/components/Task/use-server/TaskTableWithSwr';
+import { TaskUser } from "./taskUser";
 import { Task } from "@/types/Task";
 import useSWR from 'swr';
 import { strictDeepEqual } from 'fast-equals';
@@ -20,6 +21,7 @@ export const TaskWithSwrPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [filterText, setFilterText] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+    const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
     // Use SWR to automatically fetch tasks (no need to set up the tasks state, and loading state)
     const { data: swrData, error: swrError, isLoading: swrLoading } = useSWR<Task[]>("Tasks-API-USE-SWR", fetcher);
@@ -63,12 +65,14 @@ export const TaskWithSwrPage = () => {
     return swrData  && confirmedTasks ? (
         <>
             <h2>Frontend cached with Vercel SWR: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
+            <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
             <TaskSeedDBWithSwr
                 tasks={swrData }
                 seedTaskDB={seedTasksDB}
                 deleteAllRows={deleteAllRows}
                 buttonDisabled={buttonDisabled}
                 setButtonDisabled={setButtonDisabled}
+                userAuthenticated={userAuthenticated}
             />
             <br />
             <span>Filter task description: </span>
@@ -83,6 +87,7 @@ export const TaskWithSwrPage = () => {
                 updateRowFromId={updateRowFromId}
                 buttonDisabled={buttonDisabled}
                 setButtonDisabled={setButtonDisabled}
+                userAuthenticated={userAuthenticated}
             />
         </>
     ) : (<></>);

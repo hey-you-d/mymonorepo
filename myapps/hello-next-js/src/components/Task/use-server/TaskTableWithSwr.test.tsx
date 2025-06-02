@@ -5,6 +5,19 @@ import { useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
 import { TaskTableWithSwr, TaskTableType } from './TaskTableWithSwr';
 
+// mock the http only auth_token cookie. 
+// The presence of this cookie indicates that the user has logged in
+jest.mock('next/headers', () => ({
+    cookies: jest.fn(() => ({
+        get: (name: string) => {
+            if (name === 'auth_token') {
+                return { value: 'mocked-token' };
+            }
+            return undefined;
+        },
+    })),
+}));
+
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
     useRouter: jest.fn(),
@@ -59,6 +72,7 @@ describe('TaskTableWithSwr Component', () => {
         updateRowFromId: mockUpdateRowFromId as TaskTableType["updateRowFromId"],
         buttonDisabled: false,
         setButtonDisabled: mockSetButtonDisabled as Dispatch<SetStateAction<boolean>>,
+        userAuthenticated: true,
     };
 
     describe('Rendering', () => {
