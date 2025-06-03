@@ -3,6 +3,19 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Task } from "@/types/Task";
 
+// mock the http only auth_token cookie. 
+// The presence of this cookie indicates that the user has logged in
+jest.mock('next/headers', () => ({
+    cookies: jest.fn(() => ({
+        get: (name: string) => {
+            if (name === 'auth_token') {
+                return { value: 'mocked-token' };
+            }
+            return undefined;
+        },
+    })),
+}));
+
 // Mock the child components
 jest.mock('../../../components/Task/use-server/TaskSeedDBGraphQL', () => ({
     TaskSeedDBGraphQL: jest.fn(({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled }) => (

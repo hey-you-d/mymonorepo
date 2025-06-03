@@ -40,6 +40,14 @@ describe('TaskModel', () => {
     jest.resetModules(); // clear cached modules to allow mocking
 
     // Must go before any imports
+    jest.doMock('../../../lib/app/common', () => ({
+      TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
+      TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
+      BASE_URL: APP_ENV === "LIVE" ? 'https://mock-base-url.com' : "",
+    }));
+
+    // mock the http only auth_token cookie. 
+    // The presence of this cookie indicates that the user has logged in
     jest.doMock('next/headers', () => ({
       cookies: jest.fn(() => ({
         get: (name: string) => {
@@ -49,12 +57,6 @@ describe('TaskModel', () => {
           return undefined;
         },
       })),
-    }));
-
-    jest.doMock('../../../lib/app/common', () => ({
-      TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
-      TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
-      BASE_URL: APP_ENV === "LIVE" ? 'https://mock-base-url.com' : "",
     }));
 
     // Re-import AFTER mocks are in place
