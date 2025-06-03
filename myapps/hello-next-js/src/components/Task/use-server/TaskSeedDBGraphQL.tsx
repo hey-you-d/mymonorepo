@@ -14,9 +14,10 @@ type TaskSeedDBGraphQLType = {
     deleteAllRows: () => Promise<Task[] | undefined>, // !!! different return value from TaskSeedDBType
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
+    userAuthenticated: boolean,
 }
 
-export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled } : TaskSeedDBGraphQLType) => {
+export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBGraphQLType) => {
     const onClickHandler = async (e: React.FormEvent) => {
         e.preventDefault();
         
@@ -31,7 +32,7 @@ export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, 
         setButtonDisabled(false);
     }
 
-    const renderButton: React.ReactElement = buttonDisabled ? (
+    const renderButtonTriggeredByButtonDisabled: React.ReactElement = buttonDisabled ? (
         <button type="button" disabled>
             {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
         </button>
@@ -40,6 +41,12 @@ export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, 
             {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
         </button>
     );
+
+    const renderButton: React.ReactElement = userAuthenticated 
+        ? renderButtonTriggeredByButtonDisabled
+        : ( <button type="button" disabled>
+                {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+            </button> );
      
     return (
         <>

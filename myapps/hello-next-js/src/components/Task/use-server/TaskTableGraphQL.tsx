@@ -16,6 +16,7 @@ type TaskTableDefaultType = {
     updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<Task | undefined>, // !!! different return value from TaskSeedDBType
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
+    userAuthenticated: boolean,
 }
 export type TaskTableType = TaskTableDefaultType;
 
@@ -26,7 +27,7 @@ const isSafeInput = (str: string) => {
     return regex.test(str);
 };
 
-export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
+export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const appRouter = useRouter();
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
@@ -82,18 +83,26 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
             
             tasks.forEach(aTask => {
                 // for reference: make checkbox an uncontrolled react component
-                const checkbox = !buttonDisabled ? (
+                const checkboxTriggeredByButtonDisabled = !buttonDisabled ? (
                     <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
                             onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />
                 ) : (
                     <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />
                 );
+
+                const checkbox = userAuthenticated
+                    ? checkboxTriggeredByButtonDisabled
+                    : <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />;
                     
-                const button = buttonDisabled ? (
+                const buttonTriggeredByButtonDisabled = buttonDisabled ? (
                     <button type="button" disabled onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>        
                 ) : (
                     <button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>
-                );    
+                );  
+                
+                const button = userAuthenticated
+                    ? buttonTriggeredByButtonDisabled
+                    : <button type="button" disabled>Edit</button>;
 
                 output.push(
                     <tr key={aTask.id}>
@@ -121,10 +130,14 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
     }
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
-       const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
-       const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
-        const button = !isDisabled
+        const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
+        const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
+        const buttonTriggeredByIsDisabled = !isDisabled
             ? <button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button>
+            : <button type="button" disabled>add</button>;
+
+        const button = userAuthenticated
+            ? buttonTriggeredByIsDisabled
             : <button type="button" disabled>add</button>;
 
         return ([
@@ -136,7 +149,7 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
                 <td>{button}</td>
             </>
         ]);
-    }, [addNewTodoHandler]);
+    }, [addNewTodoHandler, userAuthenticated]);
 
     const tFooter = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {

@@ -56,6 +56,7 @@ export const TaskGraphQLPage = () => {
             deleteAllRows={deleteAllRows}
             buttonDisabled={buttonDisabled}
             setButtonDisabled={setButtonDisabled}
+            userAuthenticated={userAuthenticated}
           />
           <TaskTableGraphQL
             tasks={tasks}
@@ -64,6 +65,7 @@ export const TaskGraphQLPage = () => {
             updateRowFromId={updateRowFromId}
             buttonDisabled={buttonDisabled}
             setButtonDisabled={setButtonDisabled}
+            userAuthenticated={userAuthenticated}
           />
         </>
     );
