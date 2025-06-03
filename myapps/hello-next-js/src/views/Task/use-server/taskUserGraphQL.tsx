@@ -1,9 +1,10 @@
 import { useEffect, useState, MouseEvent } from "react";
 import styles from "@/app/page.module.css";
-import { registerUser, loginUser, logoutUser, checkAuthTokenCookieExist } from "@/viewModels/Task/use-server/getTasksUserViewModel";
+import { logoutUser, checkAuthTokenCookieExist } from "@/viewModels/Task/use-server/getTasksUserViewModel";
+import { registerUser, loginUser } from "@/viewModels/Task/use-server/getTasksUserGraphQLViewModel";
 import { TaskUserType } from "@/types/Task";
 
-export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
+export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
     const [email, setEmail] = useState<string>(sessionStorage.getItem("email") ?? "");
     const [password, setPassword] = useState<string>("");
     const [emailMessage, setEmailMessage] = useState<string>("");
@@ -27,7 +28,7 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         checkUserLoggedIn();
     }, [setUserAuthenticated, userAuthenticated]);
 
-    const validatePassword = () => {
+        const validatePassword = () => {
         if (password.trim().length < 6) {
             setPasswordMessage("password must not be less than 6 chars");
             return false;
@@ -64,6 +65,7 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
             setPassword("");
 
             const outcome = await loginUser(email, password);
+            console.log("taskUserGraphQL userLoginHandler: ", outcome);
             if (outcome) {
                 setFormMessage("");
                 sessionStorage.removeItem("email");
@@ -99,6 +101,7 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
             setEmail("");
             setPassword("");
             const outcome = await registerUser(email, password);
+            console.log("taskUserGraphQL userRegisterHandler: ", outcome);
             if (outcome) {
                 setFormMessage("");
                 sessionStorage.removeItem("email");
@@ -148,4 +151,4 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         <span><button type="button" onClick={(e) => userLogoutHandler(e)}>Logout</button></span>
     </div>
    );
-}
+};

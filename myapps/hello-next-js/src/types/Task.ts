@@ -38,3 +38,8 @@ export type UsersDbQueryResultType = {
     created_at: typeof Date,
     updated_at: typeof Date,
 }
+
+export type TaskUserType = {
+    userAuthenticated: boolean,
+    setUserAuthenticated: Dispatch<SetStateAction<boolean>>,
+}

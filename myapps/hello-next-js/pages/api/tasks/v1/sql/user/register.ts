@@ -27,10 +27,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             jwt: rows[0].jwt,
             admin: rows[0].admin_access,
             error: false, 
-            message: "successful email lookup"
+            message: "successful user registration"
           } : {
             error: true, 
-            message: "provided email does not exist in the db"
+            message: "failed user registration on the DB level"
           };
           
           return res.status(201).json(payload);   

@@ -31,7 +31,7 @@ export const getJwtSecret = async () => {
     }  
 }
 
-const createAuthCookie = async (jwt: string) => {
+export const createAuthCookie = async (jwt: string) => {
     const cookieStore = await cookies();
 
     cookieStore.set(JWT_TOKEN_COOKIE_NAME, jwt, {
@@ -51,6 +51,26 @@ const createAuthCookie = async (jwt: string) => {
     return token && token.value === jwt;
 }
 
+export const generateHashedPassword = async (password: string) => {
+    // generate salted & hashed password string  with argon2id encryption.
+    // for reference: just like bcrypt, Argon2 hashes include salt & parameters inside the hash string,
+    // so we don't need to store those separately
+    return await argon2.hash(password, {
+        type: argon2.argon2id, 
+        memoryCost: 2 ** 16, // RAM usage in KiB (e.g, 65536 = 64 MB) - RAM resistance: makes GPU attacks expensive
+        timeCost: 5, // number of iterations - higher = slower = safer
+        parallelism: 1, // can increase if needed - match your server's CPU capabilities
+    });
+}
+
+export const generateJWT = async (email: string, hashedPwd: string, jwtSecret: string) => {
+    return await sign(
+        { email, hashedPassword: hashedPwd  },
+        jwtSecret,
+        { expiresIn: '1h' }
+    );
+}
+
 export const registerUser = async (email: string, password: string) => {
     // lookup email in the db
     try {
@@ -66,26 +86,15 @@ export const registerUser = async (email: string, password: string) => {
     } 
     
     // generate salted & hashed password string  with argon2id encryption.
-    // for reference: just like bcrypt, Argon2 hashes include salt & parameters inside the hash string,
-    // so we don't need to store those separately
-    const hashedPwd = await argon2.hash(password, {
-        type: argon2.argon2id, 
-        memoryCost: 2 ** 16, // RAM usage in KiB (e.g, 65536 = 64 MB) - RAM resistance: makes GPU attacks expensive
-        timeCost: 5, // number of iterations - higher = slower = safer
-        parallelism: 1, // can increase if needed - match your server's CPU capabilities
-    });
+    const hashedPwd = await generateHashedPassword(password);
 
     // generate JTW token
     const jwtSecret: { jwtSecret: string } = await getJwtSecret();
-    const jwtToken = await sign(
-        { email, hashedPassword: hashedPwd  },
-        jwtSecret.jwtSecret,
-        { expiresIn: '1h' }
-    );
+    const jwt = await generateJWT(email, hashedPwd, jwtSecret.jwtSecret);
     
     // call model component to POST request to store credentials in DB
     try {
-        const outcome: UserModelType = await registerUserModel(email, hashedPwd, jwtToken, TASKS_SQL_BASE_API_URL);
+        const outcome: UserModelType = await registerUserModel(email, hashedPwd, jwt, TASKS_SQL_BASE_API_URL);
         
         // store JWT in a cookie
         // for reference: since the cookie is meant for storing a sensitive data (JWT), then we have to create the cookie

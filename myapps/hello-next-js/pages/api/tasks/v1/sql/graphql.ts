@@ -103,6 +103,10 @@ const server = new ApolloServer({
 });
 const startServer = server.start();
 
+// for reference: disables Next.js' built-in body parser for that particular API route.
+// when you are using GraphQL libs like APollo Server, they often handle request parsing themselves.
+// If the Next.js parser is not disabled, both Next.js & Apollo will try to parse the incoming request body,
+// which can results in error like "Error: request body already consumed"
 export const config = {
     api: {
         bodyParser: false,

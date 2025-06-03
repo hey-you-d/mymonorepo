@@ -30,7 +30,7 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
     // capture graphql level error (http status code is still 200)
     if (json.errors) {
       const errorFn = (e: { message: string }) => {
-        return e && e.message ? e.message : "error in TaskGraphQL model component";
+        return e && e.message ? e.message : "error in TaskGraphQLClient model component";
       }  
 
       throw new Error(json.errors.map(errorFn).join('\n'));

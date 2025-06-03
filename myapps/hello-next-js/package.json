@@ -26,6 +26,7 @@
     "axios": "^1.8.4",
     "fast-equals": "^5.2.2",
     "graphql": "^16.11.0",
+    "graphql-scalars": "^1.24.2",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "keyv": "^5.3.3",
