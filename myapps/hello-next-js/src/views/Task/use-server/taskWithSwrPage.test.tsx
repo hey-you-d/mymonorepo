@@ -16,6 +16,19 @@ jest.mock('fast-equals', () => ({
     strictDeepEqual: jest.fn()
 }));
 
+// mock the http only auth_token cookie. 
+// The presence of this cookie indicates that the user has logged in
+jest.mock('next/headers', () => ({
+    cookies: jest.fn(() => ({
+        get: (name: string) => {
+            if (name === 'auth_token') {
+                return { value: 'mocked-token' };
+            }
+            return undefined;
+        },
+    })),
+}));
+
 // Mock the viewModel functions
 jest.mock('../../../viewModels/Task/use-server/getTasksViewModelWithSwr', () => ({
     fetcher: jest.fn(),

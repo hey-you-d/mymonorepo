@@ -1,8 +1,12 @@
 "use server"
 import { TASKS_API_HEADER } from "@/lib/app/common";
-import { DOMAIN_URL } from "@/lib/app/common";
 
 export async function fetchGraphQL(query: string, variables?: Record<string, unknown>) {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { DOMAIN_URL } = await import("@/lib/app/common");
+  
     // for reference:
     // GraphQL does not use HTTP verbs to distinguish operations. Instead:
     // All operations (query, mutation, or subscription) are typically sent via 
@@ -26,11 +30,10 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
     }
 
     const json = await res.json();
-
     // capture graphql level error (http status code is still 200)
     if (json.errors) {
       const errorFn = (e: { message: string }) => {
-        return e && e.message ? e.message : "error in TaskGraphQL model component";
+        return e && e.message ? e.message : "error in TaskGraphQLClient model component";
       }  
 
       throw new Error(json.errors.map(errorFn).join('\n'));

@@ -1,4 +1,5 @@
 import { Task } from  "@/types/Task";
+import { APP_ENV } from "@/lib/app/featureFlags";
 
 const mockApiHeader = {
   'Content-Type': 'application/json',
@@ -42,7 +43,20 @@ describe('TaskModel', () => {
     jest.doMock('../../../lib/app/common', () => ({
       TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
       TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
-      BASE_URL: 'https://mock-base-url.com',
+      BASE_URL: APP_ENV === "LIVE" ? 'https://mock-base-url.com' : "",
+    }));
+
+    // mock the http only auth_token cookie. 
+    // The presence of this cookie indicates that the user has logged in
+    jest.doMock('next/headers', () => ({
+      cookies: jest.fn(() => ({
+        get: (name: string) => {
+          if (name === 'auth_token') {
+            return { value: 'mocked-token' };
+          }
+          return undefined;
+        },
+      })),
     }));
 
     // Re-import AFTER mocks are in place
@@ -56,9 +70,7 @@ describe('TaskModel', () => {
 
     global.fetch = jest.fn();
 
-    // It has been mocked, so we can import it now
-    const { BASE_URL } = await import('../../../lib/app/common'); 
-    url = process.env.NODE_ENV === 'production' ? BASE_URL : '';
+    url = APP_ENV === "LIVE" ? "https://mock-base-url.com" : "";
   });
 
   beforeEach(() => {
@@ -247,7 +259,7 @@ describe('TaskModel', () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
 
       const result = await updateRowFromId(999, 'test', 'test', true);
-      expect(result).toEqual(mockData); // the fn returns the updated row
+      expect(result).toEqual({ rows: mockData }); // the fn returns the updated row
       expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/999`, {
         method: 'PUT',
         headers: mockApiHeader,

@@ -11,7 +11,6 @@ import { fetchGraphQL } from '@/models/Task/use-server/TaskGraphqlClient';
 jest.mock('../../../models/Task/use-server/TaskGraphqlClient');
 
 import { Task } from '@/types/Task';
-import { BASE_URL } from '@/lib/app/common';
 
 const mockTasks: Task[] = [
     {
@@ -48,6 +47,20 @@ const mockUpdatedTask: Task = {
 let spyConsoleError: jest.SpyInstance<any, any>;
 
 describe('getTaskGraphQLViewModel', () => {
+  beforeAll(() => {
+    // mock the http only auth_token cookie. 
+    // The presence of this cookie indicates that the user has logged in
+    jest.doMock('next/headers', () => ({
+        cookies: jest.fn(() => ({
+            get: (name: string) => {
+            if (name === 'auth_token') {
+                return { value: 'mocked-token' };
+            }
+            return undefined;
+            },
+        })),
+    }));
+  });
   beforeEach(() => {
     // hide console.error to reduce noise on the console output
     spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});

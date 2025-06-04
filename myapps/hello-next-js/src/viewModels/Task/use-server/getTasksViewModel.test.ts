@@ -30,6 +30,21 @@ describe('getTaskViewModel', () => {
 
     let spyConsoleError: jest.SpyInstance<any, any>;
 
+    beforeAll(() => {
+        // mock the http only auth_token cookie. 
+        // The presence of this cookie indicates that the user has logged in
+        jest.doMock('next/headers', () => ({
+            cookies: jest.fn(() => ({
+                get: (name: string) => {
+                    if (name === 'auth_token') {
+                        return { value: 'mocked-token' };
+                    }
+                    return undefined;
+                },
+            })),
+        }));
+    });
+
     beforeEach(() => {
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});

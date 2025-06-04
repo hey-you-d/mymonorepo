@@ -1,8 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSecret } from "./awsParameterStore";
+import { LOCALHOST_MODE, LIVE_SITE_MODE, APP_ENV } from './featureFlags';
 
 export const MONOREPO_PREFIX = "/hello-next-js";
 export const TASKS_CRUD = "/task-crud-fullstack";
+
+export const JWT_TOKEN_COOKIE_NAME = "auth_token";
 
 export const checkRuntime = () => {
     //export const runtime = "nodejs";
@@ -22,19 +25,14 @@ export const isRunningLocally = (req: NextApiRequest) => {
 }
 
 // for reference: can only be called on server-side only
-export const DOMAIN_URL = process.env.NODE_ENV === "production"
-    //? "https://www.yudimankwanmas.com"
-    ? "http://localhost:3000" // [WIP] remote DB hasn't been created in the production environment
-    : "http://localhost:3000";
-export const BASE_URL = `${DOMAIN_URL}/hello-next-js`;
-export const TASKS_BFF_BASE_API_URL = `${process.env.NODE_ENV === "production" ? BASE_URL : ""}/api/tasks/v1/bff`;
-export const TASKS_SQL_BASE_API_URL = `${process.env.NODE_ENV === "production" ? BASE_URL : ""}/api/tasks/v1/sql`;      
+export const DOMAIN_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.domain : LOCALHOST_MODE.domain;
+export const BASE_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.base.serverSide : LOCALHOST_MODE.base.serverSide;
+export const BASE_URL_CLIENT_COMP = APP_ENV === "LIVE" ? LIVE_SITE_MODE.base.clientSide : LOCALHOST_MODE.base.clientSide;
+export const TASKS_BFF_BASE_API_URL = `${BASE_URL}/api/tasks/v1/bff`;
+export const TASKS_SQL_BASE_API_URL = `${BASE_URL}/api/tasks/v1/sql`;      
         
 export const getInternalApiKey = async (): Promise<string | undefined> => {
-    // [WIP] remote DB hasn't been created in the production environment
-    //const secretId = `/${process.env.NODE_ENV === "production" ? "prod" : "dev"}/tasks/bff/x-api-key`;    
-    const secretId = "/dev/tasks/bff/x-api-key";
-
+    const secretId = APP_ENV === "LIVE" ? LIVE_SITE_MODE.apiKeyId : LOCALHOST_MODE.apiKeyId; 
     const xApiKey = await getSecret(secretId);
     
     return xApiKey;

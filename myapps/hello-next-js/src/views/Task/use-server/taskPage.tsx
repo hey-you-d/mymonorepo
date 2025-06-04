@@ -11,6 +11,7 @@ import {
 } from '@/viewModels/Task/use-server/getTasksViewModel';
 import { TaskSeedDB } from '@/components/Task/use-server/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-server/TaskTable';
+import { TaskUser } from "./taskUser";
 import { Task } from "@/types/Task";
 
 export const TaskPage = () => {
@@ -18,6 +19,7 @@ export const TaskPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [filterText, setFilterText] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
   // Fetch tasks on mount
   useEffect(() => {
@@ -50,10 +52,18 @@ export const TaskPage = () => {
     : tasks;
 
   if (loading) return <p>Loading...</p>;
-   
+
+  const renderFilterField = ( 
+      <input
+        onChange={(e) => setFilterText(e.target.value)}
+        placeholder="Filter detail..."
+      />    
+  );
+
   return (
     <>
       <h2>Default example: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
+      <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <TaskSeedDB
         tasks={tasks}
         setTasks={setTasks}
@@ -61,13 +71,12 @@ export const TaskPage = () => {
         deleteAllRows={deleteAllRows}
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
+        userAuthenticated={userAuthenticated}
       />
+      
       <br />
       <span>Filter task description: </span>
-      <input
-        onChange={(e) => setFilterText(e.target.value)}
-        placeholder="Filter detail..."
-      />
+      {renderFilterField}
       <br />
       <TaskTable
         tasks={confirmedTasks}
@@ -76,6 +85,7 @@ export const TaskPage = () => {
         updateRowFromId={updateRowFromId}
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
+        userAuthenticated={userAuthenticated}
       />
     </>
   );

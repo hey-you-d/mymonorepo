@@ -10,10 +10,27 @@ jest.mock('next/link', () => {
     };
 });
 
+// mock the http only auth_token cookie. 
+// The presence of this cookie indicates that the user has logged in
+jest.mock('next/headers', () => ({
+    cookies: jest.fn(() => ({
+        get: (name: string) => {
+            if (name === 'auth_token') {
+                return { value: 'mocked-token' };
+            }
+            return undefined;
+        },
+    })),
+}));
+
 // Mock the view model functions
 jest.mock('../../../viewModels/Task/use-server/getTasksViewModel', () => ({
     getRowFromId: jest.fn(),
     deleteRowFromId: jest.fn(),
+}));
+
+jest.mock('../../../viewModels/Task/use-server/getTasksUserViewModel', () => ({
+  checkAuthTokenCookieExist: jest.fn(() => true),
 }));
 
 // Mock the TaskDetail component

@@ -159,7 +159,7 @@ sudo apt install postgresql-client
 psql -U postgres -d tasks-db -h localhost
 ```
 
-4. Create a table via the postgresql-client
+4. Create the necessary tables via the postgresql-client
 ```bash
 CREATE TABLE tasks (
   id SERIAL PRIMARY KEY,
@@ -168,7 +168,49 @@ CREATE TABLE tasks (
   completed BOOLEAN DEFAULT FALSE, 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  auth_type TEXT COLLATE "en_US.utf8" NOT NULL DEFAULT 'basic_auth',
+  admin_access BOOLEAN DEFAULT FALSE,  
+  email TEXT COLLATE "en_US.utf8" NOT NULL,
+  hashed_pwd TEXT COLLATE "en_US.utf8" NOT NULL,
+  jwt TEXT COLLATE "en_US.utf8" NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT unique_email UNIQUE (email)
+);
+
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = CURRENT_TIMESTAMP;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_users_updated_at
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION set_updated_at();
 ```
+
+and then set an admin account record in the users table  
+credentials - email: **admin@guy.com** , password: **1234567**
+```bash
+INSERT INTO users (email, hashed_pwd, auth_type, admin_access, jwt)
+VALUES (
+    'admin@guy.com', 
+    '$argon2id$v=19$m=65536,t=5,p=1$Q3mQEKY6fT8ECMDWYRTfeA$uiHc/ijlO7mPlkk7KjiqBF+zu3LrSSkrO2U4Fund8CA', 
+    'basic_auth',
+    TRUE,
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAbm90ZXhpc3QuY29tIiwiaGFzaGVkUGFzc3dvcmQiOiIkYXJnb24yaWQkdj0xOSRtPTY1NTM2LHQ9NSxwPTEkeUtVVGp4Z2ZwSXB6NjhnT1EzYU5ZQSRjVWliSmMyR2V5UDVoOWJRU05kV3dHUlZUcmVKS0Q0YTUwcW02bktQK3EwIiwiaWF0IjoxNzQ4ODI2MDU5LCJleHAiOjE3NDg4Mjk2NTl9.HqBZvMiCq0S6XDbPu8dZJMWA3s6zx5cqGaTjLpUeHLM'
+)
+ON CONFLICT (email) DO NOTHING;
+```
+
+For more info, have a look at [sql_create_tables.sql](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/lib/db/sql_create_tables.sql) and [sql_db_seed.sql](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/lib/db/sql_db_seed.sql)
 
 5. To kickstart the db for localhost development (no need to redo step 1)
 ```bash

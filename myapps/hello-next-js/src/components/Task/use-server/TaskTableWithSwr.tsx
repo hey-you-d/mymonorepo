@@ -18,6 +18,7 @@ export type TaskTableWithSwrType = {
     updateRowFromId: (id: number, title: string, detail: string, completed: boolean) => Promise<void> // **
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
+    userAuthenticated: boolean,
 }
 export type TaskTableType = TaskTableWithSwrType;
 
@@ -28,24 +29,24 @@ const isSafeInput = (str: string) => {
     return regex.test(str);
 };
 
-export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
+export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const appRouter = useRouter();
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
-    const chkBoxHandler = async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
+    const chkBoxHandler = useCallback(async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         setButtonDisabled(true);
         await updateRowFromId(id, title, detail, !isCurrentlySelected);
         
         // Trigger client-side revalidation after server action completes
         mutate("Tasks-API-USE-SWR");
         setButtonDisabled(false);
-    }
+    },  [setButtonDisabled, updateRowFromId]);
 
-    const editTodoHandler = (e: React.MouseEvent, id: number) => {
+    const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
         appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}`);
-    }
+    }, [appRouter]);
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -75,15 +76,23 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
             
             tasks.forEach(aTask => {
                 // for reference: make checkbox an uncontrolled react component
-                const checkbox = (
+                const checkboxTriggeredByButtonDisabled = (
                     <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
                             onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />);
-                    
-                const button = buttonDisabled ? (
+                
+                const checkbox = userAuthenticated
+                    ? checkboxTriggeredByButtonDisabled
+                    : <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />;
+                            
+                const buttonTriggeredByButtonDisabled = buttonDisabled ? (
                     <button type="button" disabled onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>        
                 ) : (
                     <button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>
-                )    
+                );
+                
+                const button = userAuthenticated
+                    ? buttonTriggeredByButtonDisabled
+                    : <button type="button" disabled>Edit</button>;
 
                 output.push(
                     <tr key={aTask.id}>
@@ -113,8 +122,12 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
        const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
        const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
-        const button = !isDisabled
+        const buttonTriggeredByIsDisabled = !isDisabled
             ? <button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button>
+            : <button type="button" disabled>add</button>;
+
+        const button = userAuthenticated
+            ? buttonTriggeredByIsDisabled
             : <button type="button" disabled>add</button>;
 
         return ([
@@ -126,7 +139,7 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
                 <td>{button}</td>
             </>
         ]);
-    }, [addNewTodoHandler]);
+    }, [addNewTodoHandler, userAuthenticated]);
 
     const tFooter = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {

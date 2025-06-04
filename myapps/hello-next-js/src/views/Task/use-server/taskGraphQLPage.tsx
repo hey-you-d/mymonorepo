@@ -9,6 +9,7 @@ import {
     getTasksDBRows,
     seedTaskDB
 } from '@/viewModels/Task/use-server/getTaskGraphQLViewModel';
+import { TaskUserGraphQL } from "./taskUserGraphQL";
 import { TaskSeedDBGraphQL } from '@/components/Task/use-server/TaskSeedDBGraphQL';
 import { TaskTableGraphQL } from '@/components/Task/use-server/TaskTableGraphQL';
 import { Task } from "@/types/Task";
@@ -17,6 +18,7 @@ export const TaskGraphQLPage = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+    const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
     // Fetch tasks on mount
     useEffect(() => {
@@ -46,6 +48,7 @@ export const TaskGraphQLPage = () => {
     return (
         <>
           <h2>Data fetching & querying with Apollo Graphql: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
+          <TaskUserGraphQL userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
           <TaskSeedDBGraphQL
             tasks={tasks}
             setTasks={setTasks}
@@ -53,6 +56,7 @@ export const TaskGraphQLPage = () => {
             deleteAllRows={deleteAllRows}
             buttonDisabled={buttonDisabled}
             setButtonDisabled={setButtonDisabled}
+            userAuthenticated={userAuthenticated}
           />
           <TaskTableGraphQL
             tasks={tasks}
@@ -61,6 +65,7 @@ export const TaskGraphQLPage = () => {
             updateRowFromId={updateRowFromId}
             buttonDisabled={buttonDisabled}
             setButtonDisabled={setButtonDisabled}
+            userAuthenticated={userAuthenticated}
           />
         </>
     );

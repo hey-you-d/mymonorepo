@@ -19,6 +19,7 @@ type TaskTableDefaultType = {
     updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
+    userAuthenticated: boolean,
 }
 export type TaskTableType = TaskTableDefaultType;
 
@@ -29,22 +30,22 @@ const isSafeInput = (str: string) => {
     return regex.test(str);
 };
 
-export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
+export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const appRouter = useRouter();
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
-    const chkBoxHandler = async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
+    const chkBoxHandler = useCallback(async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         setButtonDisabled(true);
         const result: { tasks: Task[] } = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
         setTasks(result.tasks);
         setButtonDisabled(false);
-    }
+    }, [setButtonDisabled, setTasks, updateRowFromId, tasks]);
 
-    const editTodoHandler = (e: React.MouseEvent, id: number) => {
+    const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
         appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}`);
-    }
+    }, [appRouter]);
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -73,18 +74,26 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
             
             tasks.forEach(aTask => {
                 // for reference: make checkbox an uncontrolled react component
-                const checkbox = !buttonDisabled ? (
-                    <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
-                            onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />
-                ) : (
+                const checkboxTriggeredByButtonDisabled = buttonDisabled ? (
                     <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />
+                ) : (
+                    <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
+                        onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />
                 );
+
+                const checkbox = userAuthenticated
+                    ? checkboxTriggeredByButtonDisabled
+                    : <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />;
                     
-                const button = buttonDisabled ? (
-                    <button type="button" disabled onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>        
+                const buttonTriggeredByButtonDisabled = buttonDisabled ? (
+                    <button type="button" disabled>Edit</button>        
                 ) : (
                     <button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>
                 );    
+
+                const button = userAuthenticated
+                    ? buttonTriggeredByButtonDisabled
+                    : <button type="button" disabled>Edit</button>;
 
                 output.push(
                     <tr key={aTask.id}>
@@ -112,10 +121,14 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     }
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
-       const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
-       const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
-        const button = !isDisabled
+        const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
+        const inputForDetail = <input type="text" ref={inputDetailRef} placeholder="Description" defaultValue="" />;
+        const buttonTriggeredByIsDisabled = !isDisabled
             ? <button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button>
+            : <button type="button" disabled>add</button>;
+
+        const button = userAuthenticated
+            ? buttonTriggeredByIsDisabled
             : <button type="button" disabled>add</button>;
 
         return ([
@@ -127,7 +140,7 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
                 <td>{button}</td>
             </>
         ]);
-    }, [addNewTodoHandler]);
+    }, [addNewTodoHandler, userAuthenticated]);
 
     const tFooter = (): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {

@@ -11,10 +11,24 @@ describe('fetchGraphQL', () => {
   beforeAll(async () => {
     jest.resetModules();
 
+    // Must go before any imports
     jest.doMock('../../../lib/app/common', () => ({
       TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
       TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
       DOMAIN_URL: 'http://localhost:3000',
+    }));
+
+    // mock the http only auth_token cookie. 
+    // The presence of this cookie indicates that the user has logged in
+    jest.doMock('next/headers', () => ({
+      cookies: jest.fn(() => ({
+        get: (name: string) => {
+          if (name === 'auth_token') {
+            return { value: 'mocked-token' };
+          }
+          return undefined;
+        },
+      })),
     }));
 
     // Re-import AFTER mocks are in place
@@ -94,7 +108,7 @@ describe('fetchGraphQL', () => {
     const query = `query { tasks { id } }`;
     
     await expect(fetchGraphQL(query)).rejects.toThrow(
-      'error in TaskGraphQL model component\nerror in TaskGraphQL model component'
+      'error in TaskGraphQLClient model component'
     );
   });
 
@@ -108,7 +122,7 @@ describe('fetchGraphQL', () => {
 
     const query = `query { tasks { id } }`;
 
-    await expect(fetchGraphQL(query)).rejects.toThrow('error in TaskGraphQL model component');
+    await expect(fetchGraphQL(query)).rejects.toThrow('error in TaskGraphQLClient model component');
   });
 
   it('throws an error when fetch itself fails (network error)', async () => {
