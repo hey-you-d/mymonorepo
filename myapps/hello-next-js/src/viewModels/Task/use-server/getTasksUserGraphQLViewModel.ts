@@ -26,6 +26,21 @@ const lookupUserQuery = `
     }
 `;
 
+const registerUserMutation = `
+    mutation RegisterUser($email: String!, $password: String!, $jwt: String!) {
+        registerUser(email: $email, hashed_pwd: $password, jwt: $jwt) {
+            id,
+            auth_type,
+            email,
+            hashed_pwd,
+            jwt,
+            admin_access,
+            created_at,
+            updated_at,
+        }
+    }
+`;
+
 export const loginUser = async (email: string, password: string) => {
     try {
         // check backend if the credential exists, and return jwt if confirmed to be exist
@@ -71,24 +86,9 @@ export const registerUser = async(email: string, password: string) => {
     const jwtSecret: { jwtSecret: string } = await getJwtSecret();
     const jwt = await generateJWT(email, hashedPwd, jwtSecret.jwtSecret);
     
-    const mutation = `
-        mutation RegisterUser($email: String!, $password: String!, $jwt: String!) {
-            registerUser(email: $email, hashed_pwd: $password, jwt: $jwt) {
-                id,
-                auth_type,
-                email,
-                hashed_pwd,
-                jwt,
-                admin_access,
-                created_at,
-                updated_at,
-            }
-        }
-    `;
-
     try {
         const variables = { email, password: hashedPwd, jwt };
-        const outcome: UserModelType = await fetchGraphQL(mutation, variables);
+        const outcome: UserModelType = await fetchGraphQL(registerUserMutation, variables);
 
         // store JWT in a cookie
         // for reference: since the cookie is meant for storing a sensitive data (JWT), then we have to create the cookie

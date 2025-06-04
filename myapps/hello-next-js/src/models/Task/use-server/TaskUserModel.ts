@@ -1,8 +1,13 @@
 "use server"
-import { TASKS_SQL_BASE_API_URL, TASKS_API_HEADER } from "@/lib/app/common";
+import { TASKS_API_HEADER } from "@/lib/app/common";
 import { UserModelType } from '@/types/Task';
 
 export const registerUser = async (email: string, password: string, jwt: string, overrideFetchUrl?: string): Promise<UserModelType> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -34,7 +39,12 @@ export const registerUser = async (email: string, password: string, jwt: string,
 }
 
 export const logInUser = async (email: string, overrideFetchUrl?: string): Promise<UserModelType> => {
-   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
+  // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
 

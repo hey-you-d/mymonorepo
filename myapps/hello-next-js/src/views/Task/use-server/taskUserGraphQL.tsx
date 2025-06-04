@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState, MouseEvent } from "react";
 import styles from "@/app/page.module.css";
 import { logoutUser, checkAuthTokenCookieExist } from "@/viewModels/Task/use-server/getTasksUserViewModel";
@@ -65,7 +67,6 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
             setPassword("");
 
             const outcome = await loginUser(email, password);
-            console.log("taskUserGraphQL userLoginHandler: ", outcome);
             if (outcome) {
                 setFormMessage("");
                 sessionStorage.removeItem("email");
@@ -101,7 +102,6 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
             setEmail("");
             setPassword("");
             const outcome = await registerUser(email, password);
-            console.log("taskUserGraphQL userRegisterHandler: ", outcome);
             if (outcome) {
                 setFormMessage("");
                 sessionStorage.removeItem("email");

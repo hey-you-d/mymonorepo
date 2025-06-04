@@ -10,7 +10,6 @@ import {
     logInUser as logInUserModel,
 } from '@/models/Task/use-server/TaskUserModel';
 import { UserModelType } from '@/types/Task';
-import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags';
 
 export const getJwtSecret = async () => {
     try {
@@ -32,6 +31,11 @@ export const getJwtSecret = async () => {
 }
 
 export const createAuthCookie = async (jwt: string) => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } = await import('@/lib/app/featureFlags');
+
     const cookieStore = await cookies();
 
     cookieStore.set(JWT_TOKEN_COOKIE_NAME, jwt, {

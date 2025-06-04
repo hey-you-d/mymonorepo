@@ -9,9 +9,13 @@ import {
   deleteRowFromId as deleteRowFromIdTaskModel
 } from '@/models/Task/use-server/TaskModel';
 import { Task } from '@/types/Task';
-import { BASE_URL } from '@/lib/app/common';
 
 export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       const tasks: Task[] = await getTasksDBRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       return { tasks };
@@ -22,6 +26,11 @@ export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
 };
 
 export const deleteAllRows = async (): Promise<{ tasks: Task[] }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       const tasks: Task[] = await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       return { tasks: tasks };
@@ -32,6 +41,11 @@ export const deleteAllRows = async (): Promise<{ tasks: Task[] }> => {
 };
 
 export const seedTasksDB = async (): Promise<{ tasks: Task[] }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       const tasks: Task[] = await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       return { tasks: tasks };
@@ -42,6 +56,11 @@ export const seedTasksDB = async (): Promise<{ tasks: Task[] }> => {
 };
 
 export const getRowFromId = async (id: number): Promise<{ task: Task | null }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       const task = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
       return { task: task };
@@ -52,6 +71,11 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
 };
 
 export const createRow = async (tasks: Task[], title: string, detail: string): Promise<{ tasks: Task[] }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       const result: Task[] = await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
       
@@ -65,6 +89,11 @@ export const createRow = async (tasks: Task[], title: string, detail: string): P
 };
 
 export const updateRowFromId = async (tasks: Task[], id: number, title: string, detail: string, completed: boolean): Promise<{ tasks: Task[] }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       const updatedRow: Task = await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
 
@@ -80,6 +109,11 @@ export const updateRowFromId = async (tasks: Task[], id: number, title: string, 
 };
 
 export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | null }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       await deleteRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
       // for reference: createRowTaskModel returns the a single task only (the deleted one), 

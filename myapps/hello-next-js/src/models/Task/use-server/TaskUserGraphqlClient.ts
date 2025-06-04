@@ -1,9 +1,13 @@
 "use server"
 import { TASKS_API_HEADER } from "@/lib/app/common";
-import { DOMAIN_URL } from "@/lib/app/common";
 import { UserModelType, UsersDbQueryResultType } from "@/types/Task";
 
 export async function fetchGraphQL(query: string, variables?: Record<string, unknown>) {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { DOMAIN_URL } = await import("@/lib/app/common");
+
     const res = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/user/graphql`, {
         method: 'POST',
         headers: await TASKS_API_HEADER(),

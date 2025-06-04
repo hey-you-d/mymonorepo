@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState, MouseEvent } from "react";
 import styles from "@/app/page.module.css";
 import { registerUser, loginUser, logoutUser, checkAuthTokenCookieExist } from "@/viewModels/Task/use-server/getTasksUserViewModel";

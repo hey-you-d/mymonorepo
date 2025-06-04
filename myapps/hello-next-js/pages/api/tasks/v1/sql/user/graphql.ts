@@ -1,11 +1,13 @@
-import { ApolloServer, gql } from 'apollo-server-micro';
+import { ApolloServer } from '@apollo/server'; // apollo ver.4
+import { startServerAndCreateNextHandler } from '@as-integrations/next';
+import { gql } from 'graphql-tag';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DateTimeResolver } from 'graphql-scalars';
 import { db } from '@/lib/db/db_postgreSQL';
 import { UsersDbQueryResultType as User } from '@/types/Task';
 import { CHECK_API_KEY } from '@/lib/app/common';
 
-const schema = gql`
+export const schema = gql`
     scalar DateTime
 
     type User {
@@ -30,7 +32,7 @@ const schema = gql`
     }
 `;
 
-const resolvers = {
+export const resolvers = {
     DateTime: DateTimeResolver,
     Query: {
         users: async() => {
@@ -60,12 +62,11 @@ const resolvers = {
     },
 }
 
-const server = new ApolloServer({ 
+export const server = new ApolloServer({ 
     typeDefs: schema, 
     resolvers,
     persistedQueries: false,
 });
-const startServer = server.start();
 
 export const config = {
     api: {
@@ -73,15 +74,21 @@ export const config = {
     }
 };
 
-const handler = async(req: NextApiRequest, res: NextApiResponse) => {
+// create a next.js handler
+const handler = startServerAndCreateNextHandler(server, {
+  context: async (req: NextApiRequest, res: NextApiResponse) => {
+    // Check authorization here
     const isAuthorized = await CHECK_API_KEY(req, res);
-    if (!isAuthorized) return res.status(401).json({ error: "Unauthorized access: invalid API key" });
+    if (!isAuthorized) {
+      throw new Error("Unauthorized access: invalid API key");
+    }
+    
+    return {
+      req,
+      res,
+    };
+  },
+});
 
-    await startServer;
-
-    // for reference: set up graphql endpoint at /api/tasks/v1/sql/user/graphql
-    const graphqlHandler = server.createHandler({ path: '/api/tasks/v1/sql/user/graphql' });
-    return graphqlHandler(req, res);
-}
 
 export default handler;

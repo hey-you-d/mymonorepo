@@ -79,7 +79,6 @@ export const useTaskViewModelWithSwr = () => {
   // Function to update a task and update SWR cache
   const updateRowFromId = useCallback(async (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => {
     try {
-      console.log("vm ", completed);
       const updatedRow: Task = await taskModel.updateRowFromId(id, title, detail, completed);
 
       const updatedTasks = tasks.map((item, index) => 

@@ -1,8 +1,13 @@
 "use server"
-import { TASKS_SQL_BASE_API_URL, TASKS_API_HEADER } from "@/lib/app/common";
+import { TASKS_API_HEADER } from "@/lib/app/common";
 import { Task } from "@/types/Task";
 
 export const swrFetcher = async (): Promise<Task[]> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   try {
       const response = await fetch(`${TASKS_SQL_BASE_API_URL}/`, {
           method: 'GET',
@@ -25,6 +30,11 @@ export const swrFetcher = async (): Promise<Task[]> => {
 }
 
 export const getTasksDBRows = async (overrideFetchUrl?: string): Promise<Task[]> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -51,6 +61,11 @@ export const getTasksDBRows = async (overrideFetchUrl?: string): Promise<Task[]>
 }
 
 export const deleteAllRows = async (overrideFetchUrl?: string): Promise<Task[]> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -77,6 +92,11 @@ export const deleteAllRows = async (overrideFetchUrl?: string): Promise<Task[]> 
 }
 
 export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[]> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -103,6 +123,11 @@ export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[]> =>
 }
 
 export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promise<Task | null> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -131,6 +156,11 @@ export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promi
 }
 
 export const createRow = async (title: string, detail: string, overrideFetchUrl?: string): Promise<Task[]> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -162,6 +192,11 @@ export const createRow = async (title: string, detail: string, overrideFetchUrl?
 }
 
 export const updateRowFromId = async  (id: number, title: string, detail: string, completed: boolean, overrideFetchUrl?: string): Promise<Task> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -194,6 +229,11 @@ export const updateRowFromId = async  (id: number, title: string, detail: string
 }
 
 export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Promise<void> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
@@ -220,6 +260,11 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
 }
 
 export const getJwt = async (overrideFetchUrl?: string): Promise<{jwtSecret: string}> => {
+  // for reference:
+  // "use server" should only be used in files that contain 
+  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
+  
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;

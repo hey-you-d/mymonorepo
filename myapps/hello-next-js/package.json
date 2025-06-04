@@ -14,6 +14,7 @@
     "@apollo/client": "^3.13.8",
     "@apollo/utils.keyvadapter": "^4.0.0",
     "@apollo/utils.keyvaluecache": "^3.1.0",
+    "@as-integrations/next": "^3.2.0",
     "@aws-sdk/client-secrets-manager": "^3.808.0",
     "@aws-sdk/client-ssm": "^3.810.0",
     "@keyv/redis": "^4.4.0",
@@ -45,6 +46,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@apollo/server": "^4.12.2",
     "@eslint/eslintrc": "^3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -57,6 +59,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
+    "apollo-server-testing": "^2.25.3",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "eslint-plugin-react-hooks": "^5.2.0",

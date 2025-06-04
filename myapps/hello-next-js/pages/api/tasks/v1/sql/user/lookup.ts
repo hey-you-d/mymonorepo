@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
-import { UsersDbQueryResultType } from '@/types/Task';
+import { UserModelType, UsersDbQueryResultType } from '@/types/Task';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
@@ -12,9 +12,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         try {
           const { email } = req.body;
 
-          const { rows } : { rows: UsersDbQueryResultType[] } = await db.query(`SELECT * FROM users WHERE email = '${email}'`);
+          const result: { rows: UsersDbQueryResultType[] } = await db.query(`SELECT * FROM users WHERE email = '${email}'`);
           
-          const payload = rows.length > 0 && rows[0].email === email ? {
+          // Check for null/undefined result (connection issues)
+          if (!result || !result.rows) {
+            console.error('User Login - invalid outcome from DB query'); // Log detailed error  
+            return res.status(500).json({ error: 'User Login - invalid outcome from DB query' });
+          }
+          const rows = result.rows;
+          const payload: UserModelType = rows != null && rows.length > 0 && rows[0].email === email ? {
             email: rows[0].email, 
             password: rows[0].hashed_pwd, 
             jwt: rows[0].jwt,

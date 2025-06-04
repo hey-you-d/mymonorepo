@@ -10,7 +10,6 @@ import {
   deleteRowFromId as deleteRowFromIdTaskModel
 } from '@/models/Task/use-server/TaskModel';
 import { Task } from '@/types/Task';
-import { BASE_URL } from '@/lib/app/common';
 import { revalidateTag } from "next/cache";
 
 export const fetcher = async (): Promise<Task[]> => {
@@ -26,6 +25,11 @@ export const fetcher = async (): Promise<Task[]> => {
 };
 
 export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       const tasks: Task[] = await getTasksDBRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
 
@@ -40,6 +44,11 @@ export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
 };
 
 export const deleteAllRows = async (): Promise<void> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       
@@ -52,6 +61,11 @@ export const deleteAllRows = async (): Promise<void> => {
 };
 
 export const seedTasksDB = async (): Promise<void> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
 
@@ -64,6 +78,11 @@ export const seedTasksDB = async (): Promise<void> => {
 };
 
 export const getRowFromId = async (id: number): Promise<{ task: Task | null }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       const task = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
 
@@ -78,6 +97,11 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
 };
 
 export const createRow = async (title: string, detail: string): Promise<void> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
       
@@ -90,6 +114,11 @@ export const createRow = async (title: string, detail: string): Promise<void> =>
 };
 
 export const updateRowFromId = async (id: number, title: string, detail: string, completed: boolean): Promise<void> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
       
@@ -102,6 +131,11 @@ export const updateRowFromId = async (id: number, title: string, detail: string,
 };
 
 export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | null }> => {
+    // for reference:
+    // "use server" should only be used in files that contain 
+    // server actions (async functions for form handling, etc.), not in regular React components or utility files.
+    const { BASE_URL } = await import("@/lib/app/common");
+  
     try {
       await deleteRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
       
