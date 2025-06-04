@@ -62,7 +62,7 @@ export const resolvers = {
     },
 }
 
-export const server = new ApolloServer({ 
+const server = new ApolloServer({ 
     typeDefs: schema, 
     resolvers,
     persistedQueries: false,
