@@ -52,7 +52,8 @@ export const createAuthCookie = async (jwt: string) => {
 
     // verify cookie creation is successful before returning 
     const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
-    return token && token.value === jwt;
+    if (token && token.value === jwt) return true;
+    return false; 
 }
 
 export const generateHashedPassword = async (password: string) => {
