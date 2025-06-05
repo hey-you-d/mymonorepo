@@ -62,15 +62,16 @@ import { registerUser as registerUserModel, logInUser as logInUserModel } from '
 
 describe("getTasksUserViewModel", () => {
     interface MockCookieStore {
-    set: jest.Mock;
-    get: jest.Mock;
-    delete: jest.Mock;
+        set: jest.Mock;
+        get: jest.Mock;
+        delete: jest.Mock;
     }
 
     interface MockCookie {
-    value: string;
+        value: string;
     }
 
+    let spyConsoleError: jest.SpyInstance<any, any>;
     let mockCookieStore: MockCookieStore;
 
     beforeEach(() => {
@@ -87,10 +88,15 @@ describe("getTasksUserViewModel", () => {
         
         // Setup environment variables
         process.env.AWS_REGION = 'us-east-1';
+
+        // hide console.error to reduce noise on the console output
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
     });
 
     afterEach(() => {
         jest.resetAllMocks();
+
+        spyConsoleError.mockRestore();
     });
 
     describe('getJwtSecret', () => {

@@ -14,6 +14,7 @@ jest.mock('../../../../../src/lib/app/common', () => (
 import handler from '../../../../../pages/api/tasks/v1/sql/delete-rows';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { mockRequestResponse, apiKeyAuthorizationTestSuite } from './index.test';
 
 describe ("Tasks API handler - delete-rows.ts", () => {
@@ -37,8 +38,8 @@ describe ("Tasks API handler - delete-rows.ts", () => {
             const { req, res } = mockRequestResponse('POST', 
                 { 'x-api-key': 'valid-key' });
             
-            await handler(req, res);
-            
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
             expect(db.query).toHaveBeenCalledWith('DELETE FROM tasks');
             expect(res.status).toHaveBeenCalledWith(200);
         });
@@ -53,7 +54,7 @@ describe ("Tasks API handler - delete-rows.ts", () => {
                 { 'x-api-key': 'whatever' }
             );
                         
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });

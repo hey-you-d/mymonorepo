@@ -14,7 +14,7 @@ import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
 //import Keyv from 'keyv'; 
 //import KeyvRedis from '@keyv/redis'; // Optional Redis adapter:
 
-const typeDefs = gql`
+export const schema = gql`
     type Task {
         id: ID!,
         title: String!,
@@ -37,7 +37,7 @@ const typeDefs = gql`
     }
 `;
 
-const resolvers = {
+export const resolvers = {
     Query: {
         tasks: async() => {
             const res = await db.query('SELECT * FROM tasks ORDER BY id DESC');
@@ -97,7 +97,7 @@ const resolvers = {
 // option 3. You're running in production, and want scalable, resilient, shared caching -> Use Redis or Memcached  
 
 const server = new ApolloServer({ 
-    typeDefs, 
+    typeDefs: schema, 
     resolvers,
     cache: new InMemoryLRUCache(), // option 1 - This is a bounded in-memory cache
     //persistedQueries: false, // option 2 - disable it

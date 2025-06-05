@@ -52,11 +52,11 @@ export const deleteAllRows = async() => {
     const mutation = `
         mutation DeleteTasks {
             deleteTasks {
-            id
-            title
-            detail
-            completed
-            created_at
+                id
+                title
+                detail
+                completed
+                created_at
             }
         }
     `;

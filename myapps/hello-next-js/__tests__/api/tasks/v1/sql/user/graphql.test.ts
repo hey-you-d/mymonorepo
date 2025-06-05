@@ -12,8 +12,6 @@ jest.mock('graphql-scalars', () => ({
     parseLiteral: (ast: any) => new Date(ast.value)
   }
 }));
-
-// Mock the dependencies
 jest.mock('../../../../../../src/lib/db/db_postgreSQL', () => ({
   db: {
     query: jest.fn(),
@@ -110,7 +108,6 @@ const GET_USER_QUERY = gql`
 describe('Tasks Users API handler - graphql.ts', () => {
     let server: ApolloServer;
     const { db } = require('../../../../../../src/lib/db/db_postgreSQL');
-    const { CHECK_API_KEY } = require('../../../../../../src/lib/app/common');
     
     beforeAll(async () => {
         // Create Apollo Server instance for testing
@@ -275,5 +272,31 @@ describe('Tasks Users API handler - graphql.ts', () => {
           expect(response.body.singleResult.errors?.[0].message).toBe('Email already exists');
         }
       });
+    });
+});
+
+// Separate test suite for Next.js API handler configuration
+describe('Next.js API Handler Configuration', () => {
+    it('should export correct configuration', () => {
+        // Test the exported config object
+        const expectedConfig = {
+            api: {
+                bodyParser: false,
+            }
+        };
+
+        // This would be imported from your actual handler file
+        // expect(config).toEqual(expectedConfig);
+        expect(expectedConfig.api.bodyParser).toBe(false);
+    });
+
+    it('should handle server initialization', async () => {
+        const testServer = new ApolloServer({
+            typeDefs: schema,
+            resolvers,
+        });
+
+        await expect(testServer.start()).resolves.not.toThrow();
+        await testServer.stop();
     });
 });

@@ -14,6 +14,7 @@ jest.mock('../../../../../src/lib/app/common', () => (
 import handler from '../../../../../pages/api/tasks/v1/sql/[id]';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { mockRequestResponse, apiKeyAuthorizationTestSuite } from './index.test';
 
 describe ("Tasks API handler - [id].ts", () => {
@@ -46,7 +47,7 @@ describe ("Tasks API handler - [id].ts", () => {
                 { id: '3' }
             );
             
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(db.query).toHaveBeenCalledWith(
                 'SELECT * FROM tasks WHERE id = $1', [3]
@@ -68,8 +69,7 @@ describe ("Tasks API handler - [id].ts", () => {
                 { 'x-api-key': 'valid-key' },
                 { id: '1' }
             );
-            
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
@@ -90,8 +90,7 @@ describe ("Tasks API handler - [id].ts", () => {
                 { 'x-api-key': 'valid-key' },
                 { id: String(newTask.id) }
             );    
-            
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
             
             expect(db.query).toHaveBeenCalledWith(
                 'UPDATE tasks SET title = $1, detail = $2, completed = $3 WHERE id = $4 RETURNING *',
@@ -115,8 +114,7 @@ describe ("Tasks API handler - [id].ts", () => {
                 { 'x-api-key': 'valid-key' },
                 { id: String(newTask.id) }
             );
-
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
@@ -132,8 +130,7 @@ describe ("Tasks API handler - [id].ts", () => {
             const { req, res } = mockRequestResponse('PUT', 
                 { 'whatever': 'whatever' }, { 'x-api-key': 'whatever' }, { id: "whatever" }
             );
-                        
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Invalid ID' });
@@ -149,8 +146,7 @@ describe ("Tasks API handler - [id].ts", () => {
             const { req, res } = mockRequestResponse('PUT', 
                 { id: 1, title: 'whatever' }, { 'x-api-key': 'whatever' }, { id: "whatever" }
             );
-                        
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Invalid ID' });
@@ -169,9 +165,8 @@ describe ("Tasks API handler - [id].ts", () => {
                 {}, 
                 { 'x-api-key': 'valid-key' },
                 { id: '3' });
-             
-            await handler(req, res);
-            
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
             expect(db.query).toHaveBeenCalledWith(
                 'DELETE FROM tasks WHERE id = $1 RETURNING *', [3]
             );
@@ -187,8 +182,7 @@ describe ("Tasks API handler - [id].ts", () => {
 
             const { req, res } = mockRequestResponse('DELETE', {}, { 'x-api-key': 'valid-key' });
             req.query = { id: '999' }; // Non-existent ID
-
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(404);
             expect(res.json).toHaveBeenCalledWith({ error: 'Task not found' });
@@ -207,7 +201,7 @@ describe ("Tasks API handler - [id].ts", () => {
                 { id: '3' }
             );
             req.query = { id: "3" };
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
@@ -226,7 +220,7 @@ describe ("Tasks API handler - [id].ts", () => {
                 {  id: "a string"  }
             );
             
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Invalid ID' });
