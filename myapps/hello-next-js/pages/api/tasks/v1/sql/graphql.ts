@@ -1,10 +1,13 @@
-import { ApolloServer, gql } from 'apollo-server-micro';
+import { ApolloServer } from '@apollo/server'; // apollo ver.4
+import { gql } from 'graphql-tag';
+import { expressMiddleware } from '@apollo/server/express4';
+import express from 'express';
+import { json } from 'body-parser';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { Task } from "@/types/Task";
 import { values, placeholders } from "./seed-table";
 import { CHECK_API_KEY } from '@/lib/app/common';
-
 import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
 
 //import { KeyvAdapter } from '@apollo/utils.keyvadapter';
@@ -114,14 +117,41 @@ export const config = {
 };
 
 const handler = async(req: NextApiRequest, res: NextApiResponse) => {
-    const isAuthorized = await CHECK_API_KEY(req, res);
-    if (!isAuthorized) return res.status(401).json({ error: "Unauthorized access: invalid API key" });
-
+    // Wait for ApolloServer to start
     await startServer;
+    
+    // Create an Express app
+    const app = express();
+    // Use JSON parser middleware before Apollo middleware
+    app.use(json());
+    // Custom middleware for API key check
+    app.use(async (reqExp, resExp, next) => {
+        try {
+            const isAuthorized = await CHECK_API_KEY(
+                reqExp as unknown as NextApiRequest, 
+                resExp as unknown as NextApiResponse
+            );
+            if (!isAuthorized) {
+                //throw new Error("Unauthorized API-Key");
+                res.status(401).end('Unauthorized API Key');
+                return;
+            }
+            next();
+            //return { req, res };
+        } catch (err) {
+            console.error("Apollo context error", err);
+            throw err;
+        }
+    });
+    // Apply Apollo Server's Express middleware
+    app.use(
+        expressMiddleware(server, {
+            context: async ({ req, res }) => ({ req, res }),
+        })
+    );
 
-    // set up graphql endpoint at /api/tasks/v1/sql/graphql
-    const graphqlHandler = server.createHandler({ path: '/api/tasks/v1/sql/graphql' });
-    return graphqlHandler(req, res);
+    // Let express handle the request
+    return app(req as unknown as express.Request, res as unknown as express.Response);
 }
 
 export default handler;

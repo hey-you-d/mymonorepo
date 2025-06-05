@@ -11,7 +11,7 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
     const res = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/user/graphql`, {
         method: 'POST',
         headers: await TASKS_API_HEADER(),
-        body: JSON.stringify({ query, variables }),
+        body: JSON.stringify({ query, variables: variables ?? {} }),
     });
 
     // capture http level error (http status code is not 2xx)

@@ -1,5 +1,8 @@
 import { ApolloServer } from '@apollo/server'; // apollo ver.4
-import { startServerAndCreateNextHandler } from '@as-integrations/next';
+//import { startServerAndCreateNextHandler } from '@as-integrations/next';
+import { expressMiddleware } from '@apollo/server/express4';
+import express from 'express';
+import { json } from 'body-parser';
 import { gql } from 'graphql-tag';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DateTimeResolver } from 'graphql-scalars';
@@ -67,6 +70,7 @@ const server = new ApolloServer({
     resolvers,
     persistedQueries: false,
 });
+const startServer = server.start();
 
 export const config = {
     api: {
@@ -75,6 +79,7 @@ export const config = {
 };
 
 // create a next.js handler
+/*
 const handler = startServerAndCreateNextHandler(server, {
   context: async (req: NextApiRequest, res: NextApiResponse) => {
     // Check authorization here
@@ -89,6 +94,44 @@ const handler = startServerAndCreateNextHandler(server, {
     };
   },
 });
+*/
+const handler = async(req: NextApiRequest, res: NextApiResponse) => {
+    // Wait for ApolloServer to start
+    await startServer;
+    
+    // Create an Express app
+    const app = express();
+    // Use JSON parser middleware before Apollo middleware
+    app.use(json());
+    // Custom middleware for API key check
+    app.use(async (reqExp, resExp, next) => {
+        try {
+            const isAuthorized = await CHECK_API_KEY(
+                reqExp as unknown as NextApiRequest, 
+                resExp as unknown as NextApiResponse
+            );
+            if (!isAuthorized) {
+                //throw new Error("Unauthorized API-Key");
+                res.status(401).end('Unauthorized API Key');
+                return;
+            }
+            next();
+            //return { req, res };
+        } catch (err) {
+            console.error("Apollo context error", err);
+            throw err;
+        }
+    });
+    // Apply Apollo Server's Express middleware
+    app.use(
+        expressMiddleware(server, {
+            context: async ({ req, res }) => ({ req, res }),
+        })
+    );
+
+    // Let express handle the request
+    return app(req as unknown as express.Request, res as unknown as express.Response);
+}
 
 
 export default handler;
