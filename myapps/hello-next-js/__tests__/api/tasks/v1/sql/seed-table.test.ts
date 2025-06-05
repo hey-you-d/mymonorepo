@@ -14,6 +14,7 @@ jest.mock('../../../../../src/lib/app/common', () => (
 import handler, { values, placeholders } from '../../../../../pages/api/tasks/v1/sql/seed-table';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { mockRequestResponse, apiKeyAuthorizationTestSuite } from './index.test';
 
 describe ("Tasks API handler - seed-table.ts", () => {
@@ -43,7 +44,7 @@ describe ("Tasks API handler - seed-table.ts", () => {
             
             const { req, res } = mockRequestResponse('POST', 
                 { 'x-api-key': 'valid-key' });
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(201);
         });
@@ -60,7 +61,7 @@ describe ("Tasks API handler - seed-table.ts", () => {
                 { 'x-api-key': 'whatever' }
             );
                         
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });

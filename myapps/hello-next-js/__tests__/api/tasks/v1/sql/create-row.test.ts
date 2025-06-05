@@ -14,6 +14,7 @@ jest.mock('../../../../../src/lib/app/common', () => (
 import handler from '../../../../../pages/api/tasks/v1/sql/create-row';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { mockRequestResponse, apiKeyAuthorizationTestSuite } from './index.test';
 
 describe ("Tasks API handler - create-row.ts", () => {
@@ -39,7 +40,7 @@ describe ("Tasks API handler - create-row.ts", () => {
             const { req, res } = mockRequestResponse('POST', 
                 { title: 'New Task', detail: 'New Detail' },
                 { 'x-api-key': 'valid-key' });
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
             
             expect(db.query).toHaveBeenCalledWith(
                 'INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *',
@@ -60,8 +61,7 @@ describe ("Tasks API handler - create-row.ts", () => {
                 { title: 'whatever', detail: 'whatever' }, 
                 { 'x-api-key': 'whatever' }
             );
-                        
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
@@ -77,8 +77,7 @@ describe ("Tasks API handler - create-row.ts", () => {
             const { req, res } = mockRequestResponse('POST', 
                 { 'whatever': 'whatever' }, { 'x-api-key': 'whatever' }
             );
-                        
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Title is required' });
@@ -94,8 +93,7 @@ describe ("Tasks API handler - create-row.ts", () => {
             const { req, res } = mockRequestResponse('POST', 
                 { title: 'whatever' }, { 'x-api-key': 'whatever' }
             );
-                        
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Detail is required' });

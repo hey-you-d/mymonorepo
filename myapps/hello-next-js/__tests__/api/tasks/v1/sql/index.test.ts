@@ -52,7 +52,7 @@ export const apiKeyAuthorizationTestSuite = () => {
         
             const { req, res } = mockRequestResponse('GET', {}, { 'x-api-key': 'valid-key' });
         
-            await handler(req as NextApiRequest, res as NextApiResponse);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
         
             expect(CHECK_API_KEY).toHaveReturnedWith(true);
             expect(CHECK_API_KEY).toHaveBeenCalledWith(req, res);
@@ -65,7 +65,7 @@ export const apiKeyAuthorizationTestSuite = () => {
             (CHECK_API_KEY as jest.Mock).mockReturnValue(false);
             
             const { req, res } = mockRequestResponse('GET', {}, { 'x-api-key': 'invalid-key' });
-            await handler(req as NextApiRequest, res as NextApiResponse);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
         
             expect(CHECK_API_KEY).toHaveReturnedWith(false);
             expect(CHECK_API_KEY).toHaveBeenCalledWith(req, res);
@@ -103,7 +103,7 @@ describe ("Tasks API handler - index.ts", () => {
             (db.query as jest.Mock).mockResolvedValueOnce({ rows: mockTasks });
 
             const { req, res } = mockRequestResponse('GET', {}, { 'x-api-key': 'whatever' });
-            await handler(req as NextApiRequest, res as NextApiResponse);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
             
             expect(db.query).toHaveBeenCalledWith('SELECT * FROM tasks ORDER BY id DESC');
             expect(res.status).toHaveBeenCalledWith(200);
@@ -116,7 +116,7 @@ describe ("Tasks API handler - index.ts", () => {
             
             const { req, res } = mockRequestResponse('GET', {}, { 'x-api-key': 'whatever' });
                         
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
@@ -132,8 +132,8 @@ describe ("Tasks API handler - index.ts", () => {
             (db.query as jest.Mock).mockResolvedValueOnce({ rows: [newTask] });
             
             const { req, res } = mockRequestResponse('POST', { title: 'New Task' });
-            await handler(req, res);
-            
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
             expect(db.query).toHaveBeenCalledWith(
                 'INSERT INTO tasks (title) VALUES ($1) RETURNING *',
                 ['New Task']
@@ -153,7 +153,7 @@ describe ("Tasks API handler - index.ts", () => {
                 { 'title': 'whatever' }, { 'x-api-key': 'whatever' }
             );
                         
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
@@ -170,7 +170,7 @@ describe ("Tasks API handler - index.ts", () => {
                 { 'whatever': 'whatever' }, { 'x-api-key': 'whatever' }
             );
                         
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Title is required' });

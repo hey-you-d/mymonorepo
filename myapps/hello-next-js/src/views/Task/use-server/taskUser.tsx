@@ -148,6 +148,9 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
     <div className={styles.tasksUserForm}>
         <span>{"You are logged in  "}</span>
         <span><button type="button" onClick={(e) => userLogoutHandler(e)}>Logout</button></span>
+        <div className={styles.tasksFormMessage}>
+            {formMessage}
+        </div>
     </div>
    );
 }

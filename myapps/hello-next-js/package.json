@@ -1,6 +1,6 @@
 {
   "name": "hello-next-js",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
+    "@apollo/server": "^4.12.2",
     "@apollo/utils.keyvadapter": "^4.0.0",
     "@apollo/utils.keyvaluecache": "^3.1.0",
     "@as-integrations/next": "^3.2.0",
@@ -22,7 +23,6 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-react": "^5.18.0",
-    "apollo-server-micro": "^3.13.0",
     "argon2": "^0.43.0",
     "axios": "^1.8.4",
     "fast-equals": "^5.2.2",
@@ -46,7 +46,6 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@apollo/server": "^4.12.2",
     "@eslint/eslintrc": "^3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -59,7 +58,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
-    "apollo-server-testing": "^2.25.3",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "eslint-plugin-react-hooks": "^5.2.0",

@@ -52,6 +52,8 @@ describe('getTaskViewModel', () => {
     });
 
     afterEach(() => {
+        jest.resetAllMocks();
+        
         spyConsoleError.mockRestore();
     });
 
