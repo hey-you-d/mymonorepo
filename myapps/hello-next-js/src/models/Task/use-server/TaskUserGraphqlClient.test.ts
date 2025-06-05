@@ -129,7 +129,8 @@ describe('TaskUserGraphqlClient - fetchGraphQL', () => {
                     headers: mockApiHeader,
                     body: JSON.stringify({
                         query: 'query { allUsers { email } }',
-                        variables: undefined
+                        // unlike apollo-server-micro, apollo ver.4 doesn't accept undefined for variables
+                        variables: {} 
                     }),
                 }
             );
