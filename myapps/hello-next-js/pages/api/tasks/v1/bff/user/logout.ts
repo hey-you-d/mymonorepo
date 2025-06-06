@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
-import { cookies } from 'next/headers';
+import cookie from 'cookie';
 
 // for reference:
 // for SPA: rely on BFF (the approach below) for any server-side operations
@@ -9,20 +9,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     switch (req.method) {
         case "GET" :
             try {
-                const cookieStore = await cookies();
-                cookieStore.delete(JWT_TOKEN_COOKIE_NAME);
+                // Invalidate cookie by setting it to empty with maxAge = 0
+                res.setHeader('Set-Cookie', `${JWT_TOKEN_COOKIE_NAME}=; Path=/; HttpOnly; Max-Age=0; SameSite=Strict`);
                 
-                // verify cookie deletion is successful before returning 
-                const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
-                // if token is either undefined or its value is an empty string, 
-                // then it's no longer exist in the client browser, which what we want
-                return token && token.value.length > 0 
-                    ? res.status(500).json({ 
-                        error: true, message: 'User BFF - user logout process - http-only cookie deletion failed' 
-                    }) 
-                    : res.status(200).json({ 
-                        error: false, message: 'User BFF - user logout process - successfully deleting http-only cookie' 
-                    });
+                // let client verify if the cookie has been deleted in a subsequent request
+                return res.status(200).json({ 
+                    error: false, message: 'User BFF - user logout process - successfully deleting http-only cookie' 
+                });
             } catch (error) {
                 console.error("User BFF - user logout process - http-only cookie deletion failed : ", error);
         

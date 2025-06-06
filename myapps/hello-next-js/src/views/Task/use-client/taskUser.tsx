@@ -5,7 +5,7 @@ import styles from "@/app/page.module.css";
 import useTaskUserViewModel from "@/viewModels/Task/use-client/useTaskUserViewModel";
 import { TaskUserType } from "@/types/Task";
 
-export const TaskUserPage = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
+export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
     const [email, setEmail] = useState<string>(sessionStorage.getItem("email") ?? "");
     const [password, setPassword] = useState<string>("");
     const [emailMessage, setEmailMessage] = useState<string>("");

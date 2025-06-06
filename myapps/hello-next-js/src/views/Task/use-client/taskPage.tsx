@@ -1,16 +1,18 @@
 'use client';
 import { useState, useEffect } from "react";
 import { useTaskViewModel } from '@/viewModels/Task/use-client/useTasksViewModel';
+import { TaskUser } from "./taskUser";
 import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
 
 export const TaskPage = () => {
-  const { tasks, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
+  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
 
   const [filterText, setFilterText] = useState("");
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
   const isFiltering = filterText.trim() !== "";
   
@@ -32,10 +34,7 @@ export const TaskPage = () => {
   
   const confirmedTasks = isFiltering ? filteredTasks : (tasks ? tasks : []);
   
-  // for reference: ideally, render a skeleton image, but for now comment out 
-  // the line below in order to visually demonstrate react component rehydration
-  // after clicking the add-row button 
-  //if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
 
   return tasks ? (
     <>
@@ -44,6 +43,7 @@ export const TaskPage = () => {
       <input type="text" placeholder="Filter detail..."  
         onChange={(e) => setFilterText(e.target.value)}
       />
+      <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <TaskSeedDB 
         totalRows={tasks.length} 
         seedTaskDB={seedTasksDB} 

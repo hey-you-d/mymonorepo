@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { cookies } from 'next/headers';
+import cookie from 'cookie';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
 import { UserModelType } from '@/types/Task';
@@ -26,25 +26,24 @@ export const getJwtSecret = async () => {
     }  
 }
 
-export const createAuthCookie = async (jwt: string) => {
-    const cookieStore = await cookies();
+export const createAuthCookie = async (res: NextApiResponse, jwt: string) => {
+    const path = APP_ENV == "LIVE" 
+        ? LIVE_SITE_MODE.cookie.path 
+        : LOCALHOST_MODE.cookie.path;
+    const secure = APP_ENV == "LIVE" 
+        ? LIVE_SITE_MODE.cookie.secure
+        : LOCALHOST_MODE.cookie.secure;
 
-    cookieStore.set(JWT_TOKEN_COOKIE_NAME, jwt, {
-        httpOnly: true, // always set to true to prevent XSS attacks
-        secure: APP_ENV == "LIVE" 
-            ? LIVE_SITE_MODE.cookie.secure
-            : LOCALHOST_MODE.cookie.secure, // set to true to travel over HTTPS
-        sameSite: 'strict', // set to strict to prevent CSRF attack
-        maxAge: 3600, // lets keep token expiration short (1hr or less for access token)
-        path: APP_ENV == "LIVE" 
-            ? LIVE_SITE_MODE.cookie.path 
-            : LOCALHOST_MODE.cookie.path, // limit cookie accessibility
-    });
+    const cookieParts = [
+        `${JWT_TOKEN_COOKIE_NAME}=${jwt}`,
+        `Path=${path}`,
+        'HttpOnly',
+        'Max-Age=3600',
+        'SameSite=Strict',
+    ];
+    if (secure) cookieParts.push('Secure'); // Append 'Secure' only if true
 
-    // verify cookie creation is successful before returning 
-    const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
-    if (token && token.value === jwt) return true;
-    return false; 
+    res.setHeader('Set-Cookie', cookieParts.join('; '));
 }
 
 export const generateHashedPassword = async (password: string) => {
@@ -112,26 +111,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 const outcome: UserModelType = await response.json();
                 
                 // store JWT in a http-only cookie
-                // for reference: since the cookie is meant for storing a sensitive data (JWT), then we have to create the cookie
-                // on the server-side 
                 if (outcome.jwt) {
-                    const cookieCreation = await createAuthCookie(outcome.jwt);
-                    if (cookieCreation) {
-                        // the return value if the whole process is successful
-                        return res.status(200).json({
-                            error: false,
-                            message: "User BFF - successful user registration process" 
-                        });
-                    } else {
-                        throw new Error("User BFF - user registration process - http-only cookie creation failed");    
-                    }
+                    await createAuthCookie(res, outcome.jwt);
+                    
+                    return res.status(200).json({
+                        error: false,
+                        message: "User BFF - successful user registration process" 
+                    });
                 }
 
-                // Very likely there is a bug in the implementation if the workflow ends-up here
-                // IDEA: rollback the operation if cookie creation failed.
                 return res.status(500).json({
                     error: true,
-                    message: "User BFF - Unknown Error - user registration"
+                    message: "User BFF - user registration error - jwt is undefined"
                 });
             } catch(error) {
                 console.error("User BFF - Error registering user credential: ", error );
