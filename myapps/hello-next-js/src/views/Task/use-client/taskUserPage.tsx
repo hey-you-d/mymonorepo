@@ -3,7 +3,6 @@
 import { useEffect, useState, MouseEvent } from "react";
 import styles from "@/app/page.module.css";
 import useTaskUserViewModel from "@/viewModels/Task/use-client/useTaskUserViewModel";
-//import { registerUser, loginUser, logoutUser, checkAuthTokenCookieExist } from "@/viewModels/Task/use-server/getTasksUserViewModel";
 import { TaskUserType } from "@/types/Task";
 
 export const TaskUserPage = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {

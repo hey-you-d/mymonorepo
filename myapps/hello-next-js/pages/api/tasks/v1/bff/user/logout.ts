@@ -2,10 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
 import { cookies } from 'next/headers';
 
-// for reference: instead of creating a BFF endpoint that doesn't fetch any data from the API endpoint,
-// creating a server-side component is considered to be a better approach. However, since the server-side variant MVVM
-// has already demonstrated the implementation of user logout process via the server component, and also 
-// for the sake of consistency, we'll stick with this implementation.  
+// for reference:
+// for SPA: rely on BFF (the approach below) for any server-side operations
+// for next.js pages: better use Page router's getServerSideProps or App router's server actions 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     switch (req.method) {
         case "GET" :
