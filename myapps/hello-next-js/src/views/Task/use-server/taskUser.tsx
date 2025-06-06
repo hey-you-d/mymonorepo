@@ -10,7 +10,7 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
     const [password, setPassword] = useState<string>("");
     const [emailMessage, setEmailMessage] = useState<string>("");
     const [passwordMessage, setPasswordMessage] = useState<string>("");
-    const [formMessage, setFormMessage] = useState<string>("");
+    const [formMessage, setFormMessage] = useState<string>("only logged-in users can interact with the table");
 
     useEffect(() => {
         const checkUserLoggedIn = async () => {
