@@ -172,10 +172,10 @@ a.secondary {
 /* temp styling: Tasks User Form module */
 .tasksUserForm {
     display: grid;
-    grid-template-columns: 0.15fr 0.3fr 0.3fr;
+    grid-template-columns: 0.15fr 0.3fr 0.5fr;
     grid-template-rows: repeat(2, 0.1fr);
     gap: 8px;
-    min-height: 85px;
+    min-height: 105px;
 }
 
 .tasksLabelPassword, .tasksFieldPassword, .tasksMessagePassword {
