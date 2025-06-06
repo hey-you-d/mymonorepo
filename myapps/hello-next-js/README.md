@@ -91,21 +91,20 @@ yarn workspace hello-next-js start
         - Next.js App router: [/task-crud-fullstack/use-server/page.tsx](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/page.tsx)
         - Next.js App router #2: [/task-crud-fullstack/use-server/edit/[id]](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/edit/[id]/page.tsx)    
 4. User Registraion, Login, & API Authorization with Basic Auth & JWT
-    - API Authorization with JWT (bearer token in Authorization header) **STATUS: TODO** 
+    - [API Authorization with JWT (bearer token in Authorization header)] **STATUS: TODO** 
         - prerequisites: completed both server-side & client side MVVM variants implementation
+    - [API endpoint] **STATUS: DONE**
+        - [user API endpoint](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/sql/user)
     - [Client-side components variant - is served via Next.js Page router] **STATUS: TODO**
-        - Default implementation -- 
-            - API endpoint: tba
+        - SQL Query implementation: 
             - Model component: tba
             - ViewModel component: tba
             - View component: tba
-        - GraphQL variant --
-            - API endpoint: tba
+        - GraphQL Query variant:
             - Model component: tba
             - ViewModel component: tba
             - View component: tba
     - [Server-side components variant - is served via Next.js App router] **STATUS: DONE**
-        - API endpoint: [user API endpoint](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/sql/user)
         - SQL Query implementation:
             - Model component: [TaskUserModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-server/TaskUserModel.ts)
             - ViewModel component: [getTasksUserViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksUserViewModel.ts)
@@ -134,7 +133,8 @@ yarn workspace hello-next-js start
     - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/swagger](http://localhost:3000/hello-next-js/task-crud-fullstack/swagger)
     - Merged PR: [https://github.com/hey-you-d/mymonorepo/pull/37/files](https://github.com/hey-you-d/mymonorepo/pull/37/files)
 9. Frontend feature: Alternative data query with Apollo GraphQL Server
-    - [API ENDPOINT URL (GraphQL server)]: [http://localhost:3000/hello-next-js/api/tasks/v1/sql/graphql](http://localhost:3000/hello-next-js/api/tasks/v1/sql/graphql)
+    - [API ENDPOINT URL (GraphQL server)]: **STATUS: DONE**
+        - [graphql.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/pages/api/tasks/v1/sql/graphql.ts)
     - [Client-side components variant - is served via Next.js Page router] **STATUS: DONE**
         - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
         - Model component: [TaskGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-client/TaskGraphqlClient.ts)
