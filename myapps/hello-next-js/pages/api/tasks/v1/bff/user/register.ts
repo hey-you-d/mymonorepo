@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import cookie from 'cookie';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
 import { UserModelType } from '@/types/Task';
