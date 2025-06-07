@@ -11,7 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
             try {
                 const rawCookieHeader = req.headers.cookie;
                 if (!rawCookieHeader) {
-                    console.warn("User BFF - check auth_token cookie - No cookies received in request headers");
+                    console.warn("Notification: User BFF - check auth_token cookie - No cookies received in request headers");
                     return res.status(200).json({ outcome: false });
                 }
                 

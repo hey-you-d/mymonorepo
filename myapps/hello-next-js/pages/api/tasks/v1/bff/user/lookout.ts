@@ -9,6 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
         case "POST" :
             try {
                 const { email, password } : { email: string, password: string } = req.body;
+                
                 if (!email || email.trim().length < 1) {
                     return res.status(400).json(
                         { error: true, message: 'BFF user login error - Email is required' }
@@ -54,6 +55,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                             message: "User BFF - successful user login process" 
                         });
                     }
+                    return res.status(200).json({
+                        error: true,
+                        message: "User BFF - user login attempt outcome - wrong password" 
+                    });
+                }
+
+                if (outcome.message === "provided email does not exist in the db") {
+                    return res.status(200).json({
+                        error: true,
+                        message: `User BFF - user login attempt outcome - ${outcome.message}` 
+                    });
                 }
 
                 return res.status(500).json({
