@@ -2,6 +2,11 @@
 import { TASKS_BFF_BASE_API_URL } from "@/lib/app/common";
 import { UserModelType } from "@/types/Task";
 
+const headers = {
+    "Content-Type": "application/json",
+    credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
+};
+
 export class TaskUserModel {    
     constructor() {}
 
@@ -12,9 +17,7 @@ export class TaskUserModel {
        
         const response = await fetch(`${finalUrl}/user/register`, {
             method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers,
             body: JSON.stringify({
               email,
               password
@@ -39,9 +42,7 @@ export class TaskUserModel {
 
         const response = await fetch(`${finalUrl}/user/lookout`, {
             method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers,
             body: JSON.stringify({
               email,
               password
@@ -66,9 +67,7 @@ export class TaskUserModel {
 
         const response = await fetch(`${finalUrl}/user/logout`, {
             method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers,
         });
 
         if (!response.ok) {
@@ -87,11 +86,9 @@ export class TaskUserModel {
         // In this case, we must supply an absolute URL  
         const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}/`;
 
-        const response = await fetch(`${finalUrl}/user/cookie`, {
+        const response = await fetch(`${finalUrl}/user/httpcookie`, {
             method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers,
         });
 
         if (!response.ok) {

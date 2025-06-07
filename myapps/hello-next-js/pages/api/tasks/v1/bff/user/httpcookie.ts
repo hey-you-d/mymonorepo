@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 
 // for reference:
 // for SPA: rely on BFF (the approach below) for any server-side operations
@@ -9,7 +9,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
     switch (req.method) {
         case "GET" :
             try {
-                const parsedCookies = cookie.parse(req.headers.cookie || '');
+                const rawCookieHeader = req.headers.cookie;
+                if (!rawCookieHeader) {
+                    console.warn("User BFF - check auth_token cookie - No cookies received in request headers");
+                    return res.status(200).json({ outcome: false });
+                }
+                
+                const parsedCookies = cookie.parse(rawCookieHeader);
                 const token = parsedCookies[JWT_TOKEN_COOKIE_NAME];
 
                 // if token is either undefined or its value is an empty string, 
