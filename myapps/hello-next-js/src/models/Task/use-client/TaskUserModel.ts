@@ -31,6 +31,8 @@ export class TaskUserModel {
         }
 
         const result: UserModelType = await response.json();
+
+        console.log("TaskUserModel | registerUser | result ", result);
         
         return result;
     }
@@ -40,7 +42,7 @@ export class TaskUserModel {
         // In this case, we must supply an absolute URL  
         const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}/`;
 
-        const response = await fetch(`${finalUrl}/user/lookout`, {
+        const response = await fetch(`${finalUrl}/user/lookup`, {
             method: 'POST',
             headers,
             body: JSON.stringify({
@@ -56,7 +58,7 @@ export class TaskUserModel {
         }
 
         const result: UserModelType = await response.json();
-        
+
         return result;
     }
 

@@ -81,16 +81,50 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                         { error: true, message: 'BFF user registration error - Email is required' }
                     );  
                 }
+
+                // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+                // In this case, we must supply an absolute URL
+                const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
+
+                // lookup email in the db
+                try {
+                    const response = await fetch(`${finalUrl}/user/lookup`, {
+                        method: 'POST',
+                        headers: await TASKS_API_HEADER(),
+                        body: JSON.stringify({
+                            email,
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        console.error("User BFF - Error checking user credential: ", `${response.status} - ${response.statusText}`);
+                        // If the response isn't OK, throw an error to be caught in the catch block
+                        throw new Error(`User BFF - Error checking user credential in db: ${response.status} ${response.statusText}`);
+                    } 
+                
+                    const outcome: UserModelType = await response.json();
+
+                    console.log("BFF | lookup | outcome ", outcome);
+
+                    if(!outcome.error && outcome.email && outcome.password && outcome.jwt) {
+                        // this email can't be used for registration, it has already existed in the DB
+                        return res.status(200).json({
+                            error: true,
+                            message: "User BFF - user registration attempt - email address cannot be used for registration", 
+                        });
+                    }
+                } catch (error) {
+                    console.error("Failed to lookup the entered email in the DB as part of the user registration process: ", error);
+            
+                    throw error;
+                }
+
                 // generate salted & hashed password string  with argon2id encryption.
                 const hashedPwd = await generateHashedPassword(password);
             
                 // generate JTW token
                 const jwtSecret: { jwtSecret: string } = await getJwtSecret();
                 const jwt = await generateJWT(email, hashedPwd, jwtSecret.jwtSecret);
-                
-                // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
-                // In this case, we must supply an absolute URL  
-                const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
                 
                 const response = await fetch(`${finalUrl}/user/register`, {
                     method: 'POST',
@@ -109,9 +143,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 } 
             
                 const outcome: UserModelType = await response.json();
+
+                console.log("BFF registerUser ", outcome);
                 
                 // store JWT in a http-only cookie
-                if (outcome.jwt) {
+                if (outcome.jwt === jwt) {
                     await createAuthCookie(res, outcome.jwt);
                     
                     return res.status(200).json({
@@ -119,7 +155,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                         message: "User BFF - successful user registration process" 
                     });
                 }
-
+               
                 return res.status(500).json({
                     error: true,
                     message: "User BFF - user registration error - jwt is undefined"
