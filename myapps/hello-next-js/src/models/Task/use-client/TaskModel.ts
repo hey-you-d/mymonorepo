@@ -27,32 +27,6 @@ export const swrFetcher = async () => {
 export class TaskModel {    
     constructor() {}
 
-    // for debugging only
-    async getJwt(): Promise<{jwtSecret: string}> {
-      try {
-        const response = await fetch(`${TASKS_BFF_BASE_API_URL}/jwt`, {
-          method: 'GET',
-          headers: {
-              "Content-Type": "application/json",
-          }
-        });
-
-        if (!response.ok) {
-          console.error("Error: JWT Fetch failed: ", `${response.status} - ${response.statusText}`);
-          // If the response isn't OK, throw an error to be caught in the catch block
-          throw new Error(`Error: JWT Fetch failed: ${response.status} ${response.statusText}`);
-        }
-
-        const result:{ jwtSecret:string } = await response.json();
-      
-        return result;
-      } catch(error) {
-        console.error("Error fetching JWT: ", error );
-
-        throw error;
-      }
-    }
-
     async getTasksDBRows(overrideFetchUrl?: string): Promise<Task[]> {
       // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
       // In this case, we must supply an absolute URL  
