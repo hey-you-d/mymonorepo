@@ -12,7 +12,6 @@ const useTaskUserViewModel = () => {
         setLoading(true);
         try {
           const result: User | undefined = await taskUserModel.registerUser(email, password);
-          console.log("useTaskUserViewModel | registerUser | result ", result);
           return (result && !result.error); 
         } catch (error) {
           console.error("useTaskUserViewModel | registerUser | Error: failed to register a new user: ", error);

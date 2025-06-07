@@ -104,8 +104,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 
                     const outcome: UserModelType = await response.json();
 
-                    console.log("BFF | lookup | outcome ", outcome);
-
                     if(!outcome.error && outcome.email && outcome.password && outcome.jwt) {
                         // this email can't be used for registration, it has already existed in the DB
                         return res.status(200).json({
@@ -143,8 +141,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 } 
             
                 const outcome: UserModelType = await response.json();
-
-                console.log("BFF registerUser ", outcome);
                 
                 // store JWT in a http-only cookie
                 if (outcome.jwt === jwt) {

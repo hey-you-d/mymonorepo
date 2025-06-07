@@ -31,8 +31,6 @@ export class TaskUserModel {
         }
 
         const result: UserModelType = await response.json();
-
-        console.log("TaskUserModel | registerUser | result ", result);
         
         return result;
     }
