@@ -131,19 +131,22 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
     };
 
     const renderLoginBtn = () => {
-        return !loading
+        return true // TODO
+        //return !loading
             ? <button type="button" onClick={(e) => userLoginHandler(e)}>Login</button>
             : <button type="button" disabled>Login</button>
     };
 
     const renderRegisterBtn = () => {
-        return !loading
+        return true // TODO
+        //return !loading
             ? <button type="button" onClick={(e) => userRegisterHandler(e)}>Register</button>
             : <button type="button" disabled>Register</button>
     };
 
     const renderLogoutBtn = () => {
-        return !loading
+        return true // TODO
+        //return !loading
             ? <button type="button" onClick={(e) => userLogoutHandler(e)}>Logout</button>
             : <button type="button" disabled>Logout</button>
     };
