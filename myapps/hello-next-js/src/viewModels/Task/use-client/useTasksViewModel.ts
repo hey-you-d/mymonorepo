@@ -30,7 +30,7 @@ export const useTaskViewModel = () => {
       setTasks(result);
     } catch (error) {
       console.error("Failed to delete tasks db rows:", error);
-      setTasks(tasks);
+      setTasks(tasks); // returns the unaltered tasks instead of an empty array
     } finally {
       setLoading(false);
     }

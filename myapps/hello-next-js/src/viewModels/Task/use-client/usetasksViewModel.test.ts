@@ -43,10 +43,8 @@ describe('useTaskViewModel', () => {
     
     const { result } = renderHook(() => useTaskViewModel());
     
-    waitFor(() => {
-      expect(result.current.tasks).toEqual([]);
-      expect(result.current.loading).toBe(true);
-    });
+    expect(result.current.tasks).toEqual(undefined); // the default value of the tasks state is undefined
+    expect(result.current.loading).toBe(true);
   });
 
   it('should load tasks on mount', async () => {
@@ -54,11 +52,10 @@ describe('useTaskViewModel', () => {
     
     const { result } = renderHook(() => useTaskViewModel());
     
-    // Initial state
-    waitFor(() => {
-      expect(result.current.tasks).toEqual([]);
-      expect(result.current.loading).toBe(true);
-    });
+    // Initial state (b4 executing CSR in useEffect)
+    expect(result.current.tasks).toEqual(undefined); // the default value of the tasks react state is undefined
+    expect(result.current.loading).toBe(true);
+
     // Wait for useEffect to complete
     await act(async () => {
       await Promise.resolve(); // Let the useEffect complete
@@ -155,9 +152,9 @@ describe('useTaskViewModel', () => {
       await result.current.deleteAllRows();
     });
     
-    // On error, tasks should be set to empty array
-    waitFor(() => {
-      expect(result.current.tasks).toEqual([]);
+    // On failed delete operation, tasks should remain unchanged
+    await waitFor(() => {
+      expect(result.current.tasks).toEqual(mockTasks);
     });
   });
 });

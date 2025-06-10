@@ -163,7 +163,7 @@ describe('TaskUserGraphQL Component', () => {
             fireEvent.change(passwordInput, { target: { value: '123' } });
             fireEvent.click(loginButton);
             
-            waitFor(() => {
+            await waitFor(() => {
                 expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
             });
         });
@@ -180,7 +180,7 @@ describe('TaskUserGraphQL Component', () => {
             fireEvent.change(passwordInput, { target: { value: '123' } });
             fireEvent.click(loginButton);
             
-            waitFor(() => {
+            await waitFor(() => {
                 expect(screen.getByText('incorrect email format')).toBeInTheDocument;
                 expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
             });
@@ -246,7 +246,7 @@ describe('TaskUserGraphQL Component', () => {
             const loginButton = screen.getByText('Login');
             fireEvent.click(loginButton);
             
-            waitFor(() => {
+            await waitFor(() => {
                 expect(loginUser).not.toHaveBeenCalled();
                 expect(screen.getByText('incorrect email format')).toBeInTheDocument;
                 expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;

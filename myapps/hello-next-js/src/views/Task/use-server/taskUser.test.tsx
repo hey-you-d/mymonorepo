@@ -124,10 +124,10 @@ describe('TaskUser Component', () => {
             (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(true);
         });
 
-        it('should render logout interface when user is authenticated', () => {
+        it('should render logout interface when user is authenticated', async () => {
             render(<TaskUser userAuthenticated={true} setUserAuthenticated={mockSetUserAuthenticated} />);
             
-            waitFor(() => {
+            await waitFor(() => {
                 expect(screen.getByText('You are logged in')).toBeInTheDocument;
                 expect(screen.getByText('Logout')).toBeInTheDocument;
                 expect(screen.queryByPlaceholderText('Email')).not.toBeInTheDocument;
@@ -150,7 +150,7 @@ describe('TaskUser Component', () => {
             fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
             fireEvent.click(loginButton);
             
-            waitFor(() => {
+            await waitFor(() => {
                 expect(screen.getByText('incorrect email format')).toBeInTheDocument;
             });    
         });
@@ -164,7 +164,7 @@ describe('TaskUser Component', () => {
             fireEvent.change(passwordInput, { target: { value: '123' } });
             fireEvent.click(loginButton);
             
-            waitFor(() => {
+            await waitFor(() => {
                 expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
             });    
         });
@@ -181,7 +181,7 @@ describe('TaskUser Component', () => {
             fireEvent.change(passwordInput, { target: { value: '123' } });
             fireEvent.click(loginButton);
             
-            waitFor(() => {
+            await waitFor(() => {
                 expect(screen.getByText('incorrect email format')).toBeInTheDocument;
                 expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
             });
@@ -191,7 +191,7 @@ describe('TaskUser Component', () => {
             fireEvent.change(passwordInput, { target: { value: 'password123' } });
             fireEvent.click(loginButton);
             
-            waitFor(() => {
+            await waitFor(() => {
                 expect(screen.queryByText('incorrect email format')).not.toBeInTheDocument;
                 expect(screen.queryByText('password must not be less than 6 chars')).not.toBeInTheDocument;
             });    
