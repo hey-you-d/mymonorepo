@@ -5,6 +5,7 @@ import TaskUser from "./taskUser";
 import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
+import styles from "@/app/page.module.css";
 
 export const TaskWithSWRPage = () => {
   const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();
@@ -71,12 +72,12 @@ export const TaskWithSWRPage = () => {
         setButtonDisabled={setButtonDisabled}
         userAuthenticated={userAuthenticated}
       />
-      <br/>
-      <br/>
-      <span>filter task description: </span><input ref={filterInputRef} placeholder="Filter detail..." />
-      <button type="button" onClick={searchHandler}>Filter</button>
-      <button type="button" onClick={clearSearchHandler}>Clear</button> 
-      <br/>
+      <p>filter task description: </p>
+      <div className={styles.tasksFilterRow}>
+        <div className={styles.tasksFilterCol1}><input ref={filterInputRef} placeholder="Filter detail..." /></div>
+        <div className={styles.tasksFilterCol2}><button type="button" onClick={searchHandler}>Filter</button></div>
+        <div className={styles.tasksFilterCol3}><button type="button" onClick={clearSearchHandler}>Clear</button></div>
+      </div>
       <TaskTable 
         tasks={confirmedTasks} 
         createRow={createRow} 
