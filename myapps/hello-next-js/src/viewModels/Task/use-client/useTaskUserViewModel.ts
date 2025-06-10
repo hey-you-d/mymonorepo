@@ -12,7 +12,10 @@ const useTaskUserViewModel = () => {
         setLoading(true);
         try {
           const result: User | undefined = await taskUserModel.registerUser(email, password);
-          return (result && !result.error); 
+          if (result) {
+            return (!result.error);
+          }
+          return false; 
         } catch (error) {
           console.error("useTaskUserViewModel | registerUser | Error: failed to register a new user: ", error);
           throw error;
@@ -25,7 +28,10 @@ const useTaskUserViewModel = () => {
         setLoading(true);
         try {
           const result: User | undefined = await taskUserModel.loginUser(email, password);
-          return (result && !result.error); 
+          if (result) {
+            return (!result.error);
+          }
+          return false; 
         } catch (error) {
           console.error("useTaskUserViewModel | loginUser | Error: user login failure: ", error);
           throw error;
@@ -38,7 +44,10 @@ const useTaskUserViewModel = () => {
         setLoading(true);
         try {
           const result: User | undefined = await taskUserModel.logoutUser();
-          return (result && !result.error); 
+          if (result) {
+            return (!result.error);
+          }
+          return false;
         } catch (error) {
           console.error("useTaskUserViewModel | logoutUser | Error: user logout failure: ", error);
           throw error;  

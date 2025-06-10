@@ -13,7 +13,7 @@ export class TaskUserModel {
     async registerUser(email: string, password: string, overrideFetchUrl?: string): Promise<UserModelType | undefined> {
         // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
         // In this case, we must supply an absolute URL  
-        const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}/`;
+        const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
        
         const response = await fetch(`${finalUrl}/user/register`, {
             method: 'POST',
@@ -30,7 +30,7 @@ export class TaskUserModel {
             throw new Error(`TaskUserModel - Error registering a new user: ${response.status}`);
         }
 
-        const result: UserModelType = await response.json();
+        const result: UserModelType | undefined = await response.json();
         
         return result;
     }
@@ -38,7 +38,7 @@ export class TaskUserModel {
     async loginUser(email: string, password: string, overrideFetchUrl?: string): Promise<UserModelType | undefined> {
         // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
         // In this case, we must supply an absolute URL  
-        const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}/`;
+        const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
 
         const response = await fetch(`${finalUrl}/user/lookup`, {
             method: 'POST',
@@ -55,7 +55,7 @@ export class TaskUserModel {
             throw new Error(`TaskUserModel - Error user login attempt: ${response.status}`);
         }
 
-        const result: UserModelType = await response.json();
+        const result: UserModelType | undefined = await response.json();
 
         return result;
     }
@@ -63,7 +63,7 @@ export class TaskUserModel {
     async logoutUser(overrideFetchUrl?: string): Promise<UserModelType | undefined> {
         // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
         // In this case, we must supply an absolute URL  
-        const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}/`;
+        const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
 
         const response = await fetch(`${finalUrl}/user/logout`, {
             method: 'GET',
@@ -76,7 +76,7 @@ export class TaskUserModel {
             throw new Error(`TaskUserModel - Error user logout attempt: ${response.status}`);
         }
 
-        const result: UserModelType = await response.json();
+        const result: UserModelType | undefined = await response.json();
         
         return result;
     }
@@ -84,7 +84,7 @@ export class TaskUserModel {
     async checkAuthTokenCookieExist(overrideFetchUrl?: string): Promise<boolean> {
         // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
         // In this case, we must supply an absolute URL  
-        const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}/`;
+        const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
 
         const response = await fetch(`${finalUrl}/user/httpcookie`, {
             method: 'GET',
