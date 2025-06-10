@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef, useEffect } from "react";
 import { useTaskViewModelWithSwr } from '@/viewModels/Task/use-client/useTasksViewModelWithSwr';
+import TaskUser from "./taskUser";
 import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
@@ -10,6 +11,7 @@ export const TaskWithSWRPage = () => {
 
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
   const filterInputRef = useRef<HTMLInputElement>(null); 
 
@@ -60,12 +62,14 @@ export const TaskWithSWRPage = () => {
   return tasks ? (
     <>
       <h2>Frontend cached with Vercel SWR: MVVM client-side components rendered with Next.js App Router</h2>
+      <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <TaskSeedDB 
         totalRows={tasks.length} 
         seedTaskDB={seedTasksDB} 
         deleteAllRows={deleteAllRows} 
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
+        userAuthenticated={userAuthenticated}
       />
       <br/>
       <br/>
@@ -79,6 +83,7 @@ export const TaskWithSWRPage = () => {
         updateRowFromId={updateRowFromId} 
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}  
+        userAuthenticated={userAuthenticated}
       />
     </>
   ) : (<></>);

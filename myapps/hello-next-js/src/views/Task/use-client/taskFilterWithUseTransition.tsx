@@ -17,7 +17,7 @@ import Link from "next/link";
 
 // resolution: 
 // save yourself from the potential headache, better rely on useDeferredValue
-export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
+export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     // for reference: 
     // recall, react state updates are blocking
     // - react will process the state update immediately
@@ -65,6 +65,7 @@ export const TaskFilterWithUseTransition = ({ tasks, createRow, updateRowFromId,
             updateRowFromId={updateRowFromId} 
             buttonDisabled={buttonDisabled}
             setButtonDisabled={setButtonDisabled} 
+            userAuthenticated={userAuthenticated}
           />
         </>
     ) : (<p>Is Pending...</p>);

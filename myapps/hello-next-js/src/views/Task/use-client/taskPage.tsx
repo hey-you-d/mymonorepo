@@ -50,6 +50,7 @@ export const TaskPage = () => {
         deleteAllRows={deleteAllRows} 
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
+        userAuthenticated={userAuthenticated}      
       />
       <TaskTable 
         tasks={confirmedTasks} 
@@ -57,6 +58,7 @@ export const TaskPage = () => {
         updateRowFromId={updateRowFromId} 
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
+        userAuthenticated={userAuthenticated}      
       />
     </>
   ) : (<></>);

@@ -10,9 +10,10 @@ type TaskSeedDBType = {
     deleteAllRows: () => Promise<void>,
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
+    userAuthenticated: boolean,
 }
 
-export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled } : TaskSeedDBType) => {
+export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBType) => {
     const onClickHandler = async (e: React.FormEvent) => {
         e.preventDefault();    
         setButtonDisabled(true);
@@ -24,17 +25,22 @@ export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisable
         setButtonDisabled(false);
     }
 
-    const buttonLabel = totalRows <= 0 ? "Seed DB" : "Delete all rows";
-    const renderButton: React.ReactElement = buttonDisabled ? (
+    const renderButtonTriggeredByButtonDisabled: React.ReactElement = buttonDisabled ? (
         <button type="button" disabled>
-            {buttonLabel}
+            {totalRows <= 0 ? "Seed DB" : "Delete all rows"}
         </button>
     ) : (
         <button type="button" onClick={onClickHandler}>
-            {buttonLabel}
+            {totalRows <= 0 ? "Seed DB" : "Delete all rows"}
         </button>
     );
 
+    const renderButton: React.ReactElement = userAuthenticated 
+        ? renderButtonTriggeredByButtonDisabled
+        : ( <button type="button" disabled>
+                {totalRows <= 0 ? "Seed DB" : "Delete all rows"}
+            </button> );
+     
     return (
         <>
             <p>{`Currently, there are ${totalRows} rows in the Tasks table.`}</p>

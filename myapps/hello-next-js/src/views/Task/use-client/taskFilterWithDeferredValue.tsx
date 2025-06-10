@@ -16,7 +16,7 @@ import { TaskTable } from '@/components/Task/use-client/TaskTable';
 // Cancelability:	No explicit control	-vs- Fully controllable (timeout can be cleared)
 // Use case:	Optimizing rendering in concurrent React	-vs- Delaying function calls like API requests
 // Timing:	Not configurable — React decides -vs-	Configurable (setTimeout, e.g. 300ms debounce)
-export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
+export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const [search, setSearch] = useState("");
     
     const deferredSearch = useDeferredValue(search);
@@ -51,6 +51,7 @@ export const TaskFilterWithDeferredValue = ({ tasks, createRow, updateRowFromId,
             updateRowFromId={updateRowFromId} 
             buttonDisabled={buttonDisabled}
             setButtonDisabled={setButtonDisabled} 
+            userAuthenticated={userAuthenticated}
           />
         </>
     ) : (<></>);

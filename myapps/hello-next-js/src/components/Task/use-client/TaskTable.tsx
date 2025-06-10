@@ -12,6 +12,7 @@ type TaskTableType = {
     updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<void>
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
+    userAuthenticated: boolean,
 }
 
 const isSafeInput = (str: string) => {
@@ -21,7 +22,7 @@ const isSafeInput = (str: string) => {
     return regex.test(str);
 };
 
-export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
+export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const [title, setTitle] = useState("");
     const [detail, setDetail] = useState("");
 
@@ -54,19 +55,27 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
             const output:React.ReactElement[] = [];
             
             tasks.forEach(aTask => {
-                // make checkbox an uncontrolled react component
-                const checkbox = !buttonDisabled ? (
+                const checkboxTriggeredByButtonDisabled = !buttonDisabled ? (
                     <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
                             onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />
                 ) : (
                     <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />
                 );
+
+                const checkbox = userAuthenticated
+                    ? checkboxTriggeredByButtonDisabled
+                    : <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />;
+                  
                     
-                const button = buttonDisabled ? (
-                    <button type="button" disabled onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>        
+                const buttonTriggeredByButtonDisabled = buttonDisabled ? (
+                    <button type="button" disabled>Edit</button>        
                 ) : (
                     <button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>
                 );
+
+                const button = userAuthenticated
+                    ? buttonTriggeredByButtonDisabled
+                    : <button type="button" disabled>Edit</button>;
 
                 output.push(
                     <tr key={aTask.id}>
@@ -96,8 +105,12 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement => {
         const inputTitle = <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />;
         const inputDetail = <input type="text" placeholder="Description" value={detail} onChange={e => setDetail(e.target.value)} />;
-        const button = !isDisabled
+        const buttonTriggeredByIsDisabled = !isDisabled
             ? <button type="button" onClick={(e) => addNewTodoHandler(e)}>add</button>
+            : <button type="button" disabled>add</button>;
+
+        const button = userAuthenticated
+            ? buttonTriggeredByIsDisabled
             : <button type="button" disabled>add</button>;
 
         return (
@@ -109,7 +122,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
                 <td>{button}</td>
             </tr>
         );
-    }, [addNewTodoHandler, title, detail]);
+    }, [addNewTodoHandler, title, detail, userAuthenticated]);
 
     const tFooter = (): React.ReactElement => {
         if (Array.isArray(tasks) && tasks.length > 0) {
