@@ -16,8 +16,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.getTasksDBRows();
       setTasks(result);
     } catch (error) {
-      console.error("Failed to fetch tasks db rows:", error);
-      setTasks([]);
+      console.error("useTasksViewModel | getTasksDBRows | Failed to fetch tasks db rows:", error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -29,8 +29,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.deleteAllRows();
       setTasks(result);
     } catch (error) {
-      console.error("Failed to delete tasks db rows:", error);
-      setTasks(tasks); // returns the unaltered tasks instead of an empty array
+      console.error("useTasksViewModel | deleteAllRows | Failed to delete tasks db rows:", error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -42,8 +42,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.seedTasksDB();
       setTasks(result);
     } catch (error) {
-      console.error("Failed to seed tasks db:", error);
-      setTasks([]);
+      console.error("useTasksViewModel | seedTasksDB | Failed to seed tasks db:", error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -55,8 +55,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.getRowFromId(id);
       setTasks(result);
     } catch (error) {
-      console.error(`Failed to get row for id ${id}:`, error);
-      setTasks([]);
+      console.error(`useTasksViewModel | getRowFromId | Failed to get row for id ${id}:`, error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -68,8 +68,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.createRow(title, detail);
       setTasks([result[0], ...tasks]);
     } catch (error) {
-      console.error("Failed to create a new row in the db: ", error);
-      setTasks(tasks);
+      console.error("useTasksViewModel | createRow | Failed to create a new row in the db: ", error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -86,8 +86,8 @@ export const useTaskViewModel = () => {
 
       setTasks(updatedTasks);
     } catch (error) {
-      console.error(`Failed to update row for id ${id}:`, error);
-      setTasks(tasks);
+      console.error(`useTasksViewModel | updateRowFromId | Failed to update row for id ${id}:`, error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -99,24 +99,32 @@ export const useTaskViewModel = () => {
       await taskModel.deleteRowFromId(id);
       setTasks([]);
     } catch (error) {
-      console.error(`Failed to delete row for id ${id}:`, error);
-      setTasks(tasks);
+      console.error(`useTasksViewModel | getTasksDBRows | Failed to delete row for id ${id}:`, error);
+      throw error;
     } finally {
       setLoading(false);
     }
   }, [taskModel, tasks]);
   
-  // CSR approach -> first ever call of getTasksDBRows to populate the tasks array
+  // For reference: CSR approach -> first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {
-    // only required to populate the data after inital page load (run once only)
+    // For reference: only required to populate the data after inital page load (run once only)
     if (!tasks) {
-      getTasksDBRows();
+      // For reference: Wrapping it in an async IIFE lets you await it and safely suppress any rejection.
+      (async () => {
+        try {
+          await getTasksDBRows();
+        } catch (err) {
+          // For reference: Optional - already logged inside getTasksDBRows, so we don't need to log here
+        }
+      })();
     }
   }, [tasks, getTasksDBRows]);
-  
+
   return {
     tasks,
     loading,
+    getTasksDBRows,
     seedTasksDB,
     deleteAllRows,
     createRow,
