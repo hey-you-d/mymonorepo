@@ -4,7 +4,7 @@
 // responding to user actions passed in as props.
 import { Dispatch, SetStateAction } from 'react';
 
-type TaskSeedDBType = {
+export type TaskSeedDBType = {
     totalRows: number, 
     seedTaskDB: () => Promise<void>,
     deleteAllRows: () => Promise<void>,
@@ -18,9 +18,19 @@ export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisable
         e.preventDefault();    
         setButtonDisabled(true);
         if (totalRows <= 0) {
-            await seedTaskDB();
+            try {
+                await seedTaskDB();
+            } catch(err) {
+                // For reference: Optional - already logged inside seedTaskDB, so we don't need to log here
+                // this try catch statement is needed to make this component to be unit-testable
+            } 
         }  else {
-            await deleteAllRows();
+            try {
+                await deleteAllRows();
+            } catch(err) {
+                // For reference: Optional - already logged inside deleteAllRows, so we don't need to log here
+                // this try catch statement is needed to make this component to be unit-testable
+            }
         }
         setButtonDisabled(false);
     }

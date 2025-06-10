@@ -116,6 +116,7 @@ export const useTaskViewModel = () => {
           await getTasksDBRows();
         } catch (err) {
           // For reference: Optional - already logged inside getTasksDBRows, so we don't need to log here
+          // this try catch statement is needed to make this component to be unit-testable
         }
       })();
     }
