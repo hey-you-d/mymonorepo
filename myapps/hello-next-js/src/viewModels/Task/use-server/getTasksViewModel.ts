@@ -8,7 +8,7 @@ import {
   updateRowFromId as updateRowFromIdTaskModel,
   deleteRowFromId as deleteRowFromIdTaskModel
 } from '@/models/Task/use-server/TaskModel';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 
 export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
     // for reference:

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { getRowFromId, deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
 import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
 import { TaskDetail } from '@/components/Task/use-server/TaskDetail';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 
 export const TaskDetailPage = ({id}: {id: number}) => {
@@ -35,15 +35,21 @@ export const TaskDetailPage = ({id}: {id: number}) => {
 
   useEffect(() => {
       const checkUserLoggedIn = async () => {
-          // for reference: the http only auth_token cookie is not accessible from the client-side
-          const authTokenCookieExist = await checkAuthTokenCookieExist();
-          if (authTokenCookieExist && !userAuthenticated) {
-              setUserAuthenticated(true);
-          }
-          if (!authTokenCookieExist && userAuthenticated) {
-              setUserAuthenticated(false);
+          try {
+            // for reference: the http only auth_token cookie is not accessible from the client-side
+            const authTokenCookieExist = await checkAuthTokenCookieExist();
+            if (authTokenCookieExist && !userAuthenticated) {
+                setUserAuthenticated(true);
+            }
+            if (!authTokenCookieExist && userAuthenticated) {
+                setUserAuthenticated(false);
 
-              // TODO: a modal popup that says "you have been logged out"
+                // TODO: a modal popup that says "you have been logged out"
+            }
+          } catch(err) {
+            // For reference: Optional - already logged inside checkAuthTokenCookieExist, so we don't need to log here
+            // this try catch statement is needed to make this component to be unit-testable
+            console.error("Optional - already logged inside checkAuthTokenCookieExist ", err);
           }
       };
 

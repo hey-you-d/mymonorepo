@@ -1,7 +1,7 @@
 'use client';
 import { useMemo, useCallback } from 'react';
 import { TaskModel, swrFetcher } from '@/models/Task/use-client/TaskModel';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 import useSWR, { mutate } from 'swr';
 
 const fetcher = async () => {

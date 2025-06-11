@@ -6,8 +6,7 @@
 // responding to user actions passed in as props.
 import { Dispatch, SetStateAction } from 'react';
 import { mutate } from 'swr';
-import { Task } from '@/types/Task';
-
+import type { Task } from '@/types/Task';
 
 // For reference: **
 // the viewmodel fn will call revalidateTag to refresh the tasks array instead of returning the updated tasks array

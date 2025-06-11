@@ -1,5 +1,5 @@
 import * as TaskModel from '../../../models/Task/use-server/TaskModel';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 import { BASE_URL } from '@/lib/app/common';
 
 jest.mock('../../../models/Task/use-server/TaskModel', () => ({

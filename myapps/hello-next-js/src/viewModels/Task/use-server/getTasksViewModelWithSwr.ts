@@ -9,7 +9,7 @@ import {
   updateRowFromId as updateRowFromIdTaskModel,
   deleteRowFromId as deleteRowFromIdTaskModel
 } from '@/models/Task/use-server/TaskModel';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 import { revalidateTag } from "next/cache";
 
 export const fetcher = async (): Promise<Task[]> => {

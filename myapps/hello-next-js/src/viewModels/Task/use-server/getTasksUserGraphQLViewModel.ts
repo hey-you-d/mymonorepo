@@ -9,7 +9,7 @@ import {
     generateHashedPassword, 
     generateJWT 
 } from './getTasksUserViewModel';
-import { UserModelType } from '@/types/Task';
+import type { UserModelType } from '@/types/Task';
 
 const lookupUserQuery = `
     query LookUpUser($email: String!) {

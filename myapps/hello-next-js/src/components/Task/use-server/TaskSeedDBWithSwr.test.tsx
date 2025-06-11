@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TaskSeedDBWithSwr } from './TaskSeedDBWithSwr';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 
 // mock the http only auth_token cookie. 
 // The presence of this cookie indicates that the user has logged in

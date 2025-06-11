@@ -163,7 +163,9 @@ describe('TaskUserGraphQL Component', () => {
             fireEvent.change(passwordInput, { target: { value: '123' } });
             fireEvent.click(loginButton);
             
-            expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            await waitFor(() => {
+                expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            });
         });
 
         it('should clear validation messages when valid input is provided', async () => {
@@ -178,8 +180,10 @@ describe('TaskUserGraphQL Component', () => {
             fireEvent.change(passwordInput, { target: { value: '123' } });
             fireEvent.click(loginButton);
             
-            expect(screen.getByText('incorrect email format')).toBeInTheDocument;
-            expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            await waitFor(() => {
+                expect(screen.getByText('incorrect email format')).toBeInTheDocument;
+                expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            });
             
             // Then provide valid inputs
             fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -242,9 +246,11 @@ describe('TaskUserGraphQL Component', () => {
             const loginButton = screen.getByText('Login');
             fireEvent.click(loginButton);
             
-            expect(loginUser).not.toHaveBeenCalled();
-            expect(screen.getByText('incorrect email format')).toBeInTheDocument;
-            expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            await waitFor(() => {
+                expect(loginUser).not.toHaveBeenCalled();
+                expect(screen.getByText('incorrect email format')).toBeInTheDocument;
+                expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            });
         });
     });
 
@@ -350,7 +356,7 @@ describe('TaskUserGraphQL Component', () => {
                 expect(emailInput.value).toBe('');
                 expect(passwordInput.value).toBe('');
             });
-            });
+        });
 
         it('should clear form fields after successful registration', async () => {
             (registerUser as jest.Mock).mockResolvedValue(true);

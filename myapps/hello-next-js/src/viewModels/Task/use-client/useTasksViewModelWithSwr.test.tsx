@@ -2,7 +2,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { SWRConfig } from 'swr';
 import { useTaskViewModelWithSwr } from './useTasksViewModelWithSwr';
 import { TaskModel } from '@/models/Task/use-client/TaskModel';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 
 // Mock the entire TaskModel module
 jest.mock('../../../models/Task/use-client/TaskModel');

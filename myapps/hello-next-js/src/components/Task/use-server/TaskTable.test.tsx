@@ -1,5 +1,5 @@
 import React, { SetStateAction, Dispatch } from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
@@ -210,7 +210,92 @@ describe('TaskTable Component', () => {
         });
     });
 
-    describe('Edge cases', () => {
+    describe('Input validation (isSafeInput)', () => {
+        const validInputs = [
+            'Valid task',
+            'Task with numbers 123',
+            'Mixed: Valid-Task_123 (test)!'
+        ];
+
+        const invalidInputs = [
+            'Task with punctuation.,!?\'"()-_:;',
+            '<script>alert("xss")</script>',
+            'SELECT * FROM tasks',
+            'Task with | pipe',
+            'Task with # hash',
+            'Task with @ symbol',
+            'Task with % percent'
+        ];
+
+        it('accepts valid inputs', async () => {
+            for (const validInput of validInputs) {
+                const mockTasks: Task[] = [
+                    { id: 1, title: 'Test Task 1', detail: 'Test Detail 1', completed: false, created_at: '' },
+                ];
+                const defaultProps2 = {
+                    tasks: mockTasks,
+                    setTasks: mockSetTasks as Dispatch<SetStateAction<Task[]>>,
+                    createRow: mockCreateRow,
+                    updateRowFromId: mockUpdateRowFromId,
+                    buttonDisabled: false,
+                    setButtonDisabled: mockSetButtonDisabled,
+                    userAuthenticated: true
+                };
+
+                const { unmount } = render(<TaskTable {...defaultProps2} />);
+                
+                const titleInput = screen.getByPlaceholderText('Title');
+                const detailInput = screen.getByPlaceholderText('Description');
+                const addButton = screen.getByText('add');
+                
+                fireEvent.change(titleInput, { target: { value: validInput } });
+                fireEvent.change(detailInput, { target: { value: 'Valid detail' } });
+                
+                await act(async () => {
+                    fireEvent.click(addButton);
+                });
+                
+                expect(mockCreateRow).toHaveBeenCalled();
+                mockCreateRow.mockClear();
+
+                // destroy the render to avoid duplicate in the next loop
+                unmount();
+            }
+        });
+
+        it('rejects invalid inputs', async () => {
+            for (const invalidInput of invalidInputs) {
+                const mockTasks: Task[] = [
+                    { id: 1, title: 'Test Task 1', detail: 'Test Detail 1', completed: false, created_at: '' },
+                ];
+                const defaultProps2 = {
+                    tasks: mockTasks,
+                    createRow: mockCreateRow,
+                    updateRowFromId: mockUpdateRowFromId,
+                    buttonDisabled: false,
+                    setButtonDisabled: mockSetButtonDisabled,
+                    userAuthenticated: true
+                };
+
+                const { unmount } =  render(<TaskTable {...defaultProps} />);
+                
+                const titleInput = screen.getByPlaceholderText('Title');
+                const detailInput = screen.getByPlaceholderText('Description');
+                const addButton = screen.getByText('add');
+                
+                fireEvent.change(titleInput, { target: { value: invalidInput } });
+                fireEvent.change(detailInput, { target: { value: 'Valid detail' } });
+                
+                await act(async () => {
+                    fireEvent.click(addButton);
+                });
+                
+                expect(mockCreateRow).not.toHaveBeenCalled();
+
+                // destroy the render to avoid duplicate in the next loop
+                unmount();
+            }
+        });
         it('rejects input that is too long', async () => {
             render(<TaskTable {...defaultProps} />);
             
@@ -225,7 +310,9 @@ describe('TaskTable Component', () => {
                 expect(defaultProps.createRow).not.toHaveBeenCalled();
             });
         });
+    });
 
+    describe('Edge cases', () => {
         test('handles async errors in createRow', async () => {
             mockCreateRow.mockRejectedValue(new Error('Network error'));
             

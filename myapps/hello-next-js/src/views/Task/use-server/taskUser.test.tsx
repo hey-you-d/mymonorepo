@@ -61,7 +61,7 @@ describe('TaskUser Component', () => {
                 expect(checkAuthTokenCookieExist).toHaveBeenCalled();
                 expect(mockSetUserAuthenticated).toHaveBeenCalledWith(true);
             });
-            });
+        });
 
         it('should set user as unauthenticated if no auth token exists', async () => {
             (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(false);
@@ -124,13 +124,15 @@ describe('TaskUser Component', () => {
             (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(true);
         });
 
-        it('should render logout interface when user is authenticated', () => {
+        it('should render logout interface when user is authenticated', async () => {
             render(<TaskUser userAuthenticated={true} setUserAuthenticated={mockSetUserAuthenticated} />);
-      
-            expect(screen.getByText('You are logged in')).toBeInTheDocument;
-            expect(screen.getByText('Logout')).toBeInTheDocument;
-            expect(screen.queryByPlaceholderText('Email')).not.toBeInTheDocument;
-            expect(screen.queryByPlaceholderText('Password')).not.toBeInTheDocument;
+            
+            await waitFor(() => {
+                expect(screen.getByText('You are logged in')).toBeInTheDocument;
+                expect(screen.getByText('Logout')).toBeInTheDocument;
+                expect(screen.queryByPlaceholderText('Email')).not.toBeInTheDocument;
+                expect(screen.queryByPlaceholderText('Password')).not.toBeInTheDocument;
+            });
         });
     });
 
@@ -148,7 +150,9 @@ describe('TaskUser Component', () => {
             fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
             fireEvent.click(loginButton);
             
-            expect(screen.getByText('incorrect email format')).toBeInTheDocument;
+            await waitFor(() => {
+                expect(screen.getByText('incorrect email format')).toBeInTheDocument;
+            });    
         });
 
         it('should show password validation error for short password', async () => {
@@ -160,7 +164,9 @@ describe('TaskUser Component', () => {
             fireEvent.change(passwordInput, { target: { value: '123' } });
             fireEvent.click(loginButton);
             
-            expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            await waitFor(() => {
+                expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            });    
         });
 
         it('should clear validation messages when valid input is provided', async () => {
@@ -175,16 +181,20 @@ describe('TaskUser Component', () => {
             fireEvent.change(passwordInput, { target: { value: '123' } });
             fireEvent.click(loginButton);
             
-            expect(screen.getByText('incorrect email format')).toBeInTheDocument;
-            expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            await waitFor(() => {
+                expect(screen.getByText('incorrect email format')).toBeInTheDocument;
+                expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            });
             
             // Then provide valid inputs
             fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
             fireEvent.change(passwordInput, { target: { value: 'password123' } });
             fireEvent.click(loginButton);
             
-            expect(screen.queryByText('incorrect email format')).not.toBeInTheDocument;
-            expect(screen.queryByText('password must not be less than 6 chars')).not.toBeInTheDocument;
+            await waitFor(() => {
+                expect(screen.queryByText('incorrect email format')).not.toBeInTheDocument;
+                expect(screen.queryByText('password must not be less than 6 chars')).not.toBeInTheDocument;
+            });    
         });
     });
     
@@ -239,9 +249,11 @@ describe('TaskUser Component', () => {
             const loginButton = screen.getByText('Login');
             fireEvent.click(loginButton);
             
-            expect(loginUser).not.toHaveBeenCalled();
-            expect(screen.getByText('incorrect email format')).toBeInTheDocument;
-            expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            await waitFor(() => {
+                expect(loginUser).not.toHaveBeenCalled();
+                expect(screen.getByText('incorrect email format')).toBeInTheDocument;
+                expect(screen.getByText('password must not be less than 6 chars')).toBeInTheDocument;
+            });
         });
     });
 
@@ -347,7 +359,7 @@ describe('TaskUser Component', () => {
                 expect(emailInput.value).toBe('');
                 expect(passwordInput.value).toBe('');
             });
-            });
+        });
 
         it('should clear form fields after successful registration', async () => {
             (registerUser as jest.Mock).mockResolvedValue(true);

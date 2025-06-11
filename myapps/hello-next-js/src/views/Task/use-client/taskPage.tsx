@@ -1,16 +1,18 @@
 'use client';
 import { useState, useEffect } from "react";
 import { useTaskViewModel } from '@/viewModels/Task/use-client/useTasksViewModel';
+import TaskUser from "./taskUser";
 import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
 import { TaskTable } from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
 
 export const TaskPage = () => {
-  const { tasks, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
+  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
 
   const [filterText, setFilterText] = useState("");
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
   const isFiltering = filterText.trim() !== "";
   
@@ -32,14 +34,12 @@ export const TaskPage = () => {
   
   const confirmedTasks = isFiltering ? filteredTasks : (tasks ? tasks : []);
   
-  // for reference: ideally, render a skeleton image, but for now comment out 
-  // the line below in order to visually demonstrate react component rehydration
-  // after clicking the add-row button 
-  //if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
 
   return tasks ? (
     <>
       <h2>Default example: MVVM client-side components rendered with Next.js Page Router</h2>
+      <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <span>filter task description: </span>
       <input type="text" placeholder="Filter detail..."  
         onChange={(e) => setFilterText(e.target.value)}
@@ -50,6 +50,7 @@ export const TaskPage = () => {
         deleteAllRows={deleteAllRows} 
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
+        userAuthenticated={userAuthenticated}      
       />
       <TaskTable 
         tasks={confirmedTasks} 
@@ -57,6 +58,7 @@ export const TaskPage = () => {
         updateRowFromId={updateRowFromId} 
         buttonDisabled={buttonDisabled}
         setButtonDisabled={setButtonDisabled}
+        userAuthenticated={userAuthenticated}      
       />
     </>
   ) : (<></>);

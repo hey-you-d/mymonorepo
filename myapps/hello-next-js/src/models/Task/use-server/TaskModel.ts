@@ -258,35 +258,3 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
     throw error;
   } 
 }
-
-export const getJwt = async (overrideFetchUrl?: string): Promise<{jwtSecret: string}> => {
-  // for reference:
-  // "use server" should only be used in files that contain 
-  // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-  const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
-  
-  // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
-  // In this case, we must supply an absolute URL  
-  const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
-
-  try {
-    const response = await fetch(`${finalUrl}/jwt`, {
-      method: 'GET',
-      headers: await TASKS_API_HEADER(),
-    });
-
-    if (!response.ok) {
-      console.error("Error: JWT Fetch failed: ", `${response.status} - ${response.statusText}`);
-      // If the response isn't OK, throw an error to be caught in the catch block
-      throw new Error(`Error: JWT Fetch failed: ${response.status} ${response.statusText}`);
-    }
-
-    const result:{ jwtSecret:string } = await response.json();
-  
-    return result;
-  } catch(error) {
-    console.error("Error fetching JWT: ", error );
-
-    throw error;
-  }
-}
