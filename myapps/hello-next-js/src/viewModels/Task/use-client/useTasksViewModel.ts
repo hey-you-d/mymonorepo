@@ -34,7 +34,7 @@ export const useTaskViewModel = () => {
     } finally {
       setLoading(false);
     }
-  }, [taskModel, tasks]);
+  }, [taskModel]);
   
   const seedTasksDB = useCallback(async () => {
     setLoading(true);
@@ -104,7 +104,7 @@ export const useTaskViewModel = () => {
     } finally {
       setLoading(false);
     }
-  }, [taskModel, tasks]);
+  }, [taskModel]);
   
   // For reference: CSR approach -> first ever call of getTasksDBRows to populate the tasks array
   useEffect(() => {
@@ -117,6 +117,7 @@ export const useTaskViewModel = () => {
         } catch (err) {
           // For reference: Optional - already logged inside getTasksDBRows, so we don't need to log here
           // this try catch statement is needed to make this component to be unit-testable
+          console.error("Optional - already logged inside getTasksDBRows ", err);
         }
       })();
     }
