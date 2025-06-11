@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, MouseEvent } from 'react';
 import { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
-type TaskDetailType = {
+export type TaskDetailType = {
     row: Task,
     tasks: Task[] | undefined,
     deleteRowFromId: (id: number) => Promise<void>,
