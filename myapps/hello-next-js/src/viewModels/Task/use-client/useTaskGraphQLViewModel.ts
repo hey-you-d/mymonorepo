@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { fetchGraphQL } from '@/models/Task/use-client/TaskGraphqlClient';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
     
 export const useTaskGraphQLViewModel = () => {
     const [tasks, setTasks] = useState<Task[]>([]);

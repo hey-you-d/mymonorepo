@@ -1,7 +1,7 @@
 'use server';
 
 import { fetchGraphQL } from '@/models/Task/use-server/TaskGraphqlClient';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 
 export const getTasksDBRows = async () => {
     const query = `

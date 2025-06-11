@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import argon2 from 'argon2';
 import { createAuthCookie } from './register';
-import { UserModelType } from '@/types/Task';
+import type { UserModelType } from '@/types/Task';
 import { TASKS_SQL_BASE_API_URL, TASKS_API_HEADER } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchUrl?: string): Promise<void> => {

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { getRowFromId, deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
 import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
 import { TaskDetail } from '@/components/Task/use-server/TaskDetail';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 
 export const TaskDetailPage = ({id}: {id: number}) => {

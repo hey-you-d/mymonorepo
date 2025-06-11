@@ -1,6 +1,6 @@
 "use server"
 import { TASKS_API_HEADER } from "@/lib/app/common";
-import { UserModelType } from '@/types/Task';
+import type { UserModelType } from '@/types/Task';
 
 export const registerUser = async (email: string, password: string, jwt: string, overrideFetchUrl?: string): Promise<UserModelType> => {
   // for reference:

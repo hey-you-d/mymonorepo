@@ -1,5 +1,5 @@
 import { TaskUserModel } from './TaskUserModel';
-import { UserModelType } from '@/types/Task';
+import type { UserModelType } from '@/types/Task';
 
 // Mock the TASKS_BFF_BASE_API_URL
 jest.mock('../../../lib/app/common', () => ({

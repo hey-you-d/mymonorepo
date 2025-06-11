@@ -9,7 +9,7 @@ import {
     registerUser as registerUserModel, 
     logInUser as logInUserModel,
 } from '@/models/Task/use-server/TaskUserModel';
-import { UserModelType } from '@/types/Task';
+import type { UserModelType } from '@/types/Task';
 
 export const getJwtSecret = async () => {
     try {

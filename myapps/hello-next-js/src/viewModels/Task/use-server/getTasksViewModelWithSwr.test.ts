@@ -34,7 +34,7 @@ import {
   deleteRowFromId as deleteRowFromIdModel
 } from '@/models/Task/use-server/TaskModel';
 import { revalidateTag as mockRevalidateTag } from 'next/cache';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 import { BASE_URL } from '@/lib/app/common';
 
 const mockTask: Task = {

@@ -10,7 +10,7 @@ import { fetchGraphQL } from '@/models/Task/use-server/TaskGraphqlClient';
 // Mock the fetchGraphQL module
 jest.mock('../../../models/Task/use-server/TaskGraphqlClient');
 
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 
 const mockTasks: Task[] = [
     {

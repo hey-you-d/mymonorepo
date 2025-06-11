@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TaskDetail } from './TaskDetail';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 
 // Mock the constants
 jest.mock('../../../lib/app/common', () => ({

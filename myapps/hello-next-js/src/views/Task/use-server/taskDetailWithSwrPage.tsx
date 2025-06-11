@@ -8,7 +8,7 @@ import { fetcher } from '@/viewModels/Task/use-server/getTasksViewModelWithSwr';
 import { deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
 import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
 import { TaskDetailWithSwr } from '@/components/Task/use-server/TaskDetailWithSwr';
-import { Task } from '@/types/Task';
+import type { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 
 export const TaskDetailWithSwrPage = ({id}: {id: number}) => {

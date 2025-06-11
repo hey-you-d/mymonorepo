@@ -7,7 +7,7 @@ import { gql } from 'graphql-tag';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DateTimeResolver } from 'graphql-scalars';
 import { db } from '@/lib/db/db_postgreSQL';
-import { UsersDbQueryResultType as User } from '@/types/Task';
+import type { UsersDbQueryResultType as User } from '@/types/Task';
 import { CHECK_API_KEY } from '@/lib/app/common';
 
 export const schema = gql`

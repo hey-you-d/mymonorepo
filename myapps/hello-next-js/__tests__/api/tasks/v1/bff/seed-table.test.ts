@@ -1,8 +1,8 @@
 import { createMocks, RequestMethod } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../../pages/api/tasks/v1/bff/seed-table';
-import { BASE_URL, TASKS_API_HEADER } from '@/lib/app/common';
-import { Task } from '@/types/Task';
+import { TASKS_API_HEADER } from '@/lib/app/common';
+import type { Task } from '@/types/Task';
 
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
@@ -50,7 +50,7 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(TASKS_API_HEADER).toHaveBeenCalledTimes(1);
@@ -77,7 +77,7 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
@@ -107,7 +107,7 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
@@ -136,7 +136,7 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             (global.fetch as jest.Mock).mockRejectedValue(networkError);
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
@@ -158,7 +158,7 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             (TASKS_API_HEADER as jest.Mock).mockRejectedValue(headerError);
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
@@ -188,7 +188,7 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(

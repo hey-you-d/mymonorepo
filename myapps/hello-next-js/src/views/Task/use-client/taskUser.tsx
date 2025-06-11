@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState, MouseEvent, memo } from "react";
+import { useEffect, useState, MouseEvent, memo, Dispatch, SetStateAction } from "react";
 import styles from "@/app/page.module.css";
 import useTaskUserViewModel from "@/viewModels/Task/use-client/useTaskUserViewModel";
-import { TaskUserType } from "@/types/Task";
+import type { TaskUserType } from "@/types/Task";
 
 const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
     const [email, setEmail] = useState<string>(sessionStorage.getItem("email") ?? "");

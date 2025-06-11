@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
-import { UserModelType } from '@/types/Task';
+import type { UserModelType } from '@/types/Task';
 import { getSecret } from '@/lib/app/awsSecretManager';
 import { JWT_TOKEN_COOKIE_NAME, TASKS_SQL_BASE_API_URL, TASKS_API_HEADER } from "@/lib/app/common";
 import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags';
