@@ -6,7 +6,7 @@ import { useState, useCallback, Dispatch, SetStateAction } from 'react';
 import { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
-type TaskTableType = {
+export type TaskTableType = {
     tasks: Task[], 
     createRow: (tasks: Task[], title: string, detail: string)=> Promise<void>,
     updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<void>
