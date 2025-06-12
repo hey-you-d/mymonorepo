@@ -32,16 +32,6 @@ export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, 
         setButtonDisabled(false);
     }
 
-    const renderButtonTriggeredByButtonDisabled: React.ReactElement = buttonDisabled ? (
-        <button type="button" disabled>
-            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-        </button>
-    ) : (
-        <button type="button" onClick={onClickHandler}>
-            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-        </button>
-    );
-
     const renderButton: React.ReactElement = userAuthenticated 
         ? (
             <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>

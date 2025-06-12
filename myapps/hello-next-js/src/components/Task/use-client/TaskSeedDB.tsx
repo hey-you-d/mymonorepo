@@ -39,7 +39,7 @@ export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisable
 
     const renderButton: React.ReactElement = userAuthenticated 
         ? (
-            <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
+            <button type="button" onClick={(e) => onClickHandler(e)} disabled={buttonDisabled}>
                 {totalRows <= 0 ? "Seed DB" : "Delete all rows"}
             </button>
         ) : ( <button type="button" disabled>

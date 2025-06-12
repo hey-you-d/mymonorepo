@@ -11,12 +11,9 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
     const [emailMessage, setEmailMessage] = useState<string>("");
     const [passwordMessage, setPasswordMessage] = useState<string>("");
     const [formMessage, setFormMessage] = useState<string>("only logged-in users can interact with the table");
-    const [loading, setLoading]= useState<boolean>(false);
-
+    
     useEffect(() => {
-        const checkUserLoggedIn = async () => {
-            setLoading(true);
-            
+        const checkUserLoggedIn = async () => {    
             // for reference: the http only auth_token cookie is not accessible from the client-side
             const authTokenCookieExist = await checkAuthTokenCookieExist();
             if (authTokenCookieExist && !userAuthenticated) {
@@ -27,8 +24,6 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
 
                 // TODO: a modal popup that says "you have been logged out"
             }
-            
-            setLoading(false);
         };
 
         checkUserLoggedIn();
@@ -63,8 +58,6 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
     const userLoginHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        setLoading(true);
-
         const isEmailOK = validateEmail();
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
@@ -83,14 +76,10 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
                 if (userAuthenticated) setUserAuthenticated(false); 
             }
         }
-
-        setLoading(false);
     };
 
     const userLogoutHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-
-        setLoading(true);
 
         const outcome = await logoutUser();
         if (outcome) {
@@ -100,15 +89,11 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
             // just to be safe...
             if (userAuthenticated) setUserAuthenticated(false);  
         }
-
-        setLoading(false);
     };
 
     const userRegisterHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        setLoading(true);
-        
         const isEmailOK = validateEmail();
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
@@ -126,8 +111,6 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
                 if (userAuthenticated) setUserAuthenticated(false);
             }
         }
-
-        setLoading(false);
     };
 
     return !userAuthenticated ? (
