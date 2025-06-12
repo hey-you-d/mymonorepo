@@ -44,14 +44,14 @@ yarn workspace hello-next-js lint
 9. Frontend CSS Styling: Tailwind CSS
 
 #### Localhost demo
-##### [Frontend layer - Client-side components variant - is served via Next.js Page router] 
+##### [Frontend layer - Client-side components variant - React.js components which are served via Page router] 
 - **DEFAULT PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
 - **CACHED WITH VERCEL SWR PAGE (leveraging Page router's getServerSideProps):** [http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)
 - **GRAPHQL SERVER DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
 - **GRAPHQL CLIENT + SERVER DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql/apolloClient)
 - **Optimised filtering feature with React's useDeferredValue:** [http://localhost:3000/hello-next-js/task-crud-fullstack/with-search-filter](http://localhost:3000/hello-next-js/task-crud-fullstack/with-search-filter)
 - **BFF ENDPOINT URL**: [http://localhost:3000/hello-next-js/api/tasks/v1/bff](http://localhost:3000/hello-next-js/api/tasks/v1/bff)
-##### [Frontend layer - Server-side components variant - is served via Next.js App router]
+##### [Frontend layer - Server-side components variant - Next.js Server Action components which are served via App router]
 - **DEFAULT PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server)
 - **CACHED WITH VERCEL SWR PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/with-swr)
 - **GRAPHQL SERVER DEMO PAGE:** [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/graphql)
@@ -75,14 +75,14 @@ yarn workspace hello-next-js start
     - endpoint URL: **/api/tasks/v1/bff**
     - endpoint module: [https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/bff](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/bff)
 3. Core Frontend implementation (no styling) with unit test - **STATUS: DONE**  
-    - [Client-side components variant - is served via Next.js Page router]
+    - [Client-side components variant - React.js components which are served via Next.js Page router]
         - Localhost URL: [localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
         - MVVM - model component: [TaskModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-client/TaskModel.ts)
         - MVVM - viewmodel component: [useTasksViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTasksViewModel.ts)
         - MVVM - view component: [taskPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskPage.tsx)
         - MVVM - view component #2: [taskDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskDetailPage.tsx)
         - Next.js Page router: [/hello-next-js/page/task-crud-fullstack/](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/task-crud-fullstack)
-    - [Server-side components variant - is served via Next.js App router]
+    - [Server-side components variant - Next.js Server Action components which are served via Next.js App router]
         - Localhost URL: [localhost:3000/hello-next-js/task-crud-fullstack/use-server](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server)
         - MVVM - model component: [TaskModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-server/TaskModel.ts)
         - MVVM - viewmodel component: [getTasksViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksViewModel.ts)
@@ -95,16 +95,16 @@ yarn workspace hello-next-js start
         - prerequisites: completed both server-side & client side MVVM variants implementation
     - [API endpoint] **STATUS: DONE**
         - [user API endpoint](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/sql/user)
-    - [Client-side components variant - is served via Next.js Page router] **STATUS: TODO**
-        - SQL Query implementation: 
+    - [Client-side components variant - React.js components which are served via Next.js Page router] 
+        - SQL Query implementation: **STATUS: DONE** 
+            - Model component: [TaskUserModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-client/TaskUserModel.ts) 
+            - ViewModel component: [useTaskUserViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTaskUserViewModel.ts)
+            - View component: [taskUser.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskUser.tsx)
+        - GraphQL Query variant: **STATUS: TODO**
             - Model component: tba
             - ViewModel component: tba
             - View component: tba
-        - GraphQL Query variant:
-            - Model component: tba
-            - ViewModel component: tba
-            - View component: tba
-    - [Server-side components variant - is served via Next.js App router] **STATUS: DONE**
+    - [Server-side components variant - Next.js Server Action components which are served via Next.js App router] **STATUS: DONE**
         - SQL Query implementation:
             - Model component: [TaskUserModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-server/TaskUserModel.ts)
             - ViewModel component: [getTasksUserViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksUserViewModel.ts)
@@ -115,12 +115,12 @@ yarn workspace hello-next-js start
             - View component: [taskUserGraphQL.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskUserGraphQL.tsx)       
 5. User Registration, Login, & API Authorization with OAUTH & JWT - **STATUS: TODO**
 6. Frontend feature [Client-side components variant only]: Client-side Caching implementation with Vercel SWR  
-    - [Client-side components variant - is served via Next.js Page router] **STATUS: DONE**
+    - [Client-side components variant - React.js components which are served via Next.js Page router] **STATUS: DONE**
         - Localhost URL: [localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)  
         - MVVM - model component: reusing the default implementation
         - MVVM - viewModel component: [useTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTasksViewModelWithSwr.ts)
         - MVVM - view component: [taskWithSWRPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskWithSWRPage.tsx)
-    - [Server-side components variant - is served via Next.js App router] **STATUS: DONE**
+    - [Server-side components variant - Next.js Server Action components which are served via Next.js App router] **STATUS: DONE**
         - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/with-swr)
         - MVVM - model component: reusing the default use-server component implementation
         - MVVM - viewmodel component: [getTasksViewModelWithSwr.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksViewModelWithSwr.ts)
@@ -135,12 +135,12 @@ yarn workspace hello-next-js start
 9. Frontend feature: Alternative data query with Apollo GraphQL Server
     - [API ENDPOINT URL (GraphQL server)]: **STATUS: DONE**
         - [graphql.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/pages/api/tasks/v1/sql/graphql.ts)
-    - [Client-side components variant - is served via Next.js Page router] **STATUS: DONE**
+    - [Client-side components variant - React.js components which are served via Next.js Page router] **STATUS: DONE**
         - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/graphql)
         - Model component: [TaskGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-client/TaskGraphqlClient.ts)
         - Viewmodel component: [useTaskGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTaskGraphQLViewModel.ts)
         - View component: [taskGraphQLPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskGraphQLPage.tsx)
-    - [Server-side components variant - is served via Next.js App router] **STATUS: DONE**
+    - [Server-side components variant - Next.js Server Action components which are served via Next.js App router] **STATUS: DONE**
         - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/graphql](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server/graphql)
         - Model component: [TaskGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-server/TaskGraphqlClient.ts)
         - Viewmodel component: [getTaskGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTaskGraphQLViewModel.ts)
