@@ -4,7 +4,6 @@ import { UserModelType } from "@/types/Task";
 
 const headers = {
     "Content-Type": "application/json",
-    credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
 };
 
 export class TaskUserModel {    
@@ -18,6 +17,7 @@ export class TaskUserModel {
         const response = await fetch(`${finalUrl}/user/register`, {
             method: 'POST',
             headers,
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
             body: JSON.stringify({
               email,
               password
@@ -43,6 +43,7 @@ export class TaskUserModel {
         const response = await fetch(`${finalUrl}/user/lookup`, {
             method: 'POST',
             headers,
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
             body: JSON.stringify({
               email,
               password
@@ -68,6 +69,7 @@ export class TaskUserModel {
         const response = await fetch(`${finalUrl}/user/logout`, {
             method: 'GET',
             headers,
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
         });
 
         if (!response.ok) {
@@ -89,6 +91,7 @@ export class TaskUserModel {
         const response = await fetch(`${finalUrl}/user/httpcookie`, {
             method: 'GET',
             headers,
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
         });
 
         if (!response.ok) {

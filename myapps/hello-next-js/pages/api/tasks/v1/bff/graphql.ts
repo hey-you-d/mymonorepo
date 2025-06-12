@@ -23,6 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 //const proxyResponse = await fetch(`${BASE_URL}/api/tasks/v1/sql/graphql`, {  // X - wrong
                     method: 'POST',
                     headers: await TASKS_API_HEADER(),
+                    credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
                     body: JSON.stringify({
                         query,
                         variables

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import argon2 from 'argon2';
 import { createAuthCookie } from './register';
 import type { UserModelType } from '@/types/Task';
-import { TASKS_SQL_BASE_API_URL, TASKS_API_HEADER } from "@/lib/app/common";
+import { TASKS_SQL_BASE_API_URL, getInternalApiKey } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchUrl?: string): Promise<void> => {
     switch (req.method) {
@@ -26,10 +26,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
                 const response = await fetch(`${finalUrl}/user/lookup`, {
                     method: 'POST',
-                    headers: await TASKS_API_HEADER(),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": await getInternalApiKey() ?? "",
+                        // users don't have to be logged-in in order to login, hence JWT authorization is unnecessary
+                    },
                     body: JSON.stringify({
                         email,
                     }),
+                    credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
                 });
 
                 if (!response.ok) {

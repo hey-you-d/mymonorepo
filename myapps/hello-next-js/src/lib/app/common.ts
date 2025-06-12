@@ -38,11 +38,41 @@ export const getInternalApiKey = async (): Promise<string | undefined> => {
     return xApiKey;
 }
 
+export const getJWTFrmHttpOnlyCookie = async (overrideFetchUrl?: string): Promise<string> => {
+    const { TASKS_BFF_BASE_API_URL } = await import("@/lib/app/common");
+
+    // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
+    // In this case, we must supply an absolute URL  
+    const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
+
+    const headers = {
+        "Content-Type": "application/json",
+    };
+
+    const response = await fetch(`${finalUrl}/user/jwt`, {
+        method: 'GET',
+        headers,
+        credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Common - Error get jwt from auth_token cookie attempt: ${response.status} - ${response.statusText}`, errorText);
+        throw new Error(`Common - Error get jwt from auth_token cookie attempt: ${response.status}`);
+    }
+
+    const result: { jwt: string } = await response.json();
+    console.log("COMMON JSON ", result);
+    
+    return result.jwt;
+}
+
 // for reference: can only be called on server-side only
 export const TASKS_API_HEADER = async () => {
     return {
         "Content-Type": "application/json",
         "x-api-key": await getInternalApiKey() ?? "",
+        Authorization: `Bearer ${await getJWTFrmHttpOnlyCookie()}`,
     }    
 }; 
 

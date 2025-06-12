@@ -23,7 +23,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
         // Setup default mock for TASKS_API_HEADER
         (TASKS_API_HEADER as jest.Mock).mockResolvedValue({
             'Content-Type': 'application/json',
-            'x-api-key': 'valid key'
+            'x-api-key': 'valid key',
+            'Authorization': 'bearer '
         });
     });
 
@@ -44,7 +45,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
             ];
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST' as RequestMethod
+                method: 'POST' as RequestMethod,
+                credentials: 'include',
             });
 
             (global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -59,11 +61,13 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
             expect(fetch).toHaveBeenCalledWith(
                 'https://test-api.com/api/tasks/v1/sql/delete-rows',
                 {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': 'valid key'
-                }
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': 'valid key',
+                        'Authorization': 'bearer '
+                    },
+                    credentials: "include",
                 }
             );
             expect(TASKS_API_HEADER).toHaveBeenCalled();
@@ -74,7 +78,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
         it('should handle API response error (not ok)', async () => {
             // Arrange
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST' as RequestMethod
+                method: 'POST' as RequestMethod,
+                credentials: 'include',
             });
 
             (global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -90,11 +95,13 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
             expect(fetch).toHaveBeenCalledWith(
                 'https://test-api.com/api/tasks/v1/sql/delete-rows',
                 {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': 'valid key'
-                }
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': 'valid key',
+                        'Authorization': 'bearer '
+                    },
+                    credentials: 'include',
                 }
             );
             expect(mockConsoleError).toHaveBeenCalledWith(
@@ -113,7 +120,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
         it('should handle fetch network error', async () => {
             // Arrange
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST' as RequestMethod
+                method: 'POST' as RequestMethod,
+                credentials: 'include',
             });
             
             const networkError = new Error('Network error');
@@ -126,11 +134,13 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
             expect(fetch).toHaveBeenCalledWith(
                 'https://test-api.com/api/tasks/v1/sql/delete-rows',
                 {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': 'valid key'
-                }
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': 'valid key',
+                        'Authorization': 'bearer '
+                    },
+                    credentials: "include",
                 }
             );
             expect(mockConsoleError).toHaveBeenCalledWith(
@@ -146,7 +156,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
         it('should handle JSON parsing error', async () => {
             // Arrange
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST' as RequestMethod
+                method: 'POST' as RequestMethod,
+                credentials: 'include',
             });
             
             const jsonError = new Error('Invalid JSON');
@@ -172,7 +183,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
         it('should handle TASKS_API_HEADER throwing an error', async () => {
             // Arrange
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST' as RequestMethod
+                method: 'POST' as RequestMethod,
+                credentials: 'include',
             });
             
             const headerError = new Error('Header generation failed');
@@ -199,7 +211,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
             async (method) => {
                 // Arrange
                 const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: method as RequestMethod
+                    method: method as RequestMethod,
+                    credentials: 'include',
                 });
 
                 // Act
@@ -217,7 +230,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
         it('should handle empty response body', async () => {
             // Arrange
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST' as RequestMethod
+                method: 'POST' as RequestMethod,
+                credentials: 'include',
             });
             
             (global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -236,7 +250,8 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
         it('should handle API returning null', async () => {
             // Arrange
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST' as RequestMethod
+                method: 'POST' as RequestMethod,
+                credentials: 'include',
             });
             
             (global.fetch as jest.Mock).mockResolvedValueOnce({

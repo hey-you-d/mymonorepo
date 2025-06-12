@@ -3,7 +3,7 @@ import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
 import type { UserModelType } from '@/types/Task';
 import { getSecret } from '@/lib/app/awsSecretManager';
-import { JWT_TOKEN_COOKIE_NAME, TASKS_SQL_BASE_API_URL, TASKS_API_HEADER } from "@/lib/app/common";
+import { JWT_TOKEN_COOKIE_NAME, TASKS_SQL_BASE_API_URL, getInternalApiKey } from "@/lib/app/common";
 import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags';
 
 export const getJwtSecret = async () => {
@@ -89,10 +89,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 try {
                     const response = await fetch(`${finalUrl}/user/lookup`, {
                         method: 'POST',
-                        headers: await TASKS_API_HEADER(),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-api-key": await getInternalApiKey() ?? "",
+                            // users don't have to be logged-in in order to register, hence JWT authorization is unnecessary
+                        },
                         body: JSON.stringify({
                             email,
                         }),
+                        credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
                     });
 
                     if (!response.ok) {
@@ -125,12 +130,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 
                 const response = await fetch(`${finalUrl}/user/register`, {
                     method: 'POST',
-                    headers: await TASKS_API_HEADER(),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": await getInternalApiKey() ?? "",
+                        // users don't have to be logged-in in order to register, hence JWT authorization is unnecessary
+                    },
                     body: JSON.stringify({
                         email,
                         password: hashedPwd,
                         jwt,
                     }),
+                    credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
                 });
             
                 if (!response.ok) {

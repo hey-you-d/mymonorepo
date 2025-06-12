@@ -45,7 +45,8 @@ describe('TaskModel', () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        credentials: 'include',
       });
       expect(result).toEqual(mockData);
     });
@@ -76,7 +77,8 @@ describe('TaskModel', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
       });
       expect(result).toEqual(mockData);
     });
@@ -100,7 +102,8 @@ describe('TaskModel', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
       });
       expect(result).toEqual(mockData.rows);
     });
@@ -129,7 +132,8 @@ describe('TaskModel', () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
       });
     });
 
@@ -170,6 +174,7 @@ describe('TaskModel', () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
         body: "{\"title\":\"test\",\"detail\":\"test\"}"
       });
     });
@@ -211,6 +216,7 @@ describe('TaskModel', () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
         body: "{\"title\":\"test\",\"detail\":\"test\",\"completed\":true}"
       });
     });
@@ -250,7 +256,8 @@ describe('TaskModel', () => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
       });
     });
 

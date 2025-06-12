@@ -22,6 +22,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
         mockTasksApiHeader.mockResolvedValue({
             'Content-Type': 'application/json',
             'x-api-key': 'valid key',
+            Authorization: 'bearer '
         });
     });
 
@@ -47,6 +48,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     query: 'query { tasks { id title } }',
                     variables: { limit: 10 },
@@ -59,9 +61,11 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
                 'https://test-domain.com/api/tasks/v1/sql/graphql',
                 {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
                         'x-api-key': 'valid key',
+                        Authorization: 'bearer '
                     },
                     body: JSON.stringify({
                         query: 'query { tasks { id title } }',
@@ -90,6 +94,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     query: 'query { tasks { id title } }',
                     variables: { limit: 10 },
@@ -106,6 +111,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
         it('should return 400 when query is missing', async () => {
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     // missing query
                     variables: { limit: 10 },
@@ -124,6 +130,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
         it('should return 400 when variables are missing', async () => {
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     query: 'query { tasks { id title } }',
                     // variable is missing
@@ -151,6 +158,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     query: 'query { tasks { id title } }',
                     variables: { limit: 10 },
@@ -178,6 +186,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     query: 'query { tasks { id title } }',
                     variables: { limit: 10 },
@@ -211,9 +220,10 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
-                query: 'mutation { createTask(input: {title: "New Task"}) { id } }',
-                variables: {},
+                    query: 'mutation { createTask(input: {title: "New Task"}) { id } }',
+                    variables: {},
                 },
             });
 
@@ -227,6 +237,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
                 'Content-Type': 'application/json',
                 'x-api-key': 'valid key',
                 'X-Custom-Header': 'custom-value',
+                Authorization: 'bearer '
             };
             
             mockTasksApiHeader.mockResolvedValue(mockHeaders);
@@ -243,6 +254,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     query: 'query { tasks { id } }',
                     variables: {},
@@ -256,6 +268,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
                 {
                     method: 'POST',
                     headers: mockHeaders,
+                    credentials: 'include',
                     body: JSON.stringify({
                         query: 'query { tasks { id } }',
                         variables: {},
@@ -271,7 +284,8 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             async (method) => {
                 // Arrange
                 const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                    method: method
+                    method: method,
+                    credentials: 'include',
                 });
 
                 // Act
@@ -290,6 +304,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
                 body: {},
+                credentials: 'include',
             });
 
             await handler(req, res);
@@ -303,6 +318,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
         it('should handle null values in request body', async () => {
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     query: null,
                     variables: { limit: 10 },
@@ -330,6 +346,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     query: 'query { tasks { id } }',
                     variables: {},

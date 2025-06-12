@@ -28,6 +28,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
         mockTasksApiHeader.mockResolvedValue({
             'Content-Type': 'application/json',
             'x-api-key': 'valid key',
+            Authorization: 'bearer '
         });
     });
 
@@ -59,7 +60,8 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                 'https://api.example.com/api/tasks/v1/sql/123',
                 {
                     method: 'GET',
-                    headers: { 'Content-Type': 'application/json', 'x-api-key': 'valid key' },
+                    headers: { 'Content-Type': 'application/json', 'x-api-key': 'valid key', Authorization: 'bearer ' },
+                    credentials: 'include',
                 }
             );
             expect(res._getStatusCode()).toBe(200);
@@ -76,6 +78,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'GET',
+                credentials: 'include',
                 query: { id: ['123', '456'] }, // Array format
             });
 
@@ -97,6 +100,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'GET',
+                credentials: 'include',
                 query: { id: '123' },
             });
 
@@ -113,6 +117,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'GET',
+                credentials: 'include',
                 query: { id: '123' },
             });
 
@@ -136,6 +141,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'PUT',
+                credentials: 'include',
                 query: { id: '123' },
                 body: {
                     title: 'Updated Task',
@@ -150,7 +156,8 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                 'https://api.example.com/api/tasks/v1/sql/123',
                 {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'x-api-key': 'valid key' },
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json', 'x-api-key': 'valid key', Authorization: 'bearer ' },
                 body: JSON.stringify({
                     title: 'Updated Task',
                     detail: 'Updated Detail',
@@ -165,6 +172,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
         it('should return 400 if title is missing', async () => {
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'PUT',
+                credentials: 'include',
                 query: { id: '123' },
                 body: {
                     // missing title
@@ -185,6 +193,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
         it('should return 400 if detail is missing', async () => {
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'PUT',
+                credentials: 'include',
                 query: { id: '123' },
                 body: {
                     title: 'Updated Task',
@@ -211,6 +220,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'PUT',
+                credentials: 'include',
                 query: { id: '123' },
                 body: {
                     title: 'Updated Task',
@@ -236,6 +246,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'DELETE',
+                credentials: 'include',
                 query: { id: '123' },
             });
 
@@ -245,7 +256,8 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                 'https://api.example.com/api/tasks/v1/sql/123',
                 {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json', 'x-api-key': 'valid key' },
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json', 'x-api-key': 'valid key', Authorization: 'bearer ' },
                 }
             );
             expect(res._getStatusCode()).toBe(204);
@@ -260,6 +272,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'DELETE',
+                credentials: 'include',
                 query: { id: '123' },
             });
 
@@ -276,6 +289,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'DELETE',
+                credentials: 'include',
                 query: { id: '123' },
             });
 
@@ -297,7 +311,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                 const { req, res } = createMocks({ method });
 
                 // Act
-                await handler(req, res);
+                await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
                 // Assert
                 expect(res._getStatusCode()).toBe(405);
@@ -315,6 +329,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'GET',
+                credentials: 'include',
                 query: { id: '123' },
             });
 

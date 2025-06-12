@@ -8,7 +8,8 @@ export const swrFetcher = async () => {
           method: 'GET',
           headers: {
               "Content-Type": "application/json",
-          }
+          },
+          credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
       });
 
       if (!response.ok) {
@@ -37,7 +38,8 @@ export class TaskModel {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
         });
 
         if (!response.ok) {
@@ -62,7 +64,8 @@ export class TaskModel {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
         });
 
         if (!response.ok) {
@@ -86,7 +89,8 @@ export class TaskModel {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
         });
 
         if (!response.ok) {
@@ -110,7 +114,8 @@ export class TaskModel {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
         });
 
         if (!response.ok) {
@@ -136,6 +141,7 @@ export class TaskModel {
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
             body: JSON.stringify({
               title,
               detail
@@ -177,6 +183,7 @@ export class TaskModel {
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
             body: JSON.stringify({
               title,
               detail,
@@ -204,6 +211,7 @@ export class TaskModel {
       try {
         const response = await fetch(`${TASKS_BFF_BASE_API_URL}/${id}`, {
             method: 'DELETE',
+            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
             headers: {
                 "Content-Type": "application/json",
             }

@@ -11,7 +11,7 @@
 // - You still support a mixed environment with Client Components or CSR where secrets cannot be sent directly.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
-import { BASE_URL, TASKS_API_HEADER } from "@/lib/app/common";
+import { BASE_URL, getInternalApiKey } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
@@ -19,7 +19,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/`, {
                     method: 'GET',
-                    headers: await TASKS_API_HEADER(),
+                    credentials: 'include',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": await getInternalApiKey() ?? "",
+                        // users don't have to be logged-in in order to see the populated table, hence JWT authorization is unnecessary
+                    },
                 });
         
                 if (!response.ok) {
