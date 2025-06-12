@@ -49,8 +49,8 @@ describe('TaskUserModel', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        credentials: 'include',
                     },
+                    credentials: 'include',
                     body: JSON.stringify({
                         email: 'test@example.com',
                         password: 'password123'
@@ -113,15 +113,15 @@ describe('TaskUserModel', () => {
             expect(mockFetch).toHaveBeenCalledWith(
                 'http://localhost:3000/api/user/lookup',
                 {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     credentials: 'include',
-                },
-                body: JSON.stringify({
-                    email: 'test@example.com',
-                    password: 'password123'
-                }),
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        password: 'password123'
+                    }),
                 }
             );
             expect(result).toEqual(mockUserData);
@@ -173,11 +173,11 @@ describe('TaskUserModel', () => {
             expect(mockFetch).toHaveBeenCalledWith(
                 'http://localhost:3000/api/user/logout',
                 {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     credentials: 'include',
-                },
                 }
             );
             expect(result).toEqual(mockUserData);
@@ -229,11 +229,11 @@ describe('TaskUserModel', () => {
             expect(mockFetch).toHaveBeenCalledWith(
                 'http://localhost:3000/api/user/httpcookie',
                 {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     credentials: 'include',
-                },
                 }
             );
             expect(result).toBe(true);
