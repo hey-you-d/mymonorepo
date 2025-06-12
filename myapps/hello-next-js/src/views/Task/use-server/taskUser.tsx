@@ -130,27 +130,6 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         setLoading(false);
     };
 
-    const renderLoginBtn = () => {
-        return true // TODO
-        //return !loading
-            ? <button type="button" onClick={(e) => userLoginHandler(e)}>Login</button>
-            : <button type="button" disabled>Login</button>
-    };
-
-    const renderRegisterBtn = () => {
-        return true // TODO
-        //return !loading
-            ? <button type="button" onClick={(e) => userRegisterHandler(e)}>Register</button>
-            : <button type="button" disabled>Register</button>
-    };
-
-    const renderLogoutBtn = () => {
-        return true // TODO
-        //return !loading
-            ? <button type="button" onClick={(e) => userLogoutHandler(e)}>Logout</button>
-            : <button type="button" disabled>Logout</button>
-    };
-
     return !userAuthenticated ? (
         <div className={styles.tasksUserForm}>
             <div className={styles.tasksLabelEmail}>Email</div>
@@ -166,16 +145,16 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
             <div className={styles.tasksMessageEmail}>{emailMessage}</div>
             <div className={styles.tasksMessagePassword}>{passwordMessage}</div>
             <div className={styles.tasksFormButtons}>
-                <span>{renderLoginBtn()}</span>
+                <span><button type="button" onClick={(e) => userLoginHandler(e)}>Login</button></span>
                 <span>{" -or- "}</span>
-                <span>{renderRegisterBtn()}</span>
+                <span><button type="button" onClick={(e) => userRegisterHandler(e)}>Register</button></span>
             </div>
             <div className={styles.tasksFormMessage}>{formMessage}</div>
         </div>
    ) : (
     <div className={styles.tasksUserForm}>
         <span>{"You are logged in  "}</span>
-        <span>{renderLogoutBtn()}</span>
+        <span><button type="button" onClick={(e) => userLogoutHandler(e)}>Logout</button></span>
         <div className={styles.tasksFormMessage}>{formMessage}</div>
     </div>
    );
