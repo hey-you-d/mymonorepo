@@ -26,6 +26,8 @@ const mockTask: Task = {
     created_at: String(new Date()),
 };
 
+let spyConsoleError: jest.SpyInstance<any, any>;
+
 describe('TaskSeedDB Component', () => {
     // Mock functions
     const mockSetTasks = jest.fn();
@@ -46,6 +48,14 @@ describe('TaskSeedDB Component', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        
+        // hide console.error to reduce noise on the console output
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+    });
+
+    afterEach(() => {
+        // Restore console.error
+        spyConsoleError.mockRestore();
     });
 
     describe('Rendering', () => {

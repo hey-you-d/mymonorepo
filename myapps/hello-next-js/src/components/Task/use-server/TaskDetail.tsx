@@ -32,17 +32,15 @@ export const TaskDetail = ({ row, setTask, deleteRowFromId, buttonDisabled, setB
         }
     }
 
-    const renderButton = buttonDisabled 
-        ? <button type="button" disabled>Delete this record</button>
-        : <button type="button" onClick={(e) => onClickHandler(e)}>Delete this record</button>
-
     return (
         <>
             <p>id: {row.id}</p>
             <p>title: {row.title}</p>
             <p>detail: {row.detail}</p>
             <p>completed? {row.completed ? "yes" : "no"}</p>
-            <div>{renderButton}</div>
+            <div>
+                <button type="button" onClick={(e) => onClickHandler(e)} disabled={buttonDisabled}>Delete this record</button>
+            </div>
         </>
     );    
 };

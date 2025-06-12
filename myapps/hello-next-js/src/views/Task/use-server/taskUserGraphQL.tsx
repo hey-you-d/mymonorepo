@@ -12,12 +12,9 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
     const [emailMessage, setEmailMessage] = useState<string>("");
     const [passwordMessage, setPasswordMessage] = useState<string>("");
     const [formMessage, setFormMessage] = useState<string>("only logged-in users can interact with the table");
-    const [loading, setLoading]= useState<boolean>(false);
 
     useEffect(() => {
         const checkUserLoggedIn = async () => {
-            setLoading(true);
-
             // for reference: the http only auth_token cookie is not accessible from the client-side
             const authTokenCookieExist = await checkAuthTokenCookieExist();
             if (authTokenCookieExist && !userAuthenticated) {
@@ -28,8 +25,6 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
 
                 // TODO: a modal popup that says "you have been logged out"
             }
-
-            setLoading(false);
         };
 
         checkUserLoggedIn();
@@ -64,8 +59,6 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
     const userLoginHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        setLoading(true);
-
         const isEmailOK = validateEmail();
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
@@ -84,14 +77,10 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
                 if (userAuthenticated) setUserAuthenticated(false); 
             }
         }
-
-        setLoading(false);
     };
 
     const userLogoutHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-
-        setLoading(true);
 
         const outcome = await logoutUser();
         if (outcome) {
@@ -101,15 +90,11 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
             // just to be safe...
             if (userAuthenticated) setUserAuthenticated(false);  
         }
-
-        setLoading(false);
     };
 
     const userRegisterHandler = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        setLoading(true);
-        
         const isEmailOK = validateEmail();
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
@@ -127,29 +112,6 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
                 if (userAuthenticated) setUserAuthenticated(false);
             }
         }
-
-        setLoading(false);
-    };
-
-    const renderLoginBtn = () => {
-        return true // TODO
-        //return !loading
-            ? <button type="button" onClick={(e) => userLoginHandler(e)}>Login</button>
-            : <button type="button" disabled>Login</button>
-    };
-
-    const renderRegisterBtn = () => {
-        return true // TODO
-        //return !loading
-            ? <button type="button" onClick={(e) => userRegisterHandler(e)}>Register</button>
-            : <button type="button" disabled>Register</button>
-    };
-
-    const renderLogoutBtn = () => {
-        return true // TODO
-        //return !loading
-            ? <button type="button" onClick={(e) => userLogoutHandler(e)}>Logout</button>
-            : <button type="button" disabled>Logout</button>
     };
 
     return !userAuthenticated ? (
@@ -167,16 +129,16 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
             <div className={styles.tasksMessageEmail}>{emailMessage}</div>
             <div className={styles.tasksMessagePassword}>{passwordMessage}</div>
             <div className={styles.tasksFormButtons}>
-                <span>{renderLoginBtn()}</span>
+                <span><button type="button" onClick={(e) => userLoginHandler(e)}>Login</button></span>
                 <span>{" -or- "}</span>
-                <span>{renderRegisterBtn()}</span>
+                <span><button type="button" onClick={(e) => userRegisterHandler(e)}>Register</button></span>
             </div>
             <div className={styles.tasksFormMessage}>{formMessage}</div>
         </div>
    ) : (
     <div className={styles.tasksUserForm}>
         <span>{"You are logged in  "}</span>
-        <span>{renderLogoutBtn()}</span>
+        <span><button type="button" onClick={(e) => userLogoutHandler(e)}>Logout</button></span>
         <div className={styles.tasksFormMessage}>{formMessage}</div>
     </div>
    );
