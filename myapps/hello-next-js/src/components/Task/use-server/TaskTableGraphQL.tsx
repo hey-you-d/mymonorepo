@@ -82,26 +82,13 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
             const output:React.ReactElement[] = [];
             
             tasks.forEach(aTask => {
-                // for reference: make checkbox an uncontrolled react component
-                const checkboxTriggeredByButtonDisabled = !buttonDisabled ? (
-                    <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} 
-                            onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />
-                ) : (
-                    <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />
-                );
-
                 const checkbox = userAuthenticated
-                    ? checkboxTriggeredByButtonDisabled
+                    ? <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled={buttonDisabled}
+                            onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />
                     : <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />;
-                    
-                const buttonTriggeredByButtonDisabled = buttonDisabled ? (
-                    <button type="button" disabled onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>        
-                ) : (
-                    <button type="button" onClick={(e) => editTodoHandler(e, aTask.id)}>Edit</button>
-                );  
                 
                 const button = userAuthenticated
-                    ? buttonTriggeredByButtonDisabled
+                    ? <button type="button" onClick={(e) => editTodoHandler(e, aTask.id)} disabled={buttonDisabled}>Edit</button>
                     : <button type="button" disabled>Edit</button>;
 
                 output.push(

@@ -69,12 +69,12 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
             setFormMessage("logging in...");
-            setEmail("");
-            setPassword("");
 
             const outcome = await loginUser(email, password);
             if (outcome) {
                 setFormMessage("");
+                setEmail("");
+                setPassword("");
                 sessionStorage.removeItem("email");
                 setUserAuthenticated(outcome);
             } else {
@@ -113,11 +113,11 @@ export const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserTyp
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
             setFormMessage("registering...");
-            setEmail("");
-            setPassword("");
             const outcome = await registerUser(email, password);
             if (outcome) {
                 setFormMessage("");
+                setEmail("");
+                setPassword("");
                 sessionStorage.removeItem("email");
                 setUserAuthenticated(outcome);
             } else {

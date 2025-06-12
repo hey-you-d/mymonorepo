@@ -48,8 +48,10 @@ export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisa
     );
 
     const renderButton: React.ReactElement = userAuthenticated 
-    ? renderButtonTriggeredByButtonDisabled
-    : ( <button type="button" disabled>
+    ? ( <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
+            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+        </button>
+    ) : ( <button type="button" disabled>
             {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
         </button> );
      

@@ -64,12 +64,12 @@ const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
             setFormMessage("logging in...");
-            setEmail("");
-            setPassword("");
 
             const outcome = await loginUser(email, password);
             if (outcome) {
                 setFormMessage("");
+                setEmail("");
+                setPassword("");                
                 sessionStorage.removeItem("email");
                 setUserAuthenticated(outcome);
             } else {
@@ -100,11 +100,12 @@ const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
         const isPasswordOK = validatePassword();
         if (isEmailOK && isPasswordOK) {
             setFormMessage("registering...");
-            setEmail("");
-            setPassword("");
+
             const outcome = await registerUser(email, password);
             if (outcome) {
                 setFormMessage("");
+                setEmail("");
+                setPassword("");
                 sessionStorage.removeItem("email");
                 setUserAuthenticated(outcome);
             } else {
@@ -115,23 +116,9 @@ const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
         }
     };
 
-    const renderLoginBtn = () => {
-        return !loading
-            ? <button type="button" onClick={(e) => userLoginHandler(e)}>Login</button>
-            : <button type="button" disabled>Login</button>
-    };
-
-    const renderRegisterBtn = () => {
-        return !loading
-            ? <button type="button" onClick={(e) => userRegisterHandler(e)}>Register</button>
-            : <button type="button" disabled>Register</button>
-    };
-
-    const renderLogoutBtn = () => {
-        return !loading
-            ? <button type="button" onClick={(e) => userLogoutHandler(e)}>Logout</button>
-            : <button type="button" disabled>Logout</button>
-    };
+    const renderLoginBtn = (<button type="button" onClick={(e) => userLoginHandler(e)} disabled={loading}>Login</button>);
+    const renderRegisterBtn = (<button type="button" onClick={(e) => userRegisterHandler(e)} disabled={loading}>Register</button>);
+    const renderLogoutBtn = (<button type="button" onClick={(e) => userLogoutHandler(e)} disabled={loading}>Logout</button>);
 
     return !userAuthenticated ? (
         <div className={styles.tasksUserForm}>
@@ -148,16 +135,16 @@ const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
             <div className={styles.tasksMessageEmail}>{emailMessage}</div>
             <div className={styles.tasksMessagePassword}>{passwordMessage}</div>
             <div className={styles.tasksFormButtons}>
-                <span>{renderLoginBtn()}</span>
+                <span>{renderLoginBtn}</span>
                 <span>{" -or- "}</span>
-                <span>{renderRegisterBtn()}</span>
+                <span>{renderRegisterBtn}</span>
             </div>
             <div className={styles.tasksFormMessage}>{formMessage}</div>
         </div>
    ) : (
     <div className={styles.tasksUserForm}>
         <span>{"You are logged in  "}</span>
-        <span>{renderLogoutBtn()}</span>
+        <span>{renderLogoutBtn}</span>
         <div className={styles.tasksFormMessage}>{formMessage}</div>
     </div>
    );

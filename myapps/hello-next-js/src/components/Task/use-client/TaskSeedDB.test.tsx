@@ -18,10 +18,20 @@ const defaultProps = {
   userAuthenticated: true,
 };
 
+let spyConsoleError: jest.SpyInstance<any, any>;
+
 describe('TaskSeedDB Component', () => {
   beforeEach(() => {
     // Clear all mocks before each test
     jest.clearAllMocks();
+
+    // hide console.error to reduce noise on the console output
+    spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+  });
+
+  afterEach(() => {
+    // Restore console.error
+    spyConsoleError.mockRestore();
   });
 
   describe('Rendering', () => {
