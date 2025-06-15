@@ -9,9 +9,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             // for the sake of demo, lets use POST instead of DELETE request type
             // to demonstrate its possible to use the POST request to send a DELETE request.
             try {
+                console.log("TASKS_API_HEADER ", await TASKS_API_HEADER());
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/delete-rows`, {
                     method: 'POST',
                     headers: await TASKS_API_HEADER(),
+                    credentials: 'include',
                 });
 
                 if (!response.ok) {

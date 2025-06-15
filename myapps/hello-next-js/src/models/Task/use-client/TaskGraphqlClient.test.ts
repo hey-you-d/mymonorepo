@@ -25,6 +25,7 @@ describe('fetchGraphQL', () => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
       body: JSON.stringify({ query, variables }),
     });
     
