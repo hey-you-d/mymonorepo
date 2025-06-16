@@ -1,12 +1,13 @@
-import { createMocks, RequestMethod } from 'node-mocks-http';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import handler from '../../../../../pages/api/tasks/v1/bff/[id]';
-import { TASKS_API_HEADER } from '@/lib/app/common';
-
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
   BASE_URL: 'https://api.example.com',
-  TASKS_API_HEADER: jest.fn(),
+  TASKS_API_HEADER: jest.fn().mockResolvedValue({
+        'Content-Type': 'application/json',
+        'x-api-key': 'valid key',
+        Authorization: 'bearer '
+  }),
+  VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
+  getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),
 }));
 
 // Mock fetch globally
@@ -15,8 +16,18 @@ global.fetch = jest.fn();
 // Mock console methods to avoid cluttering test output
 let mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
 
+import { createMocks, RequestMethod } from 'node-mocks-http';
+import type { NextApiRequest, NextApiResponse } from 'next';
+//import handler from '../../../../../pages/api/tasks/v1/bff/[id]';
+//import { TASKS_API_HEADER, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
+const handler = require('../../../../../pages/api/tasks/v1/bff/[id]').default;
+const {
+  TASKS_API_HEADER,
+  VERIFY_JWT_RETURN_API_RES,
+} = require('../../../../../src/lib/app/common');
+
 describe('/api/tasks/v1/bff/[id] handler', () => {
-    const mockTasksApiHeader = TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>;
+    //const mockTasksApiHeader = TASKS_API_HEADER as jest.MockedFunction<TASKS_API_HEADER_WITH_AUTH>;
     const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
 
     beforeEach(() => {
@@ -24,15 +35,16 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
         
         // Reset console methods to avoid noise in tests
         mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
-        
+        /*  
         mockTasksApiHeader.mockResolvedValue({
             'Content-Type': 'application/json',
             'x-api-key': 'valid key',
             Authorization: 'bearer '
         });
+        */
     });
 
-        afterEach(() => {
+    afterEach(() => {
         mockConsoleError.mockClear();
     });
 
@@ -325,7 +337,8 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
     describe('TASKS_API_HEADER error handling', () => {
         it('should handle TASKS_API_HEADER rejection', async () => {
-            mockTasksApiHeader.mockRejectedValueOnce(new Error('Header generation failed'));
+            //mockTasksApiHeader.mockRejectedValueOnce(new Error('Header generation failed'));
+            (TASKS_API_HEADER as jest.Mock).mockRejectedValueOnce(new Error('Header generation failed'));
 
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
                 method: 'GET',

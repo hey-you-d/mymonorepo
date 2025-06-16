@@ -1,12 +1,9 @@
-import handler from '../../../../../pages/api/tasks/v1/bff/delete-rows';
-import { createMocks, RequestMethod } from 'node-mocks-http';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { BASE_URL, TASKS_API_HEADER } from '@/lib/app/common';
-
 // Mock the dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
   BASE_URL: 'https://test-api.com',
-  TASKS_API_HEADER: jest.fn()
+  TASKS_API_HEADER: jest.fn(),
+  VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
+  getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),  
 }));
 
 // Mock fetch globally
@@ -14,6 +11,17 @@ global.fetch = jest.fn();
 
 // Mock console methods to avoid cluttering test output
 const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+import { createMocks, RequestMethod } from 'node-mocks-http';
+import { NextApiRequest, NextApiResponse } from 'next';
+//import handler from '../../../../../pages/api/tasks/v1/bff/delete-rows';
+//import { VERIFY_JWT_RETURN_API_RES, TASKS_API_HEADER } from '@/lib/app/common';
+const handler = require('../../../../../pages/api/tasks/v1/bff/delete-rows').default;
+const {
+  BASE_URL,  
+  TASKS_API_HEADER,
+  VERIFY_JWT_RETURN_API_RES,
+} = require('../../../../../src/lib/app/common');
 
 describe('/api/tasks/v1/bff/delete-rows handler', () => {
     beforeEach(() => {
@@ -26,6 +34,9 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
             'x-api-key': 'valid key',
             'Authorization': 'bearer '
         });
+
+        // Setup default mock for VERIFY_JWT_RETURN_API_RES
+        (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
     });
 
     afterEach(() => {

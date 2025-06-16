@@ -166,5 +166,5 @@ export const VERIFY_JWT_RETURN_API_RES = async (req: NextApiRequest, res: NextAp
         }
     }
 
-    return; // silently passing the verification
+    return true;
 }

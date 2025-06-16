@@ -1,16 +1,24 @@
-import handler from '../../../../../pages/api/tasks/v1/bff/create-row';
-import { createMocks, RequestMethod } from 'node-mocks-http';
-import { BASE_URL, TASKS_API_HEADER } from '@/lib/app/common';
-import { NextApiRequest, NextApiResponse } from 'next';
-
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
     BASE_URL: 'https://api.example.com',
     TASKS_API_HEADER: jest.fn(),
+    VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
+    getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),
 }));
 
 // Mock fetch globally
 global.fetch = jest.fn();
+
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createMocks, RequestMethod } from 'node-mocks-http';
+//import handler from '../../../../../pages/api/tasks/v1/bff/create-row';
+//import { BASE_URL, TASKS_API_HEADER, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
+const handler = require('../../../../../pages/api/tasks/v1/bff/create-row').default;
+const {
+  BASE_URL,  
+  TASKS_API_HEADER,
+  VERIFY_JWT_RETURN_API_RES,
+} = require('../../../../../src/lib/app/common');
 
 describe('/api/tasks/v1/bff/create-row handler', () => {
     const mockHeaders = { 'Content-Type': 'application/json', 'x-api-key': 'valid key', Authorization: 'bearer ' };
@@ -18,6 +26,10 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         (TASKS_API_HEADER as jest.Mock).mockResolvedValue(mockHeaders);
+
+        // Setup default mock for VERIFY_JWT_RETURN_API_RES
+        (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
+
         console.error = jest.fn(); // Mock console.error to avoid noise in tests
     });
 

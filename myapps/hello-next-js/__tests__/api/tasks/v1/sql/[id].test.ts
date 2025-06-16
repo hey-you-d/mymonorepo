@@ -7,13 +7,14 @@ jest.mock('../../../../../src/lib/db/db_postgreSQL', () => (
 
 jest.mock('../../../../../src/lib/app/common', () => (
     {
-        CHECK_API_KEY: jest.fn(), 
+        CHECK_API_KEY: jest.fn(),
+        VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true), 
     }
 ));
 
 import handler from '../../../../../pages/api/tasks/v1/sql/[id]';
 import { db } from '@/lib/db/db_postgreSQL';
-import { CHECK_API_KEY } from '@/lib/app/common';
+import { CHECK_API_KEY, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { mockRequestResponse, apiKeyAuthorizationTestSuite } from './index.test';
 

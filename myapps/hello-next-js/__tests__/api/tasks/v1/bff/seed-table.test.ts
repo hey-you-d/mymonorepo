@@ -1,23 +1,33 @@
-import { createMocks, RequestMethod } from 'node-mocks-http';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import handler from '../../../../../pages/api/tasks/v1/bff/seed-table';
-import { TASKS_API_HEADER } from '@/lib/app/common';
-import type { Task } from '@/types/Task';
-
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
     BASE_URL: 'https://test-api.example.com',
     TASKS_API_HEADER: jest.fn(),
+    VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
+    getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),    
 }));
 
 // Mock fetch globally
 global.fetch = jest.fn();
 
+import { createMocks, RequestMethod } from 'node-mocks-http';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Task } from '@/types/Task';
+//import handler from '../../../../../pages/api/tasks/v1/bff/seed-table';
+//import { TASKS_API_HEADER, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
+const handler = require('../../../../../pages/api/tasks/v1/bff/seed-table').default;
+const {
+  BASE_URL,  
+  TASKS_API_HEADER,
+  VERIFY_JWT_RETURN_API_RES,
+} = require('../../../../../src/lib/app/common');
 
 describe('/api/tasks/v1/bff/seed-table handler', () => {
     beforeEach(() => {
         // Reset all mocks before each test
         jest.clearAllMocks();
+
+        // Setup default mock for VERIFY_JWT_RETURN_API_RES
+        (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
         
         // Mock console methods to avoid noise in test output
         jest.spyOn(console, 'error').mockImplementation(() => {});

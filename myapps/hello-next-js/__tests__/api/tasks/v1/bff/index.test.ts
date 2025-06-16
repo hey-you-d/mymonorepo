@@ -1,8 +1,3 @@
-import handler from '../../../../../pages/api/tasks/v1/bff';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { createMocks, RequestMethod } from 'node-mocks-http';
-import { TASKS_API_HEADER, getInternalApiKey } from '@/lib/app/common';
-
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
   BASE_URL: 'https://api.example.com',
@@ -12,6 +7,11 @@ jest.mock('../../../../../src/lib/app/common', () => ({
 
 // Mock fetch globally
 global.fetch = jest.fn();
+
+import handler from '../../../../../pages/api/tasks/v1/bff';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createMocks, RequestMethod } from 'node-mocks-http';
+import { TASKS_API_HEADER, getInternalApiKey } from '@/lib/app/common';
 
 describe('/api/tasks/v1/bff handler', () => {
     beforeEach(() => {
