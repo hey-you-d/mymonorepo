@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { Request as ExpressRequest, Response as ExpressResponse } from "express";
 
 export type Task = {
     id: number,
@@ -44,3 +45,9 @@ export type TaskUserType = {
     userAuthenticated: boolean,
     setUserAuthenticated: Dispatch<SetStateAction<boolean>>,
 }
+
+export type GraphQLContext = {
+  req: ExpressRequest;
+  res: ExpressResponse;
+  user?: unknown; // optional, if you add decoded user info after verifying JWT
+};

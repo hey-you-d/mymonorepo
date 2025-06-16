@@ -7,8 +7,8 @@ import { gql } from 'graphql-tag';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { DateTimeResolver } from 'graphql-scalars';
 import { db } from '@/lib/db/db_postgreSQL';
-import type { UsersDbQueryResultType as User } from '@/types/Task';
-import { CHECK_API_KEY } from '@/lib/app/common';
+import type { UsersDbQueryResultType as User, GraphQLContext } from '@/types/Task';
+import { CHECK_API_KEY, VERIFY_JWT_IN_AUTH_HEADER } from '@/lib/app/common';
 
 export const schema = gql`
     scalar DateTime
@@ -38,29 +38,63 @@ export const schema = gql`
 export const resolvers = {
     DateTime: DateTimeResolver,
     Query: {
-        users: async() => {
-            const res = await db.query('SELECT * FROM users ORDER BY id DESC');
-            return res.rows;
+        users: async(_: unknown, {}, context: GraphQLContext) => {
+            const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
+            if (!outcome.valid) {
+                console.error(`sql/user/graphql.ts | users - failed JWT verification : ${outcome.error}`);
+                throw new Error(`sql/user/graphql.ts | users - failed JWT verification : ${outcome.error}`);
+            }
+
+            try {
+                const res = await db.query('SELECT * FROM users ORDER BY id DESC');
+                return res.rows;
+            } catch(err) {
+                console.error('sql/user/graphql.ts | users - error from DB query'); 
+                throw new Error(`sql/user/graphql.ts | users - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
-        user: async(_: unknown, { id }: { id: User['id'] }) => {
-            const res = await db.query('SELECT * FROM users WHERE id = $1', [id]);
-            return res.rows[0];
+        user: async(_: unknown, { id }: { id: User['id'] }, context: GraphQLContext) => {
+            const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
+            if (!outcome.valid) {
+                console.error(`sql/user/graphql.ts | user - failed JWT verification : ${outcome.error}`);
+                throw new Error(`sql/user/graphql.ts | user - failed JWT verification : ${outcome.error}`);
+            }
+
+            try {
+                const res = await db.query('SELECT * FROM users WHERE id = $1', [id]);
+                return res.rows[0];
+            } catch(err) {
+                console.error('sql/user/graphql.ts | user - error from DB query'); 
+                throw new Error(`sql/user/graphql.ts | user - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
-        lookupUser: async(_: unknown, { email }: User): Promise<User> => {
-            const { rows } = await db.query('SELECT * FROM users WHERE email = $1', [email]);
-            
-            return rows[0];
+        lookupUser: async(_: unknown, { email }: User): Promise<User | undefined> => {
+            // JWT Authorization is not required for user login
+
+            try {
+                const { rows } = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+                return rows[0];
+            } catch(err) {
+                console.error('sql/user/graphql.ts | lookupUser - error from DB query');
+                throw new Error(`sql/user/graphql.ts | lookupUser - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
     },
     Mutation: {
-        registerUser: async(_: unknown, { email, hashed_pwd, jwt }: User): Promise<User> => {
-            const { rows } = await db.query(
-                `INSERT INTO users (email, hashed_pwd, auth_type, admin_access, jwt) 
-                VALUES ($1, $2, $3, $4, $5) RETURNING *`, 
-                [email, hashed_pwd, "basic_auth", false, jwt]
-            );
+        registerUser: async(_: unknown, { email, hashed_pwd, jwt }: User): Promise<User | undefined> => {
+            // JWT Authorization is not required for user registration
+            try {
+                const { rows } = await db.query(
+                    `INSERT INTO users (email, hashed_pwd, auth_type, admin_access, jwt) 
+                    VALUES ($1, $2, $3, $4, $5) RETURNING *`, 
+                    [email, hashed_pwd, "basic_auth", false, jwt]
+                );
 
-            return rows[0];
+                return rows[0];
+            } catch(err) {
+                console.error('sql/user/graphql.ts | registerUser - error from DB query');
+                throw new Error(`sql/user/graphql.ts | registerUser - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
     },
 }

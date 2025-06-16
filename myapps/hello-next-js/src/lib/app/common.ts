@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Request as ExpressRequest } from 'express';
 import { getSecret } from "./awsParameterStore";
 import { getSecret as getFrmSecretMgr } from '@/lib/app/awsSecretManager';
 import { LOCALHOST_MODE, LIVE_SITE_MODE, APP_ENV } from './featureFlags';
@@ -104,7 +105,7 @@ export const getJwtSecret = async () => {
 }
 
 
-type VerifyJwtResult =
+export type VerifyJwtResult =
   | { valid: true; payload: string | JwtPayload }
   | { valid: false; error: string };
 
@@ -128,19 +129,19 @@ export const VERIFY_JWT_STRING = async(jwt: string): Promise<VerifyJwtResult> =>
     } catch (err) {
         switch((err as Error).name) {
             case "TokenExpiredError" :
-                console.warn(verifyJwtErrorMsgs.TokenExpiredError);
+                console.warn(`VERIFY_JWT_STRING | ${verifyJwtErrorMsgs.TokenExpiredError}`);
                 return { valid: false, error: verifyJwtErrorMsgs.TokenExpiredError };
             case "JsonWebTokenError" :
-                console.error(verifyJwtErrorMsgs.JsonWebTokenError);
+                console.error(`VERIFY_JWT_STRING | ${verifyJwtErrorMsgs.JsonWebTokenError}`);
                 return { valid: false, error: verifyJwtErrorMsgs.JsonWebTokenError };
             default:
-                console.error(verifyJwtErrorMsgs.UnknownError);
+                console.error(`VERIFY_JWT_STRING | ${verifyJwtErrorMsgs.UnknownError}`);
                 return { valid: false, error: verifyJwtErrorMsgs.UnknownError };
         }
     }
 }
 
-export const VERIFY_JWT_IN_AUTH_HEADER = async (req: NextApiRequest, res: NextApiResponse): Promise<VerifyJwtResult> => {
+export const VERIFY_JWT_IN_AUTH_HEADER = async (req: NextApiRequest | ExpressRequest): Promise<VerifyJwtResult> => {
     const authorization = req.headers.authorization;
     if (!authorization || Array.isArray(authorization) || !authorization.startsWith('Bearer ')) {
         return { valid: false, error: "VERIFY_JWT | Invalid or missing Authorization header" };
@@ -153,7 +154,7 @@ export const VERIFY_JWT_IN_AUTH_HEADER = async (req: NextApiRequest, res: NextAp
 }
 
 export const VERIFY_JWT_RETURN_API_RES = async (req: NextApiRequest, res: NextApiResponse) => {
-    const outcome = await VERIFY_JWT_IN_AUTH_HEADER(req, res);
+    const outcome = await VERIFY_JWT_IN_AUTH_HEADER(req);
 
     if (!outcome.valid) {
         switch(outcome.error) {

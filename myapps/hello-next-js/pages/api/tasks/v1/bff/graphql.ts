@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { DOMAIN_URL, TASKS_API_HEADER } from "@/lib/app/common";
+import { DOMAIN_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 
 export const config = {
     api: {
@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 const proxyResponse = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, { // V - correct
                 //const proxyResponse = await fetch(`${BASE_URL}/api/tasks/v1/sql/graphql`, {  // X - wrong
                     method: 'POST',
-                    headers: await TASKS_API_HEADER(),
+                    headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
                     credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
                     body: JSON.stringify({
                         query,
