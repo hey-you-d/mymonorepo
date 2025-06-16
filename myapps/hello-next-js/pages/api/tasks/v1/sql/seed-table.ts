@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
-import { CHECK_API_KEY } from '@/lib/app/common';
+import { CHECK_API_KEY, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
 
 const tasks = [
     { title: 'Build Next.js CRUD', detail: 'Add full backend API layer to hello-next-js app' },
@@ -42,6 +42,8 @@ export const placeholders = tasks
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
     if (!isAuthorized) return res.status(401).json({ error: "Unauthorized access: invalid API key" });
+
+    await VERIFY_JWT_RETURN_API_RES(req, res);
 
     switch (req.method) {
         case "POST" :
