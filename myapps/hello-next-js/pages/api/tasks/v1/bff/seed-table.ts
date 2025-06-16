@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
-import { BASE_URL, TASKS_API_HEADER } from "@/lib/app/common";
+import { BASE_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/seed-table`, {
                     method: 'POST',
-                    headers: await TASKS_API_HEADER(),
+                    headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
                     credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
                 });
 

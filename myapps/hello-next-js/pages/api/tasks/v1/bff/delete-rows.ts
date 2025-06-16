@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
-import { BASE_URL, TASKS_API_HEADER } from "@/lib/app/common";
+import { BASE_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
@@ -9,10 +9,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             // for the sake of demo, lets use POST instead of DELETE request type
             // to demonstrate its possible to use the POST request to send a DELETE request.
             try {
-                console.log("TASKS_API_HEADER ", await TASKS_API_HEADER());
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/delete-rows`, {
                     method: 'POST',
-                    headers: await TASKS_API_HEADER(),
+                    headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
                     credentials: 'include',
                 });
 

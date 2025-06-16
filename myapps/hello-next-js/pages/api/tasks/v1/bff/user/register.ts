@@ -2,28 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
 import type { UserModelType } from '@/types/Task';
-import { getSecret } from '@/lib/app/awsSecretManager';
 import { JWT_TOKEN_COOKIE_NAME, TASKS_SQL_BASE_API_URL, getInternalApiKey } from "@/lib/app/common";
 import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags';
-
-export const getJwtSecret = async () => {
-    try {
-        if (!process.env.AWS_REGION) {
-            throw new Error("AWS Region is missing");
-        }
-
-        // obtain jwt secret from the AWS secret manager
-        const secret: { jwtSecret: string } = await getSecret(
-            "dev/hello-next-js/jwt-secret", // or prod/hello-next-js/jwt-secret for prod ENV
-            process.env.AWS_REGION
-        );
-
-        return secret;
-    } catch(err) {
-        console.error("Error: failed to obtain JWT from AWS Secret Manager ", err);
-        throw err;
-    }  
-}
+import { getJwtSecret } from '@/lib/app/common';
 
 export const createAuthCookie = async (res: NextApiResponse, jwt: string) => {
     const path = APP_ENV == "LIVE" 
@@ -57,6 +38,7 @@ export const generateHashedPassword = async (password: string) => {
     });
 }
 
+// TODO: move this to @/lib/app/common
 export const generateJWT = async (email: string, hashedPwd: string, jwtSecret: string) => {
     return await sign(
         { email, hashedPassword: hashedPwd  },

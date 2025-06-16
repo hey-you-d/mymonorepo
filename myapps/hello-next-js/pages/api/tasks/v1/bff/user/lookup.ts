@@ -2,7 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import argon2 from 'argon2';
 import { createAuthCookie } from './register';
 import type { UserModelType } from '@/types/Task';
-import { TASKS_SQL_BASE_API_URL, getInternalApiKey } from "@/lib/app/common";
+import { 
+    TASKS_SQL_BASE_API_URL, 
+    getInternalApiKey, 
+    getJwtSecret, 
+    generateJWT, 
+    VERIFY_JWT_STRING,
+    verifyJwtErrorMsgs 
+} from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchUrl?: string): Promise<void> => {
     switch (req.method) {
@@ -50,11 +57,48 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                     const hashedPwd = outcome.password;
                     const pwdOk = await argon2.verify(hashedPwd, password);
                     if (pwdOk && outcome.jwt) {
-                        // store JWT in a http-only cookie
-                        // for reference: since the cookie is meant for storing a sensitive data (JWT), then we have to create the cookie
-                        // on the server-side 
-                        await createAuthCookie(res, outcome.jwt);
+                        // Next, verify if the jwt stored in the cookie hasn't expired yet. Replace it with a new one if its already expired.
+                        const verificationOutcome = await VERIFY_JWT_STRING(outcome.jwt);
 
+                        if (!verificationOutcome.valid && verificationOutcome.error === verifyJwtErrorMsgs.TokenExpiredError) {
+                            const jwtSecret: { jwtSecret: string } = await getJwtSecret();
+                            const newJwt = await generateJWT(email, hashedPwd, jwtSecret.jwtSecret);
+                            // update the DB
+                            const response = await fetch(`${finalUrl}/user/update-jwt`, {
+                                method: 'PATCH',
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "x-api-key": await getInternalApiKey() ?? "",
+                                    // the same reason as the login op above, JWT authorization is unnecessary
+                                },
+                                body: JSON.stringify({
+                                    email,
+                                    jwt: newJwt,
+                                }),
+                                credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
+                            });
+
+                            if (!response.ok) {
+                                console.error("User BFF - Error replacing expired JWT: ", `${response.status} - ${response.statusText}`);
+                                // If the response isn't OK, throw an error to be caught in the catch block
+                                throw new Error(`User BFF - Error replacing expired JWT: ${response.status} ${response.statusText}`);
+                            } 
+                        
+                            const outcome: UserModelType = await response.json();
+                            if (!outcome.error && outcome.jwt && outcome.jwt.length > 0) {
+                                // then, store JWT in a http-only cookie
+                                await createAuthCookie(res, outcome.jwt);
+                            } else {
+                                console.error("User BFF - Error re-creating a new http-only cookie: ", `${response.status} - ${response.statusText}`);
+                                throw new Error(`User BFF - Error re-creating a new http-only cookie: ${response.status} ${response.statusText}`);
+                            }
+                        } else {
+                            // store JWT in a http-only cookie
+                            // for reference: since the cookie is meant for storing a sensitive data (JWT), then we have to create the cookie
+                            // on the server-side 
+                            await createAuthCookie(res, outcome.jwt);
+                        }
+                                        
                         return res.status(200).json({
                             error: false,
                             message: "User BFF - successful user login process" 

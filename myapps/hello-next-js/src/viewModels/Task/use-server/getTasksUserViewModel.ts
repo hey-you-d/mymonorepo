@@ -11,6 +11,7 @@ import {
 } from '@/models/Task/use-server/TaskUserModel';
 import type { UserModelType } from '@/types/Task';
 
+// TODO: Move this to @/lib/app/common
 export const getJwtSecret = async () => {
     try {
         if (!process.env.AWS_REGION) {

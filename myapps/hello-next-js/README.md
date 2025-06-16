@@ -156,7 +156,7 @@ yarn workspace hello-next-js start
     - Viewmodel component: reusing the default implementation
     - View component: [taskWithSearchFilterPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskWithSearchFilterPage.tsx)
 12. Frontend styling with Tailwind CSS **STATUS: TODO**
-13. Frontend Features implementing AI Agent with OpenAI Langchain.js - **STATUS: WIP**
+13. Features leveraging AI Agent with OpenAI Langchain.js - **STATUS: TODO**
 13. BFF <-> API communication protocol with RESTful API (API v1) - **STATUS: DONE**
 14. BFF <-> API communication protocol with gRPC (API v2) - **STATUS: TODO**
 15. BFF <-> API communication protocol with event-driven-system using Apache Kafka (API v3) - **STATUS: TODO**
