@@ -1,5 +1,6 @@
 "use server"
-import { TASKS_API_HEADER } from "@/lib/app/common";
+import { TASKS_API_HEADER, JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
+import { cookies } from 'next/headers';
 
 export async function fetchGraphQL(query: string, variables?: Record<string, unknown>) {
     // for reference:
@@ -23,9 +24,11 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
     // Content-Type: application/json
     // A valid JSON body with both query and variables keys (even if variables is empty)
     // Whereas apollo-server-micro was more forgiving and didn't enforce body schema as strictly.
+    const cookieStore = await cookies();
+    const reqCookie = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
     const res = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, {
         method: 'POST',
-        headers: await TASKS_API_HEADER(),
+        headers: await TASKS_API_HEADER(reqCookie?.value ?? ""),
         body: JSON.stringify({ query, variables: variables ?? {} }),
     });
 

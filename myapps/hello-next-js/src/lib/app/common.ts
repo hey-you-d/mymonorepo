@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Request as ExpressRequest } from 'express';
+import { cookies } from 'next/headers';
 import { getSecret } from "./awsParameterStore";
 import { getSecret as getFrmSecretMgr } from '@/lib/app/awsSecretManager';
 import { LOCALHOST_MODE, LIVE_SITE_MODE, APP_ENV } from './featureFlags';
