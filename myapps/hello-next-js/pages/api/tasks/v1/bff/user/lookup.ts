@@ -3,12 +3,12 @@ import argon2 from 'argon2';
 import { createAuthCookie } from './register';
 import type { UserModelType } from '@/types/Task';
 import { 
-    TASKS_SQL_BASE_API_URL, 
-    getInternalApiKey, 
+    TASKS_SQL_BASE_API_URL,  
     getJwtSecret, 
     generateJWT, 
     VERIFY_JWT_STRING,
-    verifyJwtErrorMsgs 
+    verifyJwtErrorMsgs,
+    TASKS_API_HEADER, 
 } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchUrl?: string): Promise<void> => {
@@ -31,13 +31,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
                 // In this case, we must supply an absolute URL  
                 const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
+                // JWT auth is not needed for login process.
+                // JWT will become accessible via cookie after successful login not before.
                 const response = await fetch(`${finalUrl}/user/lookup`, {
                     method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-api-key": await getInternalApiKey() ?? "",
-                        // users don't have to be logged-in in order to login, hence JWT authorization is unnecessary
-                    },
+                    headers: await TASKS_API_HEADER(), 
                     body: JSON.stringify({
                         email,
                     }),
@@ -64,13 +62,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                             const jwtSecret: { jwtSecret: string } = await getJwtSecret();
                             const newJwt = await generateJWT(email, hashedPwd, jwtSecret.jwtSecret);
                             // update the DB
+                            // JWT auth is not needed for login process.
+                            // JWT will become accessible via cookie after successful login not before.
                             const response = await fetch(`${finalUrl}/user/update-jwt`, {
                                 method: 'PATCH',
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    "x-api-key": await getInternalApiKey() ?? "",
-                                    // the same reason as the login op above, JWT authorization is unnecessary
-                                },
+                                headers: await TASKS_API_HEADER(),
                                 body: JSON.stringify({
                                     email,
                                     jwt: newJwt,

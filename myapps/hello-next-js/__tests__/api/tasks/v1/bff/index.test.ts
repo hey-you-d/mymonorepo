@@ -1,8 +1,11 @@
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
-  BASE_URL: 'https://api.example.com',
-  TASKS_API_HEADER: jest.fn(),
-  getInternalApiKey: jest.fn().mockResolvedValue("test-key"),
+    BASE_URL: 'https://api.example.com',
+    TASKS_API_HEADER: jest.fn().mockResolvedValue({
+        "Content-Type": "application/json",
+        "x-api-key": "test-key",
+    }),
+    getInternalApiKey: jest.fn().mockResolvedValue("test-key"),
 }));
 
 // Mock fetch globally
@@ -42,10 +45,10 @@ describe('/api/tasks/v1/bff handler', () => {
                 'Content-Type': 'application/json', 
                 'x-api-key': 'test-key', 
             };
-            /*
+            
             (TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>)
                 .mockResolvedValue(mockHeaders);
-            */
+            
             (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
                 ok: true,
                 status: 200,
@@ -143,16 +146,15 @@ describe('/api/tasks/v1/bff handler', () => {
         it('should handle TASKS_API_HEADER errors', async () => {
             // Arrange
             const headerError = new Error('Failed to get headers');
-            /*
+            
             (TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>)
                 .mockRejectedValue(headerError);
-            */
-            (getInternalApiKey as jest.Mock).mockRejectedValue(headerError);
+            //(getInternalApiKey as jest.Mock).mockRejectedValue(headerError);
             const { req, res } = createMocks({
                 method: 'GET',
                 credentials: 'include'
             });
-
+            
             // Act
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
@@ -169,19 +171,16 @@ describe('/api/tasks/v1/bff handler', () => {
 
         it('should handle JSON parsing errors', async () => {
             // Arrange
-            
-            /*
             const mockHeaders = { 
                 'Content-Type': 'application/json', 
                 'x-api-key': 'test-key'
             };
-            
             (TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>)
                 .mockResolvedValue(mockHeaders);
-            */
+            //(getInternalApiKey as jest.Mock).mockRejectedValue(jsonError);
             
             const jsonError = new Error('Invalid JSON');
-            (getInternalApiKey as jest.Mock).mockRejectedValue(jsonError);
+            
             (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
                 ok: true,
                 status: 200,
@@ -253,7 +252,7 @@ describe('/api/tasks/v1/bff handler', () => {
         it('should properly construct the API URL using BASE_URL', async () => {
             // Arrange
             const mockTasks = [{ id: 1, title: 'Test Task' }];
-            /*
+            
             const mockHeaders = { 
                 'Content-Type': 'application/json', 
                 'x-api-key': 'test-key'
@@ -261,8 +260,7 @@ describe('/api/tasks/v1/bff handler', () => {
 
             (TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>)
                 .mockResolvedValue(mockHeaders);
-            */
-            (getInternalApiKey as jest.Mock).mockResolvedValue('test-key');
+            //(getInternalApiKey as jest.Mock).mockResolvedValue('test-key');
             (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
                 ok: true,
                 status: 200,
@@ -289,7 +287,7 @@ describe('/api/tasks/v1/bff handler', () => {
             // Arrange
             const mockTasks = [{ id: 1, title: 'Test Task' }];
             let headersCalled = false;
-            /*            
+                        
             (TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>)
                 .mockImplementation(async () => {
                     headersCalled = true;
@@ -299,11 +297,12 @@ describe('/api/tasks/v1/bff handler', () => {
                         Authorization: 'bearer ' 
                     };
                 });
-            */
+            /*
             (getInternalApiKey as jest.Mock).mockImplementation(async () => {
                 headersCalled = true;
                 return 'test-key';
             });
+            */
             (fetch as jest.MockedFunction<typeof fetch>).mockImplementation(async () => {
                 // Verify headers were called before fetch
                 expect(headersCalled).toBe(true);
@@ -324,8 +323,7 @@ describe('/api/tasks/v1/bff handler', () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
-            //expect(TASKS_API_HEADER).toHaveBeenCalled();
-            expect(getInternalApiKey).toHaveBeenCalled();
+            expect(TASKS_API_HEADER).toHaveBeenCalled();
             expect(fetch).toHaveBeenCalled();
         });
     });

@@ -2,7 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
 import type { UserModelType } from '@/types/Task';
-import { JWT_TOKEN_COOKIE_NAME, TASKS_SQL_BASE_API_URL, getInternalApiKey } from "@/lib/app/common";
+import { 
+    JWT_TOKEN_COOKIE_NAME, 
+    TASKS_SQL_BASE_API_URL, 
+    TASKS_API_HEADER, 
+} from "@/lib/app/common";
 import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags';
 import { getJwtSecret } from '@/lib/app/common';
 
@@ -68,14 +72,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
 
                 // lookup email in the db
+                // JWT auth is not needed for user registration process.
+                // JWT will become accessible via cookie after successful registration
                 try {
                     const response = await fetch(`${finalUrl}/user/lookup`, {
                         method: 'POST',
-                        headers: {
-                            "Content-Type": "application/json",
-                            "x-api-key": await getInternalApiKey() ?? "",
-                            // users don't have to be logged-in in order to register, hence JWT authorization is unnecessary
-                        },
+                        headers: await TASKS_API_HEADER(),
                         body: JSON.stringify({
                             email,
                         }),
@@ -110,13 +112,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 const jwtSecret: { jwtSecret: string } = await getJwtSecret();
                 const jwt = await generateJWT(email, hashedPwd, jwtSecret.jwtSecret);
                 
+                // JWT auth is not needed for user registration process.
+                // JWT will become accessible via cookie after successful registration
                 const response = await fetch(`${finalUrl}/user/register`, {
                     method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-api-key": await getInternalApiKey() ?? "",
-                        // users don't have to be logged-in in order to register, hence JWT authorization is unnecessary
-                    },
+                    headers: await TASKS_API_HEADER(),
                     body: JSON.stringify({
                         email,
                         password: hashedPwd,
