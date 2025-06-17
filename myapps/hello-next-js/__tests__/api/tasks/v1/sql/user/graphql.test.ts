@@ -1,10 +1,5 @@
-import { ApolloServer } from '@apollo/server';
-import { gql } from 'graphql-tag';
-import { schema, resolvers } from '../../../../../../pages/api/tasks/v1/sql/user/graphql';
-
 // Mock dependencies
 jest.mock('../../../../../../src/lib/db/db_postgreSQL');
-jest.mock('../../../../../../src/lib/app/common');
 jest.mock('graphql-scalars', () => ({
   DateTimeResolver: {
     serialize: (date: Date) => date.toISOString(),
@@ -20,7 +15,20 @@ jest.mock('../../../../../../src/lib/db/db_postgreSQL', () => ({
 
 jest.mock('../../../../../../src/lib/app/common', () => ({
   CHECK_API_KEY: jest.fn(),
+  VERIFY_JWT_IN_AUTH_HEADER: jest.fn().mockResolvedValue({ valid: true }),
+  getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),
 }));
+
+import { ApolloServer } from '@apollo/server';
+import { gql } from 'graphql-tag';
+import { schema, resolvers } from '../../../../../../pages/api/tasks/v1/sql/user/graphql';
+import { GraphQLContext } from '@/types/Task';
+//import { CHECK_API_KEY, VERIFY_JWT_IN_AUTH_HEADER } from '@/lib/app/common';
+const {
+  CHECK_API_KEY,  
+  VERIFY_JWT_IN_AUTH_HEADER,
+  getJWTFrmHttpOnlyCookie,
+} = require('../../../../../../src/lib/app/common');
 
 // Mock console.error to avoid noise in test output
 const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -106,7 +114,7 @@ const GET_USER_QUERY = gql`
 `;
 
 describe('Tasks Users API handler - graphql.ts', () => {
-    let server: ApolloServer;
+    let server: ApolloServer<GraphQLContext>;
     const { db } = require('../../../../../../src/lib/db/db_postgreSQL');
     
     beforeAll(async () => {
@@ -161,7 +169,7 @@ describe('Tasks Users API handler - graphql.ts', () => {
         expect(response.body.kind).toBe('single');
         if (response.body.kind === 'single') {
           expect(response.body.singleResult.errors).toBeDefined();
-          expect(response.body.singleResult.errors?.[0].message).toBe('Database connection failed');
+          expect(response.body.singleResult.errors?.[0].message).toBe('sql/user/graphql.ts | users - error from DB query : Error - Database connection failed');
         }
       });
     });
@@ -269,7 +277,7 @@ describe('Tasks Users API handler - graphql.ts', () => {
         expect(response.body.kind).toBe('single');
         if (response.body.kind === 'single') {
           expect(response.body.singleResult.errors).toBeDefined();
-          expect(response.body.singleResult.errors?.[0].message).toBe('Email already exists');
+          expect(response.body.singleResult.errors?.[0].message).toBe('sql/user/graphql.ts | registerUser - error from DB query : Error - Email already exists');
         }
       });
     });
