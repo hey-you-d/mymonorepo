@@ -4,10 +4,16 @@ import { cookies } from 'next/headers';
 import { getSecret } from '@/lib/app/awsSecretManager';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
-import { JWT_TOKEN_COOKIE_NAME, TASKS_SQL_BASE_API_URL  } from '@/lib/app/common';
+import { 
+    JWT_TOKEN_COOKIE_NAME, 
+    TASKS_SQL_BASE_API_URL,  
+    VERIFY_JWT_STRING,
+    verifyJwtErrorMsgs,
+} from '@/lib/app/common';
 import { 
     registerUser as registerUserModel, 
     logInUser as logInUserModel,
+    updateJwt as updateJwtUserModel,
 } from '@/models/Task/use-server/TaskUserModel';
 import type { UserModelType } from '@/types/Task';
 
@@ -86,9 +92,8 @@ export const registerUser = async (email: string, password: string) => {
             return false;
         }
     } catch (error) {
-        console.error("Failed to lookup the entered email in the DB as part of the user registration process: ", error);
-
-        throw error;
+        console.error(`user-server | getTasksUserViewModel | Unknown Error when attempting user lookup as part of registration process: ${(error as Error).name} - ${(error as Error).message}`);
+        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when attempting user lookup as part of registration process: ${(error as Error).name} - ${(error as Error).message}`);
     } 
     
     // generate salted & hashed password string  with argon2id encryption.
@@ -116,9 +121,8 @@ export const registerUser = async (email: string, password: string) => {
         // just to be safe...
         await logoutUser();
         
-        console.error("Failed to register a new user: ", error);
-
-        throw error;
+        console.error(`user-server | getTasksUserViewModel | Unknown Error when attempting user registration: ${(error as Error).name} - ${(error as Error).message}`);
+        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when attempting user registration: ${(error as Error).name} - ${(error as Error).message}`);
     } 
 }
 
@@ -131,7 +135,27 @@ export const loginUser = async (email: string, password: string) =>  {
             const hashedPwd = outcome.password;
             const pwdOk = await argon2.verify(hashedPwd, password);
             if (pwdOk && outcome.jwt) {
-                // store JWT in a cookie
+                // Next, verify if the jwt stored in the cookie hasn't expired yet. Replace it with a new one if its already expired.
+                const verificationOutcome = await VERIFY_JWT_STRING(outcome.jwt);
+
+                if (!verificationOutcome.valid && verificationOutcome.error === verifyJwtErrorMsgs.TokenExpiredError) {
+                    const jwtSecret: { jwtSecret: string } = await getJwtSecret();
+                    const newJwt = await generateJWT(email, hashedPwd, jwtSecret.jwtSecret);
+                    // update the DB
+                    const result: UserModelType = await updateJwtUserModel(email, newJwt, TASKS_SQL_BASE_API_URL);
+
+                    if (!result.error && result.jwt && result.jwt.length > 0) {
+                        // then, store JWT in a http-only cookie
+                        // for reference: since the cookie is meant for storing a sensitive data (JWT), then we have to create the cookie
+                        // on the server-side (For server-side variant, via Next.js server actions instead of the API endpoint)
+                        return await createAuthCookie(result.jwt);
+                    } else {
+                        console.error(`user-server | getTasksUserViewModel | Error re-creating a new http-only cookie: ${result.message}`);
+                        throw new Error(`user-server | getTasksUserViewModel | Error re-creating a new http-only cookie: ${result.message}`);
+                    }
+                }
+
+                // store JWT in a http-only cookie
                 // for reference: since the cookie is meant for storing a sensitive data (JWT), then we have to create the cookie
                 // on the server-side (For server-side variant, via Next.js server actions instead of the API endpoint)
                 return await createAuthCookie(outcome.jwt);
@@ -142,9 +166,8 @@ export const loginUser = async (email: string, password: string) =>  {
         // just to be safe...
         await logoutUser();
         
-        console.error("Failed to login : ", error);
-
-        throw error;
+        console.error(`user-server | getTasksUserViewModel | Unknown Error when attempting user login process: ${(error as Error).name} - ${(error as Error).message}`);
+        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when attempting user login process: ${(error as Error).name} - ${(error as Error).message}`);
     }
 }
 
@@ -159,9 +182,8 @@ export const logoutUser = async () => {
         // then it's no longer exist in the client browser, which what we want
         return token && token.value.length > 0 ? false : true;
     } catch (error) {
-        console.error("Failed to logout : ", error);
-
-        throw error;
+        console.error(`user-server | getTasksUserViewModel | Unknown Error when attempting user logout process: ${(error as Error).name} - ${(error as Error).message}`);
+        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when attempting user logout process: ${(error as Error).name} - ${(error as Error).message}`);
     }
 }
 
@@ -172,8 +194,7 @@ export const checkAuthTokenCookieExist = async () => {
 
         return token && token.value.length > 0;
     } catch (error) {
-        console.error("Failed to check auth cookie : ", error);
-
-        throw error;
+        console.error(`user-server | getTasksUserViewModel | Unknown Error when checking auth_token: ${(error as Error).name} - ${(error as Error).message}`);
+        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when checking auth_token: ${(error as Error).name} - ${(error as Error).message}`);
     }
 }
