@@ -5,9 +5,9 @@ import express from 'express';
 import { json } from 'body-parser';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
-import { Task } from "@/types/Task";
+import { Task, GraphQLContext } from "@/types/Task";
 import { values, placeholders } from "./seed-table";
-import { CHECK_API_KEY } from '@/lib/app/common';
+import { CHECK_API_KEY, VERIFY_JWT_IN_AUTH_HEADER } from '@/lib/app/common';
 import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
 
 //import { KeyvAdapter } from '@apollo/utils.keyvadapter';
@@ -40,43 +40,165 @@ export const schema = gql`
 export const resolvers = {
     Query: {
         tasks: async() => {
-            const res = await db.query('SELECT * FROM tasks ORDER BY id DESC');
-            return res.rows;
+            // JWT authorization is not required for this query
+
+            try {
+                const res = await db.query('SELECT * FROM tasks ORDER BY id DESC');
+                
+                // Check for null/undefined result (connection issues)
+                if (!res || !res.rows) {
+                    console.error('sql/graphql.ts | tasks - null/undefined output');
+                    throw new Error("sql/graphql.ts | tasks - null/undefined output");
+                }
+                
+                return res.rows;
+            } catch(err) {
+                console.error('sql/graphql.ts | tasks - error from DB query');
+                throw new Error(`sql/graphql.ts | tasks - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
-        task: async (_: unknown, { id }: { id: Task['id'] }) => {
-            const res = await db.query('SELECT * FROM tasks WHERE id = $1', [id]);
-            return res.rows[0];
+        task: async (_: unknown, { id }: { id: Task['id'] }, context: GraphQLContext) => {
+            const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
+            if (!outcome.valid) {
+                console.error(`sql/graphql.ts | task - failed JWT verification : ${outcome.error}`);
+                throw new Error(`sql/graphql.ts | task - failed JWT verification : ${outcome.error}`);
+            }
+
+            try {
+                const res = await db.query('SELECT * FROM tasks WHERE id = $1', [id]);
+                
+                // Check for null/undefined result (connection issues)
+                if (!res || !res.rows) {
+                    console.error('sql/graphql.ts | task - null/undefined output');
+                    throw new Error("sql/graphql.ts | task - null/undefined output");
+                }
+                
+                return res.rows[0];
+            } catch(err) {
+                console.error('sql/graphql.ts | task - error from DB query'); 
+                throw new Error(`sql/graphql.ts | task - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
     },
     Mutation: {
-        createTask: async (_: unknown, { title, detail }: Task) => {
-            const res = await db.query(
-                'INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *', 
-                [title, detail]
-            );
-            return res.rows[0];
+        createTask: async (_: unknown, { title, detail }: Task, context: GraphQLContext) => {
+            const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
+            if (!outcome.valid) {
+                console.error(`sql/graphql.ts | createTask - failed JWT verification : ${outcome.error}`);
+                throw new Error(`sql/graphql.ts | createTask - failed JWT verification : ${outcome.error}`);
+            }
+            
+            try {
+                const res = await db.query(
+                    'INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *', 
+                    [title, detail]
+                );
+
+                // Check for null/undefined result (connection issues)
+                if (!res || !res.rows) {
+                    console.error('sql/graphql.ts | createTask - null/undefined output');
+                    throw new Error("sql/graphql.ts | createTask - error from DB query");
+                }
+
+                return res.rows[0];
+            } catch(err) {
+                console.error('sql/graphql.ts | createTask - error from DB query');
+                throw new Error(`sql/graphql.ts | createTask - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
-        updateTask: async (_: unknown, { id, title, detail, completed }: Task) => {
-            const res = await db.query(
-                'UPDATE tasks SET title = $1, detail = $2, completed = $3 WHERE id = $4 RETURNING *', 
-                [title, detail, completed, id]
-            );
-            return res.rows[0];
+        updateTask: async (_: unknown, { id, title, detail, completed }: Task, context: GraphQLContext) => {
+            const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
+            if (!outcome.valid) {
+                console.error(`sql/graphql.ts | updateTask - failed JWT verification : ${outcome.error}`);
+                throw new Error(`sql/graphql.ts | updateTask - failed JWT verification : ${outcome.error}`);
+            }
+
+            try {
+                const res = await db.query(
+                    'UPDATE tasks SET title = $1, detail = $2, completed = $3 WHERE id = $4 RETURNING *', 
+                    [title, detail, completed, id]
+                );
+
+                // Check for null/undefined result (connection issues)
+                if (!res || !res.rows) {
+                    console.error('sql/graphql.ts | updateTask - null/undefined output');
+                    throw new Error("sql/graphql.ts | updateTask - error from DB query");
+                }
+
+                return res.rows[0];
+            } catch(err) {
+                console.error('sql/graphql.ts | updateTask - error from DB query'); 
+                throw new Error(`sql/graphql.ts | updateTask - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
-        deleteTask: async (_: unknown, { id }: { id: Task['id'] }) => {
-            const res = await db.query('DELETE FROM tasks WHERE id = $1 RETURNING *', [id]);
-            return res.rows[0];
+        deleteTask: async (_: unknown, { id }: { id: Task['id'] }, context: GraphQLContext) => {
+            const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
+            if (!outcome.valid) {
+                console.error(`sql/graphql.ts | deleteTask - failed JWT verification : ${outcome.error}`);
+                throw new Error(`sql/graphql.ts | deleteTask - failed JWT verification : ${outcome.error}`);
+            }
+
+            try {
+                const res = await db.query('DELETE FROM tasks WHERE id = $1 RETURNING *', [id]);
+                
+                // Check for null/undefined result (connection issues)
+                if (!res || !res.rows) {
+                    console.error('sql/graphql.ts | deleteTask - null/undefined output');
+                    throw new Error('sql/graphql.ts | deleteTask - null/undefined output');
+                }
+                
+                return res.rows[0];
+            } catch(err) {
+                console.error('sql/graphql.ts | deleteTask - error from DB query');
+                throw new Error(`sql/graphql.ts | deleteTask - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
-        deleteTasks: async () => {
-            const res = await db.query('DELETE FROM tasks RETURNING *', []);
-            return res.rows;
+        deleteTasks: async (_: unknown, {}, context: GraphQLContext) => {
+            const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
+            if (!outcome.valid) {
+                console.error(`sql/graphql.ts | deleteTasks - failed JWT verification : ${outcome.error}`);
+                throw new Error(`sql/graphql.ts | deleteTasks - failed JWT verification : ${outcome.error}`);
+            }
+
+            try {
+                const res = await db.query('DELETE FROM tasks RETURNING *', []);
+                
+                // Check for null/undefined result (connection issues)
+                if (!res || !res.rows) {
+                    console.error('sql/graphql.ts | deleteTasks - null/undefined output');
+                    throw new Error('sql/graphql.ts | deleteTasks - error from DB query');
+                }
+                
+                return res.rows;
+            } catch(err) {
+                console.error('sql/graphql.ts | deleteTasks - error from DB query'); 
+                throw new Error(`sql/graphql.ts | deleteTasks - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }
         },
-        seedTasks: async (_: unknown, {}) => {
-            const res = await db.query(`INSERT INTO tasks (title, detail) VALUES ${placeholders} RETURNING *`, 
-                values);
-            //const res = await db.query(`INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *`, 
-            //    ["hello", "world"]);
-            return res.rows;    
+        seedTasks: async (_: unknown, {}, context: GraphQLContext) => {
+            const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
+            if (!outcome.valid) {
+                console.error(`sql/graphql.ts | seedTasks - failed JWT verification : ${outcome.error}`);
+                throw new Error(`sql/graphql.ts | seedTasks - failed JWT verification : ${outcome.error}`);
+            }
+
+            try {
+                const res = await db.query(`INSERT INTO tasks (title, detail) VALUES ${placeholders} RETURNING *`, 
+                    values);
+
+                // Check for null/undefined result (connection issues)
+                if (!res || !res.rows) {
+                    console.error('sql/graphql.ts | seedTasks - null/undefined output');
+                    throw new Error('sql/graphql.ts | seedTasks - null/undefined output');
+                }    
+
+                //const res = await db.query(`INSERT INTO tasks (title, detail) VALUES ($1, $2) RETURNING *`, 
+                //    ["hello", "world"]);
+                return res.rows;
+            } catch(err) {
+                console.error('sql/graphql.ts | seedTasks - error from DB query'); 
+                throw new Error(`sql/graphql.ts | seedTasks - error from DB query : ${(err as Error).name} - ${(err as Error).message}`);
+            }    
         },
     },
 };

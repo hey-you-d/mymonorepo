@@ -5,9 +5,10 @@
 **-- STATUS: FULFILLED**
 2. Demonstrate server-side (App Router) & client-side (Page Router) frontend development with Node.JS (Next.JS), React.JS & Backend to Frontend (BFF) **-- STATUS: FULFILLED**
 3. Demonstrate knowledge of various Frontend features (data querying with graphQL, user register/login, authentication & authorization with JWT,  client-side caching, unit testing with Jest, styling with Tailwind CSS, etc.) **-- STATUS: ONGOING**
-4. Demonstrate backend 2 backend API development with Node.JS (Next.JS) & RESTful API protocol **-- STATUS: FULFILLED**
-5. Explore backend 2 backend API development with Node.JS (Next.JS) & gRPC protocol **-- STATUS: TODO**
-6. Explore backend 2 backend API development with Node.JS (Next.JS) & Kafka event-driven-system **-- STATUS: TODO**
+4. Explore AI Agent implementation as Frontend features with OpenAI's Langchain.js (Experimental feature) **-- STATUS: TODO**
+5. Demonstrate backend 2 backend API development with Node.JS (Next.JS) & RESTful API protocol **-- STATUS: FULFILLED**
+6. Explore backend 2 backend API development with Node.JS (Next.JS) & gRPC protocol **-- STATUS: TODO**
+7. Explore backend 2 backend API development with Node.JS (Next.JS) & Kafka event-driven-system **-- STATUS: TODO**
 
 ## Infrastructure
 ### Tech stacks
@@ -31,6 +32,7 @@ Setup instruction (localhost) & Work Progress Log: [README](https://github.com/h
 7. Documentation: Swagger API Doc.
 8. Unit Test: Jest Testing Framework.
 9. Frontend CSS Styling: Tailwind CSS
+10. AI Agent: OpenAI Langchain.js (tentative)
 
 ## Links
 1. [Production site - hello-react-js](https://www.yudimankwanmas.com)

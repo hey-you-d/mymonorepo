@@ -7,7 +7,8 @@ jest.mock('../../../../../src/lib/db/db_postgreSQL', () => (
 
 jest.mock('../../../../../src/lib/app/common', () => (
     {
-        CHECK_API_KEY: jest.fn(), 
+        CHECK_API_KEY: jest.fn(),
+        VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true), 
     }
 ));
 

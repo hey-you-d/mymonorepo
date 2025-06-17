@@ -1,23 +1,33 @@
-import { createMocks, RequestMethod } from 'node-mocks-http';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import handler from '../../../../../pages/api/tasks/v1/bff/seed-table';
-import { TASKS_API_HEADER } from '@/lib/app/common';
-import type { Task } from '@/types/Task';
-
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
     BASE_URL: 'https://test-api.example.com',
     TASKS_API_HEADER: jest.fn(),
+    VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
+    getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),    
 }));
 
 // Mock fetch globally
 global.fetch = jest.fn();
 
+import { createMocks, RequestMethod } from 'node-mocks-http';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Task } from '@/types/Task';
+//import handler from '../../../../../pages/api/tasks/v1/bff/seed-table';
+//import { TASKS_API_HEADER, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
+const handler = require('../../../../../pages/api/tasks/v1/bff/seed-table').default;
+const {
+  BASE_URL,  
+  TASKS_API_HEADER,
+  VERIFY_JWT_RETURN_API_RES,
+} = require('../../../../../src/lib/app/common');
 
 describe('/api/tasks/v1/bff/seed-table handler', () => {
     beforeEach(() => {
         // Reset all mocks before each test
         jest.clearAllMocks();
+
+        // Setup default mock for VERIFY_JWT_RETURN_API_RES
+        (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
         
         // Mock console methods to avoid noise in test output
         jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -38,7 +48,8 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
 
             // Create fresh mock request and response objects
             const { req, res } = createMocks({
-                method: 'POST'
+                method: 'POST',
+                credentials: 'include'
             });
         
             const mockHeaders = { 'x-api-key': 'valid key' };
@@ -56,7 +67,7 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             expect(TASKS_API_HEADER).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
                 'https://test-api.example.com/api/tasks/v1/sql/seed-table',
-                { method: 'POST', headers: mockHeaders, }
+                { method: 'POST', headers: mockHeaders, credentials: 'include' }
             );
             expect(res._getStatusCode()).toBe(200);
             expect(JSON.parse(res._getData())).toEqual(mockTasks);
@@ -66,7 +77,8 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             // Arrange
             // Create fresh mock request and response objects
             const { req, res } = createMocks({
-                method: 'POST'
+                method: 'POST',
+                credentials: 'include'
             });
             const mockHeaders = { 'x-api-key': 'valid key' };
             (TASKS_API_HEADER as jest.Mock).mockResolvedValue(mockHeaders);
@@ -96,7 +108,8 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
         it('should handle API response not ok (5xx error)', async () => {
             // Arrange
             const { req, res } = createMocks({
-                method: 'POST'
+                method: 'POST',
+                credentials: 'include',
             });
             const mockHeaders = { 'x-api-key': 'valid key' };
             (TASKS_API_HEADER as jest.Mock).mockResolvedValue(mockHeaders);
@@ -126,7 +139,8 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
         it('should handle fetch network error', async () => {
             // Arrange
             const { req, res } = createMocks({
-                method: 'POST'
+                method: 'POST',
+                credentials: 'include',
             });
             
             const mockHeaders = { 'x-api-key': 'valid key' };
@@ -152,7 +166,8 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
         it('should handle TASKS_API_HEADER rejection', async () => {
             // Arrange
             const { req, res } = createMocks({
-                method: 'POST'
+                method: 'POST',
+                credentials: 'include',
             });
             const headerError = new Error('Header generation failed');
             (TASKS_API_HEADER as jest.Mock).mockRejectedValue(headerError);
@@ -175,7 +190,8 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             // Arrange
             // Create fresh mock request and response objects
             const { req, res } = createMocks({
-                method: 'POST'
+                method: 'POST',
+                credentials: 'include',
             });
             
             const mockHeaders = { 'x-api-key': 'valid key' };
@@ -208,7 +224,8 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             async (method) => {
                 // Arrange
                 const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                    method: method
+                    method: method,
+                    credentials: 'include',
                 });
 
                 // Act
@@ -226,7 +243,8 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
         it('should handle empty response body', async () => {
             // Arrange
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST' as RequestMethod
+                method: 'POST' as RequestMethod,
+                credentials: 'include',
             });
             
             (global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -245,7 +263,8 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
         it('should handle API returning null', async () => {
             // Arrange
             const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST' as RequestMethod
+                method: 'POST' as RequestMethod,
+                credentials: 'include',
             });
             
             (global.fetch as jest.Mock).mockResolvedValueOnce({

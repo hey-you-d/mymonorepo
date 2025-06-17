@@ -1,16 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
-import { BASE_URL, TASKS_API_HEADER  } from "@/lib/app/common";
+import { BASE_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
-    
+
     switch (req.method) {
         case "GET" :
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'GET',
-                    headers: await TASKS_API_HEADER(),
+                    headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
+                    credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
                 });
 
                 if (!response.ok) {
@@ -34,7 +35,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'PUT',
-                    headers: await TASKS_API_HEADER(),
+                    headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
+                    credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
                     body: JSON.stringify({
                         title,
                         detail,
@@ -59,7 +61,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'DELETE',
-                    headers: await TASKS_API_HEADER(),
+                    credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
+                    headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
                 });
 
                 if (!response.ok) {

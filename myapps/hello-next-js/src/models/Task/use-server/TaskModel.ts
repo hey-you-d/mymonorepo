@@ -1,5 +1,6 @@
 "use server"
-import { TASKS_API_HEADER } from "@/lib/app/common";
+import { cookies } from 'next/headers';
+import { TASKS_API_HEADER, JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
 import { Task } from "@/types/Task";
 
 export const swrFetcher = async (): Promise<Task[]> => {
@@ -69,11 +70,12 @@ export const deleteAllRows = async (overrideFetchUrl?: string): Promise<Task[]> 
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
-
+  const cookieStore = await cookies();
+  const reqCookie = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
   try {
     const response = await fetch(`${finalUrl}/delete-rows`, {
         method: 'POST',
-        headers: await TASKS_API_HEADER(),
+        headers: await TASKS_API_HEADER(reqCookie?.value ?? ""),
     });
 
     if (!response.ok) {
@@ -100,11 +102,12 @@ export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[]> =>
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
-  
+  const cookieStore = await cookies();
+  const reqCookie = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
   try {
     const response = await fetch(`${finalUrl}/seed-table`, {
         method: 'POST',
-        headers: await TASKS_API_HEADER(),
+        headers: await TASKS_API_HEADER(reqCookie?.value ?? ""),
     });
 
     if (!response.ok) {
@@ -131,11 +134,12 @@ export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promi
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
-  
+  const cookieStore = await cookies();
+  const reqCookie = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
   try {
     const response = await fetch(`${finalUrl}/${id}`, {
         method: 'GET',
-        headers: await TASKS_API_HEADER(),
+        headers: await TASKS_API_HEADER(reqCookie?.value ?? ""),
     });
 
     if (!response.ok) {
@@ -164,11 +168,12 @@ export const createRow = async (title: string, detail: string, overrideFetchUrl?
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
-  
+  const cookieStore = await cookies();
+  const reqCookie = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
   try {
     const response = await fetch(`${finalUrl}/create-row`, {
         method: 'POST',
-        headers: await TASKS_API_HEADER(),
+        headers: await TASKS_API_HEADER(reqCookie?.value ?? ""),
         body: JSON.stringify({
           title,
           detail
@@ -200,11 +205,12 @@ export const updateRowFromId = async  (id: number, title: string, detail: string
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
-  
+  const cookieStore = await cookies();
+  const reqCookie = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
   try {
     const response = await fetch(`${finalUrl}/${id}`, {
         method: 'PUT',
-        headers: await TASKS_API_HEADER(),
+        headers: await TASKS_API_HEADER(reqCookie?.value ?? ""),
         body: JSON.stringify({
           title,
           detail,
@@ -237,11 +243,12 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
   // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
   // In this case, we must supply an absolute URL  
   const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_SQL_BASE_API_URL;
-  
+  const cookieStore = await cookies();
+  const reqCookie = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
   try {
     const response = await fetch(`${finalUrl}/${id}`, {
         method: 'DELETE',
-        headers: await TASKS_API_HEADER(),
+        headers: await TASKS_API_HEADER(reqCookie?.value ?? ""),
     });
 
     if (!response.ok) {

@@ -1,345 +1,416 @@
-import { createMocks, RequestMethod } from 'node-mocks-http';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../../pages/api/tasks/v1/bff/graphql';
-import { DOMAIN_URL, TASKS_API_HEADER } from '@/lib/app/common';
+import { DOMAIN_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 
 // Mock the dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
-    DOMAIN_URL: 'https://test-domain.com',
+    DOMAIN_URL: 'https://example.com',
     TASKS_API_HEADER: jest.fn(),
+    getJWTFrmHttpOnlyCookie: jest.fn(),
 }));
 
 // Mock fetch globally
 global.fetch = jest.fn();
 
+// Mock console.error to avoid noise in test output
+const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
 describe('/api/tasks/v1/bff/graphql handler', () => {
-    const mockTasksApiHeader = TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>;
-    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+    let req: Partial<NextApiRequest>;
+    let res: Partial<NextApiResponse>;
+    let mockJson: jest.Mock;
+    let mockStatus: jest.Mock;
+    let mockEnd: jest.Mock;
+    let mockSend: jest.Mock;
+    let mockSetHeader: jest.Mock;
 
     beforeEach(() => {
+        // Reset all mocks
         jest.clearAllMocks();
         
-        mockTasksApiHeader.mockResolvedValue({
-            'Content-Type': 'application/json',
-            'x-api-key': 'valid key',
+        // Setup response mocks
+        mockJson = jest.fn().mockReturnThis();
+        mockStatus = jest.fn().mockReturnThis();
+        mockEnd = jest.fn().mockReturnThis();
+        mockSend = jest.fn().mockReturnThis();
+        mockSetHeader = jest.fn().mockReturnThis();
+
+        req = {
+        method: 'POST',
+        body: {
+            query: 'query { tasks { id name } }',
+            variables: { limit: 10 }
+        }
+        };
+
+        res = {
+        status: mockStatus,
+        json: mockJson,
+        end: mockEnd,
+        send: mockSend,
+        setHeader: mockSetHeader,
+        };
+
+        // Setup common mocks
+        (getJWTFrmHttpOnlyCookie as jest.Mock).mockResolvedValue('mock-jwt-token');
+        (TASKS_API_HEADER as jest.Mock).mockResolvedValue({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer mock-jwt-token'
         });
     });
 
-    afterEach(() => {
-        jest.resetAllMocks();
+    afterAll(() => {
+        consoleSpy.mockRestore();
     });
 
     describe('POST method', () => {
-        it('should successfully proxy a GraphQL request with JSON response', async () => {
-            const mockResponseData = {
-                data: { tasks: [{ id: '1', title: 'Test Task' }] }
-            };
-
-            mockFetch.mockResolvedValueOnce({
+        it('should successfully proxy GraphQL request with JSON response', async () => {
+            const mockResponseData = { data: { tasks: [{ id: 1, name: 'Task 1' }] } };
+            const mockFetchResponse = {
                 ok: true,
                 status: 200,
-                statusText: 'OK',
                 headers: {
-                    get: jest.fn().mockReturnValue('application/json'),
+                get: jest.fn().mockReturnValue('application/json')
                 },
-                text: jest.fn().mockResolvedValue(JSON.stringify(mockResponseData)),
-            } as any);
+                text: jest.fn().mockResolvedValue(JSON.stringify(mockResponseData))
+            };
 
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                    query: 'query { tasks { id title } }',
-                    variables: { limit: 10 },
-                },
-            });
+            (global.fetch as jest.Mock).mockResolvedValue(mockFetchResponse);
 
-            await handler(req, res);
+            await handler(req as NextApiRequest, res as NextApiResponse);
 
-            expect(mockFetch).toHaveBeenCalledWith(
-                'https://test-domain.com/api/tasks/v1/sql/graphql',
+            expect(fetch).toHaveBeenCalledWith(
+                'https://example.com/api/tasks/v1/sql/graphql',
                 {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': 'valid key',
-                    },
-                    body: JSON.stringify({
-                        query: 'query { tasks { id title } }',
-                        variables: { limit: 10 },
-                    }),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer mock-jwt-token'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    query: 'query { tasks { id name } }',
+                    variables: { limit: 10 }
+                })
                 }
             );
 
-            expect(res._getStatusCode()).toBe(200);
-            expect(res._getHeaders()['content-type']).toBe('application/json');
-            expect(res._getData()).toBe(JSON.stringify(mockResponseData));
+            expect(mockStatus).toHaveBeenCalledWith(200);
+            expect(mockSetHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
+            expect(mockSend).toHaveBeenCalledWith(JSON.stringify(mockResponseData));
         });
 
-        it('should successfully proxy a GraphQL request with non-JSON response', async () => {
+        it('should successfully proxy GraphQL request with non-JSON response', async () => {
             const mockResponseData = 'Plain text response';
-
-            mockFetch.mockResolvedValueOnce({
+            const mockFetchResponse = {
                 ok: true,
                 status: 200,
-                statusText: 'OK',
                 headers: {
-                    get: jest.fn().mockReturnValue('text/plain'),
+                get: jest.fn().mockReturnValue('text/plain')
                 },
-                text: jest.fn().mockResolvedValue(mockResponseData),
-            } as any);
+                text: jest.fn().mockResolvedValue(mockResponseData)
+            };
 
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                    query: 'query { tasks { id title } }',
-                    variables: { limit: 10 },
-                },
-            });
+            (global.fetch as jest.Mock).mockResolvedValue(mockFetchResponse);
 
-            await handler(req, res);
+            await handler(req as NextApiRequest, res as NextApiResponse);
 
-            expect(res._getStatusCode()).toBe(200);
-            expect(res._getHeaders()['content-type']).toBeUndefined();
-            expect(res._getData()).toBe(mockResponseData);
+            expect(mockStatus).toHaveBeenCalledWith(200);
+            expect(mockSetHeader).not.toHaveBeenCalledWith('Content-Type', 'application/json');
+            expect(mockSend).toHaveBeenCalledWith(mockResponseData);
         });
 
         it('should return 400 when query is missing', async () => {
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                    // missing query
-                    variables: { limit: 10 },
-                },
-            });
+            req.body = { variables: { limit: 10 } }; // Missing query
 
-            await handler(req, res);
+            await handler(req as NextApiRequest, res as NextApiResponse);
 
-            expect(mockFetch).not.toHaveBeenCalled();
-            expect(res._getStatusCode()).toBe(400);
-            expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF graphql proxy error - Query is required'
-            });
+            expect(mockStatus).toHaveBeenCalledWith(400);
+            expect(mockJson).toHaveBeenCalledWith({ error: 'BFF graphql proxy error - Query is required' });
+            expect(fetch).not.toHaveBeenCalled();
         });
 
-        it('should return 400 when variables are missing', async () => {
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                    query: 'query { tasks { id title } }',
-                    // variable is missing
-                },
-            });
+        it('should return 400 when variables is missing', async () => {
+            req.body = { query: 'query { tasks { id name } }' }; // Missing variables
 
-            await handler(req, res);
+            await handler(req as NextApiRequest, res as NextApiResponse);
 
-            expect(mockFetch).not.toHaveBeenCalled();
-            expect(res._getStatusCode()).toBe(400);
-            expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF graphql proxy error - Variable is required'
-            });
+            expect(mockStatus).toHaveBeenCalledWith(400);
+            expect(mockJson).toHaveBeenCalledWith({ error: 'BFF graphql proxy error - Variable is required' });
+            expect(fetch).not.toHaveBeenCalled();
         });
 
-        it('should handle upstream server errors', async () => {
-            mockFetch.mockResolvedValueOnce({
+        it('should return 400 when query is empty string', async () => {
+            req.body = { query: '', variables: { limit: 10 } };
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockStatus).toHaveBeenCalledWith(400);
+            expect(mockJson).toHaveBeenCalledWith({ error: 'BFF graphql proxy error - Query is required' });
+        });
+
+        it('should return 400 when variables is empty object', async () => {
+            req.body = { query: 'query { tasks { id name } }', variables: null };
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockStatus).toHaveBeenCalledWith(400);
+            expect(mockJson).toHaveBeenCalledWith({ error: 'BFF graphql proxy error - Variable is required' });
+        });
+
+        it('should handle GraphQL server error response', async () => {
+            const mockFetchResponse = {
+                ok: false,
+                status: 400,
+                statusText: 'Bad Request',
+                headers: {
+                get: jest.fn().mockReturnValue('application/json')
+                },
+                text: jest.fn().mockResolvedValue('{"errors": [{"message": "GraphQL error"}]}')
+            };
+
+            (global.fetch as jest.Mock).mockResolvedValue(mockFetchResponse);
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockStatus).toHaveBeenCalledWith(500);
+            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+        });
+
+        it('should handle GraphQL server 500 error', async () => {
+            const mockFetchResponse = {
                 ok: false,
                 status: 500,
                 statusText: 'Internal Server Error',
-            } as any);
-
-            // Spy on console.error to verify logging
-            const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                    query: 'query { tasks { id title } }',
-                    variables: { limit: 10 },
-                },
-            });
-
-            await handler(req, res);
-
-            expect(consoleSpy).toHaveBeenCalledWith(
-                'BFF Error fetching data with graphql server: 500 - Internal Server Error'
-            );
-            expect(res._getStatusCode()).toBe(500);
-            expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF graphql proxy error'
-            });
-
-            consoleSpy.mockRestore();
-        });
-
-        it('should handle network errors', async () => {
-            mockFetch.mockRejectedValueOnce(new Error('Network error'));
-
-            // Spy on console.error to verify logging
-            const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                    query: 'query { tasks { id title } }',
-                    variables: { limit: 10 },
-                },
-            });
-
-            await handler(req, res);
-
-            expect(consoleSpy).toHaveBeenCalledWith(
-                'BFF graphql proxy error',
-                expect.any(Error)
-            );
-            expect(res._getStatusCode()).toBe(500);
-            expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF graphql proxy error'
-            });
-
-            consoleSpy.mockRestore();
-        });
-
-        it('should forward the correct status code from upstream', async () => {
-            mockFetch.mockResolvedValueOnce({
-                ok: true,
-                status: 201,
-                statusText: 'Created',
                 headers: {
-                    get: jest.fn().mockReturnValue('application/json'),
+                get: jest.fn().mockReturnValue('application/json')
                 },
-                text: jest.fn().mockResolvedValue('{"success": true}'),
-            } as any);
+                text: jest.fn().mockResolvedValue('Internal server error')
+            };
 
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                query: 'mutation { createTask(input: {title: "New Task"}) { id } }',
-                variables: {},
-                },
-            });
+            (global.fetch as jest.Mock).mockResolvedValue(mockFetchResponse);
 
-            await handler(req, res);
+            await handler(req as NextApiRequest, res as NextApiResponse);
 
-            expect(res._getStatusCode()).toBe(201);
+            expect(mockStatus).toHaveBeenCalledWith(500);
+            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
         });
 
-        it('should handle TASKS_API_HEADER returning a promise', async () => {
-            const mockHeaders = {
-                'Content-Type': 'application/json',
-                'x-api-key': 'valid key',
-                'X-Custom-Header': 'custom-value',
-            };
-            
-            mockTasksApiHeader.mockResolvedValue(mockHeaders);
+        it('should handle network error', async () => {
+            (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
 
-            mockFetch.mockResolvedValueOnce({
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockStatus).toHaveBeenCalledWith(500);
+            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+        });
+
+        it('should handle JWT token retrieval error', async () => {
+            (getJWTFrmHttpOnlyCookie as jest.Mock).mockRejectedValue(new Error('JWT error'));
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockStatus).toHaveBeenCalledWith(500);
+            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+        });
+
+        it('should handle TASKS_API_HEADER error', async () => {
+            (TASKS_API_HEADER as jest.Mock).mockRejectedValue(new Error('Header error'));
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockStatus).toHaveBeenCalledWith(500);
+            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+        });
+
+        it('should handle response.text() error', async () => {
+            const mockFetchResponse = {
                 ok: true,
                 status: 200,
-                statusText: 'OK',
                 headers: {
-                    get: jest.fn().mockReturnValue('application/json'),
+                get: jest.fn().mockReturnValue('application/json')
                 },
-                text: jest.fn().mockResolvedValue('{"data": {}}'),
-            } as any);
+                text: jest.fn().mockRejectedValue(new Error('Failed to read response'))
+            };
 
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                    query: 'query { tasks { id } }',
-                    variables: {},
+            (global.fetch as jest.Mock).mockResolvedValue(mockFetchResponse);
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockStatus).toHaveBeenCalledWith(500);
+            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+        });
+
+        it('should preserve response status from GraphQL server', async () => {
+            const mockFetchResponse = {
+                ok: true,
+                status: 201,
+                headers: {
+                get: jest.fn().mockReturnValue('application/json')
                 },
-            });
+                text: jest.fn().mockResolvedValue('{"data": {"created": true}}')
+            };
 
-            await handler(req, res);
+            (global.fetch as jest.Mock).mockResolvedValue(mockFetchResponse);
 
-            expect(mockFetch).toHaveBeenCalledWith(
-                'https://test-domain.com/api/tasks/v1/sql/graphql',
-                {
-                    method: 'POST',
-                    headers: mockHeaders,
-                    body: JSON.stringify({
-                        query: 'query { tasks { id } }',
-                        variables: {},
-                    }),
-                }
-            );
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockStatus).toHaveBeenCalledWith(201);
+            expect(mockSend).toHaveBeenCalledWith('{"data": {"created": true}}');
+        });
+
+        it('should handle content-type with charset', async () => {
+            const mockResponseData = { data: { tasks: [] } };
+            const mockFetchResponse = {
+                ok: true,
+                status: 200,
+                headers: {
+                get: jest.fn().mockReturnValue('application/json; charset=utf-8')
+                },
+                text: jest.fn().mockResolvedValue(JSON.stringify(mockResponseData))
+            };
+
+            (global.fetch as jest.Mock).mockResolvedValue(mockFetchResponse);
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockSetHeader).toHaveBeenCalledWith('Content-Type', 'application/json');
+            expect(mockSend).toHaveBeenCalledWith(JSON.stringify(mockResponseData));
         });
     });
 
     describe('Non-POST methods', () => {
-        it.each(['GET', 'PUT', 'DELETE', 'PATCH'] as RequestMethod[])(
-            'should return 405 Method Not Allowed for %s method',
-            async (method) => {
-                // Arrange
-                const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                    method: method
-                });
+        it('should return 405 for GET method', async () => {
+            req.method = 'GET';
 
-                // Act
-                await handler(req, res);
+            await handler(req as NextApiRequest, res as NextApiResponse);
 
-                // Assert
-                expect(res._getHeaders()).toHaveProperty('allow', ['POST']);
-                expect(res._getStatusCode()).toBe(405);
-                expect(res._getData()).toBe(`Method ${method} Not Allowed`);
-            }
-        );
+            expect(mockSetHeader).toHaveBeenCalledWith('Allow', ['POST']);
+            expect(mockStatus).toHaveBeenCalledWith(405);
+            expect(mockEnd).toHaveBeenCalledWith('Method GET Not Allowed');
+        });
+
+         it('should return 405 for PUT method', async () => {
+            req.method = 'PUT';
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockSetHeader).toHaveBeenCalledWith('Allow', ['POST']);
+            expect(mockStatus).toHaveBeenCalledWith(405);
+            expect(mockEnd).toHaveBeenCalledWith('Method PUT Not Allowed');
+        });
+
+        it('should return 405 for DELETE method', async () => {
+            req.method = 'DELETE';
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockSetHeader).toHaveBeenCalledWith('Allow', ['POST']);
+            expect(mockStatus).toHaveBeenCalledWith(405);
+            expect(mockEnd).toHaveBeenCalledWith('Method DELETE Not Allowed');
+        });
     });
-    
-    describe('Edge cases', () => {
-        it('should handle empty request body', async () => {
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {},
-            });
 
-            await handler(req, res);
+    describe('Integration scenarios', () => {
+        it('should handle complex GraphQL query with multiple variables', async () => {
+            req.body = {
+                query: `
+                query GetTasksWithFilters($limit: Int!, $status: String!, $userId: ID!) {
+                    tasks(limit: $limit, status: $status, userId: $userId) {
+                    id
+                    name
+                    status
+                    createdAt
+                    }
+                }
+                `,
+                variables: {
+                limit: 50,
+                status: 'ACTIVE',
+                userId: 'user123'
+                }
+            };
 
-            expect(res._getStatusCode()).toBe(400);
-            expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF graphql proxy error - Query is required'
-            });
-        });
+            const mockResponseData = {
+                data: {
+                tasks: [
+                    { id: 1, name: 'Task 1', status: 'ACTIVE', createdAt: '2023-01-01' },
+                    { id: 2, name: 'Task 2', status: 'ACTIVE', createdAt: '2023-01-02' }
+                ]
+                }
+            };
 
-        it('should handle null values in request body', async () => {
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                    query: null,
-                    variables: { limit: 10 },
-                },
-            });
-
-            await handler(req, res);
-
-            expect(res._getStatusCode()).toBe(400);
-            expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF graphql proxy error - Query is required'
-            });
-        });
-
-        it('should handle undefined content-type header', async () => {
-            mockFetch.mockResolvedValueOnce({
+            const mockFetchResponse = {
                 ok: true,
                 status: 200,
-                statusText: 'OK',
                 headers: {
-                    get: jest.fn().mockReturnValue(null),
+                get: jest.fn().mockReturnValue('application/json')
                 },
-                text: jest.fn().mockResolvedValue('response without content-type'),
-            } as any);
+                text: jest.fn().mockResolvedValue(JSON.stringify(mockResponseData))
+            };
 
-            const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-                method: 'POST',
-                body: {
-                    query: 'query { tasks { id } }',
-                    variables: {},
+            (global.fetch as jest.Mock).mockResolvedValue(mockFetchResponse);
+
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(fetch).toHaveBeenCalledWith(
+                'https://example.com/api/tasks/v1/sql/graphql',
+                expect.objectContaining({
+                body: JSON.stringify({
+                    query: req.body.query,
+                    variables: req.body.variables
+                })
+                })
+            );
+
+            expect(mockStatus).toHaveBeenCalledWith(200);
+            expect(mockSend).toHaveBeenCalledWith(JSON.stringify(mockResponseData));
+        });
+
+        it('should handle GraphQL mutation', async () => {
+            req.body = {
+                query: `
+                mutation CreateTask($input: CreateTaskInput!) {
+                    createTask(input: $input) {
+                    id
+                    name
+                    status
+                    }
+                }
+                `,
+                variables: {
+                input: {
+                    name: 'New Task',
+                    description: 'Task description'
+                }
+                }
+            };
+
+            const mockResponseData = {
+                data: {
+                    createTask: {
+                        id: 123,
+                        name: 'New Task',
+                        status: 'PENDING'
+                    }
+                }
+            };
+
+            const mockFetchResponse = {
+                ok: true,
+                status: 200,
+                headers: {
+                get: jest.fn().mockReturnValue('application/json')
                 },
-            });
+                text: jest.fn().mockResolvedValue(JSON.stringify(mockResponseData))
+            };
 
-            await handler(req, res);
+            (global.fetch as jest.Mock).mockResolvedValue(mockFetchResponse);
 
-            expect(res._getStatusCode()).toBe(200);
-            expect(res._getData()).toBe('response without content-type');
+            await handler(req as NextApiRequest, res as NextApiResponse);
+
+            expect(mockStatus).toHaveBeenCalledWith(200);
+            expect(mockSend).toHaveBeenCalledWith(JSON.stringify(mockResponseData));
         });
     });
 });

@@ -10,7 +10,7 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
 
     const res = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/user/graphql`, {
         method: 'POST',
-        headers: await TASKS_API_HEADER(),
+        headers: await TASKS_API_HEADER(), // JWT auth is not needed for registration/login process 
         body: JSON.stringify({ query, variables: variables ?? {} }),
     });
 

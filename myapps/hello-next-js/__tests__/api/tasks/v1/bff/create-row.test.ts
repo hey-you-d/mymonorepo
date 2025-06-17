@@ -1,22 +1,35 @@
-import handler from '../../../../../pages/api/tasks/v1/bff/create-row';
-import { createMocks, RequestMethod } from 'node-mocks-http';
-import { BASE_URL, TASKS_API_HEADER } from '@/lib/app/common';
-
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
     BASE_URL: 'https://api.example.com',
     TASKS_API_HEADER: jest.fn(),
+    VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
+    getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),
 }));
 
 // Mock fetch globally
 global.fetch = jest.fn();
 
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createMocks, RequestMethod } from 'node-mocks-http';
+//import handler from '../../../../../pages/api/tasks/v1/bff/create-row';
+//import { BASE_URL, TASKS_API_HEADER, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
+const handler = require('../../../../../pages/api/tasks/v1/bff/create-row').default;
+const {
+  BASE_URL,  
+  TASKS_API_HEADER,
+  VERIFY_JWT_RETURN_API_RES,
+} = require('../../../../../src/lib/app/common');
+
 describe('/api/tasks/v1/bff/create-row handler', () => {
-    const mockHeaders = { 'Content-Type': 'application/json', 'x-api-key': 'valid key' };
+    const mockHeaders = { 'Content-Type': 'application/json', 'x-api-key': 'valid key', Authorization: 'bearer ' };
     
     beforeEach(() => {
         jest.clearAllMocks();
         (TASKS_API_HEADER as jest.Mock).mockResolvedValue(mockHeaders);
+
+        // Setup default mock for VERIFY_JWT_RETURN_API_RES
+        (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
+
         console.error = jest.fn(); // Mock console.error to avoid noise in tests
     });
 
@@ -29,6 +42,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const mockHeaders = {
                 'Content-Type': 'application/json',
                 'x-api-key': 'test-key',
+                'Authorization': 'bearer '
             };
 
             (TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>).mockResolvedValue(mockHeaders);
@@ -39,6 +53,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
 
             const { req, res } = createMocks({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     title: 'Test Task',
                     detail: 'Test Detail'
@@ -46,7 +61,8 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             });
 
             //  Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
 
             //  Assert
             expect(fetch).toHaveBeenCalledWith(
@@ -54,6 +70,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
                 {
                     method: 'POST',
                     headers: mockHeaders,
+                    credentials: 'include',
                     body: JSON.stringify({
                         title: 'Test Task',
                         detail: 'Test Detail'
@@ -69,6 +86,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             // Arrange
             const { req, res } = createMocks({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     // missing title
                     detail: 'Test Detail'
@@ -76,7 +94,8 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
 
             // Assert
             expect(fetch).not.toHaveBeenCalled();
@@ -90,14 +109,15 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             // Arrange
             const { req, res } = createMocks({
                 method: 'POST',
+                credentials: 'include',
                 body: {
-                title: '',
-                detail: 'Test Detail'
+                    title: '',
+                    detail: 'Test Detail'
                 }
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(fetch).not.toHaveBeenCalled();
@@ -111,6 +131,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             // Arrange
             const { req, res } = createMocks({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     title: 'Test Task'
                     // detail is missing
@@ -118,7 +139,8 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
 
             // Assert
             expect(fetch).not.toHaveBeenCalled();
@@ -132,6 +154,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             // Arrange
             const { req, res } = createMocks({
                 method: 'POST',
+                credentials: 'include',
                 body: {
                     title: 'Test Task',
                     detail: ''
@@ -139,7 +162,8 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
 
             // Assert
             expect(fetch).not.toHaveBeenCalled();
@@ -153,11 +177,12 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             // Arrange
             const { req, res } = createMocks({
                 method: 'POST',
+                credentials: 'include',
                 body: {} // empty body, missing title & detail
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(fetch).not.toHaveBeenCalled();
@@ -172,6 +197,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const mockHeaders = {
                 'Content-Type': 'application/json',
                 'x-api-key': 'test-key',
+                'Authorization': 'bearer '
             };
 
             (TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>)
@@ -185,13 +211,14 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const { req, res } = createMocks({
                 method: 'POST',
                 body: {
-                title: 'Test Task',
-                detail: 'Test Detail'
-                }
+                    title: 'Test Task',
+                    detail: 'Test Detail'
+                },
+                credentials: 'include',
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
@@ -208,6 +235,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const mockHeaders = {
                 'Content-Type': 'application/json',
                 'x-api-key': 'test-key',
+                'Authorization': 'bearer '
             };
 
             (TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>)
@@ -221,13 +249,14 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const { req, res } = createMocks({
                 method: 'POST',
                 body: {
-                title: 'Test Task',
-                detail: 'Test Detail'
-                }
+                    title: 'Test Task',
+                    detail: 'Test Detail'
+                },
+                credentials: 'include',
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
@@ -244,6 +273,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const mockHeaders = {
                 'Content-Type': 'application/json',
                 'x-api-key': 'test-key',
+                'Authorization': 'bearer '
             };
             const networkError = new Error('Network error');
 
@@ -254,13 +284,14 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const { req, res } = createMocks({
                 method: 'POST',
                 body: {
-                title: 'Test Task',
-                detail: 'Test Detail'
-                }
+                    title: 'Test Task',
+                    detail: 'Test Detail'
+                },
+                credentials: 'include',
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
@@ -283,13 +314,14 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const { req, res } = createMocks({
                 method: 'POST',
                 body: {
-                title: 'Test Task',
-                detail: 'Test Detail'
-                }
+                    title: 'Test Task',
+                    detail: 'Test Detail'
+                },
+                credentials: 'include',
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
@@ -311,12 +343,12 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
                 const { req, res } = createMocks({ method });
 
                 // Act
-                await handler(req, res);
+                await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
                 // Assert
                 expect(res._getStatusCode()).toBe(405);
                 expect(res._getHeaders()).toEqual({
-                allow: ['POST']
+                    allow: ['POST']
                 });
                 expect(res._getData()).toBe(`Method ${method} Not Allowed`);
             }
@@ -329,13 +361,14 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const { req, res } = createMocks({
                 method: 'POST',
                 body: {
-                title: null,
-                detail: 'Test Detail'
-                }
+                    title: null,
+                    detail: 'Test Detail'
+                },
+                credentials: 'include',
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(res._getStatusCode()).toBe(400);
@@ -349,13 +382,14 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const { req, res } = createMocks({
                 method: 'POST',
                 body: {
-                title: undefined,
-                detail: 'Test Detail'
-                }
+                    title: undefined,
+                    detail: 'Test Detail'
+                },
+                credentials: 'include',
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(res._getStatusCode()).toBe(400);
@@ -372,6 +406,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             const mockHeaders = {
                 'Content-Type': 'application/json',
                 'x-api-key': 'test-key',
+                'Authorization': 'bearer '
             };
 
             (TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>)
@@ -385,14 +420,15 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
 
             const { req, res } = createMocks({
                 method: 'POST',
+                credentials: 'include',
                 body: {
-                title: '   ', // whitespace only strings
-                detail: 'Test Detail'
+                    title: '   ', // whitespace only strings
+                    detail: 'Test Detail'
                 }
             });
 
             // Act
-            await handler(req, res);
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
             expect(fetch).not.toHaveBeenCalled();

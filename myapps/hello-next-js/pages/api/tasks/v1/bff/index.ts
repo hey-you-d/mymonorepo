@@ -17,8 +17,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "GET" :
             try {
+                // users don't have to be logged-in in order to see the populated table, 
+                // hence for this GET request action, JWT auth is unnecessary
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/`, {
                     method: 'GET',
+                    credentials: 'include',
                     headers: await TASKS_API_HEADER(),
                 });
         

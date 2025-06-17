@@ -4,6 +4,7 @@ describe('fetchGraphQL', () => {
   const mockApiHeader = {
     'Content-Type': 'application/json',
     'x-api-key': 'dummy-test-key',
+    'Authorization': 'Bearer valid-jwt',
   };
 
   let fetchGraphQL: typeof import('./TaskGraphqlClient').fetchGraphQL;

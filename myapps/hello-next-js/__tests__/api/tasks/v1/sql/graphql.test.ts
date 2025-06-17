@@ -1,22 +1,30 @@
-import { ApolloServer } from '@apollo/server';
-import { gql } from 'graphql-tag';
-// Import the actual schema and resolvers from your file
-// Adjust the path according to your actual file structure
-import handler, { schema, resolvers } from '../../../../../pages/api/tasks/v1/sql/graphql'
-
 // Mock dependencies
 jest.mock('../../../../../src/lib/db/db_postgreSQL', () => ({
-  db: {
-    query: jest.fn(),
-  },
+    db: {
+        query: jest.fn(),
+    },
 }));
 jest.mock('../../../../../src/lib/app/common', () => ({
-  CHECK_API_KEY: jest.fn(),
+    CHECK_API_KEY: jest.fn(),
+    VERIFY_JWT_IN_AUTH_HEADER: jest.fn().mockResolvedValue({ valid: true }),
+    getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),
 }));
 jest.mock('../../../../../pages/api/tasks/v1/sql/seed-table', () => ({
     values: ['Task 1', 'Detail 1', 'Task 2', 'Detail 2'],
     placeholders: '($1, $2), ($3, $4)'
 }));
+
+import { ApolloServer } from '@apollo/server';
+import { gql } from 'graphql-tag';
+import { GraphQLContext } from '@/types/Task';
+// Import the actual schema and resolvers from your file
+// Adjust the path according to your actual file structure
+import { schema, resolvers } from '../../../../../pages/api/tasks/v1/sql/graphql'
+const {
+  CHECK_API_KEY,  
+  VERIFY_JWT_IN_AUTH_HEADER,
+  getJWTFrmHttpOnlyCookie,
+} = require('../../../../../src/lib/app/common');
 
 // Mock console.error to avoid noise in test output
 const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -43,7 +51,7 @@ const mockTasks = [
 ];
 
 describe('Tasks API handler - graphql.ts', () => {
-    let server: ApolloServer;
+    let server: ApolloServer<GraphQLContext>;
     let mockDb: jest.Mocked<any>;
     let mockCheckApiKey: jest.MockedFunction<any>;
 
