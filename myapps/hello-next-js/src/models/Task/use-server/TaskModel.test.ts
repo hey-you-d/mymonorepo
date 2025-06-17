@@ -4,6 +4,7 @@ import { APP_ENV } from "@/lib/app/featureFlags";
 const mockApiHeader = {
   'Content-Type': 'application/json',
   'x-api-key': 'dummy-test-key',
+  'Authorization': 'Bearer valid-jwt',
 };
 
 // Define mock response type
