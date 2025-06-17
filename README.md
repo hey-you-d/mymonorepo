@@ -4,7 +4,15 @@
 1. Explore cloud-based serverless deployment automation (CI/CD) with AWS Copilot (Fargate launch type), dockerized container for ECR, and CI/CD implementation with Github Action 
 **-- STATUS: FULFILLED**
 2. Demonstrate server-side (App Router) & client-side (Page Router) frontend development with Node.JS (Next.JS), React.JS & Backend to Frontend (BFF) **-- STATUS: FULFILLED**
-3. Demonstrate knowledge of various Frontend features (data querying with graphQL, user registration/login, authentication & authorization with JWT, client-side caching, unit testing with Jest, styling with Tailwind CSS, etc.) **-- STATUS: ONGOING**
+3. Demonstrate knowledge of various Frontend features such as:
+    - data querying with graphQL, **-- STATUS: FULFILLED**
+    - basic user registration/login, **-- STATUS: FULFILLED**
+    - authentication & authorization with JWT, **-- STATUS: FULFILLED**
+    - authentication & authorization with JWT + OAUTH 2.0 & OIDC via Auth0 identity service, **-- STATUS: TODO** 
+    - client-side caching with Vercel SWR, **-- STATUS: FULFILLED**
+    - unit testing with Jest, **-- STATUS: FULFILLED**
+    - styling with Tailwind CSS, **-- STATUS: TODO**
+    - etc. **-- STATUS: ONGOING**
 4. Demonstrate backend 2 backend API development with Node.JS (Next.JS) & RESTful API protocol **-- STATUS: FULFILLED**
 5. Explore backend 2 backend API development with Node.JS (Next.JS) & gRPC protocol **-- STATUS: TODO**
 6. Explore backend 2 backend API development with Node.JS (Next.JS) & Kafka event-driven-system **-- STATUS: TODO**
@@ -28,10 +36,10 @@ Setup instruction (localhost) & Work Progress Log: [README](https://github.com/h
 3. Data Query Language: direct SQL and via Apollo GraphQL (Server & Client)
 4. Restful API Authentication: API-key x-api-key via http header & JWT-based auth
 5. Client-side Caching: Vercel SWR (for non-graphql) and Apollo Client in-Memory cache
-6. Server-side Caching: To be determined. 
+6. Server-side Caching: Redis (tentative) 
 7. Documentation: Swagger API Doc.
 8. Unit Test: Jest Testing Framework.
-9. Frontend CSS Styling: Tailwind CSS
+9. Frontend CSS Styling: Tailwind CSS (tentative)
 10. AI Agent: OpenAI Langchain.js (tentative)
 
 ## Links
