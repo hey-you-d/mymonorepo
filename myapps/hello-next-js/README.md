@@ -128,7 +128,7 @@ yarn workspace hello-next-js start
         - MVVM - view component #2: [taskDetailWithSwrPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskDetailWithSwrPage.tsx)
         - Next.js App router: [/task-crud-fullstack/use-server/with-swr](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/with-swr/page.tsx)
         - Next.js App router #2: [/task-crud-fullstack/use-server/edit/with-swr/[id]](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/edit/with-swr/[id]/page.tsx)
-7. Server-side Caching implementation with Redis - **STATUS: TODO** 
+7. Server-side Caching - **STATUS: TODO** 
 8. Swagger Doc integration - **STATUS: DONE**  
     - Localhost URL: [http://localhost:3000/hello-next-js/task-crud-fullstack/swagger](http://localhost:3000/hello-next-js/task-crud-fullstack/swagger)
     - Merged PR: [https://github.com/hey-you-d/mymonorepo/pull/37/files](https://github.com/hey-you-d/mymonorepo/pull/37/files)
@@ -156,7 +156,7 @@ yarn workspace hello-next-js start
     - Viewmodel component: reusing the default implementation
     - View component: [taskWithSearchFilterPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskWithSearchFilterPage.tsx)
 12. Frontend styling with Tailwind CSS **STATUS: TODO**
-13. Features leveraging AI Agent with OpenAI Langchain.js - **STATUS: TODO**
+13. Experimental Features leveraging AI Agent with OpenAI Langchain.js - **STATUS: TODO**
 13. BFF <-> API communication protocol with RESTful API (API v1) - **STATUS: DONE**
 14. BFF <-> API communication protocol with gRPC (API v2) - **STATUS: TODO**
 15. BFF <-> API communication protocol with event-driven-system using Apache Kafka (API v3) - **STATUS: TODO**
