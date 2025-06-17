@@ -90,9 +90,9 @@ yarn workspace hello-next-js start
         - MVVM - view component #2: [taskDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskDetailPage.tsx)
         - Next.js App router: [/task-crud-fullstack/use-server/page.tsx](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/page.tsx)
         - Next.js App router #2: [/task-crud-fullstack/use-server/edit/[id]](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/edit/[id]/page.tsx)    
-4. User Registraion, Login, & API Authorization with Basic Auth & JWT
-    - [API Authorization with JWT (bearer token in Authorization header)] **STATUS: TODO** 
-        - prerequisites: completed both server-side & client side MVVM variants implementation
+4. Authentication & Authorization with Basic Auth & JWT 
+    - [API Authorization with JWT (bearer token in Authorization header)] **STATUS: DONE** 
+        - [Merged PR](https://github.com/hey-you-d/mymonorepo/pull/83) 
     - [API endpoint] **STATUS: DONE**
         - [user API endpoint](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/sql/user)
     - [Client-side components variant - React.js components which are rendered via Next.js Page router] 
@@ -100,7 +100,7 @@ yarn workspace hello-next-js start
             - Model component: [TaskUserModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-client/TaskUserModel.ts) 
             - ViewModel component: [useTaskUserViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTaskUserViewModel.ts)
             - View component: [taskUser.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskUser.tsx)
-        - GraphQL Query variant: **STATUS: TODO**
+        - GraphQL Query variant: **STATUS: IN PROGRESS**
             - Model component: tba
             - ViewModel component: tba
             - View component: tba
@@ -113,7 +113,7 @@ yarn workspace hello-next-js start
             - Model component: [TaskUserGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-server/TaskUserGraphqlClient.ts)
             - ViewModel component: [getTasksUserGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksUserGraphQLViewModel.ts)
             - View component: [taskUserGraphQL.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskUserGraphQL.tsx)       
-5. User Registration, Login, & API Authorization with OAUTH & JWT - **STATUS: TODO**
+5. Authentication & Authorization with OAUTH 2.0 & OIDC VIA AUTH0 - **STATUS: TODO**
 6. Frontend feature [Client-side components variant only]: Client-side Caching implementation with Vercel SWR  
     - [Client-side components variant - React.js components which are rendered via Next.js Page router] **STATUS: DONE**
         - Localhost URL: [localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)  
