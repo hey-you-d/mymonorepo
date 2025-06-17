@@ -51,7 +51,8 @@ jest.mock('../../../lib/app/featureFlags', () => ({
 
 jest.mock('../../../lib/app/common', () => ({
   JWT_TOKEN_COOKIE_NAME: 'auth_token',
-  TASKS_SQL_BASE_API_URL: 'http://test-api.com'
+  TASKS_SQL_BASE_API_URL: 'http://test-api.com',
+  VERIFY_JWT_STRING: jest.fn().mockResolvedValue({ valid: true, payload: "" }),
 }));
 
 import { cookies } from 'next/headers';
@@ -59,6 +60,7 @@ import { getSecret } from '@/lib/app/awsSecretManager';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
 import { registerUser as registerUserModel, logInUser as logInUserModel } from '@/models/Task/use-server/TaskUserModel';
+import { VERIFY_JWT_STRING } from '@/lib/app/common';
 
 describe("getTasksUserViewModel", () => {
     interface MockCookieStore {
@@ -297,6 +299,10 @@ describe("getTasksUserViewModel", () => {
                 password: hashedPwd,
                 jwt
             });
+            (VERIFY_JWT_STRING as jest.Mock).mockResolvedValue({
+                valid: true,
+                payload: "",
+            });    
             (argon2.verify as jest.Mock).mockResolvedValue(true);
             mockCookieStore.get.mockReturnValue({ value: jwt } as MockCookie);
 
@@ -411,6 +417,11 @@ describe("getTasksUserViewModel", () => {
             const email = 'integration@example.com';
             const password = 'integrationPassword123';
             
+            (VERIFY_JWT_STRING as jest.Mock).mockResolvedValue({
+                valid: true,
+                payload: "",
+            }); 
+
             // Mock successful registration flow
             (logInUserModel as jest.Mock).mockResolvedValue({ error: 'User not found' });
             (argon2.hash as jest.Mock).mockResolvedValue('hashed_integration_password');
@@ -428,6 +439,11 @@ describe("getTasksUserViewModel", () => {
         it('should handle complete login flow', async () => {
             const email = 'login@example.com';
             const password = 'loginPassword123';
+
+            (VERIFY_JWT_STRING as jest.Mock).mockResolvedValue({
+                valid: true,
+                payload: "",
+            }); 
       
             // Mock successful login flow
             (logInUserModel as jest.Mock).mockResolvedValue({

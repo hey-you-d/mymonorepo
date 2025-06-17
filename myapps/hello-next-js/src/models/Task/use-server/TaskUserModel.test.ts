@@ -6,17 +6,18 @@ const mockApiHeader = {
 
 jest.mock('../../../lib/app/common', () => ({
     TASKS_API_HEADER: jest.fn(),
+    VERIFY_JWT_STRING: jest.fn(),
     TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql'
 }));
 
 import { registerUser, logInUser } from './TaskUserModel';
-import { TASKS_API_HEADER } from '../../../lib/app/common';
+import { TASKS_API_HEADER, VERIFY_JWT_STRING } from '../../../lib/app/common';
 
 // Mock fetch globally
 global.fetch = jest.fn();
 
 const mock_TASKS_API_HEADER = TASKS_API_HEADER as jest.MockedFunction<typeof TASKS_API_HEADER>;
-
+const mock_VERIFY_JWT_STRING = VERIFY_JWT_STRING as jest.MockedFunction<typeof VERIFY_JWT_STRING>;
 describe('TaskUserModel', () => {
     let spyConsoleError: jest.SpyInstance<any, any>;
 
@@ -27,6 +28,7 @@ describe('TaskUserModel', () => {
         jest.clearAllMocks();
         // Reset the mock function
         mock_TASKS_API_HEADER.mockResolvedValue(mockApiHeader);
+        mock_VERIFY_JWT_STRING.mockResolvedValue({ valid: true, payload: "" });
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
     });
@@ -98,12 +100,9 @@ describe('TaskUserModel', () => {
 
             await expect(registerUser('test@example.com', 'password123', 'jwt-token'))
                 .rejects
-                .toThrow('Error registering user credential in DB: 400 Bad Request');
-
-            expect(spyConsoleError).toHaveBeenCalledWith(
-                'Error registering user credential: ',
-                '400 - Bad Request'
-            );
+                .toThrow('user-server | TaskUserModel | Error registration attempt | unknown error: Error - user-server | TaskUserModel | Error registration attempt | response not OK: 400 Bad Request');
+            
+            expect(spyConsoleError).toHaveBeenCalledWith('user-server | TaskUserModel | Error registration attempt | response not OK: 400 - Bad Request');
         });
 
         it('should handle network errors', async () => {
@@ -114,10 +113,7 @@ describe('TaskUserModel', () => {
                 .rejects
                 .toThrow('Network error');
 
-            expect(spyConsoleError).toHaveBeenCalledWith(
-                'Error registering user credential: ',
-                networkError
-            );
+            expect(spyConsoleError).toHaveBeenCalledWith("user-server | TaskUserModel | Error registration attempt | unknown error: Error - Network error");
         });
 
         it('should handle JSON parsing errors', async () => {
@@ -192,12 +188,9 @@ describe('TaskUserModel', () => {
 
             await expect(logInUser('test@example.com'))
                 .rejects
-                .toThrow('Error logging in user: 404 Not Found');
+                .toThrow('user-server | TaskUserModel | Error login attempt | unknown error: Error - user-server | TaskUserModel | Error login attempt | response not OK: 404 Not Found');
 
-            expect(spyConsoleError).toHaveBeenCalledWith(
-                'Error logging in user: ',
-                '404 - Not Found'
-            );
+            expect(spyConsoleError).toHaveBeenCalledWith('user-server | TaskUserModel | Error login attempt | response not OK: 404 - Not Found');
         });
 
         it('should handle network errors', async () => {
@@ -208,10 +201,7 @@ describe('TaskUserModel', () => {
                 .rejects
                 .toThrow('Network error');
 
-            expect(spyConsoleError).toHaveBeenCalledWith(
-                'Error logging in user: ',
-                networkError
-            );
+            expect(spyConsoleError).toHaveBeenCalledWith('user-server | TaskUserModel | Error login attempt | unknown error: Error - Network error');
         });
 
         it('should handle unauthorized access', async () => {
@@ -223,7 +213,7 @@ describe('TaskUserModel', () => {
 
             await expect(logInUser('test@example.com'))
                 .rejects
-                .toThrow('Error logging in user: 401 Unauthorized');
+                .toThrow('user-server | TaskUserModel | Error login attempt | unknown error: Error - user-server | TaskUserModel | Error login attempt | response not OK: 401 Unauthorized');
         });
     });
 
@@ -246,7 +236,7 @@ describe('TaskUserModel', () => {
 
             await expect(registerUser('', 'password123', 'jwt-token'))
                 .rejects
-                .toThrow('Error registering user credential in DB: 400 Bad Request');
+                .toThrow('user-server | TaskUserModel | Error registration attempt | unknown error: Error - user-server | TaskUserModel | Error registration attempt | response not OK: 400 Bad Request');
         });
 
         it('should handle empty email for logInUser', async () => {
@@ -258,7 +248,7 @@ describe('TaskUserModel', () => {
 
             await expect(logInUser(''))
                 .rejects
-                .toThrow('Error logging in user: 400 Bad Request');
+                .toThrow('user-server | TaskUserModel | Error login attempt | unknown error: Error - user-server | TaskUserModel | Error login attempt | response not OK: 400 Bad Request');
         });    
     });
 });
