@@ -46,7 +46,7 @@ export const TaskDetailPage = ({id}: {id: number}) => {
         };
   
         checkUserLoggedIn();
-    }, [setUserAuthenticated, userAuthenticated, checkAuthTokenCookieExist]);
+    }, [setUserAuthenticated, userAuthenticated, checkAuthTokenCookieExist, logoutUser]);
   
 
   if (loading) return <p>Loading...</p>;

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
 import * as cookie from 'cookie';
-import { VERIFY_JWT_STRING, verifyJwtErrorMsgs } from '@/lib/app/common';
+import { VERIFY_JWT_STRING } from '@/lib/app/common';
 
 // for reference:
 // for SPA: rely on BFF (the approach below) for any server-side operations

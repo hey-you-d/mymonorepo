@@ -31,7 +31,7 @@ export const createAuthCookie = async (res: NextApiResponse, jwt: string) => {
         ? LIVE_SITE_MODE.cookie.secure
         : LOCALHOST_MODE.cookie.secure;
 
-    const cookieStr = serialize(JWT_TOKEN_COOKIE_NAME, '', {
+    const cookieStr = serialize(JWT_TOKEN_COOKIE_NAME, jwt, {
         httpOnly: true,
         secure,
         path,
@@ -40,7 +40,6 @@ export const createAuthCookie = async (res: NextApiResponse, jwt: string) => {
     });
 
     res.setHeader('Set-Cookie', cookieStr);
-    
 }
 
 export const generateHashedPassword = async (password: string) => {
