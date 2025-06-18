@@ -93,6 +93,7 @@ yarn workspace hello-next-js start
 4. Authentication & Authorization with Basic Auth & JWT  
     - [API Authorization with JWT (bearer token in Authorization header)] **STATUS: DONE** 
         - [Merged PR](https://github.com/hey-you-d/mymonorepo/pull/83) 
+    - [Refresh Token implementation] **STATUS: IN PROGRESS**    
     - [API endpoint] **STATUS: DONE**
         - [user API endpoint](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/sql/user)
     - [Client-side components variant - React.js components which are rendered via Next.js Page router] 
@@ -100,10 +101,6 @@ yarn workspace hello-next-js start
             - Model component: [TaskUserModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-client/TaskUserModel.ts) 
             - ViewModel component: [useTaskUserViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-client/useTaskUserViewModel.ts)
             - View component: [taskUser.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-client/taskUser.tsx)
-        - GraphQL Query variant: **STATUS: IN PROGRESS**
-            - Model component: tba
-            - ViewModel component: tba
-            - View component: tba
     - [Server-side components variant - React.js Server Components which are rendered via Next.js App router] **STATUS: DONE**
         - SQL Query implementation:
             - Model component: [TaskUserModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-server/TaskUserModel.ts)
