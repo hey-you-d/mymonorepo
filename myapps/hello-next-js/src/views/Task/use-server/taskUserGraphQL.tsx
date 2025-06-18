@@ -17,10 +17,11 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
         const checkUserLoggedIn = async () => {
             // for reference: the http only auth_token cookie is not accessible from the client-side
             const authTokenCookieExist = await checkAuthTokenCookieExist();
-            if (authTokenCookieExist && !userAuthenticated) {
+            if (authTokenCookieExist.outcome && !userAuthenticated) {
                 setUserAuthenticated(true);
             }
-            if (!authTokenCookieExist && userAuthenticated) {
+            if (!authTokenCookieExist.outcome && userAuthenticated) {
+                await logoutUser();
                 setUserAuthenticated(false);
 
                 // TODO: a modal popup that says "you have been logged out"

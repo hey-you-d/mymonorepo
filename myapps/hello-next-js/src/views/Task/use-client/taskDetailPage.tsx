@@ -11,7 +11,7 @@ import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 export const TaskDetailPage = ({id}: {id: number}) => {
   //const { tasks, loading, deleteRowFromId } = useTaskViewModel();
   const { tasks, loading, deleteRowFromId } = useTaskViewModelWithSwr();
-  const { checkAuthTokenCookieExist } = useTaskUserViewModel();
+  const { checkAuthTokenCookieExist, logoutUser } = useTaskUserViewModel();
 
   const [row, setRow] = useState<Task | undefined>(undefined);
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
@@ -29,12 +29,13 @@ export const TaskDetailPage = ({id}: {id: number}) => {
             // for reference: the http only auth_token cookie is not accessible from the client-side
             try {
               const authTokenCookieExist = await checkAuthTokenCookieExist();
-              if (authTokenCookieExist && !userAuthenticated) {
+              if (authTokenCookieExist.outcome && !userAuthenticated) {
                   setUserAuthenticated(true);
               }
-              if (!authTokenCookieExist && userAuthenticated) {
+              if (!authTokenCookieExist.outcome && userAuthenticated) {
+                  await logoutUser();
                   setUserAuthenticated(false);
-    
+                  
                   // TODO: a modal popup that says "you have been logged out"
               }
             } catch(err) {

@@ -81,7 +81,7 @@ export const generateJWT = async (email: string, hashedPwd: string, jwtSecret: s
     return await sign(
         { email, hashedPassword: hashedPwd  },
         jwtSecret,
-        { expiresIn: '1h' }
+        { expiresIn: '900000' } // 90000ms = 15mins
     );
 }
 

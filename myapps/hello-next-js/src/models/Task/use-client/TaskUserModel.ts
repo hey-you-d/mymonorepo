@@ -83,7 +83,7 @@ export class TaskUserModel {
         return result;
     }
 
-    async checkAuthTokenCookieExist(overrideFetchUrl?: string): Promise<boolean> {
+    async checkAuthTokenCookieExist(overrideFetchUrl?: string): Promise<{ outcome: boolean, message: string }> {
         // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
         // In this case, we must supply an absolute URL  
         const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
@@ -96,12 +96,13 @@ export class TaskUserModel {
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`TaskUserModel - Error check auth_token cookie attempt: ${response.status} - ${response.statusText}`, errorText);
-            throw new Error(`TaskUserModel - Error check auth_token cookie attempt: ${response.status}`);
+            const errMessage = `TaskUserModel - Error check auth_token cookie attempt: ${response.status} - ${response.statusText} - ${errorText}`; 
+            console.error(errMessage);
+            throw new Error(errMessage);
         }
 
-        const result: { outcome: boolean } = await response.json();
+        const result: { outcome: boolean, message: string } = await response.json();
         
-        return result.outcome;
+        return result;
     }
 }

@@ -215,7 +215,7 @@ describe("getTasksUserViewModel", () => {
         expect(sign).toHaveBeenCalledWith(
             { email, hashedPassword: hashedPwd },
             jwtSecret,
-            { expiresIn: '1h' }
+            { expiresIn: '900000' } // 90000sec = 15mins
         );
         expect(result).toBe(expectedToken);
         });
