@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
 import * as cookie from 'cookie';
-import { VERIFY_JWT_STRING } from '@/lib/app/common';
+import { VERIFY_JWT_STRING, verifyJwtErrorMsgs } from '@/lib/app/common';
+import { APP_ENV, LIVE_SITE_MODE, LOCALHOST_MODE } from "@/lib/app/featureFlags";
 
 // for reference:
 // for SPA: rely on BFF (the approach below) for any server-side operations
@@ -26,6 +27,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 if (token && token.length > 0) {
                     const result = await VERIFY_JWT_STRING(token);
                     console.log("BFF httpCookie ", result);
+
+                    // if the token is already expired, set the cookie value to an empty string, therefore invalidating it
+                    if(!result.valid && result.error === verifyJwtErrorMsgs.TokenExpiredError) {
+                        // for reference: you can't actually delete a cookie, you can only:
+                        // Set its value to empty (or null), & Set Max-Age=0 or Expires=<past date>,
+        
+                        // Invalidate cookie by setting it to empty with maxAge = 0
+                        //res.setHeader('Set-Cookie', `${JWT_TOKEN_COOKIE_NAME}=; Path=/; HttpOnly; Max-Age=0; SameSite=Strict`);
+                        const path = APP_ENV == "LIVE" 
+                                ? LIVE_SITE_MODE.cookie.path 
+                                : LOCALHOST_MODE.cookie.path;
+                            const secure = APP_ENV == "LIVE" 
+                                ? LIVE_SITE_MODE.cookie.secure
+                                : LOCALHOST_MODE.cookie.secure;
+                        
+                        // for reference: cookie.serialize() ensures safe encoding and formatting, avoiding issues with special characters.        
+                        const cookieStr = cookie.serialize(JWT_TOKEN_COOKIE_NAME, '', {
+                            httpOnly: true,
+                            secure,
+                            path,
+                            sameSite: 'strict',
+                            maxAge: 0, // expire immediately
+                        });
+
+                        res.setHeader('Set-Cookie', cookieStr);
+                    }
 
                     return res.status(200).json({  
                         outcome: result.valid, 
