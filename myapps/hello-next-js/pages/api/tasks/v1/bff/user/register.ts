@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
+import { serialize } from 'cookie';
 import type { UserModelType } from '@/types/Task';
 import { 
     JWT_TOKEN_COOKIE_NAME, 
@@ -11,13 +12,7 @@ import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags'
 import { getJwtSecret } from '@/lib/app/common';
 
 export const createAuthCookie = async (res: NextApiResponse, jwt: string) => {
-    const path = APP_ENV == "LIVE" 
-        ? LIVE_SITE_MODE.cookie.path 
-        : LOCALHOST_MODE.cookie.path;
-    const secure = APP_ENV == "LIVE" 
-        ? LIVE_SITE_MODE.cookie.secure
-        : LOCALHOST_MODE.cookie.secure;
-
+    /*
     const cookieParts = [
         `${JWT_TOKEN_COOKIE_NAME}=${jwt}`,
         `Path=${path}`,
@@ -28,6 +23,24 @@ export const createAuthCookie = async (res: NextApiResponse, jwt: string) => {
     if (secure) cookieParts.push('Secure'); // Append 'Secure' only if true
 
     res.setHeader('Set-Cookie', cookieParts.join('; '));
+    */
+    const path = APP_ENV == "LIVE" 
+        ? LIVE_SITE_MODE.cookie.path 
+        : LOCALHOST_MODE.cookie.path;
+    const secure = APP_ENV == "LIVE" 
+        ? LIVE_SITE_MODE.cookie.secure
+        : LOCALHOST_MODE.cookie.secure;
+
+    const cookieStr = serialize(JWT_TOKEN_COOKIE_NAME, '', {
+        httpOnly: true,
+        secure,
+        path,
+        sameSite: 'strict',
+        maxAge: 3600, // 1hr
+    });
+
+    res.setHeader('Set-Cookie', cookieStr);
+    
 }
 
 export const generateHashedPassword = async (password: string) => {

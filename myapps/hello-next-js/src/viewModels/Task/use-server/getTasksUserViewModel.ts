@@ -51,7 +51,7 @@ export const createAuthCookie = async (jwt: string) => {
             ? LIVE_SITE_MODE.cookie.secure
             : LOCALHOST_MODE.cookie.secure, // set to true to travel over HTTPS
         sameSite: 'strict', // set to strict to prevent CSRF attack
-        maxAge: 15, // lets keep token expiration short (1hr or less for access token)
+        maxAge: 3600, // lets keep token expiration short (1hr or less for access token)
         path: APP_ENV == "LIVE" 
             ? LIVE_SITE_MODE.cookie.path 
             : LOCALHOST_MODE.cookie.path, // limit cookie accessibility
