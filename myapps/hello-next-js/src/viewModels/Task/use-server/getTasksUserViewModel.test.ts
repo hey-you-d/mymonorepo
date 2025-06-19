@@ -93,6 +93,9 @@ describe("getTasksUserViewModel", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+
+        // hide console.error to reduce noise on the console output
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
         
         // Setup mock cookie store
         mockCookieStore = {

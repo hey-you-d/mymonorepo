@@ -26,7 +26,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 // check if token has already expired or not
                 if (token && token.length > 0) {
                     const result = await VERIFY_JWT_STRING(token);
-                    console.log("BFF httpCookie ", result);
 
                     // if the token is already expired, set the cookie value to an empty string, therefore invalidating it
                     if(!result.valid && result.error === verifyJwtErrorMsgs.TokenExpiredError) {

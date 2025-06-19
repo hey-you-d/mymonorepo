@@ -195,7 +195,6 @@ export const checkAuthTokenCookieExist = async () => {
         // check if token has already expired or not
         if (token && token.value.length > 0) {
             const result = await VERIFY_JWT_STRING(token.value);
-            console.log("use-server | getTasksUserViewModel ", result);
 
             // delete the cookie if the token is already expired
             if (!result.valid && result.error === verifyJwtErrorMsgs.TokenExpiredError) {
