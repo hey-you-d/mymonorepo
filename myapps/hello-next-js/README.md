@@ -90,10 +90,9 @@ yarn workspace hello-next-js start
         - MVVM - view component #2: [taskDetailPage.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskDetailPage.tsx)
         - Next.js App router: [/task-crud-fullstack/use-server/page.tsx](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/page.tsx)
         - Next.js App router #2: [/task-crud-fullstack/use-server/edit/[id]](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/src/app/task-crud-fullstack/use-server/edit/[id]/page.tsx)    
-4. Authentication & Authorization with Basic Auth & JWT  
+4. Authentication & Authorization with Basic Auth & JWT (No refresh token implementation) 
     - [API Authorization with JWT (bearer token in Authorization header)] **STATUS: DONE** 
-        - [Merged PR](https://github.com/hey-you-d/mymonorepo/pull/83) 
-    - [Refresh Token implementation] **STATUS: IN PROGRESS**    
+        - [Merged PR](https://github.com/hey-you-d/mymonorepo/pull/83)    
     - [API endpoint] **STATUS: DONE**
         - [user API endpoint](https://github.com/hey-you-d/mymonorepo/tree/master/myapps/hello-next-js/pages/api/tasks/v1/sql/user)
     - [Client-side components variant - React.js components which are rendered via Next.js Page router] 
@@ -110,7 +109,7 @@ yarn workspace hello-next-js start
             - Model component: [TaskUserGraphqlClient.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/models/Task/use-server/TaskUserGraphqlClient.ts)
             - ViewModel component: [getTasksUserGraphQLViewModel.ts](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/viewModels/Task/use-server/getTasksUserGraphQLViewModel.ts)
             - View component: [taskUserGraphQL.tsx](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/src/views/Task/use-server/taskUserGraphQL.tsx)       
-5. Authentication & Authorization with OAUTH 2.0 & OIDC via AUTH0 Identity Service - **STATUS: TODO**
+5. Authentication & Authorization with OAUTH 2.0 & OIDC via AUTH0 Identity Service (Access Token & Refresh Token implementation) - **STATUS: TODO**
 6. Frontend feature [Client-side components variant only]: Client-side Caching implementation with Vercel SWR  
     - [Client-side components variant - React.js components which are rendered via Next.js Page router] **STATUS: DONE**
         - Localhost URL: [localhost:3000/hello-next-js/task-crud-fullstack/with-swr](http://localhost:3000/hello-next-js/task-crud-fullstack/with-swr)  

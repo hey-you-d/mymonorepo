@@ -7,9 +7,8 @@
 3. Demonstrate knowledge of various Frontend features such as:
     - data querying with graphQL, **-- STATUS: FULFILLED**
     - basic user registration/login, **-- STATUS: FULFILLED**
-    - authentication & authorization with JWT **-- STATUS: FULFILLED**
-    - authentication & authorization with JWT + refresh token **-- STATUS: TODO**
-    - authentication & authorization with JWT + OAUTH 2.0 & OIDC via Auth0 identity service, **-- STATUS: TODO** 
+    - authentication & authorization with JWT (sans refresh token implementation) **-- STATUS: FULFILLED**
+    - authentication & authorization with JWT + OAUTH 2.0 & OIDC via Auth0 identity service (access token & refresh token implementation), **-- STATUS: TODO** 
     - client-side caching with Vercel SWR, **-- STATUS: FULFILLED**
     - unit testing with Jest, **-- STATUS: FULFILLED**
     - styling with Tailwind CSS, **-- STATUS: TODO**
