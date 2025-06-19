@@ -7,6 +7,18 @@ jest.mock('../../../viewModels/Task/use-server/getTasksUserGraphQLViewModel', ()
   registerUser: jest.fn(),
   loginUser: jest.fn(),
 }));
+// mock the http only auth_token cookie. 
+// The presence of this cookie indicates that the user has logged in
+jest.mock('next/headers', () => ({
+    cookies: jest.fn(() => ({
+        get: (name: string) => {
+            if (name === 'auth_token') {
+                return { value: 'mocked-token' };
+            }
+            return undefined;
+        },
+    })),
+}));
 
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { TaskUserGraphQL } from './taskUserGraphQL';
@@ -56,7 +68,7 @@ describe('TaskUserGraphQL Component', () => {
 
     describe('Authentication State Management', () => {
         it('should check auth token on mount and set user as authenticated if token exists', async () => {
-            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(true);
+            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: true});
             
             render(<TaskUserGraphQL userAuthenticated={false} setUserAuthenticated={mockSetUserAuthenticated} />);
             
@@ -67,7 +79,7 @@ describe('TaskUserGraphQL Component', () => {
         });
 
         it('should set user as unauthenticated if no auth token exists', async () => {
-            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(false);
+            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: false});
             
             render(<TaskUserGraphQL userAuthenticated={true} setUserAuthenticated={mockSetUserAuthenticated} />);
             
@@ -80,7 +92,7 @@ describe('TaskUserGraphQL Component', () => {
 
     describe('Unauthenticated User Interface', () => {
         beforeEach(() => {
-            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(false);
+            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: false});
         });
 
         it('should render login form when user is not authenticated', () => {
@@ -124,7 +136,7 @@ describe('TaskUserGraphQL Component', () => {
 
     describe('Authenticated User Interface', () => {
         beforeEach(() => {
-            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(true);
+            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: true});
         });
 
         it('should render logout interface when user is authenticated', () => {
@@ -139,7 +151,7 @@ describe('TaskUserGraphQL Component', () => {
 
     describe('Form Validation', () => {
         beforeEach(() => {
-            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(false);
+            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: false});
         });
 
         it('should show email validation error for invalid email format', async () => {
@@ -197,7 +209,7 @@ describe('TaskUserGraphQL Component', () => {
     
     describe('Login Functionality', () => {
         beforeEach(() => {
-            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(false);
+            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: false});
         });
 
         it('should successfully login user with valid credentials', async () => {
@@ -256,7 +268,7 @@ describe('TaskUserGraphQL Component', () => {
 
     describe('Registration Functionality', () => {
         beforeEach(() => {
-            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(false);
+            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: false});
         });
 
         it('should successfully register user with valid credentials', async () => {
@@ -302,7 +314,7 @@ describe('TaskUserGraphQL Component', () => {
     
     describe('Logout Functionality', () => {
         beforeEach(() => {
-            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(true);
+            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: true});
         });
 
 
@@ -336,7 +348,7 @@ describe('TaskUserGraphQL Component', () => {
     
     describe('Edge Cases and Error Handling', () => {
         beforeEach(() => {
-            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue(false);
+            (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: false});
         });
 
         it('should clear form fields after successful login', async () => {

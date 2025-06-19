@@ -76,6 +76,21 @@ describe("getTasksUserViewModel", () => {
     let spyConsoleError: jest.SpyInstance<any, any>;
     let mockCookieStore: MockCookieStore;
 
+    beforeAll(() => {
+        // mock the http only auth_token cookie. 
+        // The presence of this cookie indicates that the user has logged in
+        jest.doMock('next/headers', () => ({
+            cookies: jest.fn(() => ({
+                get: (name: string) => {
+                    if (name === 'auth_token') {
+                        return { value: 'mocked-token' };
+                    }
+                    return undefined;
+                },
+            })),
+        }));
+    });
+
     beforeEach(() => {
         jest.clearAllMocks();
         
@@ -87,6 +102,7 @@ describe("getTasksUserViewModel", () => {
         };
         
         (cookies as jest.Mock).mockResolvedValue(mockCookieStore);
+        (VERIFY_JWT_STRING as jest.Mock).mockResolvedValue({ valid: true, payload: "" }),
         
         // Setup environment variables
         process.env.AWS_REGION = 'us-east-1';
@@ -385,7 +401,7 @@ describe("getTasksUserViewModel", () => {
             const result = await checkAuthTokenCookieExist();
 
             expect(mockCookieStore.get).toHaveBeenCalledWith('auth_token');
-            expect(result).toBe(true);
+            expect(result).toStrictEqual({ outcome: true, message: "" });
         });
 
         it('should return false when auth token cookie does not exist', async () => {
@@ -393,7 +409,7 @@ describe("getTasksUserViewModel", () => {
 
             const result = await checkAuthTokenCookieExist();
 
-            expect(result).toBeFalsy();
+            expect(result).toStrictEqual({message: "use-server | getTasksUserViewModel | Unknown Error when checking auth_token", "outcome": false});
         });
 
         it('should return false when auth token cookie exists but has empty value', async () => {
@@ -401,7 +417,7 @@ describe("getTasksUserViewModel", () => {
 
             const result = await checkAuthTokenCookieExist();
 
-            expect(result).toBeFalsy();
+            expect(result).toStrictEqual({message: "use-server | getTasksUserViewModel | Unknown Error when checking auth_token", outcome: false});
         });
 
         it('should handle cookie check errors', async () => {

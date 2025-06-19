@@ -57,6 +57,7 @@ jest.mock('../../../lib/app/common', () => ({
 }));
 
 import { getRowFromId, deleteRowFromId } from '../../../viewModels/Task/use-server/getTasksViewModel';
+import { checkAuthTokenCookieExist } from '../../../viewModels/Task/use-server/getTasksUserViewModel';
 
 const mockGetRowFromId = getRowFromId as jest.MockedFunction<typeof getRowFromId>;
 const mockDeleteRowFromId = deleteRowFromId as jest.MockedFunction<typeof deleteRowFromId>;
@@ -72,6 +73,7 @@ describe('TaskDetailPage', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: true });
         // Clear console.error mock to reduce noises between tests
         jest.spyOn(console, 'error').mockImplementation(() => {});
     });

@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TaskDetailWithSwrPage } from './taskDetailWithSwrPage';
 import { TaskDetailWithSwrType } from '@/components/Task/use-server/TaskDetailWithSwr';
+import { checkAuthTokenCookieExist } from '../../../viewModels/Task/use-server/getTasksUserViewModel';
 import useSWR from 'swr';
 
 let spyConsoleError: jest.SpyInstance<any, any>;
@@ -76,6 +77,8 @@ describe('TaskDetailWithSwrPage', () => {
     beforeEach(() => {
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+
+        (checkAuthTokenCookieExist as jest.Mock).mockResolvedValue({ outcome: true });
 
         jest.clearAllMocks();
     });

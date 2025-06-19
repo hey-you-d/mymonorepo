@@ -50,7 +50,7 @@ describe('TaskDetailPage', () => {
     ];
 
     const mockDeleteRowFromId = jest.fn();
-    const mockCheckAuthTokenCookieExist = jest.fn();
+    const mockCheckAuthTokenCookieExist = jest.fn().mockResolvedValue({ outcome: true });
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -93,7 +93,7 @@ describe('TaskDetailPage', () => {
 
     describe('Authentication flow', () => {
         it('should check authentication on mount', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(true);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
             render(<TaskDetailPage id={1} />);
 
@@ -103,7 +103,7 @@ describe('TaskDetailPage', () => {
         });
 
         it('should show TaskDetail when user is authenticated and task exists', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(true);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
             render(<TaskDetailPage id={1} />);
 
@@ -115,7 +115,7 @@ describe('TaskDetailPage', () => {
         });
 
         it('should show login message when user is not authenticated', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(false);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: false });
 
             render(<TaskDetailPage id={1} />);
 
@@ -129,7 +129,7 @@ describe('TaskDetailPage', () => {
 
     describe('Task existence', () => {
         it('should show task not found message when task does not exist but user is authenticated', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(true);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
             render(<TaskDetailPage id={999} />); // Non-existent task ID
 
@@ -141,7 +141,7 @@ describe('TaskDetailPage', () => {
         });
 
         it('should find and display the correct task by id', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(true);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
             render(<TaskDetailPage id={2} />);
 
@@ -154,7 +154,7 @@ describe('TaskDetailPage', () => {
 
     describe('Navigation', () => {
         it('should always render back link to tasks page', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(true);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
             render(<TaskDetailPage id={1} />);
 
@@ -166,7 +166,7 @@ describe('TaskDetailPage', () => {
         });
 
         it('should render back link even when not authenticated', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(false);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: false });
 
             render(<TaskDetailPage id={1} />);
 
@@ -180,7 +180,7 @@ describe('TaskDetailPage', () => {
 
     describe('Props handling', () => {
         it('should pass correct props to TaskDetail component', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(true);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
             render(<TaskDetailPage id={1} />);
 
@@ -198,6 +198,7 @@ describe('TaskDetailPage', () => {
 
     describe('State management', () => {
         it('should update authentication state when token status changes', async () => {
+            // manual Promise control to simulate delayed auth resolution
             let resolveAuthCheck: (value: unknown) => void = (x) => {};
             const authPromise = new Promise(resolve => {
                 resolveAuthCheck = resolve;
@@ -211,7 +212,7 @@ describe('TaskDetailPage', () => {
             expect(screen.getByText('You must be logged-in first to edit this task')).toBeInTheDocument();
 
             // Resolve auth check as authenticated
-            resolveAuthCheck(true);
+            resolveAuthCheck({ outcome: true });
 
             await waitFor(() => {
                 expect(screen.queryByText('You must be logged-in first to edit this task')).not.toBeInTheDocument();
@@ -228,7 +229,7 @@ describe('TaskDetailPage', () => {
                 deleteRowFromId: mockDeleteRowFromId
             });
             
-            mockCheckAuthTokenCookieExist.mockResolvedValue(true);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
             render(<TaskDetailPage id={1} />);
 

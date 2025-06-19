@@ -236,7 +236,7 @@ describe('TaskUserModel', () => {
                     credentials: 'include',
                 }
             );
-            expect(result).toBe(true);
+            expect(result).toStrictEqual({ outcome: true });
         });
         it('should return false when auth token cookie does not exist', async () => {
             mockFetch.mockResolvedValueOnce({
@@ -246,7 +246,7 @@ describe('TaskUserModel', () => {
 
             const result = await taskUserModel.checkAuthTokenCookieExist();
 
-            expect(result).toBe(false);
+            expect(result).toStrictEqual({ outcome: false });
         });
         it('should work with override URL', async () => {
             const overrideUrl = 'http://custom-url.com/api';
@@ -261,7 +261,7 @@ describe('TaskUserModel', () => {
                 `${overrideUrl}/user/httpcookie`,
                 expect.any(Object)
             );
-            expect(result).toBe(true);
+            expect(result).toStrictEqual({ outcome: true });
         });
         it('should throw error when cookie check fails', async () => {
             const errorResponse = {
@@ -277,8 +277,7 @@ describe('TaskUserModel', () => {
             ).rejects.toThrow('TaskUserModel - Error check auth_token cookie attempt: 403');
 
             expect(console.error).toHaveBeenCalledWith(
-                'TaskUserModel - Error check auth_token cookie attempt: 403 - Forbidden',
-                'Access denied'
+                'TaskUserModel - Error check auth_token cookie attempt: 403 - Forbidden - Access denied'
             );
         });
     });
