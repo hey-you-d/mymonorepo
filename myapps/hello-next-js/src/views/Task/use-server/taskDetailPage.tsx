@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getRowFromId, deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
-import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
+import { checkAuthTokenCookieExist, logoutUser } from '@/viewModels/Task/use-server/getTasksUserViewModel';
 import { TaskDetail } from '@/components/Task/use-server/TaskDetail';
 import type { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
@@ -38,12 +38,13 @@ export const TaskDetailPage = ({id}: {id: number}) => {
           try {
             // for reference: the http only auth_token cookie is not accessible from the client-side
             const authTokenCookieExist = await checkAuthTokenCookieExist();
-            if (authTokenCookieExist && !userAuthenticated) {
+            if (authTokenCookieExist.outcome && !userAuthenticated) {
                 setUserAuthenticated(true);
             }
-            if (!authTokenCookieExist && userAuthenticated) {
+            if (!authTokenCookieExist.outcome && userAuthenticated) {
+                await logoutUser();
                 setUserAuthenticated(false);
-
+                
                 // TODO: a modal popup that says "you have been logged out"
             }
           } catch(err) {

@@ -79,7 +79,7 @@ export const generateJWT = async (email: string, hashedPwd: string, jwtSecret: s
     return await sign(
         { email, hashedPassword: hashedPwd  },
         jwtSecret,
-        { expiresIn: '1h' }
+        { expiresIn: '900000' } // 90000ms = 15mins
     );
 }
 
@@ -191,10 +191,29 @@ export const checkAuthTokenCookieExist = async () => {
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
+        
+        // check if token has already expired or not
+        if (token && token.value.length > 0) {
+            const result = await VERIFY_JWT_STRING(token.value);
 
-        return token && token.value.length > 0;
+            // delete the cookie if the token is already expired
+            if (!result.valid && result.error === verifyJwtErrorMsgs.TokenExpiredError) {
+                cookieStore.delete(JWT_TOKEN_COOKIE_NAME);
+            }
+
+            return ({  
+                outcome: result.valid, 
+                message: result.valid ? result.payload : result.error, 
+            });
+        }
+        
+        return ({  
+            outcome: false, 
+            message: `use-server | getTasksUserViewModel | Unknown Error when checking auth_token`, 
+        });
     } catch (error) {
-        console.error(`user-server | getTasksUserViewModel | Unknown Error when checking auth_token: ${(error as Error).name} - ${(error as Error).message}`);
-        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when checking auth_token: ${(error as Error).name} - ${(error as Error).message}`);
+        const errorMessage = `use-server | getTasksUserViewModel | Unknown Error when checking auth_token: ${(error as Error).name} - ${(error as Error).message}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
     }
 }

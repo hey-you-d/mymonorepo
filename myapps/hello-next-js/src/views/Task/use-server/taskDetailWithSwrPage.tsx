@@ -6,7 +6,7 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import { fetcher } from '@/viewModels/Task/use-server/getTasksViewModelWithSwr';
 import { deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
-import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
+import { checkAuthTokenCookieExist, logoutUser } from '@/viewModels/Task/use-server/getTasksUserViewModel';
 import { TaskDetailWithSwr } from '@/components/Task/use-server/TaskDetailWithSwr';
 import type { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
@@ -46,12 +46,13 @@ export const TaskDetailWithSwrPage = ({id}: {id: number}) => {
       const checkUserLoggedIn = async () => {
           // for reference: the http only auth_token cookie is not accessible from the client-side
           const authTokenCookieExist = await checkAuthTokenCookieExist();
-          if (authTokenCookieExist && !userAuthenticated) {
+          if (authTokenCookieExist.outcome && !userAuthenticated) {
               setUserAuthenticated(true);
           }
-          if (!authTokenCookieExist && userAuthenticated) {
+          if (!authTokenCookieExist.outcome && userAuthenticated) {
+              await logoutUser();
               setUserAuthenticated(false);
-
+              
               // TODO: a modal popup that says "you have been logged out"
           }
       };

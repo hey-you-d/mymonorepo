@@ -59,7 +59,7 @@ const useTaskUserViewModel = () => {
     const checkAuthTokenCookieExist = useCallback(async () => {
         setLoading(true);
         try {
-          const result: boolean = await taskUserModel.checkAuthTokenCookieExist();
+          const result: { outcome: boolean, message: string } = await taskUserModel.checkAuthTokenCookieExist();
           return result;
         } catch (error) {
           console.error("useTaskUserViewModel | checkAuthTokenCookieExist | Error: check http-only auth_token cookie failure: ", error);

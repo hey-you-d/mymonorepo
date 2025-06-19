@@ -57,6 +57,7 @@ describe('TaskUser Component (client-side variant)', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         (useTaskUserViewModel as jest.Mock).mockReturnValue(mockViewModel);
+        mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true }); 
         mockSessionStorage.getItem.mockReturnValue(null);
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
@@ -98,7 +99,7 @@ describe('TaskUser Component (client-side variant)', () => {
         });
 
         it('checks auth token cookie on mount', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(true);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
             
             render(<TaskUser {...defaultProps} />);
 
@@ -109,7 +110,7 @@ describe('TaskUser Component (client-side variant)', () => {
         });
 
         it('sets user as unauthenticated when no auth token cookie exists', async () => {
-            mockCheckAuthTokenCookieExist.mockResolvedValue(false);
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: false });
             
             render(<TaskUser {...defaultProps} userAuthenticated={true} />);
 
