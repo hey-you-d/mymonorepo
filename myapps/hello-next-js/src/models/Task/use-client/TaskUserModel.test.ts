@@ -22,15 +22,20 @@ describe('TaskUserModel', () => {
         message: "",  
     };
 
+    let spyConsoleError: jest.SpyInstance<any, any>;
+
     beforeEach(() => {
-        taskUserModel = new TaskUserModel();
-        mockFetch.mockClear();
         jest.clearAllMocks();
+        mockFetch.mockClear();
+
+        taskUserModel = new TaskUserModel();
+
         // Clear console.error mock
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        spyConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
     });
 
     afterEach(() => {
+        spyConsoleError.mockRestore();
         jest.restoreAllMocks();
     });
 

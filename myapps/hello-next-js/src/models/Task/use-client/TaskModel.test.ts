@@ -22,6 +22,7 @@ describe('TaskModel', () => {
   });
 
   beforeEach(() => {
+    jest.clearAllMocks();
     // hide console.error to reduce noise on the console output
     spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
 
@@ -31,7 +32,7 @@ describe('TaskModel', () => {
 
   afterEach(() => {
     spyConsoleError.mockRestore();
-    jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   describe('getTasksDBRows', () => {
