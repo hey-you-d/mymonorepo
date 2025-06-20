@@ -45,6 +45,7 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
 
     afterAll(() => {
         mockConsoleError.mockRestore();
+         jest.restoreAllMocks();
     });
 
     describe('POST method', () => {
@@ -116,15 +117,14 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
                 }
             );
             expect(mockConsoleError).toHaveBeenCalledWith(
-                'BFF Error deleting all rows: 404 - Not Found'
+                expect.stringContaining("tasks/v1 | BFF | delete-rows.ts | POST | not ok response: 404 - Not Found ")
             );
             expect(mockConsoleError).toHaveBeenCalledWith(
-                'BFF deleting all rows - server error',
-                expect.any(Error)
+                expect.stringContaining("tasks/v1 | BFF | delete-rows.ts | POST | catched error: Error - tasks/v1 | BFF | delete-rows.ts | POST | not ok response: 404 - Not Found ")
             );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF deleting all rows - server error'
+                error: 'tasks/v1 | BFF | delete-rows.ts | POST | catched error: Error - tasks/v1 | BFF | delete-rows.ts | POST | not ok response: 404 - Not Found '
             });
         });
 
@@ -154,13 +154,10 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
                     credentials: "include",
                 }
             );
-            expect(mockConsoleError).toHaveBeenCalledWith(
-                'BFF deleting all rows - server error',
-                networkError
-            );
+            expect(mockConsoleError).toHaveBeenCalledWith("tasks/v1 | BFF | delete-rows.ts | POST | catched error: Error - Network error");
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF deleting all rows - server error'
+                error: "tasks/v1 | BFF | delete-rows.ts | POST | catched error: Error - Network error"
             });
         });
 
@@ -181,13 +178,10 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             // Assert
-            expect(mockConsoleError).toHaveBeenCalledWith(
-                'BFF deleting all rows - server error',
-                jsonError
-            );
+            expect(mockConsoleError).toHaveBeenCalledWith("tasks/v1 | BFF | delete-rows.ts | POST | catched error: Error - Invalid JSON");
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF deleting all rows - server error'
+                error: "tasks/v1 | BFF | delete-rows.ts | POST | catched error: Error - Invalid JSON"
             });
         });
 
@@ -205,13 +199,10 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
             await handler(req, res);
 
             // Assert
-            expect(mockConsoleError).toHaveBeenCalledWith(
-                'BFF deleting all rows - server error',
-                headerError
-            );
+            expect(mockConsoleError).toHaveBeenCalledWith("tasks/v1 | BFF | delete-rows.ts | POST | catched error: Error - Header generation failed");
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF deleting all rows - server error'
+                error: "tasks/v1 | BFF | delete-rows.ts | POST | catched error: Error - Header generation failed"
             });
         });
     });

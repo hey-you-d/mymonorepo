@@ -12,9 +12,6 @@ jest.mock('../../../../../src/lib/app/common', () => ({
 // Mock fetch globally
 global.fetch = jest.fn();
 
-// Mock console.error to avoid noise in test output
-const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
 describe('/api/tasks/v1/bff/graphql handler', () => {
     let req: Partial<NextApiRequest>;
     let res: Partial<NextApiResponse>;
@@ -23,6 +20,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
     let mockEnd: jest.Mock;
     let mockSend: jest.Mock;
     let mockSetHeader: jest.Mock;
+
+    // Mock console.error to avoid noise in test output
+    let spyConsoleError: jest.SpyInstance<any, any>;
 
     beforeEach(() => {
         // Reset all mocks
@@ -57,10 +57,17 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer mock-jwt-token'
         });
+
+        // hide console.error to reduce noise on the console output
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+    });
+
+    afterEach(() => {
+        spyConsoleError.mockRestore();
     });
 
     afterAll(() => {
-        consoleSpy.mockRestore();
+        jest.restoreAllMocks();
     });
 
     describe('POST method', () => {
@@ -126,7 +133,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(400);
-            expect(mockJson).toHaveBeenCalledWith({ error: 'BFF graphql proxy error - Query is required' });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | GraphQL query is required", 
+            });
             expect(fetch).not.toHaveBeenCalled();
         });
 
@@ -136,7 +145,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(400);
-            expect(mockJson).toHaveBeenCalledWith({ error: 'BFF graphql proxy error - Variable is required' });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | GraphQL variable is required", 
+            });
             expect(fetch).not.toHaveBeenCalled();
         });
 
@@ -146,7 +157,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(400);
-            expect(mockJson).toHaveBeenCalledWith({ error: 'BFF graphql proxy error - Query is required' });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | GraphQL query is required", 
+            });
         });
 
         it('should return 400 when variables is empty object', async () => {
@@ -155,7 +168,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(400);
-            expect(mockJson).toHaveBeenCalledWith({ error: 'BFF graphql proxy error - Variable is required' });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | GraphQL variable is required", 
+            });
         });
 
         it('should handle GraphQL server error response', async () => {
@@ -174,7 +189,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(500);
-            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | catched error: Error - tasks/v1 | BFF | graphql.ts | POST | not ok response: 400 - Bad Request " 
+            });
         });
 
         it('should handle GraphQL server 500 error', async () => {
@@ -193,7 +210,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(500);
-            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | catched error: Error - tasks/v1 | BFF | graphql.ts | POST | not ok response: 500 - Internal Server Error " 
+            });
         });
 
         it('should handle network error', async () => {
@@ -202,7 +221,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(500);
-            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | catched error: Error - Network error", 
+            });
         });
 
         it('should handle JWT token retrieval error', async () => {
@@ -211,7 +232,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(500);
-            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | catched error: Error - JWT error", 
+            });
         });
 
         it('should handle TASKS_API_HEADER error', async () => {
@@ -220,7 +243,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(500);
-            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | catched error: Error - Header error", 
+            });
         });
 
         it('should handle response.text() error', async () => {
@@ -238,7 +263,9 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(mockStatus).toHaveBeenCalledWith(500);
-            expect(mockJson).toHaveBeenCalledWith({ error: "BFF graphql proxy error" });
+            expect(mockJson).toHaveBeenCalledWith({ 
+                error: "tasks/v1 | BFF | graphql.ts | POST | catched error: Error - Failed to read response" 
+            });
         });
 
         it('should preserve response status from GraphQL server', async () => {
