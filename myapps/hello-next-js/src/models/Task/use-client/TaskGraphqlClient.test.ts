@@ -3,9 +3,21 @@ import { fetchGraphQL } from './TaskGraphqlClient';
 global.fetch = jest.fn();
 
 describe('fetchGraphQL', () => {
+  let spyConsoleError: jest.SpyInstance<any, any>;
+
   beforeEach(() => {
     jest.clearAllMocks();
+    // hide console.error to reduce noise on the console output
+    spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
   });
+
+  afterEach(() => {
+    spyConsoleError.mockRestore();
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  })
 
   it('sends the correct POST request and returns data', async () => {
     const mockData = { someField: 'value' };
@@ -42,7 +54,7 @@ describe('fetchGraphQL', () => {
 
     const query = `query { tasks { id } }`;
 
-    await expect(fetchGraphQL(query)).rejects.toThrow("HTTP error 500: Internal Server Error");
+    await expect(fetchGraphQL(query)).rejects.toThrow("use-client | model | TaskGraphqlClient | not ok response: 500: - Internal Server Error ");
   });
 
   it('throws an error when GraphQL response contains errors', async () => {
@@ -76,7 +88,7 @@ describe('fetchGraphQL', () => {
     const query = `query { tasks { id } }`;
     
     await expect(fetchGraphQL(query)).rejects.toThrow(
-      'error in TaskGraphQL model component\nerror in TaskGraphQL model component'
+      'use-client | model | TaskGraphqlClient | json.errors: unknown error\nunknown error'
     );
   });
 
@@ -90,7 +102,7 @@ describe('fetchGraphQL', () => {
 
     const query = `query { tasks { id } }`;
 
-    await expect(fetchGraphQL(query)).rejects.toThrow('error in TaskGraphQL model component');
+    await expect(fetchGraphQL(query)).rejects.toThrow('use-client | model | TaskGraphqlClient | json.errors: unknown error ');
   });
 
   it('throws an error when fetch itself fails (network error)', async () => {

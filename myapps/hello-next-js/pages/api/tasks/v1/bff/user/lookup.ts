@@ -11,6 +11,28 @@ import {
     TASKS_API_HEADER, 
 } from "@/lib/app/common";
 
+const fnSignature = "tasks/v1 | BFF | user/lookup.ts";
+const customResponseMessage = async (fnName: string, customMsg: string) => {
+    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
+    console.log(msg);
+    return msg;
+}
+const missingParamErrorMessage = async (fnName: string, missingParamMsg: string) => {
+    const errorMsg = `${fnSignature} | ${fnName} | ${missingParamMsg}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const notOkErrorMessage = async (fnName: string, response: Response) => {
+    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchUrl?: string): Promise<void> => {
     switch (req.method) {
         case "POST" :
@@ -19,12 +41,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 
                 if (!email || email.trim().length < 1) {
                     return res.status(400).json(
-                        { error: true, message: 'BFF user login error - Email is required' }
+                        { error: true, message: await missingParamErrorMessage("POST", "Title is required"), }
                     );
                 }
                 if (!password || password.trim().length < 1) {
                     return res.status(400).json(
-                        { error: true, message: 'BFF user login error - Password is required' }
+                        { error: true, message: await missingParamErrorMessage("POST", "Password is required"), }
                     );
                 }
 
@@ -43,9 +65,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 });
 
                 if (!response.ok) {
-                    console.error("User BFF - Error checking user credential: ", `${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
-                    throw new Error(`User BFF - Error checking user credential in db: ${response.status} ${response.statusText}`);
+                    const errorMsg = await notOkErrorMessage("POST - Error checking user credential: ", response);
+                    throw new Error(errorMsg);
                 } 
             
                 const outcome: UserModelType = await response.json();
@@ -57,6 +78,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                     if (pwdOk && outcome.jwt) {
                         // Next, verify if the jwt stored in the cookie hasn't expired yet. Replace it with a new one if its already expired.
                         const verificationOutcome = await VERIFY_JWT_STRING(outcome.jwt);
+                        if(!verificationOutcome.valid) {
+                            await customResponseMessage("POST", `VERIFY_JWT_STRING | ${verificationOutcome.error}`)
+                        }
 
                         if (!verificationOutcome.valid && verificationOutcome.error === verifyJwtErrorMsgs.TokenExpiredError) {
                             const jwtSecret: { jwtSecret: string } = await getJwtSecret();
@@ -75,9 +99,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                             });
 
                             if (!response.ok) {
-                                console.error("User BFF - Error replacing expired JWT: ", `${response.status} - ${response.statusText}`);
-                                // If the response isn't OK, throw an error to be caught in the catch block
-                                throw new Error(`User BFF - Error replacing expired JWT: ${response.status} ${response.statusText}`);
+                                const errorMsg = await notOkErrorMessage("POST - Error replacing expired JWT: ", response);
+                                throw new Error(errorMsg);
                             } 
                         
                             const outcome: UserModelType = await response.json();
@@ -85,8 +108,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                                 // then, store JWT in a http-only cookie
                                 await createAuthCookie(res, outcome.jwt);
                             } else {
-                                console.error("User BFF - Error re-creating a new http-only cookie: ", `${response.status} - ${response.statusText}`);
-                                throw new Error(`User BFF - Error re-creating a new http-only cookie: ${response.status} ${response.statusText}`);
+                                const errorMsg = await notOkErrorMessage("POST - Error re-creating a new http-only cookie: ", response);
+                                throw new Error(errorMsg);
                             }
                         } else {
                             // store JWT in a http-only cookie
@@ -97,12 +120,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                                         
                         return res.status(200).json({
                             error: false,
-                            message: "User BFF - successful user login process" 
+                            message: await customResponseMessage("POST", "successful login") 
                         });
                     }
                     return res.status(200).json({
                         error: true,
-                        message: "User BFF - user login attempt outcome - wrong password" 
+                        message: await customResponseMessage("POST", "wrong password") 
                     });
                 }
 
@@ -118,8 +141,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                     message: "User BFF - user login error - jwt is undefined"
                 });
             } catch(error) {
-                console.error("User BFF - Error registering user credential: ", error );
-                throw error;
+                const errorMsg = await catchedErrorMessage("POST", error as Error);
+                return res.status(500).json({ error: errorMsg });
             } 
         default:
             res.setHeader('Allow', ['POST']);

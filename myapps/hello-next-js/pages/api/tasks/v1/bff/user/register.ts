@@ -11,6 +11,28 @@ import {
 import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags';
 import { getJwtSecret } from '@/lib/app/common';
 
+const fnSignature = "tasks/v1 | BFF | user/register.ts";
+const customResponseMessage = async (fnName: string, customMsg: string) => {
+    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
+    console.log(msg);
+    return msg;
+}
+const missingParamErrorMessage = async (fnName: string, missingParamMsg: string) => {
+    const errorMsg = `${fnSignature} | ${fnName} | ${missingParamMsg}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const notOkErrorMessage = async (fnName: string, response: Response) => {
+    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 export const createAuthCookie = async (res: NextApiResponse, jwt: string) => {
     /*
     const cookieParts = [
@@ -70,12 +92,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 const { email, password } : { email: string, password: string } = req.body;
                 if (!email || email.trim().length < 1) {
                     return res.status(400).json(
-                        { error: true, message: 'BFF user registration error - Email is required' }
+                        { error: true, message: await missingParamErrorMessage("POST", "Email is required"), }
                     );
                 }
                 if (!password || password.trim().length < 1) {
                     return res.status(400).json(
-                        { error: true, message: 'BFF user registration error - Email is required' }
+                        { error: true, message: await missingParamErrorMessage("POST", "Password is required"), }
                     );  
                 }
 
@@ -97,9 +119,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                     });
 
                     if (!response.ok) {
-                        console.error("User BFF - Error checking user credential: ", `${response.status} - ${response.statusText}`);
-                        // If the response isn't OK, throw an error to be caught in the catch block
-                        throw new Error(`User BFF - Error checking user credential in db: ${response.status} ${response.statusText}`);
+                        const errorMsg = await notOkErrorMessage("POST", response);
+                        throw new Error(errorMsg);
                     } 
                 
                     const outcome: UserModelType = await response.json();
@@ -108,14 +129,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                         // this email can't be used for registration, it has already existed in the DB
                         return res.status(200).json({
                             error: true,
-                            message: "User BFF - user registration attempt - email address cannot be used for registration", 
+                            message: await customResponseMessage("POST", "Email address cannot be used for registration"), 
                         });
                     }
-                } catch (error) {
-                    console.error("Failed to lookup the entered email in the DB as part of the user registration process: ", error);
-            
-                    throw error;
-                }
+                } catch (err) {
+                    const errorMsg = await catchedErrorMessage("POST", err as Error);
+                    return res.status(500).json({ error: errorMsg });
+                } 
 
                 // generate salted & hashed password string  with argon2id encryption.
                 const hashedPwd = await generateHashedPassword(password);
@@ -138,9 +158,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 });
             
                 if (!response.ok) {
-                    console.error("User BFF - Error registering user credential: ", `${response.status} - ${response.statusText}`);
-                    // If the response isn't OK, throw an error to be caught in the catch block
-                    throw new Error(`User BFF - Error registering user credential in DB: ${response.status} ${response.statusText}`);
+                        const errorMsg = await notOkErrorMessage("POST - Error registering user credential: ", response);
+                        throw new Error(errorMsg);
                 } 
             
                 const outcome: UserModelType = await response.json();
@@ -151,17 +170,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                     
                     return res.status(200).json({
                         error: false,
-                        message: "User BFF - successful user registration process" 
+                        message: await customResponseMessage("POST", "successful user registration") 
                     });
                 }
                
                 return res.status(500).json({
                     error: true,
-                    message: "User BFF - user registration error - jwt is undefined"
+                    message: await notOkErrorMessage("POST - Error registering user credential - JWT is undefined: ", response)
                 });
             } catch(error) {
-                console.error("User BFF - Error registering user credential: ", error );
-                throw error;
+                const errorMsg = await catchedErrorMessage("POST - Error registering user credential: ", error as Error);
+                return res.status(500).json({ error: errorMsg });
             } 
         default:
             res.setHeader('Allow', ['POST']);

@@ -2,6 +2,23 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
 import { BASE_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 
+const fnSignature = "tasks/v1 | BFF | [id].ts";
+const missingParamErrorMessage = async (fnName: string, missingParamMsg: string) => {
+    const errorMsg = `${fnSignature} | ${fnName} | ${missingParamMsg}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const notOkErrorMessage = async (fnName: string, response: Response) => {
+    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
 
@@ -15,23 +32,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
 
                 if (!response.ok) {
-                    console.error(`BFF Error get row for id ${id}: ${response.status} - ${response.statusText}`);
-                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
-                    throw new Error(`BFF Error get row for id ${id}: ${response.status} - ${response.statusText}`);
+                    const errorMsg = await notOkErrorMessage(`GET id:${id}`, response);
+                    throw new Error(errorMsg);
                 }
         
                 const result:Task[] = await response.json();
     
                 return res.status(200).json(result);
             } catch(err) {
-                console.error(`BFF get row for id ${id} - server error`, err); // Log detailed error
-                return res.status(500).json({ error: `BFF get row for id ${id} - server error` });
+                const errorMsg = await catchedErrorMessage(`GET id:${id}`, err as Error);
+                return res.status(500).json({ error: errorMsg });
             }
         case "PUT" :
             const { title, detail, completed } = req.body;
-            if (!title) return res.status(400).json({ error: `BFF Error updating row ${id} - Title is required` });
-            if (!detail) return res.status(400).json({ error: `BFF Error updating row ${id} - Detail is required` });  
-            
+            if (!title || title.trim().length < 1) return res.status(400).json({ 
+                error: await missingParamErrorMessage(`PUT id:${id}`, "Title is required"), 
+            });
+            if (!detail || detail.trim().length < 1) return res.status(400).json({ 
+                error: await missingParamErrorMessage(`PUT id:${id}`, "Detail is required"), 
+            });  
             try {
                 const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
                     method: 'PUT',
@@ -45,17 +64,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
 
                 if (!response.ok) {
-                    console.error(`BFF Error update row for id ${id}: ${response.status} - ${response.statusText}`);
-                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
-                    throw new Error(`BFF Error update row for id ${id}: ${response.status} ${response.statusText}`);
+                    const errorMsg = await notOkErrorMessage(`PUT id:${id}`, response);
+                    throw new Error(errorMsg);
                 }
         
                 const result:Task[] = await response.json();
     
                 return res.status(200).json(result);
             } catch(err) {
-                console.error(`BFF update row for id ${id} - server error`, err); // Log detailed error
-                return res.status(500).json({ error: `BFF update row for id ${id} - server error` });
+                const errorMsg = await catchedErrorMessage(`PUT id:${id}`, err as Error);
+                return res.status(500).json({ error: errorMsg });
             }
         case "DELETE" :
             try {
@@ -66,15 +84,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
 
                 if (!response.ok) {
-                    console.error(`BFF Error delete row for id ${id}: ${response.status} - ${response.statusText}`);
-                    // For reference: If the response isn't OK, throw an error to be caught in the catch block
-                    throw new Error(`BFF Error delete row for id ${id}: ${response.status} ${response.statusText}`);
+                    const errorMsg = await notOkErrorMessage(`DELETE id:${id}`, response);
+                    throw new Error(errorMsg);
                 }
         
                 return res.status(204).end();
             } catch(err) {
-                console.error(`BFF delete row for id ${id} - server error`, err); // Log detailed error
-                return res.status(500).json({ error: `BFF delete row for id ${id} - server error` });
+                const errorMsg = await catchedErrorMessage(`DELETE id:${id}`, err as Error);
+                return res.status(500).json({ error: errorMsg });
             } 
         default:
             res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);

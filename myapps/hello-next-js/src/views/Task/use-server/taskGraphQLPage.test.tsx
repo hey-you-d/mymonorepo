@@ -83,6 +83,10 @@ describe('TaskGraphQLPage', () => {
       spyConsoleError.mockRestore();
   });
 
+  afterAll(() => {
+    jest.restoreAllMocks();
+  })
+
   describe('Component Rendering', () => {
       it('renders loading state initially', () => {
           // Mock getTasksDBRows to return a promise that doesn't resolve immediately

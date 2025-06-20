@@ -18,7 +18,7 @@ export const TaskDetailWithSwrPage = ({id}: {id: number}) => {
   const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
   // Use SWR to automatically fetch tasks (no need to set up the tasks state, and loading state)
-  const { data: swrData, error: swrError, isLoading: swrLoading } = useSWR<Task[]>("Tasks-API-USE-SWR", fetcher);
+  const { data: swrData, error: swrError, isLoading: swrLoading } = useSWR<Task[] | null>("Tasks-API-USE-SWR", fetcher);
 
   useEffect(() => {
     const fetchTask = async () => {

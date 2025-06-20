@@ -3,6 +3,18 @@ import { JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
 import { serialize } from 'cookie';
 import { APP_ENV, LIVE_SITE_MODE, LOCALHOST_MODE } from "@/lib/app/featureFlags";
 
+const fnSignature = "tasks/v1 | BFF | user/logout.ts";
+const customResponseMessage = async (fnName: string, customMsg: string) => {
+    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
+    console.log(msg);
+    return msg;
+}
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 // for reference:
 // for SPA: rely on BFF (the approach below) for any server-side operations
 // for next.js pages: better use Page router's getServerSideProps or App router's server actions 
@@ -35,12 +47,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
                 
                 // let client verify if the cookie has been deleted in a subsequent request
                 return res.status(200).json({ 
-                    error: false, message: 'User BFF - user logout process - successfully deleting http-only cookie' 
+                    error: false, 
+                    message: await customResponseMessage("POST", `successful ${JWT_TOKEN_COOKIE_NAME} cookie deletion`) 
                 });
             } catch (error) {
-                console.error("User BFF - user logout process - http-only cookie deletion failed : ", error);
-        
-                throw error;
+                const errorMsg = await catchedErrorMessage("POST", error as Error);
+                return res.status(500).json({ error: errorMsg });
             }
         default:
             res.setHeader('Allow', ['GET']);

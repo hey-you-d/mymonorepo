@@ -12,31 +12,30 @@ import {
 import type { Task } from '@/types/Task';
 import { revalidateTag } from "next/cache";
 
-export const fetcher = async (): Promise<Task[]> => {
+export const fetcher = async (): Promise<Task[] | null> => {
     try {
-      return await swrFetcher();
-      // alternatively...
-      //const tasks: Task[] = await getTasksDBRowsTaskModel();
-      //return { tasks };
+      const result: Task[] | undefined = await swrFetcher();
+      return result ?? null;
     } catch (error) {
       console.error("Failed to fetch tasks db rows:", error);
       throw error;
     }
 };
 
-export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
+export const getTasksDBRows = async (): Promise<{ tasks: Task[] | null }> => {
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
     const { BASE_URL } = await import("@/lib/app/common");
   
     try {
-      const tasks: Task[] = await getTasksDBRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      const tasks: Task[] | undefined = await getTasksDBRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
 
-      // Revalidate the swr cache tag - this works with Next.js fetch cache
-      revalidateTag("tasks-api-swr-tag");
-
-      return { tasks };
+      if (tasks) {
+        // Revalidate the swr cache tag - this works with Next.js fetch cache
+        revalidateTag("tasks-api-swr-tag");
+      }
+      return { tasks: tasks ?? null };
     } catch (error) {
       console.error("Failed to fetch tasks db rows:", error);
       throw error;
@@ -84,12 +83,14 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
     const { BASE_URL } = await import("@/lib/app/common");
   
     try {
-      const task = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
+      const task: Task | null | undefined = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
 
-      // Revalidate the swr cache tag - this works with Next.js fetch cache
-      revalidateTag("tasks-api-swr-tag");  
+      if (task) {
+        // Revalidate the swr cache tag - this works with Next.js fetch cache
+        revalidateTag("tasks-api-swr-tag");  
+      }
 
-      return { task: task };
+      return { task: task ?? null };
     } catch (error) {
       console.error(`Failed to get row for id ${id}:`, error);
       throw error;

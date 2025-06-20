@@ -35,6 +35,9 @@ describe('TaskUserModel', () => {
 
     afterEach(() => {
         spyConsoleError.mockRestore();
+    });
+
+    afterAll(() => {
         jest.restoreAllMocks();
     });
 
@@ -100,9 +103,9 @@ describe('TaskUserModel', () => {
 
             await expect(registerUser('test@example.com', 'password123', 'jwt-token'))
                 .rejects
-                .toThrow('user-server | TaskUserModel | Error registration attempt | unknown error: Error - user-server | TaskUserModel | Error registration attempt | response not OK: 400 Bad Request');
+                .toThrow('use-server | model | TaskUserModel | registerUser | catched error: Error - use-server | model | TaskUserModel | registerUser | not ok response: 400 - Bad Request ');
             
-            expect(spyConsoleError).toHaveBeenCalledWith('user-server | TaskUserModel | Error registration attempt | response not OK: 400 - Bad Request');
+            expect(spyConsoleError).toHaveBeenCalledWith('use-server | model | TaskUserModel | registerUser | catched error: Error - use-server | model | TaskUserModel | registerUser | not ok response: 400 - Bad Request ');
         });
 
         it('should handle network errors', async () => {
@@ -113,7 +116,7 @@ describe('TaskUserModel', () => {
                 .rejects
                 .toThrow('Network error');
 
-            expect(spyConsoleError).toHaveBeenCalledWith("user-server | TaskUserModel | Error registration attempt | unknown error: Error - Network error");
+            expect(spyConsoleError).toHaveBeenCalledWith("use-server | model | TaskUserModel | registerUser | catched error: Error - Network error");
         });
 
         it('should handle JSON parsing errors', async () => {
@@ -188,9 +191,9 @@ describe('TaskUserModel', () => {
 
             await expect(logInUser('test@example.com'))
                 .rejects
-                .toThrow('user-server | TaskUserModel | Error login attempt | unknown error: Error - user-server | TaskUserModel | Error login attempt | response not OK: 404 Not Found');
+                .toThrow('use-server | model | TaskUserModel | loginUser | catched error: Error - use-server | model | TaskUserModel | loginUser | not ok response: 404 - Not Found ');
 
-            expect(spyConsoleError).toHaveBeenCalledWith('user-server | TaskUserModel | Error login attempt | response not OK: 404 - Not Found');
+            expect(spyConsoleError).toHaveBeenCalledWith('use-server | model | TaskUserModel | loginUser | catched error: Error - use-server | model | TaskUserModel | loginUser | not ok response: 404 - Not Found ');
         });
 
         it('should handle network errors', async () => {
@@ -201,7 +204,7 @@ describe('TaskUserModel', () => {
                 .rejects
                 .toThrow('Network error');
 
-            expect(spyConsoleError).toHaveBeenCalledWith('user-server | TaskUserModel | Error login attempt | unknown error: Error - Network error');
+            expect(spyConsoleError).toHaveBeenCalledWith('use-server | model | TaskUserModel | loginUser | catched error: Error - Network error');
         });
 
         it('should handle unauthorized access', async () => {
@@ -213,7 +216,7 @@ describe('TaskUserModel', () => {
 
             await expect(logInUser('test@example.com'))
                 .rejects
-                .toThrow('user-server | TaskUserModel | Error login attempt | unknown error: Error - user-server | TaskUserModel | Error login attempt | response not OK: 401 Unauthorized');
+                .toThrow('use-server | model | TaskUserModel | loginUser | catched error: Error - use-server | model | TaskUserModel | loginUser | not ok response: 401 - Unauthorized ');
         });
     });
 
@@ -236,7 +239,7 @@ describe('TaskUserModel', () => {
 
             await expect(registerUser('', 'password123', 'jwt-token'))
                 .rejects
-                .toThrow('user-server | TaskUserModel | Error registration attempt | unknown error: Error - user-server | TaskUserModel | Error registration attempt | response not OK: 400 Bad Request');
+                .toThrow('use-server | model | TaskUserModel | registerUser | catched error: Error - use-server | model | TaskUserModel | registerUser | not ok response: 400 - Bad Request ');
         });
 
         it('should handle empty email for logInUser', async () => {
@@ -248,7 +251,7 @@ describe('TaskUserModel', () => {
 
             await expect(logInUser(''))
                 .rejects
-                .toThrow('user-server | TaskUserModel | Error login attempt | unknown error: Error - user-server | TaskUserModel | Error login attempt | response not OK: 400 Bad Request');
+                .toThrow('use-server | model | TaskUserModel | loginUser | catched error: Error - use-server | model | TaskUserModel | loginUser | not ok response: 400 - Bad Request ');
         });    
     });
 });

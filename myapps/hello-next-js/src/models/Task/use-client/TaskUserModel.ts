@@ -6,6 +6,19 @@ const headers = {
     "Content-Type": "application/json",
 };
 
+const fnSignature = "use-client | model | TaskUserModel";
+export const notOkErrorMessage = async (fnName: string, response: Response) => {
+    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
+export const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+} 
+
 export class TaskUserModel {    
     constructor() {}
 
@@ -13,26 +26,29 @@ export class TaskUserModel {
         // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
         // In this case, we must supply an absolute URL  
         const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
-       
-        const response = await fetch(`${finalUrl}/user/register`, {
-            method: 'POST',
-            headers,
-            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
-            body: JSON.stringify({
-              email,
-              password
-            }),
-        });
+        try {
+            const response = await fetch(`${finalUrl}/user/register`, {
+                method: 'POST',
+                headers,
+                credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
+                body: JSON.stringify({
+                email,
+                password
+                }),
+            });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`TaskUserModel - Error registering a new user: ${response.status} - ${response.statusText}`, errorText);
-            throw new Error(`TaskUserModel - Error registering a new user: ${response.status}`);
+            if (!response.ok) {
+                const errorMsg = await notOkErrorMessage("registerUser", response);
+                throw new Error(errorMsg);
+            }
+
+            const result: UserModelType | undefined = await response.json();
+            
+            return result;
+        } catch(error) {
+            const errorMsg = await catchedErrorMessage("registerUser", error as Error);
+            throw new Error(errorMsg);
         }
-
-        const result: UserModelType | undefined = await response.json();
-        
-        return result;
     }
 
     async loginUser(email: string, password: string, overrideFetchUrl?: string): Promise<UserModelType | undefined> {
@@ -40,25 +56,29 @@ export class TaskUserModel {
         // In this case, we must supply an absolute URL  
         const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
 
-        const response = await fetch(`${finalUrl}/user/lookup`, {
-            method: 'POST',
-            headers,
-            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
-            body: JSON.stringify({
-              email,
-              password
-            }),
-        });
+        try {
+            const response = await fetch(`${finalUrl}/user/lookup`, {
+                method: 'POST',
+                headers,
+                credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
+                body: JSON.stringify({
+                email,
+                password
+                }),
+            });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`TaskUserModel - Error user login attempt: ${response.status} - ${response.statusText}`, errorText);
-            throw new Error(`TaskUserModel - Error user login attempt: ${response.status}`);
+            if (!response.ok) {
+                const errorMsg = await notOkErrorMessage("loginUser", response);
+                throw new Error(errorMsg);
+            }
+
+            const result: UserModelType | undefined = await response.json();
+
+            return result;
+        } catch(error) {
+            const errorMsg = await catchedErrorMessage("loginUser", error as Error);
+            throw new Error(errorMsg);
         }
-
-        const result: UserModelType | undefined = await response.json();
-
-        return result;
     }
 
     async logoutUser(overrideFetchUrl?: string): Promise<UserModelType | undefined> {
@@ -66,21 +86,25 @@ export class TaskUserModel {
         // In this case, we must supply an absolute URL  
         const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
 
-        const response = await fetch(`${finalUrl}/user/logout`, {
-            method: 'GET',
-            headers,
-            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
-        });
+        try {
+            const response = await fetch(`${finalUrl}/user/logout`, {
+                method: 'GET',
+                headers,
+                credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
+            });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`TaskUserModel - Error user logout attempt: ${response.status} - ${response.statusText}`, errorText);
-            throw new Error(`TaskUserModel - Error user logout attempt: ${response.status}`);
+            if (!response.ok) {
+                const errorMsg = await notOkErrorMessage("logoutUser", response);
+                throw new Error(errorMsg);
+            }
+
+            const result: UserModelType | undefined = await response.json();
+            
+            return result;
+        } catch(error) {
+            const errorMsg = await catchedErrorMessage("logoutUser", error as Error);
+            throw new Error(errorMsg);
         }
-
-        const result: UserModelType | undefined = await response.json();
-        
-        return result;
     }
 
     async checkAuthTokenCookieExist(overrideFetchUrl?: string): Promise<{ outcome: boolean, message: string }> {
@@ -88,21 +112,24 @@ export class TaskUserModel {
         // In this case, we must supply an absolute URL  
         const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}`;
 
-        const response = await fetch(`${finalUrl}/user/httpcookie`, {
-            method: 'GET',
-            headers,
-            credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
-        });
+        try {
+            const response = await fetch(`${finalUrl}/user/httpcookie`, {
+                method: 'GET',
+                headers,
+                credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
+            });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            const errMessage = `TaskUserModel - Error check auth_token cookie attempt: ${response.status} - ${response.statusText} - ${errorText}`; 
-            console.error(errMessage);
-            throw new Error(errMessage);
+            if (!response.ok) {
+                const errorMsg = await notOkErrorMessage("checkAuthTokenCookieExist", response);
+                throw new Error(errorMsg);
+            }
+
+            const result: { outcome: boolean, message: string } = await response.json();
+            
+            return result;
+        } catch(error) {
+            const errorMsg = await catchedErrorMessage("checkAuthTokenCookieExist", error as Error);
+            throw new Error(errorMsg);
         }
-
-        const result: { outcome: boolean, message: string } = await response.json();
-        
-        return result;
     }
 }

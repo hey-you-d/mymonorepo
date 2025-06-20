@@ -7,13 +7,34 @@ export const config = {
     },
 };
 
+const fnSignature = "tasks/v1 | BFF | graphql.ts";
+const missingParamErrorMessage = async (fnName: string, missingParamMsg: string) => {
+    const errorMsg = `${fnSignature} | ${fnName} | ${missingParamMsg}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const notOkErrorMessage = async (fnName: string, response: Response) => {
+    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "POST" :
             try {
                 const { query, variables } = req.body;
-                if (!query) return res.status(400).json({ error: 'BFF graphql proxy error - Query is required' });
-                if (!variables) return res.status(400).json({ error: 'BFF graphql proxy error - Variable is required' });  
+                if (!query) return res.status(400).json({ 
+                    error: await missingParamErrorMessage("POST", "GraphQL query is required"),
+                });
+                if (!variables) return res.status(400).json({ 
+                    error: await missingParamErrorMessage("POST", "GraphQL variable is required"), 
+                });  
 
                 // for reference:
                 // The GraphQL handler is registered under: /api/tasks/v1/sql/graphql
@@ -31,9 +52,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
                 
                 if (!proxyResponse.ok) {
-                    console.error(`BFF Error fetching data with graphql server: ${proxyResponse.status} - ${proxyResponse.statusText}`);
-                    // for reference: If the response isn't OK, throw an error to be caught in the catch block
-                    throw new Error(`BFF Error fetching data with graphql server: ${proxyResponse.status} ${proxyResponse.statusText}`);
+                    const errorMsg = await notOkErrorMessage("POST", proxyResponse);
+                    throw new Error(errorMsg);
                 }
 
                 // for reference:
@@ -68,8 +88,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     res.send(rawBody); // for reference: fallback: text/plain, etc.
                 }
             } catch (err) {
-                console.error("BFF graphql proxy error", err);  // Log detailed error
-                return res.status(500).json({ error: "BFF graphql proxy error" });
+                const errorMsg = await catchedErrorMessage("POST", err as Error);
+                return res.status(500).json({ error: errorMsg });
             }
             
             break;

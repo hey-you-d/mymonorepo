@@ -30,7 +30,12 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
         // Setup default mock for VERIFY_JWT_RETURN_API_RES
         (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
 
-        console.error = jest.fn(); // Mock console.error to avoid noise in tests
+        // Mock console methods to avoid noise in test output
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     describe('POST method', () => {
@@ -101,7 +106,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             expect(fetch).not.toHaveBeenCalled();
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error creating row - Title is required'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | Title is required'
             });
         });
 
@@ -123,7 +128,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             expect(fetch).not.toHaveBeenCalled();
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error creating row - Title is required'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | Title is required'
             });
         });
 
@@ -146,7 +151,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             expect(fetch).not.toHaveBeenCalled();
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error creating row - Detail is required'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | Detail is required'
             });
         });
 
@@ -169,7 +174,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             expect(fetch).not.toHaveBeenCalled();
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error creating row - Detail is required'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | Detail is required'
             });
         });
 
@@ -188,7 +193,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             expect(fetch).not.toHaveBeenCalled();
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error creating row - Title is required'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | Title is required'
             });
         });
 
@@ -222,11 +227,14 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
-                'BFF Error creating row: 400 - Bad Request'
+                expect.stringContaining("tasks/v1 | BFF | create-row.ts | POST | not ok response: 400 - Bad Request ")
+            );
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | create-row.ts | POST | catched error: Error - tasks/v1 | BFF | create-row.ts | POST | not ok response: 400 - Bad Request ")
             );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF creating row - server error'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | catched error: Error - tasks/v1 | BFF | create-row.ts | POST | not ok response: 400 - Bad Request '
             });
         });
 
@@ -260,11 +268,14 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
-                'BFF Error creating row: 500 - Internal Server Error'
+                expect.stringContaining("tasks/v1 | BFF | create-row.ts | POST | not ok response: 500 - Internal Server Error ")
+            );
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | create-row.ts | POST | catched error: Error - tasks/v1 | BFF | create-row.ts | POST | not ok response: 500 - Internal Server Error ")
             );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF creating row - server error'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | catched error: Error - tasks/v1 | BFF | create-row.ts | POST | not ok response: 500 - Internal Server Error '
             });
         });
 
@@ -294,13 +305,10 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
-            expect(console.error).toHaveBeenCalledWith(
-                'BFF creating row - server error',
-                networkError
-            );
+            expect(console.error).toHaveBeenCalledWith("tasks/v1 | BFF | create-row.ts | POST | catched error: Error - Network error");
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF creating row - server error'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | catched error: Error - Network error'
             });
         });
 
@@ -324,13 +332,10 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
-            expect(console.error).toHaveBeenCalledWith(
-                'BFF creating row - server error',
-                headerError
-            );
+            expect(console.error).toHaveBeenCalledWith("tasks/v1 | BFF | create-row.ts | POST | catched error: Error - Header generation failed");
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF creating row - server error'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | catched error: Error - Header generation failed'
             });
         });
     });
@@ -373,7 +378,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             // Assert
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error creating row - Title is required'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | Title is required'
             });
         });
 
@@ -394,7 +399,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
             // Assert
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error creating row - Title is required'
+                error: 'tasks/v1 | BFF | create-row.ts | POST | Title is required'
             });
         });
 

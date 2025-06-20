@@ -13,6 +13,18 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
 import { BASE_URL, TASKS_API_HEADER } from "@/lib/app/common";
 
+const fnSignature = "tasks/v1 | BFF | index.ts";
+const notOkErrorMessage = async (fnName: string, response: Response) => {
+    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "GET" :
@@ -26,17 +38,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
         
                 if (!response.ok) {
-                    console.error(`BFF Error fetching all rows: ${response.status} - ${response.statusText}`);
-                    // for reference: If the response isn't OK, throw an error to be caught in the catch block
-                    throw new Error(`BFF Error fetching all rows: ${response.status} ${response.statusText}`);
+                    const errorMsg = await notOkErrorMessage("GET", response);
+                    throw new Error(errorMsg);
                 }
     
                 const result:Task[] = await response.json();
     
                 return res.status(200).json(result);
             } catch(error) {
-                console.error("BFF Error fetching all rows - server error ", error ); // Log detailed error
-                return res.status(500).json({ error: "BFF Error fetching all rows - server error" });
+                const errorMsg = await catchedErrorMessage("GET", error as Error);
+                return res.status(500).json({ error: errorMsg });
             } 
         case "POST" :
             // for reference: Frontend layer (client) is not using it, hence its not necessary to create one  

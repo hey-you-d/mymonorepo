@@ -22,18 +22,22 @@ export async function fetchGraphQL(query: string, variables = {}) {
     // capture http level error (http status code is not 2xx)
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`HTTP error ${res.status}: ${text}`);
+      const errorMsg = `use-client | model | TaskGraphqlClient | not ok response: ${res.status}: - ${text} `;
+      console.error(errorMsg);
+      throw new Error(errorMsg);
     }
 
     const json = await res.json();
 
     // capture graphql level error (http status code is still 200)
     if (json.errors) {
+      
       const errorFn = (e: { message: string }) => {
-        return e && e.message ? e.message : "error in TaskGraphQL model component";
+        return e && e.message ? e.message : "unknown error";
       }  
-
-      throw new Error(json.errors.map(errorFn).join('\n'));
+      const errorMsg = `use-client | model | TaskGraphqlClient | json.errors: ${json.errors.map(errorFn).join('\n')} `;
+      console.error(errorMsg);
+      throw new Error(errorMsg);
     }
 
     return json.data;
