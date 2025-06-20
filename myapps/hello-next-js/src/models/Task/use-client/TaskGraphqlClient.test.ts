@@ -13,8 +13,11 @@ describe('fetchGraphQL', () => {
 
   afterEach(() => {
     spyConsoleError.mockRestore();
-    jest.restoreAllMocks();
   });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  })
 
   it('sends the correct POST request and returns data', async () => {
     const mockData = { someField: 'value' };

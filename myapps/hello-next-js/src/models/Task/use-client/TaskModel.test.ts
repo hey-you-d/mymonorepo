@@ -32,6 +32,9 @@ describe('TaskModel', () => {
 
   afterEach(() => {
     spyConsoleError.mockRestore();
+  });
+
+  afterAll(() => {
     jest.restoreAllMocks();
   });
 

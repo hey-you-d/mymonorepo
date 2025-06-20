@@ -26,8 +26,7 @@ describe('TaskUserModel', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        mockFetch.mockClear();
-
+        
         taskUserModel = new TaskUserModel();
 
         // Clear console.error mock
@@ -36,6 +35,9 @@ describe('TaskUserModel', () => {
 
     afterEach(() => {
         spyConsoleError.mockRestore();
+    });
+
+    afterAll(() => {
         jest.restoreAllMocks();
     });
 

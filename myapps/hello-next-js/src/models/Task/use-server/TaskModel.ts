@@ -3,7 +3,20 @@ import { cookies } from 'next/headers';
 import { TASKS_API_HEADER, JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
 import { Task } from "@/types/Task";
 
-export const swrFetcher = async (): Promise<Task[]> => {
+const fnSignature = "use-server | model | TaskModel";
+export const notOkErrorMessage = async (fnName: string, response: Response) => {
+    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
+export const catchedErrorMessage = (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+} 
+
+export const swrFetcher = async (): Promise<Task[] | undefined> => {
   // for reference:
   // "use server" should only be used in files that contain 
   // server actions (async functions for form handling, etc.), not in regular React components or utility files.
@@ -17,20 +30,19 @@ export const swrFetcher = async (): Promise<Task[]> => {
       });
 
       if (!response.ok) {
-          console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
-          throw new Error(`Database Fetch failed: ${response.status} ${response.statusText}`);
+        const errorMsg = await notOkErrorMessage("swrFetcher", response);
+        throw new Error(errorMsg);
       }
       const result:Task[] = await response.json();
   
       return result;
   } catch(error) {
-      console.error("Error fetching all rows: ", error );
-      
-      throw error;
+      const errorMsg = catchedErrorMessage("swrFetcher", error as Error);
+      throw new Error(errorMsg);
   }
 }
 
-export const getTasksDBRows = async (overrideFetchUrl?: string): Promise<Task[]> => {
+export const getTasksDBRows = async (overrideFetchUrl?: string): Promise<Task[] | undefined> => {
   // for reference:
   // "use server" should only be used in files that contain 
   // server actions (async functions for form handling, etc.), not in regular React components or utility files.
@@ -47,21 +59,19 @@ export const getTasksDBRows = async (overrideFetchUrl?: string): Promise<Task[]>
     });
 
     if (!response.ok) {
-        console.error("Error fetching all rows: ", `${response.status} - ${response.statusText}`);
-        // If the response isn't OK, throw an error to be caught in the catch block
-        throw new Error(`Error fetching all rows: ${response.status} ${response.statusText}`);
+        const errorMsg = await notOkErrorMessage("getTasksDBRows", response);
+        throw new Error(errorMsg);
     }
 
     const result:Task[] = await response.json();
     return result;
   } catch(error) {
-    console.error("Error fetching all rows: ", error );
-
-    throw error;
+    const errorMsg = catchedErrorMessage("getTasksDBRows", error as Error);
+    throw new Error(errorMsg);
   } 
 }
 
-export const deleteAllRows = async (overrideFetchUrl?: string): Promise<Task[]> => {
+export const deleteAllRows = async (overrideFetchUrl?: string): Promise<Task[] | undefined> => {
   // for reference:
   // "use server" should only be used in files that contain 
   // server actions (async functions for form handling, etc.), not in regular React components or utility files.
@@ -79,21 +89,19 @@ export const deleteAllRows = async (overrideFetchUrl?: string): Promise<Task[]> 
     });
 
     if (!response.ok) {
-        const errorText = await response.text(); // <- Just read as text
-        console.error("Error deleting DB Table rows: ", `${response.status} - ${response.statusText} - ${errorText}`);
-        throw new Error(`Error deleting DB Table rows: ${response.status}`);
+        const errorMsg = await notOkErrorMessage("deleteAllRows", response);
+        throw new Error(errorMsg);
     }
     
     const result: Task[] = await response.json();
     return result;
   } catch(error) {
-    console.error("Error deleting DB Table rows: ", error );
-
-    throw error;
+    const errorMsg = catchedErrorMessage("deleteAllRows", error as Error);
+    throw new Error(errorMsg);
   } 
 }
 
-export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[]> => {
+export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[] | undefined> => {
   // for reference:
   // "use server" should only be used in files that contain 
   // server actions (async functions for form handling, etc.), not in regular React components or utility files.
@@ -111,21 +119,19 @@ export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[]> =>
     });
 
     if (!response.ok) {
-        const errorText = await response.text(); // <- Just read as text
-        console.error("Error seeding tasks DB: ", `${response.status} - ${response.statusText} - ${errorText}`);
-        throw new Error(`Error seeding tasks DB: ${response.status}`);
+        const errorMsg = await notOkErrorMessage("seedTasksDB", response);
+        throw new Error(errorMsg);
     }
 
     const result = await response.json();
     return result.rows;
   } catch(error) {
-    console.error("Error seeding tasks DB: ", error );
-
-    throw error;
+    const errorMsg = catchedErrorMessage("seedTasksDB", error as Error);
+    throw new Error(errorMsg);
   } 
 }
 
-export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promise<Task | null> => {
+export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promise<Task | null | undefined> => {
   // for reference:
   // "use server" should only be used in files that contain 
   // server actions (async functions for form handling, etc.), not in regular React components or utility files.
@@ -146,20 +152,19 @@ export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promi
         if (response.status == 404) {
           return null;
         }
-        const errorText = await response.text(); // <- Just read as text
-        throw new Error(`Error fetching row: ${response.status} - ${response.statusText} - ${errorText}`);
+        const errorMsg = await notOkErrorMessage("getRowFromId", response);
+        throw new Error(errorMsg);
       }
 
     const result: Task | null = await response.json();   
     return result;  
   } catch(error) {
-    console.error(`Error fetching row for id ${id}: `, error );
-
-    throw error;
+    const errorMsg = catchedErrorMessage("getRowFromId", error as Error);
+    throw new Error(errorMsg);
   } 
 }
 
-export const createRow = async (title: string, detail: string, overrideFetchUrl?: string): Promise<Task[]> => {
+export const createRow = async (title: string, detail: string, overrideFetchUrl?: string): Promise<Task[] | undefined> => {
   // for reference:
   // "use server" should only be used in files that contain 
   // server actions (async functions for form handling, etc.), not in regular React components or utility files.
@@ -181,22 +186,20 @@ export const createRow = async (title: string, detail: string, overrideFetchUrl?
     });
 
     if (!response.ok) {
-        const errorText = await response.text(); // <- Just read as text
-        console.error(`Error creating row: ${response.status} - ${response.statusText}`, errorText);
-        throw new Error(`Error creating row: ${response.status}`);
+        const errorMsg = await notOkErrorMessage("createRow", response);
+        throw new Error(errorMsg);
     }
 
     const result = await response.json();
     
     return result.rows satisfies Task[];
   } catch(error) {
-    console.error("Error creating row: ", error );
-
-    throw error;
+    const errorMsg = catchedErrorMessage("createRow", error as Error);
+    throw new Error(errorMsg);
   } 
 }
 
-export const updateRowFromId = async  (id: number, title: string, detail: string, completed: boolean, overrideFetchUrl?: string): Promise<Task> => {
+export const updateRowFromId = async  (id: number, title: string, detail: string, completed: boolean, overrideFetchUrl?: string): Promise<Task | undefined> => {
   // for reference:
   // "use server" should only be used in files that contain 
   // server actions (async functions for form handling, etc.), not in regular React components or utility files.
@@ -219,18 +222,16 @@ export const updateRowFromId = async  (id: number, title: string, detail: string
     });
 
     if (!response.ok) {
-        const errorText = await response.text(); // <- Just read as text
-        console.error(`Error updating row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
-        throw new Error(`Error updating row: ${response.status}`);
+        const errorMsg = await notOkErrorMessage("updateRowFromId", response);
+        throw new Error(errorMsg);
     }
 
     const result = await response.json();
 
     return result;
   } catch(error) {
-    console.error(`Error updating row for id ${id}: `, error );
-
-    throw error;
+    const errorMsg = catchedErrorMessage("updateRowFromId", error as Error);
+    throw new Error(errorMsg);
   } 
 }
 
@@ -252,16 +253,14 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
     });
 
     if (!response.ok) {
-        const errorText = await response.text(); // <- Just read as text
-        console.error(`Error deleting row for id ${id}: ${response.status} - ${response.statusText}`, errorText);
-        throw new Error(`Error deleting row: ${response.status}`);
+        const errorMsg = await notOkErrorMessage("deleteRowFromId", response);
+        throw new Error(errorMsg);
     }
 
     const result = await response.json();
     return result.rows;
   } catch(error) {
-    console.error(`Error fetching row for id ${id}: `, error );
-
-    throw error;
+    const errorMsg = catchedErrorMessage("deleteRowFromId", error as Error);
+    throw new Error(errorMsg);
   } 
 }
