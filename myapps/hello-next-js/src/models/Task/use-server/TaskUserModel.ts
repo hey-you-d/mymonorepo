@@ -9,7 +9,7 @@ export const notOkErrorMessage = async (fnName: string, response: Response) => {
     return errorMsg;
 }
 
-export const catchedErrorMessage = (fnName: string, error: Error) => {
+export const catchedErrorMessage = async (fnName: string, error: Error) => {
     const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
     console.error(errorMsg);
     return errorMsg;
@@ -45,7 +45,7 @@ export const registerUser = async (email: string, password: string, jwt: string,
     const result: UserModelType = await response.json();
     return result;
   } catch(error) {
-    const errorMsg = catchedErrorMessage("registerUser", error as Error);
+    const errorMsg = await catchedErrorMessage("registerUser", error as Error);
     throw new Error(errorMsg);
   } 
 }
@@ -78,7 +78,7 @@ export const logInUser = async (email: string, overrideFetchUrl?: string): Promi
     const result: UserModelType = await response.json();
     return result;
   } catch(error) {
-    const errorMsg = catchedErrorMessage("loginUser", error as Error);
+    const errorMsg = await catchedErrorMessage("loginUser", error as Error);
     throw new Error(errorMsg);
   } 
 };
@@ -111,7 +111,7 @@ export const updateJwt = async (email: string, jwt: string, overrideFetchUrl?: s
     const result: UserModelType = await response.json();
     return result;
   } catch(error) {
-    const errorMsg = catchedErrorMessage("updateJwt", error as Error);
+    const errorMsg = await catchedErrorMessage("updateJwt", error as Error);
     throw new Error(errorMsg);
   } 
 };

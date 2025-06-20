@@ -9,7 +9,7 @@ export const notOkErrorMessage = async (fnName: string, response: Response) => {
     return errorMsg;
 }
 
-export const catchedErrorMessage = (fnName: string, error: Error) => {
+export const catchedErrorMessage = async (fnName: string, error: Error) => {
     const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
     console.error(errorMsg);
     return errorMsg;
@@ -33,7 +33,7 @@ export const swrFetcher = async () => {
   
       return result;
   } catch(error) {
-      const errorMsg = catchedErrorMessage("swrFetcher", error as Error);
+      const errorMsg = await catchedErrorMessage("swrFetcher", error as Error);
       throw new Error(errorMsg);
   }
 }
@@ -64,7 +64,7 @@ export class TaskModel {
 
         return result;
       } catch(error) {
-        const errorMsg = catchedErrorMessage("getTasksDBRows", error as Error);
+        const errorMsg = await catchedErrorMessage("getTasksDBRows", error as Error);
         throw new Error(errorMsg);
       } 
     }
@@ -87,7 +87,7 @@ export class TaskModel {
         const result: Task[] = await response.json();
         return result;
       } catch(error) {
-        const errorMsg = catchedErrorMessage("deleteAllRows", error as Error);
+        const errorMsg = await catchedErrorMessage("deleteAllRows", error as Error);
         throw new Error(errorMsg);
       } 
     }
@@ -110,7 +110,7 @@ export class TaskModel {
         const result = await response.json();
         return result.rows;
       } catch(error) {
-        const errorMsg = catchedErrorMessage("seedTasksDB", error as Error);
+        const errorMsg = await catchedErrorMessage("seedTasksDB", error as Error);
         throw new Error(errorMsg);
       } 
     }
@@ -134,7 +134,7 @@ export class TaskModel {
 
         return result.rows;
       } catch(error) {
-        const errorMsg = catchedErrorMessage("getRowFromId", error as Error);
+        const errorMsg = await catchedErrorMessage("getRowFromId", error as Error);
         throw new Error(errorMsg);
       } 
     }
@@ -174,7 +174,7 @@ export class TaskModel {
         ];
         */
       } catch(error) {
-        const errorMsg = catchedErrorMessage("createRow", error as Error);
+        const errorMsg = await catchedErrorMessage("createRow", error as Error);
         throw new Error(errorMsg);
       } 
     }
@@ -203,7 +203,7 @@ export class TaskModel {
 
         return result;
       } catch(error) {
-        const errorMsg = catchedErrorMessage("updateRowFromId", error as Error);
+        const errorMsg = await catchedErrorMessage("updateRowFromId", error as Error);
         throw new Error(errorMsg);
       } 
     }
@@ -223,7 +223,7 @@ export class TaskModel {
             throw new Error(errorMsg);
         }
       } catch(error) {
-        const errorMsg = catchedErrorMessage("deleteRowFromId", error as Error);
+        const errorMsg = await catchedErrorMessage("deleteRowFromId", error as Error);
         throw new Error(errorMsg);
       } 
     }

@@ -13,7 +13,7 @@ export const notOkErrorMessage = async (fnName: string, response: Response) => {
     return errorMsg;
 }
 
-export const catchedErrorMessage = (fnName: string, error: Error) => {
+export const catchedErrorMessage = async (fnName: string, error: Error) => {
     const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
     console.error(errorMsg);
     return errorMsg;
@@ -46,7 +46,7 @@ export class TaskUserModel {
             
             return result;
         } catch(error) {
-            const errorMsg = catchedErrorMessage("registerUser", error as Error);
+            const errorMsg = await catchedErrorMessage("registerUser", error as Error);
             throw new Error(errorMsg);
         }
     }
@@ -76,7 +76,7 @@ export class TaskUserModel {
 
             return result;
         } catch(error) {
-            const errorMsg = catchedErrorMessage("loginUser", error as Error);
+            const errorMsg = await catchedErrorMessage("loginUser", error as Error);
             throw new Error(errorMsg);
         }
     }
@@ -102,7 +102,7 @@ export class TaskUserModel {
             
             return result;
         } catch(error) {
-            const errorMsg = catchedErrorMessage("logoutUser", error as Error);
+            const errorMsg = await catchedErrorMessage("logoutUser", error as Error);
             throw new Error(errorMsg);
         }
     }
@@ -128,7 +128,7 @@ export class TaskUserModel {
             
             return result;
         } catch(error) {
-            const errorMsg = catchedErrorMessage("checkAuthTokenCookieExist", error as Error);
+            const errorMsg = await catchedErrorMessage("checkAuthTokenCookieExist", error as Error);
             throw new Error(errorMsg);
         }
     }
