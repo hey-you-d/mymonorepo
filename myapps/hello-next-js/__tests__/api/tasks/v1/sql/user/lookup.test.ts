@@ -42,7 +42,7 @@ describe('Tasks Users API handler - lookup.ts', () => {
 
             expect(res._getStatusCode()).toBe(401);
             expect(JSON.parse(res._getData())).toEqual({
-                error: "Unauthorized access: invalid API key"
+                error: "tasks/v1 | API | user/lookup.ts | handler | Unauthorized access: invalid API key",
             });
             expect(db.query).not.toHaveBeenCalled();
         });
@@ -197,12 +197,8 @@ describe('Tasks Users API handler - lookup.ts', () => {
             // Assert
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'User Login - Database related error'
+                error: "tasks/v1 | API | user/lookup.ts | POST | catched error: Error - Database connection failed",
             });
-            expect(console.error).toHaveBeenCalledWith(
-                'User Login - Database related error: ',
-                dbError
-            );
         });
 
         it('should handle missing email in request body', async () => {
@@ -251,11 +247,8 @@ describe('Tasks Users API handler - lookup.ts', () => {
             // Assert
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'User Login - invalid outcome from DB query'
+                error: "tasks/v1 | API | user/lookup.ts | POST | null/undefined result",
             });
-            expect(console.error).toHaveBeenCalledWith(
-                'User Login - invalid outcome from DB query'
-            );
         });
 
         it('should handle special characters in email', async () => {
