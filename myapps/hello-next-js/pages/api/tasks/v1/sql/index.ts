@@ -2,6 +2,23 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
 
+const fnSignature = "tasks/v1 | API | index.ts";
+const customResponseMessage = async (fnName: string, customMsg: string) => {
+    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
+    console.log(msg);
+    return msg;
+}
+const missingParamErrorMessage = async (fnName: string, missingParamMsg: string) => {
+    const errorMsg = `${fnSignature} | ${fnName} | ${missingParamMsg}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 /**
  * @swagger
  * components:
@@ -65,7 +82,9 @@ import { CHECK_API_KEY } from '@/lib/app/common';
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
-    if (!isAuthorized) return res.status(401).json({ error: "Unauthorized access: invalid API key" });
+    if (!isAuthorized) return res.status(401).json({ 
+      error: await customResponseMessage("handler", "Unauthorized access: invalid API key"),
+    });
 
     switch (req.method) {
       case "GET" :
@@ -73,21 +92,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const { rows } = await db.query('SELECT * FROM tasks ORDER BY id DESC');
         
           return res.status(200).json(rows);
-        } catch (err) {
-          console.error('Database error:', err); // Log detailed error
-          return res.status(500).json({ error: 'Database error' });
+        } catch (error) {
+          const errorMsg = await catchedErrorMessage("GET", error as Error);
+          return res.status(500).json({ error: errorMsg });
         } 
       case "POST" :
         try {
           const { title } = req.body;
-          if (!title) return res.status(400).json({ error: 'Title is required' });
+          if (!title) return res.status(400).json(
+              { error: await missingParamErrorMessage("POST", "Title is required"), }
+          );
 
           const result = await db.query('INSERT INTO tasks (title) VALUES ($1) RETURNING *', [title]);
           
           return res.status(201).json(result.rows[0]);
-        } catch (err) {
-          console.error('Database error:', err); // Log detailed error
-          return res.status(500).json({ error: 'Database error' });
+        } catch (error) {
+          const errorMsg = await catchedErrorMessage("POST", error as Error);
+          return res.status(500).json({ error: errorMsg });
         } 
       default:
         res.setHeader('Allow', ['GET', 'POST']);

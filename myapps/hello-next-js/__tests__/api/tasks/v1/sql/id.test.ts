@@ -73,9 +73,9 @@ describe ("Tasks API handler - [id].ts", () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
+            expect(res.json).toHaveBeenCalledWith({ error: "tasks/v1 | API | [id].ts | GET | catched error: Error - Connection error", });
         });
-        
+
     }); 
 
     describe("PUT request", () => {
@@ -118,7 +118,7 @@ describe ("Tasks API handler - [id].ts", () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
+            expect(res.json).toHaveBeenCalledWith({ error: "tasks/v1 | API | [id].ts | PUT | catched error: Error - Connection error", });
         });
         
         it('should handle error 400 bad request', async () => {
@@ -205,7 +205,7 @@ describe ("Tasks API handler - [id].ts", () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
+            expect(res.json).toHaveBeenCalledWith({ error: "tasks/v1 | API | [id].ts | DELETE | catched error: Error - Connection error", });
         });
 
         it('should return status code 400 given a wrong type of param', async () => {

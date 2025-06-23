@@ -65,7 +65,7 @@ describe ("Tasks API handler - seed-table.ts", () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
+            expect(res.json).toHaveBeenCalledWith({ error: "tasks/v1 | API | seed-table.ts | POST | catched error: Error - Connection error", });
         });
     });
 });        
