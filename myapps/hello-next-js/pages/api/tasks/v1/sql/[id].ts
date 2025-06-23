@@ -8,11 +8,6 @@ const customResponseMessage = async (fnName: string, customMsg: string) => {
     console.log(msg);
     return msg;
 }
-const missingParamErrorMessage = async (fnName: string, missingParamMsg: string) => {
-    const errorMsg = `${fnSignature} | ${fnName} | ${missingParamMsg}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 const catchedErrorMessage = async (fnName: string, error: Error) => {
     const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
     console.error(errorMsg);
