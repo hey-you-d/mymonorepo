@@ -85,7 +85,7 @@ describe('getTaskGraphQLViewModel', () => {
       const error = new Error('Fetch failed');
       (fetchGraphQL as jest.Mock).mockRejectedValueOnce(error);
 
-      await expect(getTasksDBRowsVM()).rejects.toThrow(error);
+      await expect(getTasksDBRowsVM()).rejects.toThrow("use-server | view-model | getTaskGraphQLViewModel | getTasksDBRows | catched error: Error - Fetch failed");
     });
   });
   describe('createRow', () => {
@@ -105,7 +105,7 @@ describe('getTaskGraphQLViewModel', () => {
       const error = new Error('Creation failed');
       (fetchGraphQL as jest.Mock).mockRejectedValueOnce(error);
 
-      await expect(createRowVM([], 'New Task', 'New Detail')).rejects.toThrow(error);
+      await expect(createRowVM([], 'New Task', 'New Detail')).rejects.toThrow("use-server | view-model | getTaskGraphQLViewModel | createRow | catched error: Error - Creation failed");
     });
   });
   describe('deleteAllRows', () => {
@@ -122,7 +122,7 @@ describe('getTaskGraphQLViewModel', () => {
       const error = new Error('Deletion failed');
       (fetchGraphQL as jest.Mock).mockRejectedValueOnce(error);
 
-      await expect(deleteAllRowsVM()).rejects.toThrow(error);
+      await expect(deleteAllRowsVM()).rejects.toThrow("use-server | view-model | getTaskGraphQLViewModel | deleteAllRows | catched error: Error - Deletion failed");
     });
   });
   describe('seedTaskDB', () => {
@@ -139,7 +139,7 @@ describe('getTaskGraphQLViewModel', () => {
       const error = new Error('Seeding failed');
       (fetchGraphQL as jest.Mock).mockRejectedValueOnce(error);
 
-      await expect(seedTaskDBVM()).rejects.toThrow(error);
+      await expect(seedTaskDBVM()).rejects.toThrow("use-server | view-model | getTaskGraphQLViewModel | seedTaskDB | catched error: Error - Seeding failed");
     });
   });
   describe('updateRowFromId', () => {
@@ -172,7 +172,7 @@ describe('getTaskGraphQLViewModel', () => {
 
       await expect(
         updateRowFromIdVM(mockTasks, 1, 'Updated', 'Detail', true)
-      ).rejects.toThrow(error);
+      ).rejects.toThrow("use-server | view-model | getTaskGraphQLViewModel | updateRowFromId [id: 1] | catched error: Error - Update failed");
     });
   });
 });

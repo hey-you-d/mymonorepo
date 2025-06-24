@@ -17,6 +17,18 @@ import {
 } from '@/models/Task/use-server/TaskUserModel';
 import type { UserModelType } from '@/types/Task';
 
+const fnSignature = "use-server | view-model | getTasksUserViewModel";
+const customResponseMessage = async (fnName: string, customMsg: string) => {
+    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
+    console.log(msg);
+    return msg;
+}
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 // TODO: Move this to @/lib/app/common
 export const getJwtSecret = async () => {
     try {
@@ -32,8 +44,8 @@ export const getJwtSecret = async () => {
 
         return secret;
     } catch(err) {
-        console.error("Error: failed to obtain JWT from AWS Secret Manager ", err);
-        throw err;
+        const errorMsg = await catchedErrorMessage("getJwtSecret", err as Error);
+        throw new Error(errorMsg);
     }  
 }
 
@@ -92,8 +104,8 @@ export const registerUser = async (email: string, password: string) => {
             return false;
         }
     } catch (error) {
-        console.error(`user-server | getTasksUserViewModel | Unknown Error when attempting user lookup as part of registration process: ${(error as Error).name} - ${(error as Error).message}`);
-        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when attempting user lookup as part of registration process: ${(error as Error).name} - ${(error as Error).message}`);
+        const errorMsg = await catchedErrorMessage("registerUser -> logInUserModel", error as Error);
+        throw new Error(errorMsg);
     } 
     
     // generate salted & hashed password string  with argon2id encryption.
@@ -121,8 +133,8 @@ export const registerUser = async (email: string, password: string) => {
         // just to be safe...
         await logoutUser();
         
-        console.error(`user-server | getTasksUserViewModel | Unknown Error when attempting user registration: ${(error as Error).name} - ${(error as Error).message}`);
-        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when attempting user registration: ${(error as Error).name} - ${(error as Error).message}`);
+        const errorMsg = await catchedErrorMessage("registerUser -> registerUserModel", error as Error);
+        throw new Error(errorMsg);
     } 
 }
 
@@ -150,8 +162,8 @@ export const loginUser = async (email: string, password: string) =>  {
                         // on the server-side (For server-side variant, via Next.js server actions instead of the API endpoint)
                         return await createAuthCookie(result.jwt);
                     } else {
-                        console.error(`user-server | getTasksUserViewModel | Error re-creating a new http-only cookie: ${result.message}`);
-                        throw new Error(`user-server | getTasksUserViewModel | Error re-creating a new http-only cookie: ${result.message}`);
+                        const errorMsg = await customResponseMessage("loginUser", result.message);
+                        throw new Error(errorMsg);
                     }
                 }
 
@@ -166,8 +178,8 @@ export const loginUser = async (email: string, password: string) =>  {
         // just to be safe...
         await logoutUser();
         
-        console.error(`user-server | getTasksUserViewModel | Unknown Error when attempting user login process: ${(error as Error).name} - ${(error as Error).message}`);
-        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when attempting user login process: ${(error as Error).name} - ${(error as Error).message}`);
+        const errorMsg = await catchedErrorMessage("loginUser", error as Error);
+        throw new Error(errorMsg);
     }
 }
 
@@ -182,8 +194,8 @@ export const logoutUser = async () => {
         // then it's no longer exist in the client browser, which what we want
         return token && token.value.length > 0 ? false : true;
     } catch (error) {
-        console.error(`user-server | getTasksUserViewModel | Unknown Error when attempting user logout process: ${(error as Error).name} - ${(error as Error).message}`);
-        throw new Error(`user-server | getTasksUserViewModel | Unknown Error when attempting user logout process: ${(error as Error).name} - ${(error as Error).message}`);
+        const errorMsg = await catchedErrorMessage("logoutUser", error as Error);
+        throw new Error(errorMsg);
     }
 }
 
@@ -209,11 +221,10 @@ export const checkAuthTokenCookieExist = async () => {
         
         return ({  
             outcome: false, 
-            message: `use-server | getTasksUserViewModel | Unknown Error when checking auth_token`, 
+            message: await customResponseMessage("checkAuthTokenCookieExist", "unknown error when checking auth_token"), 
         });
     } catch (error) {
-        const errorMessage = `use-server | getTasksUserViewModel | Unknown Error when checking auth_token: ${(error as Error).name} - ${(error as Error).message}`;
-        console.error(errorMessage);
-        throw new Error(errorMessage);
+        const errorMsg = await catchedErrorMessage("checkAuthTokenCookieExist", error as Error);
+        throw new Error(errorMsg);
     }
 }

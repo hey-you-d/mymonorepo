@@ -3,6 +3,13 @@
 import { fetchGraphQL } from '@/models/Task/use-server/TaskGraphqlClient';
 import type { Task } from '@/types/Task';
 
+const fnSignature = "use-server | view-model | getTaskGraphQLViewModel";
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 export const getTasksDBRows = async () => {
     const query = `
         query {
@@ -18,9 +25,9 @@ export const getTasksDBRows = async () => {
     try {
         const data: { tasks: Task[] } = await fetchGraphQL(query);
         return data.tasks;
-    } catch (e) {
-        console.error("getTaskGraphQLViewModel | Failed to fetch tasks db rows:", e);
-        throw e;
+    } catch (error) {
+        const errorMsg = await catchedErrorMessage("getTasksDBRows", error as Error);
+        throw new Error(errorMsg);
     }
 };
 
@@ -42,9 +49,9 @@ export const createRow = async(_: Task[], title: string, detail: string) => {
         const data: { createTask: Task } = await fetchGraphQL(mutation, variables);
 
         return data.createTask;
-    } catch (e) {
-        console.error("getTaskGraphQLViewModel | Failed to create a new row:", e);
-        throw e;
+    } catch (error) {
+        const errorMsg = await catchedErrorMessage("createRow", error as Error);
+        throw new Error(errorMsg);
     }
 }
 
@@ -67,9 +74,9 @@ export const deleteAllRows = async() => {
         //return data.deleteTasks;
         await fetchGraphQL(mutation);
         return [] as Task[];
-    } catch (e) {
-        console.error("getTaskGraphQLViewModel | Failed to delete all rows:", e);
-        throw e;
+    } catch (error) {
+        const errorMsg = await catchedErrorMessage("deleteAllRows", error as Error);
+        throw new Error(errorMsg);
     }
 }
 
@@ -89,9 +96,9 @@ export const seedTaskDB = async() => {
     try {
         const data: { seedTasks: Task[] } = await fetchGraphQL(mutation);        
         return data.seedTasks;
-    } catch (e) {
-        console.error("getTaskGraphQLViewModel | Failed to seed db table:", e);
-        throw e;
+    } catch (error) {
+        const errorMsg = await catchedErrorMessage("seedTaskDB", error as Error);
+        throw new Error(errorMsg);
     }
 }
 
@@ -113,8 +120,8 @@ export const updateRowFromId = async(_: Task[], id: number, title: string, detai
         const data: { updateTask: Task } = await fetchGraphQL(mutation, variables);
   
         return data.updateTask;
-    } catch (e) {
-        console.error(`getTaskGraphQLViewModel | Failed update row with id ${id}:`, e);
-        throw e;
+    } catch (error) {
+        const errorMsg = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, error as Error);
+        throw new Error(errorMsg);
     }
 }

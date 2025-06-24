@@ -191,7 +191,7 @@ describe('useTaskViewModel', () => {
       });
 
       waitFor(() => {
-        const expectedMsg = "Error: use-client | view-model | useTasksViewModel | deleteAllRows | catched error: Error - Delete failed";
+        const expectedMsg = "use-client | view-model | useTasksViewModel | deleteAllRows | catched error: Error - Delete failed";
         expect(thrownError.message).toBe(expectedMsg);
         expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
         expect(result.current.tasks).toEqual(mockTasks); // Tasks remain unchanged

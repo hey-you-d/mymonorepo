@@ -72,7 +72,7 @@ describe('getTasksViewModelWithSwr', () => {
       const error = new Error('Fetch failed');
       (swrFetcher as jest.Mock).mockRejectedValue(error);
       
-      await expect(fetcher()).rejects.toThrow(error);
+      await expect(fetcher()).rejects.toThrow("use-server | view-model | getTasksViewModelWithSwr | fetcher | catched error: Error - Fetch failed");
     });
   });
   describe('getTasksDBRows', () => {
@@ -90,7 +90,7 @@ describe('getTasksViewModelWithSwr', () => {
       const error = new Error('Fetch failed');
       (getTasksDBRowsModel as jest.Mock).mockRejectedValue(error);
       
-      await expect(getTasksDBRowsVM()).rejects.toThrow(error);
+      await expect(getTasksDBRowsVM()).rejects.toThrow("use-server | view-model | getTasksViewModelWithSwr | getTasksDBRows | catched error: Error - Fetch failed");
     });
   });
   describe('deleteAllRows', () => {
@@ -105,7 +105,7 @@ describe('getTasksViewModelWithSwr', () => {
       const error = new Error('Deletion failed');
       (deleteAllRowsModel as jest.Mock).mockRejectedValue(error);
       
-      await expect(deleteAllRowsVM()).rejects.toThrow(error);
+      await expect(deleteAllRowsVM()).rejects.toThrow("use-server | view-model | getTasksViewModelWithSwr | deleteAllRows | catched error: Error - Deletion failed");
     });
   });
   describe('seedTasksDB', () => {
@@ -120,7 +120,7 @@ describe('getTasksViewModelWithSwr', () => {
       const error = new Error('Seeding failed');
       (seedTasksDBModel as jest.Mock).mockRejectedValue(error);
       
-      await expect(seedTasksDBVM()).rejects.toThrow(error);
+      await expect(seedTasksDBVM()).rejects.toThrow("use-server | view-model | getTasksViewModelWithSwr | seedTasksDB | catched error: Error - Seeding failed");
     });
   });
   describe('getRowFromId', () => {
@@ -146,7 +146,7 @@ describe('getTasksViewModelWithSwr', () => {
       const error = new Error('Fetch failed');
       (getRowFromIdModel as jest.Mock).mockRejectedValue(error);
       
-      await expect(getRowFromIdVM(1)).rejects.toThrow(error);
+      await expect(getRowFromIdVM(1)).rejects.toThrow("use-server | view-model | getTasksViewModelWithSwr | getRowFromId [id: 1] | catched error: Error - Fetch failed");
     });
   });
   describe('createRow', () => {
@@ -165,7 +165,7 @@ describe('getTasksViewModelWithSwr', () => {
       const error = new Error('Creation failed');
       (createRowModel as jest.Mock).mockRejectedValue(error);
       
-      await expect(createRowVM('New Task', 'New Detail')).rejects.toThrow(error);
+      await expect(createRowVM('New Task', 'New Detail')).rejects.toThrow("use-server | view-model | getTasksViewModelWithSwr | createRow | catched error: Error - Creation failed");
     });
   });
   describe('updateRowFromId', () => {
@@ -187,7 +187,7 @@ describe('getTasksViewModelWithSwr', () => {
       (updateRowFromIdModel as jest.Mock).mockRejectedValue(error);
       
       await expect(updateRowFromIdVM(1, 'Updated Task', 'Updated Detail', true))
-        .rejects.toThrow(error);
+        .rejects.toThrow("use-server | view-model | getTasksViewModelWithSwr | updateRowFromId [id: 1] | catched error: Error - Update failed");
     });
   });
   describe('deleteRowFromId', () => {
@@ -206,7 +206,7 @@ describe('getTasksViewModelWithSwr', () => {
       const error = new Error('Deletion failed');
       (deleteRowFromIdModel as jest.Mock).mockRejectedValue(error);
       
-      await expect(deleteRowFromIdVM(1)).rejects.toThrow(error);
+      await expect(deleteRowFromIdVM(1)).rejects.toThrow("use-server | view-model | getTasksViewModelWithSwr | deleteRowFromId [id: 1] | catched error: Error - Deletion failed");
     });
   });
 });

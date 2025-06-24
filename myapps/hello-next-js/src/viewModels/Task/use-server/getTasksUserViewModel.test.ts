@@ -412,7 +412,12 @@ describe("getTasksUserViewModel", () => {
 
             const result = await checkAuthTokenCookieExist();
 
-            expect(result).toStrictEqual({message: "use-server | getTasksUserViewModel | Unknown Error when checking auth_token", "outcome": false});
+            expect(result).toStrictEqual(
+                {
+                    message: "use-server | view-model | getTasksUserViewModel | checkAuthTokenCookieExist | unknown error when checking auth_token", 
+                    outcome: false
+                }
+            );
         });
 
         it('should return false when auth token cookie exists but has empty value', async () => {
@@ -420,7 +425,12 @@ describe("getTasksUserViewModel", () => {
 
             const result = await checkAuthTokenCookieExist();
 
-            expect(result).toStrictEqual({message: "use-server | getTasksUserViewModel | Unknown Error when checking auth_token", outcome: false});
+            expect(result).toStrictEqual(
+                {
+                    message: "use-server | view-model | getTasksUserViewModel | checkAuthTokenCookieExist | unknown error when checking auth_token", 
+                    outcome: false
+                }
+            );
         });
 
         it('should handle cookie check errors', async () => {
