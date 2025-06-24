@@ -243,7 +243,7 @@ describe('useTaskViewModel', () => {
       });
 
       waitFor(() => {
-        const expectedMsg = "Error: use-client | view-model | useTasksViewModel | seedTasksDB | catched error: Error - Seed failed";
+        const expectedMsg = "use-client | view-model | useTasksViewModel | seedTasksDB | catched error: Error - Seed failed";
         expect(thrownError.message).toBe(expectedMsg);
         expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
         expect(result.current.tasks).toEqual([]);
@@ -295,7 +295,7 @@ describe('useTaskViewModel', () => {
       });
 
       waitFor(() => {
-        const expectedMsg = "Error: use-client | view-model | useTasksViewModel | getRowFromId [id: 3] | catched error: Error - Get row failed";
+        const expectedMsg = "use-client | view-model | useTasksViewModel | getRowFromId [id: 3] | catched error: Error - Get row failed";
         expect(thrownError.message).toBe(expectedMsg);
         expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
         expect(result.current.tasks).toEqual(mockTasks);
@@ -346,7 +346,7 @@ describe('useTaskViewModel', () => {
       });
 
       waitFor(() => {
-        const expectedMsg = "Error: use-client | view-model | useTasksViewModel | createRow | catched error: Error - Create failed";
+        const expectedMsg = "use-client | view-model | useTasksViewModel | createRow | catched error: Error - Create failed";
         expect(thrownError.message).toBe(expectedMsg);
         expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
         expect(result.current.tasks).toEqual(mockTasks);
@@ -400,7 +400,7 @@ describe('useTaskViewModel', () => {
       });
 
       waitFor(() => {
-        const expectedMsg = "Error: use-client | view-model | useTasksViewModel | updateRowFromId [id: 1] | catched error: Error - Update failed";
+        const expectedMsg = "use-client | view-model | useTasksViewModel | updateRowFromId [id: 1] | catched error: Error - Update failed";
         expect(thrownError.message).toBe(expectedMsg);
         expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
         expect(result.current.tasks).toEqual(mockTasks);
@@ -452,7 +452,7 @@ describe('useTaskViewModel', () => {
       });
 
       waitFor(() => {
-        const expectedMsg = "Error: use-client | view-model | useTasksViewModel | deleteRowFromId [id: 1] | catched error: Error - Delete failed";
+        const expectedMsg = "use-client | view-model | useTasksViewModel | deleteRowFromId [id: 1] | catched error: Error - Delete failed";
         expect(thrownError.message).toBe(expectedMsg);
         expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
         expect(result.current.tasks).toEqual(mockTasks);

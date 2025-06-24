@@ -74,6 +74,7 @@ describe("getTasksUserViewModel", () => {
     }
 
     let spyConsoleError: jest.SpyInstance<any, any>;
+    let spyConsoleLog: jest.SpyInstance<any, any>;
     let mockCookieStore: MockCookieStore;
 
     beforeAll(() => {
@@ -96,6 +97,7 @@ describe("getTasksUserViewModel", () => {
 
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
         
         // Setup mock cookie store
         mockCookieStore = {
@@ -115,9 +117,12 @@ describe("getTasksUserViewModel", () => {
     });
 
     afterEach(() => {
-        jest.resetAllMocks();
+        spyConsoleError.mockClear();
+        spyConsoleLog.mockClear();
+    });
 
-        spyConsoleError.mockRestore();
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     describe('getJwtSecret', () => {

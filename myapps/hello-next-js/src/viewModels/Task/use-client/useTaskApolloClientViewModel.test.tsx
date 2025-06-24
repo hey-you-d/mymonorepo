@@ -74,6 +74,28 @@ const getTasksMock = {
 };
 
 describe('useTaskApolloClientViewModel', () => {
+    let spyConsoleError: jest.SpyInstance<any, any>;
+    let spyConsoleLog: jest.SpyInstance<any, any>;
+
+    beforeEach(() => {
+        // Clear all mocks before each test
+        jest.clearAllMocks();
+      
+        // hide console.error to reduce noise on the console output
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
+    });
+
+    afterEach(() => {
+        // Restore console.error
+        spyConsoleError.mockRestore();
+        spyConsoleLog.mockRestore();
+    });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
+    });
+
     it('GET_ALL_TASKS -> fetches and renders tasks correctly', async () => {
         const getAllDataMocks = [
             {

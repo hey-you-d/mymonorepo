@@ -20,12 +20,23 @@ import { mockRequestResponse, apiKeyAuthorizationTestSuite } from './index.test'
 
 describe ("Tasks API handler - create-row.ts", () => {
     let spyConsoleError: jest.SpyInstance<any, any>;
-    
+    let spyConsoleLog: jest.SpyInstance<any, any>;
+
     beforeEach(() => {
+        jest.clearAllMocks();
+        
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
+    });
 
-        jest.clearAllMocks();
+    afterEach(() => {
+        spyConsoleError.mockClear();
+        spyConsoleLog.mockClear();
+    });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     apiKeyAuthorizationTestSuite();

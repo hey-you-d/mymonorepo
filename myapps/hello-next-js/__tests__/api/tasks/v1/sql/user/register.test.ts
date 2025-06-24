@@ -16,15 +16,21 @@ jest.mock('../../../../../../src/lib/app/common', () => ({
 }));
 
 // Mock console.error to avoid noise in test output
-const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
 describe('Tasks Users API handler - register.ts', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
+    afterEach(() => {
+        consoleErrorSpy.mockClear();
+        consoleLogSpy.mockClear();
+    });
+
     afterAll(() => {
-        consoleSpy.mockRestore();
+        jest.restoreAllMocks();
     });
 
     describe('Authorization', () => {

@@ -20,12 +20,24 @@ import { mockRequestResponse, apiKeyAuthorizationTestSuite } from './index.test'
 
 describe ("Tasks API handler - delete-rows.ts", () => {
     let spyConsoleError: jest.SpyInstance<any, any>;
-    
+    let spyConsoleLog: jest.SpyInstance<any, any>;    
+
     beforeEach(() => {
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
 
         jest.clearAllMocks();
+    });
+
+    afterEach(() => {
+        // Restore console.error
+        spyConsoleError.mockRestore();
+        spyConsoleLog.mockRestore();
+    });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     apiKeyAuthorizationTestSuite();

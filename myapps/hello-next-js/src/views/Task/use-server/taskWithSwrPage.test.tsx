@@ -88,6 +88,9 @@ describe('TaskWithSwrPage', () => {
     const mockUseSWR = useSWR as jest.MockedFunction<typeof useSWR>;
     const mockStrictDeepEqual = strictDeepEqual as jest.MockedFunction<typeof strictDeepEqual>;
 
+    let spyConsoleError: jest.SpyInstance<any, any>;
+    let spyConsoleLog: jest.SpyInstance<any, any>;
+
     const mockTasks = [
         { id: 1, detail: 'Complete project documentation' },
         { id: 2, detail: 'Review code changes' },
@@ -97,6 +100,19 @@ describe('TaskWithSwrPage', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockStrictDeepEqual.mockReturnValue(false);
+
+        // hide console.error to reduce noise on the console output
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
+    });
+
+    afterEach(() => {
+        spyConsoleError.mockClear();
+        spyConsoleLog.mockClear();
+    });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     describe('Loading States', () => {
