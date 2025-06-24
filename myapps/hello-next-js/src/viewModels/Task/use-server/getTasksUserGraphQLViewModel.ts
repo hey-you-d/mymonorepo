@@ -6,9 +6,10 @@ import {
     logoutUser, 
     getJwtSecret, 
     createAuthCookie, 
-    generateHashedPassword, 
-    generateJWT 
+    generateHashedPassword,  
 } from './getTasksUserViewModel';
+import { generateJWT } from '@/lib/app/common';
+
 import type { UserModelType } from '@/types/Task';
 
 const fnSignature = "use-server | view-model | getTasksUserGraphQLViewModel";

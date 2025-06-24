@@ -3,12 +3,12 @@
 import { cookies } from 'next/headers';
 import { getSecret } from '@/lib/app/awsSecretManager';
 import argon2 from 'argon2';
-import { sign } from 'jsonwebtoken';
 import { 
     JWT_TOKEN_COOKIE_NAME, 
     TASKS_SQL_BASE_API_URL,  
     VERIFY_JWT_STRING,
     verifyJwtErrorMsgs,
+    generateJWT,
 } from '@/lib/app/common';
 import { 
     registerUser as registerUserModel, 
@@ -27,15 +27,6 @@ const catchedErrorMessage = async (fnName: string, error: Error) => {
     const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
     console.error(errorMsg);
     return errorMsg;
-}
-
-// TODO: Move this to @/lib/app/common
-export const generateJWT = async (email: string, hashedPwd: string, jwtSecret: string) => {
-    return await sign(
-        { email, hashedPassword: hashedPwd  },
-        jwtSecret,
-        { expiresIn: '900000' } // 90000ms = 15mins
-    );
 }
 
 // TODO: Move this to @/lib/app/common

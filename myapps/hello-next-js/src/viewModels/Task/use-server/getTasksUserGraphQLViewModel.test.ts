@@ -6,13 +6,13 @@ import {
   getJwtSecret,
   createAuthCookie,
   generateHashedPassword,
-  generateJWT
 } from './getTasksUserViewModel';
-
+import { generateJWT } from '@/lib/app/common';
 // Mock all dependencies
 jest.mock('../../../models/Task/use-server/TaskUserGraphqlClient');
 jest.mock('argon2');
 jest.mock('./getTasksUserViewModel');
+jest.mock('../../../lib/app/common');
 
 const mockFetchGraphQL = fetchGraphQL as jest.MockedFunction<typeof fetchGraphQL>;
 const mockArgon2Verify = argon2.verify as jest.MockedFunction<typeof argon2.verify>;
