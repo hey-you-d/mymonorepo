@@ -117,10 +117,7 @@ describe('useTaskUserViewModel', () => {
                 await expect(result.current.registerUser('test@example.com', 'password123')).rejects.toThrow('Registration failed');
             });
             
-            expect(console.error).toHaveBeenCalledWith(
-                'useTaskUserViewModel | registerUser | Error: failed to register a new user: ',
-                error
-            );
+            expect(console.error).toHaveBeenCalledWith("use-client | view-model | useTaskUserViewModel | registerUser | catched error: Error - Registration failed");
             expect(result.current.loading).toBe(false);
         });
 
@@ -181,10 +178,8 @@ describe('useTaskUserViewModel', () => {
                 await expect(result.current.loginUser('test@example.com', 'password123')).rejects.toThrow('Login failed');
             });
             
-            expect(console.error).toHaveBeenCalledWith(
-                'useTaskUserViewModel | loginUser | Error: user login failure: ',
-                error
-            );
+            expect(console.error).toHaveBeenCalledWith("use-client | view-model | useTaskUserViewModel | loginUser | catched error: Error - Login failed"
+);
             expect(result.current.loading).toBe(false);
         });
     });
@@ -231,10 +226,7 @@ describe('useTaskUserViewModel', () => {
                 await expect(result.current.logoutUser()).rejects.toThrow('Logout failed');
             });
             
-            expect(console.error).toHaveBeenCalledWith(
-                'useTaskUserViewModel | logoutUser | Error: user logout failure: ',
-                error
-            );
+            expect(console.error).toHaveBeenCalledWith("use-client | view-model | useTaskUserViewModel | logoutUser | catched error: Error - Logout failed");
             expect(result.current.loading).toBe(false);
         });
     });
@@ -279,10 +271,7 @@ describe('useTaskUserViewModel', () => {
                 await expect(result.current.checkAuthTokenCookieExist()).rejects.toThrow('Check auth token failed');
             });
             
-            expect(console.error).toHaveBeenCalledWith(
-                'useTaskUserViewModel | checkAuthTokenCookieExist | Error: check http-only auth_token cookie failure: ',
-                error
-            );
+            expect(console.error).toHaveBeenCalledWith("use-client | view-model | useTaskUserViewModel | checkAuthTokenCookieExist | catched error: Error - Check auth token failed");
             expect(result.current.loading).toBe(false);
             });
     });

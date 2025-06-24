@@ -55,7 +55,7 @@ describe('useTaskGraphQLViewModel', () => {
     // Wait for loading to complete
     await waitFor(() => {
       expect(viewModel.loading).toBe(false)
-      expect(viewModel.error).toBe('error: Failed to fetch');
+      expect(viewModel.error).toBe('use-client | view-model | useTaskGraphQLViewModel | loadTasks | catched error: Error - Failed to fetch');
     });
   });
   

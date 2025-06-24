@@ -3,6 +3,14 @@ import { useState } from 'react';
 import { ApolloError, gql, useQuery, useMutation } from '@apollo/client';
 import { Task } from "@/types/Task";
 
+const fnSignature = "use-client | view-model | useTaskApolloClientViewModel";
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
+
 export const GET_ALL_TASKS = gql`
     query {
         tasks {
@@ -122,9 +130,8 @@ export const useTaskApolloClientViewModel = () => {
             // preventing race conditions from stale closures.
             setTasks(prev => [mutatedData.createTask, ...prev]);
         } catch (e) {
-            if (e instanceof Error) {
-                setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
-            }
+            const errorMessage = await catchedErrorMessage("createRow", e as Error);
+            setErrorMsg(errorMessage);
         } finally {
             setIsLoading(false);
         }
@@ -151,9 +158,8 @@ export const useTaskApolloClientViewModel = () => {
             
             setTasks([]);
         } catch (e) {
-            if (e instanceof Error) {
-                setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
-            }
+            const errorMessage = await catchedErrorMessage("deleteAllRows", e as Error);
+            setErrorMsg(errorMessage);
         } finally {
             setIsLoading(false);
         }
@@ -188,9 +194,8 @@ export const useTaskApolloClientViewModel = () => {
             // dev note 3: I can 100% guarantee that prev is [], hence
             setTasks([...mutatedData.seedTasks]);
         } catch (e) {
-            if (e instanceof Error) {
-                setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
-            }
+            const errorMessage = await catchedErrorMessage("seedTaskDB", e as Error);
+            setErrorMsg(errorMessage);
         } finally {
             setIsLoading(false);
         }
@@ -220,9 +225,8 @@ export const useTaskApolloClientViewModel = () => {
             );
             
         } catch (e) {
-            if (e instanceof Error) {
-                setErrorMsg(e.message ? `error: ${e.message}` : 'Something went wrong');
-            }
+            const errorMessage = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, e as Error);
+            setErrorMsg(errorMessage);
         } finally {
             setIsLoading(false);
         }
