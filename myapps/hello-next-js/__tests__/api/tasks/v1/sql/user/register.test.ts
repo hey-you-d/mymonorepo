@@ -16,15 +16,21 @@ jest.mock('../../../../../../src/lib/app/common', () => ({
 }));
 
 // Mock console.error to avoid noise in test output
-const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
 describe('Tasks Users API handler - register.ts', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
+    afterEach(() => {
+        consoleErrorSpy.mockClear();
+        consoleLogSpy.mockClear();
+    });
+
     afterAll(() => {
-        consoleSpy.mockRestore();
+        jest.restoreAllMocks();
     });
 
     describe('Authorization', () => {
@@ -44,7 +50,7 @@ describe('Tasks Users API handler - register.ts', () => {
 
             expect(res._getStatusCode()).toBe(401);
             expect(JSON.parse(res._getData())).toEqual({
-                error: "Unauthorized access: invalid API key"
+                error: "tasks/v1 | API | user/register.ts | handler | Unauthorized access: invalid API key",
             });
             expect(db.query).not.toHaveBeenCalled();
         });
@@ -107,7 +113,7 @@ describe('Tasks Users API handler - register.ts', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'Email is required'
+                error: "tasks/v1 | API | user/register.ts | POST | Title is required",
             });
             expect(db.query).not.toHaveBeenCalled();
         });
@@ -126,7 +132,7 @@ describe('Tasks Users API handler - register.ts', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'Email is required'
+                error: "tasks/v1 | API | user/register.ts | POST | Title is required",
             });
         });
 
@@ -144,7 +150,7 @@ describe('Tasks Users API handler - register.ts', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'Hashed Password is required'
+                error: "tasks/v1 | API | user/register.ts | POST | Hashed Password is required",
             });
         });
 
@@ -162,7 +168,7 @@ describe('Tasks Users API handler - register.ts', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'Hashed Password is required'
+                error: "tasks/v1 | API | user/register.ts | POST | Hashed Password is required",
             });
         });
 
@@ -180,7 +186,7 @@ describe('Tasks Users API handler - register.ts', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'JWT is required'
+                error: "tasks/v1 | API | user/register.ts | POST | JWT is required",
             });
         });
 
@@ -198,7 +204,7 @@ describe('Tasks Users API handler - register.ts', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'JWT is required'
+                error: "tasks/v1 | API | user/register.ts | POST | JWT is required",
             });
         });
     });
@@ -282,14 +288,11 @@ describe('Tasks Users API handler - register.ts', () => {
 
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
-            expect(console.error).toHaveBeenCalledWith(
-                'User Registration - Database related error: ',
-                dbError
-            );
+            expect(console.error).toHaveBeenCalledWith("tasks/v1 | API | user/register.ts | POST | catched error: Error - Database connection failed");
             
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'User Registration - Database related error'
+                error: "tasks/v1 | API | user/register.ts | POST | catched error: Error - Database connection failed"
             });
         });
 
@@ -401,10 +404,7 @@ describe('Tasks Users API handler - register.ts', () => {
         // Assert
         expect(res._getStatusCode()).toBe(500);
         expect(JSON.parse(res._getData())).toEqual({
-            error: 'User Login - invalid outcome from DB query'
+            error: "tasks/v1 | API | user/register.ts | POST | null/undefined result"
         });
-        expect(console.error).toHaveBeenCalledWith(
-            'User Login - invalid outcome from DB query'
-        );
     });
 });

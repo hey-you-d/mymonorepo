@@ -74,6 +74,7 @@ describe("getTasksUserViewModel", () => {
     }
 
     let spyConsoleError: jest.SpyInstance<any, any>;
+    let spyConsoleLog: jest.SpyInstance<any, any>;
     let mockCookieStore: MockCookieStore;
 
     beforeAll(() => {
@@ -96,6 +97,7 @@ describe("getTasksUserViewModel", () => {
 
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
         
         // Setup mock cookie store
         mockCookieStore = {
@@ -115,9 +117,12 @@ describe("getTasksUserViewModel", () => {
     });
 
     afterEach(() => {
-        jest.resetAllMocks();
+        spyConsoleError.mockClear();
+        spyConsoleLog.mockClear();
+    });
 
-        spyConsoleError.mockRestore();
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     describe('getJwtSecret', () => {
@@ -412,7 +417,12 @@ describe("getTasksUserViewModel", () => {
 
             const result = await checkAuthTokenCookieExist();
 
-            expect(result).toStrictEqual({message: "use-server | getTasksUserViewModel | Unknown Error when checking auth_token", "outcome": false});
+            expect(result).toStrictEqual(
+                {
+                    message: "use-server | view-model | getTasksUserViewModel | checkAuthTokenCookieExist | unknown error when checking auth_token", 
+                    outcome: false
+                }
+            );
         });
 
         it('should return false when auth token cookie exists but has empty value', async () => {
@@ -420,7 +430,12 @@ describe("getTasksUserViewModel", () => {
 
             const result = await checkAuthTokenCookieExist();
 
-            expect(result).toStrictEqual({message: "use-server | getTasksUserViewModel | Unknown Error when checking auth_token", outcome: false});
+            expect(result).toStrictEqual(
+                {
+                    message: "use-server | view-model | getTasksUserViewModel | checkAuthTokenCookieExist | unknown error when checking auth_token", 
+                    outcome: false
+                }
+            );
         });
 
         it('should handle cookie check errors', async () => {

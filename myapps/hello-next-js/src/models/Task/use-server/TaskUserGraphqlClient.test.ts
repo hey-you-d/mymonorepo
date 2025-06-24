@@ -16,10 +16,21 @@ global.fetch = jest.fn();
 
 describe('TaskUserGraphqlClient - fetchGraphQL', () => {
     const mockTasksApiHeader = require('../../../lib/app/common').TASKS_API_HEADER;
+    let spyConsoleError: jest.SpyInstance<any, any>;
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockTasksApiHeader.mockResolvedValue(mockApiHeader);
+        // hide console.error to reduce noise on the console output
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+    });
+
+    afterEach(() => {
+        spyConsoleError.mockRestore();
+    });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     describe('successful requests', () => {
@@ -147,7 +158,7 @@ describe('TaskUserGraphqlClient - fetchGraphQL', () => {
 
             await expect(
                 fetchGraphQL('query { lookupUser }', { email: 'test@example.com' })
-            ).rejects.toThrow('HTTP error 404: Not Found');
+            ).rejects.toThrow('use-server | model | TaskUserGraphqlClient | not ok response: 404: - undefined ');
         });
 
         it('should throw error for GraphQL errors', async () => {
@@ -184,7 +195,7 @@ describe('TaskUserGraphqlClient - fetchGraphQL', () => {
 
             await expect(
                 fetchGraphQL('query { test }')
-            ).rejects.toThrow('Valid error\nerror in TaskUserGraphQLClient model component\nerror in TaskUserGraphQLClient model component');
+            ).rejects.toThrow('use-server | model | TaskUserGraphqlClient | json.errors: Valid error\nunknown error\nunknown error');
         });
     });
 

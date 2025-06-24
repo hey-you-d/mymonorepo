@@ -50,6 +50,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
     afterAll(() => {
         mockConsoleError.mockRestore();
+        jest.restoreAllMocks();
     });
 
     describe('GET method', () => {
@@ -116,11 +117,19 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                 query: { id: '123' },
             });
 
-            await handler(req, res);
+            // Act
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
+            // Assert
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | [id].ts | GET id:123 | not ok response: 404 - Not Found ")
+            );
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | [id].ts | GET id:123 | catched error: Error - tasks/v1 | BFF | [id].ts | GET id:123 | not ok response: 404 - Not Found ")
+            );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF get row for id 123 - server error'
+                error: 'tasks/v1 | BFF | [id].ts | GET id:123 | catched error: Error - tasks/v1 | BFF | [id].ts | GET id:123 | not ok response: 404 - Not Found '
             });
         });
 
@@ -133,11 +142,16 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                 query: { id: '123' },
             });
 
-            await handler(req, res);
+            // Act
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
+            // Assert
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | [id].ts | GET id:123 | catched error: Error - Network error")
+            );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF get row for id 123 - server error'
+                error: 'tasks/v1 | BFF | [id].ts | GET id:123 | catched error: Error - Network error'
             });
         });
     });
@@ -197,7 +211,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error updating row 123 - Title is required'
+                error: "tasks/v1 | BFF | [id].ts | PUT id:123 | Title is required"
             });
             expect(mockFetch).not.toHaveBeenCalled();
         });
@@ -218,7 +232,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
 
             expect(res._getStatusCode()).toBe(400);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error updating row 123 - Detail is required'
+                error: "tasks/v1 | BFF | [id].ts | PUT id:123 | Detail is required",
             });
             expect(mockFetch).not.toHaveBeenCalled();
         });
@@ -240,12 +254,20 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                     completed: true,
                 },
             });
+            
+            // Act
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
-            await handler(req, res);
-
+            // Assert
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | [id].ts | PUT id:123 | not ok response: 400 - Bad Request ")
+            );
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | [id].ts | PUT id:123 | catched error: Error - tasks/v1 | BFF | [id].ts | PUT id:123 | not ok response: 400 - Bad Request ")
+            );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF update row for id 123 - server error'
+                error: 'tasks/v1 | BFF | [id].ts | PUT id:123 | catched error: Error - tasks/v1 | BFF | [id].ts | PUT id:123 | not ok response: 400 - Bad Request '
             });
         });
     });
@@ -288,11 +310,19 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                 query: { id: '123' },
             });
 
-            await handler(req, res);
+            // Act
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
+            // Assert
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | [id].ts | DELETE id:123 | not ok response: 404 - Not Found ")
+            );
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | [id].ts | DELETE id:123 | catched error: Error - tasks/v1 | BFF | [id].ts | DELETE id:123 | not ok response: 404 - Not Found ")
+            );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF delete row for id 123 - server error'
+                error: 'tasks/v1 | BFF | [id].ts | DELETE id:123 | catched error: Error - tasks/v1 | BFF | [id].ts | DELETE id:123 | not ok response: 404 - Not Found '
             });
         });
 
@@ -305,11 +335,16 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                 query: { id: '123' },
             });
 
-            await handler(req, res);
+            // Act
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
+            // Assert
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | [id].ts | DELETE id:123 | catched error: Error - Network error")
+            );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF delete row for id 123 - server error'
+                error: 'tasks/v1 | BFF | [id].ts | DELETE id:123 | catched error: Error - Network error'
             });
         });
     });
@@ -346,11 +381,16 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
                 query: { id: '123' },
             });
 
-            await handler(req, res);
+            // Act
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
+            // Assert
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | [id].ts | GET id:123 | catched error: Error - Header generation failed")
+            );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF get row for id 123 - server error'
+                error: 'tasks/v1 | BFF | [id].ts | GET id:123 | catched error: Error - Header generation failed'
             });
         });
     });

@@ -4,6 +4,13 @@ import { TaskModel, swrFetcher } from '@/models/Task/use-client/TaskModel';
 import type { Task } from '@/types/Task';
 import useSWR, { mutate } from 'swr';
 
+const fnSignature = "use-client | view-model | useTasksViewModelWithSwr";
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 const fetcher = async () => {
     return await swrFetcher();
     // alternatively...
@@ -26,8 +33,9 @@ export const useTaskViewModelWithSwr = () => {
       const result: Task[] = await taskModel.getTasksDBRows();
       mutate("Tasks-API", result, false);  // Update SWR cache without refetching
     } catch (error) {
-      console.error("Failed to fetch tasks db rows:", error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
+      const errorMsg = await catchedErrorMessage("getTasksDBRows", error as Error);
+      throw new Error(errorMsg);
     }
   }, [taskModel]);
 
@@ -37,8 +45,9 @@ export const useTaskViewModelWithSwr = () => {
       const result: Task[] = await taskModel.deleteAllRows();
       mutate("Tasks-API", result, false);  // Update SWR cache
     } catch (error) {
-      console.error("Failed to delete all tasks:", error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
+      const errorMsg = await catchedErrorMessage("deleteAllRows", error as Error);
+      throw new Error(errorMsg);
     }
   }, [taskModel]);
 
@@ -48,8 +57,9 @@ export const useTaskViewModelWithSwr = () => {
       const result: Task[] = await taskModel.seedTasksDB();
       mutate("Tasks-API", result, false);  // Update SWR cache
     } catch (error) {
-      console.error("Failed to seed tasks db:", error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
+      const errorMsg = await catchedErrorMessage("seedTasksDB", error as Error);
+      throw new Error(errorMsg);
     }
   }, [taskModel]);
 
@@ -59,8 +69,9 @@ export const useTaskViewModelWithSwr = () => {
       const result: Task[] = await taskModel.getRowFromId(id);
       mutate("Tasks-API", result, false);  // Update SWR cache
     } catch (error) {
-      console.error(`Failed to get task for id ${id}:`, error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
+      const errorMsg = await catchedErrorMessage("getRowFromId", error as Error);
+      throw new Error(errorMsg);
     }
   }, [taskModel]);
 
@@ -71,8 +82,9 @@ export const useTaskViewModelWithSwr = () => {
 
       mutate("Tasks-API", [result[0], ...tasks], false);  // Update SWR cache
     } catch (error) {
-      console.error("Failed to create a task:", error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
+      const errorMsg = await catchedErrorMessage("createRow", error as Error);
+      throw new Error(errorMsg);
     }
   }, [taskModel]);
 
@@ -87,8 +99,9 @@ export const useTaskViewModelWithSwr = () => {
 
       mutate("Tasks-API", updatedTasks, false);  // Update SWR cache
     } catch (error) {
-      console.error(`Failed to update task for id ${id}:`, error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
+      const errorMsg = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, error as Error);
+      throw new Error(errorMsg);
     }
   }, [taskModel]);
 
@@ -99,8 +112,9 @@ export const useTaskViewModelWithSwr = () => {
 
       mutate("Tasks-API", [], false);  // Update SWR cache
     } catch (error) {
-      console.error(`Failed to delete task for id ${id}:`, error);
       mutate("Tasks-API", [], false); // Explicitly clear cache
+      const errorMsg = await catchedErrorMessage(`deleteRowFromId [id: ${id}]`, error as Error);
+      throw new Error(errorMsg);
     }
   }, [taskModel]);
 

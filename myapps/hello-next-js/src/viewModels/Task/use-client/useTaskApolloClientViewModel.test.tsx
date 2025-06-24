@@ -14,11 +14,18 @@ import {
 
 // Test component to expose the hook
 type OpType = "seed" | "create" | "delete" | "update" | "get"; 
-const TestComponent = ({mode = "get"}: {mode: OpType}) => {
+const TestComponent = ({mode = "get", onError}: {mode: OpType, onError?: (error: string) => void}) => {
     const { 
         tasks, loading: isLoading, error: errorMsg, 
         createRow, deleteAllRows, seedTaskDB, updateRowFromId, 
     } = useTaskApolloClientViewModel();
+
+    // Call onError callback when error occurs
+    React.useEffect(() => {
+        if (errorMsg && onError) {
+            onError(errorMsg);
+        }
+    }, [errorMsg, onError]);
   
     return (
       <>
@@ -67,6 +74,28 @@ const getTasksMock = {
 };
 
 describe('useTaskApolloClientViewModel', () => {
+    let spyConsoleError: jest.SpyInstance<any, any>;
+    let spyConsoleLog: jest.SpyInstance<any, any>;
+
+    beforeEach(() => {
+        // Clear all mocks before each test
+        jest.clearAllMocks();
+      
+        // hide console.error to reduce noise on the console output
+        spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
+    });
+
+    afterEach(() => {
+        // Restore console.error
+        spyConsoleError.mockRestore();
+        spyConsoleLog.mockRestore();
+    });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
+    });
+
     it('GET_ALL_TASKS -> fetches and renders tasks correctly', async () => {
         const getAllDataMocks = [
             {
@@ -175,16 +204,18 @@ describe('useTaskApolloClientViewModel', () => {
             },
         };
 
+        const onErrorSpy = jest.fn();
+
         const { getByText } = render(
             <MockedProvider mocks={[createErrorMock, getTasksMock]} addTypename={false}>
-              <TestComponent mode="create" />
+              <TestComponent mode="create" onError={onErrorSpy} />
             </MockedProvider>
         );
         
         fireEvent.click(getByText('Add Task'));
         
         await waitFor(() => {
-            expect(getByText(/Error: Mocked createTask error/i)).toBeInTheDocument();
+            expect(onErrorSpy).toHaveBeenCalledWith('use-client | view-model | useTaskApolloClientViewModel | createRow | catched error: ApolloError - Mocked createTask error');
         });
     });
 
@@ -204,17 +235,19 @@ describe('useTaskApolloClientViewModel', () => {
               },
             },
         };
-        
+
+        const onErrorSpy = jest.fn();
+
         const { getByText } = render(
             <MockedProvider mocks={[createNullMock, getTasksMock]} addTypename={false}>
-              <TestComponent mode="create" />
+              <TestComponent mode="create" onError={onErrorSpy} />
             </MockedProvider>
         );
         
         fireEvent.click(getByText('Add Task'));
         
         await waitFor(() => {
-            expect(getByText(/Error: No task returned/i)).toBeInTheDocument();
+            expect(onErrorSpy).toHaveBeenCalledWith('use-client | view-model | useTaskApolloClientViewModel | createRow | catched error: Error - No task returned');
         });
     });
 
@@ -263,15 +296,19 @@ describe('useTaskApolloClientViewModel', () => {
             error: new Error('Delete failed'),
         };
         
-        const { getByText, findByText } = render(
+        const onErrorSpy = jest.fn();
+
+        const { getByText } = render(
             <MockedProvider mocks={[deleteTasksErrorMock, getTasksMock]} addTypename={false}>
-                <TestComponent mode="delete" />
+              <TestComponent mode="delete" onError={onErrorSpy} />
             </MockedProvider>
         );
-    
+        
         fireEvent.click(getByText('Delete All'));
-    
-        expect(await findByText(/Error: error: Delete failed/i)).toBeInTheDocument();
+        
+        await waitFor(() => {
+            expect(onErrorSpy).toHaveBeenCalledWith('use-client | view-model | useTaskApolloClientViewModel | deleteAllRows | catched error: ApolloError - Delete failed');
+        });
     });
 
     it('SEED_TASKS -> seed tasks and adds the data set to the list', async () => {
@@ -330,20 +367,22 @@ describe('useTaskApolloClientViewModel', () => {
               query: SEED_TASKS,
             },
             result: {
-              errors: [new GraphQLError('Mocked createTask error')],
+              errors: [new GraphQLError('Mocked seedTask error')],
             },
         };
 
+        const onErrorSpy = jest.fn();
+
         const { getByText } = render(
             <MockedProvider mocks={[createErrorMock, getTasksMock]} addTypename={false}>
-              <TestComponent mode="seed" />
+              <TestComponent mode="seed" onError={onErrorSpy} />
             </MockedProvider>
         );
         
         fireEvent.click(getByText('Seed DB'));
         
         await waitFor(() => {
-            expect(getByText(/Error: Mocked createTask error/i)).toBeInTheDocument();
+            expect(onErrorSpy).toHaveBeenCalledWith('use-client | view-model | useTaskApolloClientViewModel | seedTaskDB | catched error: ApolloError - Mocked seedTask error');
         });
     });
 
@@ -427,16 +466,18 @@ describe('useTaskApolloClientViewModel', () => {
             },
         };
 
+        const onErrorSpy = jest.fn();
+
         const { getByText } = render(
             <MockedProvider mocks={[createErrorMock, getTasksMock]} addTypename={false}>
-              <TestComponent mode="update" />
+              <TestComponent mode="update" onError={onErrorSpy} />
             </MockedProvider>
         );
         
         fireEvent.click(getByText('Update Task'));
         
         await waitFor(() => {
-            expect(getByText(/Error: Mocked createTask error/i)).toBeInTheDocument();
+            expect(onErrorSpy).toHaveBeenCalledWith('use-client | view-model | useTaskApolloClientViewModel | updateRowFromId [id: 999] | catched error: ApolloError - Mocked createTask error');
         });
     });
 });

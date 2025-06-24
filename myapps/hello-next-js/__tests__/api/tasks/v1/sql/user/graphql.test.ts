@@ -169,7 +169,9 @@ describe('Tasks Users API handler - graphql.ts', () => {
         expect(response.body.kind).toBe('single');
         if (response.body.kind === 'single') {
           expect(response.body.singleResult.errors).toBeDefined();
-          expect(response.body.singleResult.errors?.[0].message).toBe('sql/user/graphql.ts | users - error from DB query : Error - Database connection failed');
+          expect(response.body.singleResult.errors?.[0].message).toBe(
+             "tasks/v1 | API | user/graphql.ts | query - users | catched error: Error - Database connection failed"
+          );
         }
       });
     });
@@ -277,7 +279,9 @@ describe('Tasks Users API handler - graphql.ts', () => {
         expect(response.body.kind).toBe('single');
         if (response.body.kind === 'single') {
           expect(response.body.singleResult.errors).toBeDefined();
-          expect(response.body.singleResult.errors?.[0].message).toBe('sql/user/graphql.ts | registerUser - error from DB query : Error - Email already exists');
+          expect(response.body.singleResult.errors?.[0].message).toBe(
+            "tasks/v1 | API | user/graphql.ts | mutation - registerUser | catched error: Error - Email already exists"
+          );
         }
       });
     });

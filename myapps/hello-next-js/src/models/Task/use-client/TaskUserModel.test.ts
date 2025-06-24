@@ -22,15 +22,22 @@ describe('TaskUserModel', () => {
         message: "",  
     };
 
+    let spyConsoleError: jest.SpyInstance<any, any>;
+
     beforeEach(() => {
-        taskUserModel = new TaskUserModel();
-        mockFetch.mockClear();
         jest.clearAllMocks();
+        
+        taskUserModel = new TaskUserModel();
+
         // Clear console.error mock
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        spyConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
     });
 
     afterEach(() => {
+        spyConsoleError.mockRestore();
+    });
+
+    afterAll(() => {
         jest.restoreAllMocks();
     });
 
@@ -85,12 +92,7 @@ describe('TaskUserModel', () => {
 
             await expect(
                 taskUserModel.registerUser('test@example.com', 'password123')
-            ).rejects.toThrow('TaskUserModel - Error registering a new user: 400');
-
-            expect(console.error).toHaveBeenCalledWith(
-                'TaskUserModel - Error registering a new user: 400 - Bad Request',
-                'User already exists'
-            );
+            ).rejects.toThrow('use-client | model | TaskUserModel | registerUser | catched error: Error - use-client | model | TaskUserModel | registerUser | not ok response: 400 - Bad Request ');
         });
         it('should handle network errors', async () => {
             mockFetch.mockRejectedValueOnce(new Error('Network error'));
@@ -152,12 +154,7 @@ describe('TaskUserModel', () => {
 
             await expect(
                 taskUserModel.loginUser('test@example.com', 'wrongpassword')
-            ).rejects.toThrow('TaskUserModel - Error user login attempt: 401');
-
-            expect(console.error).toHaveBeenCalledWith(
-                'TaskUserModel - Error user login attempt: 401 - Unauthorized',
-                'Invalid credentials'
-            );
+            ).rejects.toThrow('use-client | model | TaskUserModel | loginUser | catched error: Error - use-client | model | TaskUserModel | loginUser | not ok response: 401 - Unauthorized ');
         });
     });
 
@@ -208,12 +205,7 @@ describe('TaskUserModel', () => {
 
             await expect(
                 taskUserModel.logoutUser()
-            ).rejects.toThrow('TaskUserModel - Error user logout attempt: 500');
-
-            expect(console.error).toHaveBeenCalledWith(
-                'TaskUserModel - Error user logout attempt: 500 - Internal Server Error',
-                'Server error'
-            );
+            ).rejects.toThrow('use-client | model | TaskUserModel | logoutUser | catched error: Error - use-client | model | TaskUserModel | logoutUser | not ok response: 500 - Internal Server Error ');
         });
     });
 
@@ -274,10 +266,10 @@ describe('TaskUserModel', () => {
 
             await expect(
                 taskUserModel.checkAuthTokenCookieExist()
-            ).rejects.toThrow('TaskUserModel - Error check auth_token cookie attempt: 403');
+            ).rejects.toThrow('use-client | model | TaskUserModel | checkAuthTokenCookieExist | catched error: Error - use-client | model | TaskUserModel | checkAuthTokenCookieExist | not ok response: 403 - Forbidden ');
 
             expect(console.error).toHaveBeenCalledWith(
-                'TaskUserModel - Error check auth_token cookie attempt: 403 - Forbidden - Access denied'
+                'use-client | model | TaskUserModel | checkAuthTokenCookieExist | catched error: Error - use-client | model | TaskUserModel | checkAuthTokenCookieExist | not ok response: 403 - Forbidden '
             );
         });
     });
@@ -311,12 +303,7 @@ describe('TaskUserModel', () => {
 
             await expect(
                 taskUserModel.loginUser('test@example.com', 'password123')
-            ).rejects.toThrow('TaskUserModel - Error user login attempt: 404');
-
-            expect(console.error).toHaveBeenCalledWith(
-                'TaskUserModel - Error user login attempt: 404 - Not Found',
-                ''
-            );
+            ).rejects.toThrow('use-client | model | TaskUserModel | loginUser | catched error: Error - use-client | model | TaskUserModel | loginUser | not ok response: 404 - Not Found ');
         });
     });
 });

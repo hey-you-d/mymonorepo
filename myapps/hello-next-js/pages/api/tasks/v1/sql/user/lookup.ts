@@ -3,9 +3,23 @@ import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
 import type { UserModelType, UsersDbQueryResultType } from '@/types/Task';
 
+const fnSignature = "tasks/v1 | API | user/lookup.ts";
+const customResponseMessage = async (fnName: string, customMsg: string) => {
+    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
+    console.log(msg);
+    return msg;
+}
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
-    if (!isAuthorized) return res.status(401).json({ error: "Unauthorized access: invalid API key" });
+    if (!isAuthorized) return res.status(401).json({ 
+      error: await customResponseMessage("handler", "Unauthorized access: invalid API key"),
+    });
 
     switch (req.method) {
       case "POST" :
@@ -16,8 +30,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           
           // Check for null/undefined result (connection issues)
           if (!result || !result.rows) {
-            console.error('User Login - invalid outcome from DB query'); // Log detailed error  
-            return res.status(500).json({ error: 'User Login - invalid outcome from DB query' });
+            const errMsg = await customResponseMessage("POST", "null/undefined result");  
+            return res.status(500).json({ error: errMsg });
           }
           const rows = result.rows;
           const payload: UserModelType = rows != null && rows.length > 0 && rows[0].email === email ? {
@@ -33,9 +47,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           };
           
           return res.status(201).json(payload);
-        } catch (err) {
-          console.error('User Login - Database related error: ', err); // Log detailed error
-          return res.status(500).json({ error: 'User Login - Database related error' });
+        } catch (error) {
+          const errorMsg = await catchedErrorMessage("POST", error as Error);
+          return res.status(500).json({ error: errorMsg });
         }
       default:
         res.setHeader('Allow', ['POST']);

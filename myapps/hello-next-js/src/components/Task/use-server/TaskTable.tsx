@@ -16,7 +16,7 @@ type TaskTableDefaultType = {
     tasks: Task[],
     setTasks: Dispatch<SetStateAction<Task[]>>, 
     createRow: (tasks: Task[], title: string, detail: string)=> Promise<{ tasks: Task[] }>, // **
-    updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] }> // **
+    updateRowFromId: (tasks: Task[], id: number, title: string, detail: string, completed: boolean) => Promise<{ tasks: Task[] | null }> // **
     buttonDisabled: boolean,
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
     userAuthenticated: boolean,
@@ -57,8 +57,8 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     
     const chkBoxHandler = useCallback(async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         setButtonDisabled(true);
-        const result: { tasks: Task[] } = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
-        setTasks(result.tasks);
+        const result: { tasks: Task[] | null } = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
+        setTasks(result.tasks ?? tasks);
         setButtonDisabled(false);
     }, [setButtonDisabled, setTasks, updateRowFromId, tasks]);
 

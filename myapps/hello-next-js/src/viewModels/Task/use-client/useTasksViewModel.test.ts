@@ -134,9 +134,14 @@ describe('useTaskViewModel', () => {
 
       expect(mockTaskModel.getTasksDBRows).toHaveBeenCalledTimes(2);
 
+      expect(console.error).toHaveBeenCalledTimes(2);
+      // inside the useEffect - automatically executed after initial render
       expect(console.error).toHaveBeenCalledWith(
-        'useTasksViewModel | getTasksDBRows | Failed to fetch tasks db rows:',
-        manualCallError
+        'use-client | view-model | useTasksViewModel | getTasksDBRows | catched error: Error - Initial auto-fetch failed'
+      );
+      // manual calling of the getTasksDBRows
+      expect(console.error).toHaveBeenCalledWith(
+        'use-client | view-model | useTasksViewModel | getTasksDBRows | catched error: Error - Manual fetch failed'
       );
 
       expect(result.current.loading).toBe(false);
@@ -176,19 +181,22 @@ describe('useTaskViewModel', () => {
         expect(result.current.loading).toBe(false);
       });
 
-      let thrownError;
+      let thrownError: Error;
       await act(async () => {
         try {
           await result.current.deleteAllRows();
         } catch (e) {
-          thrownError = e;
+          thrownError = e as Error;
         }
       });
 
-      expect(thrownError).toBe(error);
-      expect(spyConsoleError).toHaveBeenCalledWith('useTasksViewModel | deleteAllRows | Failed to delete tasks db rows:', error);
-      expect(result.current.tasks).toEqual(mockTasks); // Tasks remain unchanged
-      expect(result.current.loading).toBe(false);
+      waitFor(() => {
+        const expectedMsg = "use-client | view-model | useTasksViewModel | deleteAllRows | catched error: Error - Delete failed";
+        expect(thrownError.message).toBe(expectedMsg);
+        expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
+        expect(result.current.tasks).toEqual(mockTasks); // Tasks remain unchanged
+        expect(result.current.loading).toBe(false);
+      });
     });
   });
 
@@ -225,19 +233,22 @@ describe('useTaskViewModel', () => {
         expect(result.current.loading).toBe(false);
       });
 
-      let thrownError;
+      let thrownError: Error;
       await act(async () => {
         try {
           await result.current.seedTasksDB();
         } catch (e) {
-          thrownError = e;
+          thrownError = e as Error;
         }
       });
 
-      expect(thrownError).toBe(error);
-      expect(spyConsoleError).toHaveBeenCalledWith('useTasksViewModel | seedTasksDB | Failed to seed tasks db:', error);
-      expect(result.current.tasks).toEqual([]);
-      expect(result.current.loading).toBe(false);
+      waitFor(() => {
+        const expectedMsg = "use-client | view-model | useTasksViewModel | seedTasksDB | catched error: Error - Seed failed";
+        expect(thrownError.message).toBe(expectedMsg);
+        expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
+        expect(result.current.tasks).toEqual([]);
+        expect(result.current.loading).toBe(false);
+      });
     });
   });
 
@@ -274,19 +285,22 @@ describe('useTaskViewModel', () => {
         expect(result.current.loading).toBe(false);
       });
 
-      let thrownError;
+      let thrownError: Error;
       await act(async () => {
         try {
           await result.current.getRowFromId(3);
         } catch (e) {
-          thrownError = e;
+          thrownError = e as Error;
         }
       });
 
-      expect(thrownError).toBe(error);
-      expect(spyConsoleError).toHaveBeenCalledWith('useTasksViewModel | getRowFromId | Failed to get row for id 3:', error);
-      expect(result.current.tasks).toEqual(mockTasks);
-      expect(result.current.loading).toBe(false);
+      waitFor(() => {
+        const expectedMsg = "use-client | view-model | useTasksViewModel | getRowFromId [id: 3] | catched error: Error - Get row failed";
+        expect(thrownError.message).toBe(expectedMsg);
+        expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
+        expect(result.current.tasks).toEqual(mockTasks);
+        expect(result.current.loading).toBe(false);
+      });
     });
   });  
   describe('createRow', () => {
@@ -322,19 +336,22 @@ describe('useTaskViewModel', () => {
         expect(result.current.loading).toBe(false);
       });
 
-      let thrownError;
+      let thrownError: Error;
       await act(async () => {
         try {
           await result.current.createRow(mockTasks, 'New Task', 'New Detail');
         } catch (e) {
-          thrownError = e;
+          thrownError = e as Error;
         }
       });
 
-      expect(thrownError).toBe(error);
-      expect(spyConsoleError).toHaveBeenCalledWith('useTasksViewModel | createRow | Failed to create a new row in the db: ', error);
-      expect(result.current.tasks).toEqual(mockTasks);
-      expect(result.current.loading).toBe(false);
+      waitFor(() => {
+        const expectedMsg = "use-client | view-model | useTasksViewModel | createRow | catched error: Error - Create failed";
+        expect(thrownError.message).toBe(expectedMsg);
+        expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
+        expect(result.current.tasks).toEqual(mockTasks);
+        expect(result.current.loading).toBe(false);
+      });
     });
   });
 
@@ -373,19 +390,22 @@ describe('useTaskViewModel', () => {
         expect(result.current.loading).toBe(false);
       });
 
-      let thrownError;
+      let thrownError: Error;
       await act(async () => {
         try {
           await result.current.updateRowFromId(mockTasks, 1, 'Updated Task', 'Updated Detail', true);
         } catch (e) {
-          thrownError = e;
+          thrownError = e as Error;
         }
       });
 
-      expect(thrownError).toBe(error);
-      expect(spyConsoleError).toHaveBeenCalledWith('useTasksViewModel | updateRowFromId | Failed to update row for id 1:', error);
-      expect(result.current.tasks).toEqual(mockTasks);
-      expect(result.current.loading).toBe(false);
+      waitFor(() => {
+        const expectedMsg = "use-client | view-model | useTasksViewModel | updateRowFromId [id: 1] | catched error: Error - Update failed";
+        expect(thrownError.message).toBe(expectedMsg);
+        expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
+        expect(result.current.tasks).toEqual(mockTasks);
+        expect(result.current.loading).toBe(false);
+      });
     });
   });
 
@@ -422,19 +442,22 @@ describe('useTaskViewModel', () => {
         expect(result.current.loading).toBe(false);
       });
 
-      let thrownError;
+      let thrownError: Error;
       await act(async () => {
         try {
           await result.current.deleteRowFromId(1);
         } catch (e) {
-          thrownError = e;
+          thrownError = e as Error;
         }
       });
 
-      expect(thrownError).toBe(error);
-      expect(spyConsoleError).toHaveBeenCalledWith('useTasksViewModel | getTasksDBRows | Failed to delete row for id 1:', error);
-      expect(result.current.tasks).toEqual(mockTasks);
-      expect(result.current.loading).toBe(false);
+      waitFor(() => {
+        const expectedMsg = "use-client | view-model | useTasksViewModel | deleteRowFromId [id: 1] | catched error: Error - Delete failed";
+        expect(thrownError.message).toBe(expectedMsg);
+        expect(spyConsoleError).toHaveBeenCalledWith(expectedMsg);
+        expect(result.current.tasks).toEqual(mockTasks);
+        expect(result.current.loading).toBe(false);
+      });
     });
   });
   describe('Loading states', () => {

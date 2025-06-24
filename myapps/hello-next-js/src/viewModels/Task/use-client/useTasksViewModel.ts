@@ -3,6 +3,13 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { TaskModel } from '@/models/Task/use-client/TaskModel';
 import type { Task } from '@/types/Task';
 
+const fnSignature = "use-client | view-model | useTasksViewModel";
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 export const useTaskViewModel = () => {
   const [tasks, setTasks] = useState<Task[] | undefined>(undefined);
   const [loading, setLoading] = useState(true);
@@ -16,8 +23,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.getTasksDBRows();
       setTasks(result);
     } catch (error) {
-      console.error("useTasksViewModel | getTasksDBRows | Failed to fetch tasks db rows:", error);
-      throw error;
+      const errorMsg = await catchedErrorMessage("getTasksDBRows", error as Error);
+      throw new Error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -29,8 +36,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.deleteAllRows();
       setTasks(result);
     } catch (error) {
-      console.error("useTasksViewModel | deleteAllRows | Failed to delete tasks db rows:", error);
-      throw error;
+      const errorMsg = await catchedErrorMessage("deleteAllRows", error as Error);
+      throw new Error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -42,8 +49,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.seedTasksDB();
       setTasks(result);
     } catch (error) {
-      console.error("useTasksViewModel | seedTasksDB | Failed to seed tasks db:", error);
-      throw error;
+      const errorMsg = await catchedErrorMessage("seedTasksDB", error as Error);
+      throw new Error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -55,8 +62,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.getRowFromId(id);
       setTasks(result);
     } catch (error) {
-      console.error(`useTasksViewModel | getRowFromId | Failed to get row for id ${id}:`, error);
-      throw error;
+      const errorMsg = await catchedErrorMessage(`getRowFromId [id: ${id}]`, error as Error);
+      throw new Error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -68,8 +75,8 @@ export const useTaskViewModel = () => {
       const result: Task[] = await taskModel.createRow(title, detail);
       setTasks([result[0], ...tasks]);
     } catch (error) {
-      console.error("useTasksViewModel | createRow | Failed to create a new row in the db: ", error);
-      throw error;
+      const errorMsg = await catchedErrorMessage("createRow", error as Error);
+      throw new Error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -86,8 +93,8 @@ export const useTaskViewModel = () => {
 
       setTasks(updatedTasks);
     } catch (error) {
-      console.error(`useTasksViewModel | updateRowFromId | Failed to update row for id ${id}:`, error);
-      throw error;
+      const errorMsg = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, error as Error);
+      throw new Error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -99,8 +106,8 @@ export const useTaskViewModel = () => {
       await taskModel.deleteRowFromId(id);
       setTasks([]);
     } catch (error) {
-      console.error(`useTasksViewModel | getTasksDBRows | Failed to delete row for id ${id}:`, error);
-      throw error;
+      const errorMsg = await catchedErrorMessage(`deleteRowFromId [id: ${id}]`, error as Error);
+      throw new Error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -117,7 +124,6 @@ export const useTaskViewModel = () => {
         } catch (err) {
           // For reference: Optional - already logged inside getTasksDBRows, so we don't need to log here
           // this try catch statement is needed to make this component to be unit-testable
-          console.error("Optional - already logged inside getTasksDBRows ", err);
         }
       })();
     }

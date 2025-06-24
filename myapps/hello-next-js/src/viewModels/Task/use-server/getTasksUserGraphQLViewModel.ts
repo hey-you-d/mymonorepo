@@ -11,6 +11,13 @@ import {
 } from './getTasksUserViewModel';
 import type { UserModelType } from '@/types/Task';
 
+const fnSignature = "use-server | view-model | getTasksUserGraphQLViewModel";
+const catchedErrorMessage = async (fnName: string, error: Error) => {
+    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
+    console.error(errorMsg);
+    return errorMsg;
+}
+
 const lookupUserQuery = `
     query LookUpUser($email: String!) {
         lookupUser(email: $email) {
@@ -59,9 +66,9 @@ export const loginUser = async (email: string, password: string) => {
             }
         }
         return false;
-    } catch (e) {
-        console.error("getTasksUserGraphQLViewModel | Failed to lookup a user: ", e);
-        throw e;
+    } catch (error) {
+        const errorMsg = await catchedErrorMessage("loginUser", error as Error);
+        throw new Error(errorMsg);
     }
 };
 
@@ -74,9 +81,8 @@ export const registerUser = async(email: string, password: string) => {
             return false;
         }
     } catch (error) {
-        console.error("Failed to lookup the entered email in the DB as part of the user registration process: ", error);
-
-        throw error;
+        const errorMsg = await catchedErrorMessage("registerUser -> lookupUserQuery", error as Error);
+        throw new Error(errorMsg);
     }
     
     // generate salted & hashed password string  with argon2id encryption.
@@ -101,11 +107,11 @@ export const registerUser = async(email: string, password: string) => {
         }
 
         return false;
-    } catch (e) {
+    } catch (error) {
         // just to be safe...
         await logoutUser();
                 
-        console.error("getTasksUserGraphQLViewModel | Failed to register a new user: ", e);
-        throw e;
+        const errorMsg = await catchedErrorMessage("registerUser", error as Error);
+        throw new Error(errorMsg);
     }
 }

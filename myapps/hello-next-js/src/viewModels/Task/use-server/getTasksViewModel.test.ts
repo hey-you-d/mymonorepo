@@ -75,7 +75,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.getTasksDBRows as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(getTasksDBRows()).rejects.toThrow(mockError);
+        await expect(getTasksDBRows()).rejects.toThrow("use-server | view-model | getTasksViewModel | getTasksDBRows | catched error: Error - DB fetch failed");
 
         // assert
         expect(TaskModel.getTasksDBRows).toHaveBeenCalledTimes(1);
@@ -99,7 +99,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.deleteAllRows as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(deleteAllRows()).rejects.toThrow(mockError);
+        await expect(deleteAllRows()).rejects.toThrow("use-server | view-model | getTasksViewModel | deleteAllRows | catched error: Error - DB fetch failed");
 
         // assert
         expect(TaskModel.deleteAllRows).toHaveBeenCalledTimes(1);
@@ -123,7 +123,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.seedTasksDB as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(seedTasksDB()).rejects.toThrow(mockError);
+        await expect(seedTasksDB()).rejects.toThrow("use-server | view-model | getTasksViewModel | seedTasksDB | catched error: Error - DB fetch failed");
 
         // assert
         expect(TaskModel.seedTasksDB).toHaveBeenCalledTimes(1);
@@ -150,7 +150,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.createRow as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(createRow).rejects.toThrow(mockError);
+        await expect(createRow).rejects.toThrow("use-server | view-model | getTasksViewModel | createRow | catched error: Error - DB fetch failed");
 
         // assert
         expect(TaskModel.createRow).toHaveBeenCalledTimes(1);
@@ -175,7 +175,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.getRowFromId as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(getRowFromId).rejects.toThrow(mockError);
+        await expect(getRowFromId).rejects.toThrow("use-server | view-model | getTasksViewModel | getRowFromId [id: undefined] | catched error: Error - DB fetch failed");
 
         // assert
         expect(TaskModel.getRowFromId).toHaveBeenCalledTimes(1);
@@ -200,7 +200,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.deleteRowFromId as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(deleteRowFromId).rejects.toThrow(mockError);
+        await expect(deleteRowFromId).rejects.toThrow("use-server | view-model | getTasksViewModel | deleteRowFromId [id: undefined] | catched error: Error - DB fetch failed");
 
         // assert
         expect(TaskModel.deleteRowFromId).toHaveBeenCalledTimes(1);
@@ -233,7 +233,7 @@ describe('getTaskViewModel', () => {
         (TaskModel.updateRowFromId as jest.Mock).mockRejectedValue(mockError);
         
         // act
-        await expect(updateRowFromId).rejects.toThrow(mockError);
+        await expect(updateRowFromId).rejects.toThrow("use-server | view-model | getTasksViewModel | updateRowFromId [id: undefined] | catched error: Error - DB fetch failed");
 
         // assert
         expect(TaskModel.updateRowFromId).toHaveBeenCalledTimes(1);

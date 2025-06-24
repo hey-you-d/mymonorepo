@@ -103,11 +103,14 @@ describe('/api/tasks/v1/bff handler', () => {
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
-                'BFF Error fetching all rows: 404 - Not Found'
+                expect.stringContaining("tasks/v1 | BFF | index.ts | GET | not ok response: 404 - Not Found ")
+            );
+            expect(console.error).toHaveBeenCalledWith(
+                expect.stringContaining("tasks/v1 | BFF | index.ts | GET | catched error: Error - tasks/v1 | BFF | index.ts | GET | not ok response: 404 - Not Found ")
             );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error fetching all rows - server error'
+                error: 'tasks/v1 | BFF | index.ts | GET | catched error: Error - tasks/v1 | BFF | index.ts | GET | not ok response: 404 - Not Found '
             });
         });
 
@@ -133,13 +136,10 @@ describe('/api/tasks/v1/bff handler', () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
-            expect(console.error).toHaveBeenCalledWith(
-                'BFF Error fetching all rows - server error ',
-                networkError
-            );
+            expect(console.error).toHaveBeenCalledWith("tasks/v1 | BFF | index.ts | GET | catched error: Error - Network error");
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error fetching all rows - server error'
+                error: 'tasks/v1 | BFF | index.ts | GET | catched error: Error - Network error'
             });
         });
 
@@ -159,13 +159,10 @@ describe('/api/tasks/v1/bff handler', () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
-            expect(console.error).toHaveBeenCalledWith(
-                'BFF Error fetching all rows - server error ',
-                headerError
-            );
+            expect(console.error).toHaveBeenCalledWith("tasks/v1 | BFF | index.ts | GET | catched error: Error - Failed to get headers");
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error fetching all rows - server error'
+                error: 'tasks/v1 | BFF | index.ts | GET | catched error: Error - Failed to get headers'
             });
         });
 
@@ -197,13 +194,10 @@ describe('/api/tasks/v1/bff handler', () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             // Assert
-            expect(console.error).toHaveBeenCalledWith(
-                'BFF Error fetching all rows - server error ',
-                jsonError
-            );
+            expect(console.error).toHaveBeenCalledWith("tasks/v1 | BFF | index.ts | GET | catched error: Error - Invalid JSON");
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF Error fetching all rows - server error'
+                error: 'tasks/v1 | BFF | index.ts | GET | catched error: Error - Invalid JSON'
             });
         });
     });

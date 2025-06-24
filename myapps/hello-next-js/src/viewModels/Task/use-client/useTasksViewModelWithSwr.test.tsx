@@ -126,9 +126,10 @@ describe('useTaskViewModelWithSwr', () => {
     await act(async () => {
       await Promise.resolve();
     });
-    
+  
+    // Expect the function to throw an error
     await act(async () => {
-      await result.current.seedTasksDB();
+      await expect(result.current.seedTasksDB()).rejects.toThrow('Seeding failed');
     });
     
     // State shouldn't change on error
@@ -146,8 +147,9 @@ describe('useTaskViewModelWithSwr', () => {
       await Promise.resolve();
     });
     
+    // Expect the function to throw an error
     await act(async () => {
-      await result.current.deleteAllRows();
+      await expect(result.current.deleteAllRows()).rejects.toThrow('Deletion failed');
     });
     
     // On error, tasks should be set to empty array

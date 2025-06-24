@@ -162,10 +162,7 @@ describe('GetTasksUserGraphQLViewModel', () => {
 
       // Act & Assert
       await expect(loginUser(mockEmail, mockPassword)).rejects.toThrow('GraphQL fetch failed');
-      expect(console.error).toHaveBeenCalledWith(
-        "getTasksUserGraphQLViewModel | Failed to lookup a user: ",
-        mockError
-      );
+      expect(console.error).toHaveBeenCalledWith("use-server | view-model | getTasksUserGraphQLViewModel | loginUser | catched error: Error - GraphQL fetch failed");
     });   
   });
   
@@ -313,10 +310,7 @@ describe('GetTasksUserGraphQLViewModel', () => {
 
       // Act & Assert
       await expect(registerUser(mockEmail, mockPassword)).rejects.toThrow('Lookup failed during registration');
-      expect(console.error).toHaveBeenCalledWith(
-        "Failed to lookup the entered email in the DB as part of the user registration process: ",
-        mockError
-      );
+      expect(console.error).toHaveBeenCalledWith("use-server | view-model | getTasksUserGraphQLViewModel | registerUser -> lookupUserQuery | catched error: Error - Lookup failed during registration");
     });
 
     it('should throw error and logout when registration mutation fails', async () => {
@@ -334,10 +328,7 @@ describe('GetTasksUserGraphQLViewModel', () => {
       // Act & Assert
       await expect(registerUser(mockEmail, mockPassword)).rejects.toThrow('Registration mutation failed');
       expect(mockLogoutUser).toHaveBeenCalled();
-      expect(console.error).toHaveBeenCalledWith(
-        "getTasksUserGraphQLViewModel | Failed to register a new user: ",
-        mockError
-      );
+      expect(console.error).toHaveBeenCalledWith("use-server | view-model | getTasksUserGraphQLViewModel | registerUser | catched error: Error - Registration mutation failed");
     });
 
      it('should throw error and logout when password hashing fails', async () => {

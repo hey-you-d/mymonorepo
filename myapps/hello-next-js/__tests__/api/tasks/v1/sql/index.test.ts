@@ -70,7 +70,7 @@ export const apiKeyAuthorizationTestSuite = () => {
             expect(CHECK_API_KEY).toHaveReturnedWith(false);
             expect(CHECK_API_KEY).toHaveBeenCalledWith(req, res);
             expect(res.status).toHaveBeenCalledWith(401);
-            expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized access: invalid API key" });
+            expect(res.json).toHaveBeenCalledWith({ error: "tasks/v1 | API | index.ts | handler | Unauthorized access: invalid API key", });
         
             // Database query should NOT be called if authentication fails
             expect(db.query).not.toHaveBeenCalled();
@@ -80,12 +80,25 @@ export const apiKeyAuthorizationTestSuite = () => {
 
 describe ("Tasks API handler - index.ts", () => {
     let spyConsoleError: jest.SpyInstance<any, any>;
+    let spyConsoleLog: jest.SpyInstance<any, any>;
     
     beforeEach(() => {
+        (CHECK_API_KEY as jest.Mock).mockReturnValue(true);
+
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
 
         jest.clearAllMocks();
+    });
+
+    afterEach(() => {
+        spyConsoleError.mockClear();
+        spyConsoleLog.mockClear();
+    });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     apiKeyAuthorizationTestSuite();
@@ -119,7 +132,7 @@ describe ("Tasks API handler - index.ts", () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
+            expect(res.json).toHaveBeenCalledWith({ error: "tasks/v1 | API | index.ts | GET | catched error: Error - Connection error", });
         });
     }); 
 
@@ -156,7 +169,7 @@ describe ("Tasks API handler - index.ts", () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
+            expect(res.json).toHaveBeenCalledWith({ error: "tasks/v1 | API | index.ts | POST | catched error: Error - Connection error", });
         });
         
         it('should handle error 400 bad request', async () => {
@@ -173,7 +186,7 @@ describe ("Tasks API handler - index.ts", () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(400);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Title is required' });
+            expect(res.json).toHaveBeenCalledWith({ error: 'tasks/v1 | API | index.ts | POST | Title is required' });
         });
     });
 });

@@ -22,6 +22,7 @@ describe('TaskModel', () => {
   });
 
   beforeEach(() => {
+    jest.clearAllMocks();
     // hide console.error to reduce noise on the console output
     spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
 
@@ -31,7 +32,10 @@ describe('TaskModel', () => {
 
   afterEach(() => {
     spyConsoleError.mockRestore();
-    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
   });
 
   describe('getTasksDBRows', () => {
@@ -54,7 +58,7 @@ describe('TaskModel', () => {
     it('should handle fetch error', async () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse(false, { error: 'Server error' }));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
+      await expect(taskModel.getTasksDBRows()).rejects.toThrow("use-client | model | TaskModel | getTasksDBRows | catched error: Error - use-client | model | TaskModel | getTasksDBRows | not ok response: 500 - Internal Server Error ");
       expect(fetch).toHaveBeenCalledTimes(1);
     });
 
@@ -86,7 +90,7 @@ describe('TaskModel', () => {
     it('should handle delete error', async () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse(false, { error: 'Delete failed' }));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
+      await expect(taskModel.getTasksDBRows()).rejects.toThrow("use-client | model | TaskModel | getTasksDBRows | catched error: Error - use-client | model | TaskModel | getTasksDBRows | not ok response: 500 - Internal Server Error ");
       expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
@@ -111,7 +115,7 @@ describe('TaskModel', () => {
     it('should handle seed error', async () => {
       (fetch as jest.Mock).mockResolvedValue(mockResponse(false, { error: 'Seed failed' }));
 
-      await expect(taskModel.getTasksDBRows()).rejects.toThrow("Error fetching all rows: 500 Internal Server Error");
+      await expect(taskModel.getTasksDBRows()).rejects.toThrow("use-client | model | TaskModel | getTasksDBRows | catched error: Error - use-client | model | TaskModel | getTasksDBRows | not ok response: 500 - Internal Server Error ");
       expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
@@ -147,7 +151,7 @@ describe('TaskModel', () => {
   
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
   
-      await expect(taskModel.getRowFromId(999)).rejects.toThrow('Error fetching row: 404');
+      await expect(taskModel.getRowFromId(999)).rejects.toThrow('use-client | model | TaskModel | getRowFromId | catched error: Error - use-client | model | TaskModel | getRowFromId | not ok response: 404 - Not Found ');
     });
 
     it('should throw error on fetch failure', async () => {
@@ -189,7 +193,7 @@ describe('TaskModel', () => {
   
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
   
-      await expect(taskModel.createRow('test', 'test')).rejects.toThrow('Error creating row: 404');
+      await expect(taskModel.createRow('test', 'test')).rejects.toThrow('use-client | model | TaskModel | createRow | catched error: Error - use-client | model | TaskModel | createRow | not ok response: 404 - Not Found ');
     });
 
     it('should throw error on fetch failure', async () => {
@@ -231,7 +235,7 @@ describe('TaskModel', () => {
   
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
   
-      await expect(taskModel.updateRowFromId(999, 'test', 'test', false)).rejects.toThrow('Error updating row: 404');
+      await expect(taskModel.updateRowFromId(999, 'test', 'test', false)).rejects.toThrow('use-client | model | TaskModel | updateRowFromId | catched error: Error - use-client | model | TaskModel | updateRowFromId | not ok response: 404 - Not Found ');
     });
 
     it('should throw error on fetch failure', async () => {
@@ -271,7 +275,7 @@ describe('TaskModel', () => {
   
       (fetch as jest.Mock).mockResolvedValue(mockResponse);
   
-      await expect(taskModel.deleteRowFromId(999)).rejects.toThrow('Error deleting row: 404');
+      await expect(taskModel.deleteRowFromId(999)).rejects.toThrow('use-client | model | TaskModel | deleteRowFromId | catched error: Error - use-client | model | TaskModel | deleteRowFromId | not ok response: 404 - Not Found ');
     });
 
     it('should throw error on fetch failure', async () => {

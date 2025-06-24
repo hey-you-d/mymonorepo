@@ -33,7 +33,7 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
         jest.spyOn(console, 'error').mockImplementation(() => {});
     });
 
-    afterEach(() => {
+    afterAll(() => {
         // Restore console methods
         jest.restoreAllMocks();
     });
@@ -93,15 +93,14 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
-                'BFF Error seeding tasks DB: 400 - Bad Request'
+                expect.stringContaining("tasks/v1 | BFF | seed-table.ts | POST | not ok response: 400 - Bad Request")
             );
             expect(console.error).toHaveBeenCalledWith(
-                'BFF seeding tasks DB - server error',
-                expect.any(Error)
+                expect.stringContaining("tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - tasks/v1 | BFF | seed-table.ts | POST | not ok response: 400 - Bad Request")
             );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF seeding tasks DB - server error'
+                error: 'tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - tasks/v1 | BFF | seed-table.ts | POST | not ok response: 400 - Bad Request '
             });
         });
 
@@ -124,15 +123,14 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
-                'BFF Error seeding tasks DB: 500 - Internal Server Error'
+                expect.stringContaining("tasks/v1 | BFF | seed-table.ts | POST | not ok response: 500 - Internal Server Error ")
             );
             expect(console.error).toHaveBeenCalledWith(
-                'BFF seeding tasks DB - server error',
-                expect.any(Error)
+                expect.stringContaining("tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - tasks/v1 | BFF | seed-table.ts | POST | not ok response: 500 - Internal Server Error ")
             );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF seeding tasks DB - server error'
+                error: "tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - tasks/v1 | BFF | seed-table.ts | POST | not ok response: 500 - Internal Server Error "
             });
         });
 
@@ -154,12 +152,11 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
-                'BFF seeding tasks DB - server error',
-                networkError
+                "tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - Network error"
             );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF seeding tasks DB - server error'
+                error: "tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - Network error"
             });
         });
 
@@ -177,12 +174,11 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
-                'BFF seeding tasks DB - server error',
-                headerError
+                'tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - Header generation failed'
             );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF seeding tasks DB - server error'
+                error: 'tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - Header generation failed'
             });
         });
 
@@ -208,12 +204,11 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
 
             // Assert
             expect(console.error).toHaveBeenCalledWith(
-                'BFF seeding tasks DB - server error',
-                jsonError
+                'tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - Invalid JSON'
             );
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: 'BFF seeding tasks DB - server error'
+                error: 'tasks/v1 | BFF | seed-table.ts | POST | catched error: Error - Invalid JSON'
             });
         });
     });

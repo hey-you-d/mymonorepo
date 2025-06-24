@@ -20,12 +20,23 @@ import { mockRequestResponse, apiKeyAuthorizationTestSuite } from './index.test'
 
 describe ("Tasks API handler - create-row.ts", () => {
     let spyConsoleError: jest.SpyInstance<any, any>;
-    
+    let spyConsoleLog: jest.SpyInstance<any, any>;
+
     beforeEach(() => {
+        jest.clearAllMocks();
+        
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
+    });
 
-        jest.clearAllMocks();
+    afterEach(() => {
+        spyConsoleError.mockClear();
+        spyConsoleLog.mockClear();
+    });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
     });
 
     apiKeyAuthorizationTestSuite();
@@ -65,7 +76,7 @@ describe ("Tasks API handler - create-row.ts", () => {
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Database error' });
+            expect(res.json).toHaveBeenCalledWith({ error: 'tasks/v1 | API | create-row.ts | POST | catched error: Error - Connection error' });
         });
         
         it('should handle error 400 bad request', async () => {

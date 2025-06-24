@@ -63,6 +63,7 @@ import { TaskSeedDBGraphQL } from '@/components/Task/use-server/TaskSeedDBGraphQ
 import { TaskTableGraphQL } from '@/components/Task/use-server/TaskTableGraphQL';
 
 let spyConsoleError: jest.SpyInstance<any, any>;
+let spyConsoleLog: jest.SpyInstance<any, any>;
 
 describe('TaskGraphQLPage', () => {
   const mockTasks: Task[] = [
@@ -76,12 +77,18 @@ describe('TaskGraphQLPage', () => {
       
       // hide console.error to reduce noise on the console output
       spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+      spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
   });
 
   afterEach(() => {
       // Restore console.error
       spyConsoleError.mockRestore();
+      spyConsoleLog.mockRestore();
   });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  })
 
   describe('Component Rendering', () => {
       it('renders loading state initially', () => {
