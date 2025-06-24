@@ -87,6 +87,82 @@ describe ("Tasks API handler - [id].ts", () => {
 
     }); 
 
+    describe("DELETE request", () => {
+        it('should delete an existing task in DB with matching ID', async () => {
+            // Set up the CHECK_API_KEY mock to return success response
+            (CHECK_API_KEY as jest.Mock).mockResolvedValue(true);
+            (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
+            
+            const deletedTask = { id: 3, title: 'New Task 3', detail: 'New Detail 3', completed: true };
+            (db.query as jest.Mock).mockResolvedValue({ rows: [deletedTask] });
+            
+            const { req, res } = mockRequestResponse('DELETE',
+                {}, 
+                { 'x-api-key': 'valid-key' },
+                { id: '3' });
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
+            expect(db.query).toHaveBeenCalledWith(
+                'DELETE FROM tasks WHERE id = $1 RETURNING *', [3]
+            );
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith(deletedTask);
+        });
+
+        it('should return 404 when task does not exist', async () => {
+            (CHECK_API_KEY as jest.Mock).mockResolvedValue(true);
+            (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
+
+            (db.query as jest.Mock).mockResolvedValue({ rows: [] }); // Empty result
+
+            const { req, res } = mockRequestResponse('DELETE', {}, { 'x-api-key': 'valid-key' }, { id: '999' });
+            
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Task not found' });
+        });
+
+        it('should handle database error', async () => {
+            // Set up the CHECK_API_KEY mock to return success response
+            (CHECK_API_KEY as jest.Mock).mockResolvedValue(true);
+            (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
+            
+            const dbError = new Error('Connection error');
+            (db.query as jest.Mock).mockRejectedValueOnce(dbError);
+            
+            const { req, res } = mockRequestResponse('DELETE', 
+                {},
+                { 'x-api-key': 'valid-key' },
+                { id: '3' }
+            );
+            req.query = { id: "3" };
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ error: "tasks/v1 | API | [id].ts | DELETE | catched error: Error - Connection error", });
+        });
+
+        it('should return status code 400 given a wrong type of param', async () => {
+            // Set up the CHECK_API_KEY mock to return success response
+            (CHECK_API_KEY as jest.Mock).mockResolvedValue(true);
+            (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
+            
+            //const dbError = new Error('Connection error');
+            //(db.query as jest.Mock).mockRejectedValueOnce(dbError);
+            
+            const { req, res } = mockRequestResponse('DELETE', 
+                {},
+                { 'x-api-key': 'valid-key' },
+                {  id: "a string"  }
+            );
+            
+            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Invalid ID' });
+        });
+    });
+
     describe("PUT request", () => {
         it('should update an existing task', async () => {
             // Set up the CHECK_API_KEY mock to return success response
@@ -160,83 +236,6 @@ describe ("Tasks API handler - [id].ts", () => {
             const { req, res } = mockRequestResponse('PUT', 
                 { id: 1, title: 'whatever' }, { 'x-api-key': 'whatever' }, { id: "whatever" }
             );
-            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
-
-            expect(res.status).toHaveBeenCalledWith(400);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Invalid ID' });
-        });
-    });
-
-    describe("DELETE request", () => {
-        it.skip('should delete an existing task in DB with matching ID', async () => {
-            // Set up the CHECK_API_KEY mock to return success response
-            (CHECK_API_KEY as jest.Mock).mockResolvedValue(true);
-            (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
-            
-            const deletedTask = { id: 3, title: 'New Task 3', detail: 'New Detail 3', completed: true };
-            (db.query as jest.Mock).mockResolvedValue({ rows: [deletedTask] });
-            
-            const { req, res } = mockRequestResponse('DELETE',
-                {}, 
-                { 'x-api-key': 'valid-key' },
-                { id: '3' });
-            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
-
-            expect(db.query).toHaveBeenCalledWith(
-                'DELETE FROM tasks WHERE id = $1 RETURNING *', [3]
-            );
-            expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith(deletedTask);
-        });
-
-        it.skip('should return 404 when task does not exist', async () => {
-            (CHECK_API_KEY as jest.Mock).mockResolvedValue(true);
-            (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
-
-            (db.query as jest.Mock).mockResolvedValue({ rows: [] }); // Empty result
-
-            const { req, res } = mockRequestResponse('DELETE', {}, { 'x-api-key': 'valid-key' }, { id: '999' });
-            
-            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
-
-            expect(res.status).toHaveBeenCalledWith(404);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Task not found' });
-        });
-
-        it('should handle database error', async () => {
-            // Set up the CHECK_API_KEY mock to return success response
-            (CHECK_API_KEY as jest.Mock).mockResolvedValue(true);
-            (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
-            
-            const dbError = new Error('Connection error');
-            (db.query as jest.Mock).mockRejectedValueOnce(dbError);
-            
-            const { req, res } = mockRequestResponse('DELETE', 
-                {},
-                { 'x-api-key': 'valid-key' },
-                { id: '3' }
-            );
-            req.query = { id: "3" };
-            await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
-
-            expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ error: "tasks/v1 | API | [id].ts | DELETE | catched error: Error - Connection error", });
-        });
-
-        it('should return status code 400 given a wrong type of param', async () => {
-            // Set up the CHECK_API_KEY mock to return success response
-            (CHECK_API_KEY as jest.Mock).mockResolvedValue(true);
-            (VERIFY_JWT_RETURN_API_RES as jest.Mock).mockResolvedValue(true);
-            
-            //const dbError = new Error('Connection error');
-            //(db.query as jest.Mock).mockRejectedValueOnce(dbError);
-            
-            const { req, res } = mockRequestResponse('DELETE', 
-                {},
-                { 'x-api-key': 'valid-key' },
-                {  id: "a string"  }
-            );
-            
             await handler(req as unknown as NextApiRequest, res as unknown as NextApiResponse);
 
             expect(res.status).toHaveBeenCalledWith(400);
