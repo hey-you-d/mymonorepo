@@ -4,11 +4,10 @@ import { fetchGraphQL } from '@/models/Task/use-server/TaskUserGraphqlClient';
 import argon2 from 'argon2';
 import { 
     logoutUser, 
-    getJwtSecret, 
     createAuthCookie, 
     generateHashedPassword,  
 } from './getTasksUserViewModel';
-import { generateJWT } from '@/lib/app/common';
+import { generateJWT, getJwtSecret } from '@/lib/app/common';
 
 import type { UserModelType } from '@/types/Task';
 

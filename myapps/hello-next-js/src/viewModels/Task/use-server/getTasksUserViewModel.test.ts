@@ -1,5 +1,4 @@
 import {
-  getJwtSecret,
   createAuthCookie,
   generateHashedPassword,
   registerUser,
@@ -7,6 +6,8 @@ import {
   logoutUser,
   checkAuthTokenCookieExist
 } from './getTasksUserViewModel';
+
+import { getJwtSecret } from '@/lib/app/common';
 
 // Mock external dependencies
 jest.mock('next/headers', () => ({
@@ -49,10 +50,11 @@ jest.mock('../../../lib/app/featureFlags', () => ({
 }));
 
 jest.mock('../../../lib/app/common', () => ({
-  JWT_TOKEN_COOKIE_NAME: 'auth_token',
-  TASKS_SQL_BASE_API_URL: 'http://test-api.com',
-  generateJWT: jest.fn().mockResolvedValue("new.jwt.token"),
-  VERIFY_JWT_STRING: jest.fn().mockResolvedValue({ valid: true, payload: "" }),
+    JWT_TOKEN_COOKIE_NAME: 'auth_token',
+    TASKS_SQL_BASE_API_URL: 'http://test-api.com',
+    generateJWT: jest.fn().mockResolvedValue("new.jwt.token"),
+    VERIFY_JWT_STRING: jest.fn().mockResolvedValue({ valid: true, payload: "" }),
+    getJwtSecret: jest.fn().mockResolvedValue({ jwtSecret: "123" }),
 }));
 
 import { cookies } from 'next/headers';
@@ -123,34 +125,6 @@ describe("getTasksUserViewModel", () => {
 
     afterAll(() => {
         jest.restoreAllMocks();
-    });
-
-    describe('getJwtSecret', () => {
-        it('should successfully retrieve JWT secret from AWS Secret Manager', async () => {
-            const mockSecret = { jwtSecret: 'test-secret-123' };
-            (getSecret as jest.Mock).mockResolvedValue(mockSecret);
-
-            const result = await getJwtSecret();
-
-            expect(getSecret).toHaveBeenCalledWith(
-                'dev/hello-next-js/jwt-secret',
-                'us-east-1'
-            );
-            expect(result).toEqual(mockSecret);
-        });
-
-        it('should throw error when AWS_REGION is missing', async () => {
-            delete process.env.AWS_REGION;
-
-            await expect(getJwtSecret()).rejects.toThrow('AWS Region is missing');
-        });
-
-        it('should handle AWS Secret Manager errors', async () => {
-            const error = new Error('AWS Secret Manager error');
-            (getSecret as jest.Mock).mockRejectedValue(error);
-
-            await expect(getJwtSecret()).rejects.toThrow('AWS Secret Manager error');
-        });
     });
 
     describe('createAuthCookie', () => {

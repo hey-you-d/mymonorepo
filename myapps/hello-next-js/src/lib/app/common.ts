@@ -104,7 +104,6 @@ export const getJwtSecret = async () => {
     }  
 }
 
-
 export type VerifyJwtResult =
   | { valid: true; payload: string | JwtPayload }
   | { valid: false; error: string };
