@@ -3,7 +3,8 @@
 // for reference: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import { useState, useCallback, Dispatch, SetStateAction } from 'react';
-import { Task } from "@/types/Task";
+import { useRouter } from 'next/router';
+import type { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
 export type TaskTableType = {
@@ -46,16 +47,19 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
     const [title, setTitle] = useState("");
     const [detail, setDetail] = useState("");
 
+    const router = useRouter();
+
     const chkBoxHandler = (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
     }
-
+    
     const editTodoHandler = (e: React.MouseEvent, id: number) => {
         e.preventDefault();
 
-        window.location.replace( `${MONOREPO_PREFIX}/${TASKS_CRUD}/edit/${id}`);
+        // render the following next.js Page route: /pages/task-crud-fullstack/edit/[id].tsx
+        window.location.replace( `${MONOREPO_PREFIX}/${TASKS_CRUD}/edit/${id}?from=${router.asPath}`);
     }
-
+    
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
         
@@ -79,11 +83,11 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
                     ? <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled={buttonDisabled}
                             onClick={(e) => chkBoxHandler(e, aTask.id, aTask.title, aTask.detail, aTask.completed)} />
                     : <input type="checkbox" id={`chkbox-${aTask.id}`} defaultChecked={aTask.completed} disabled />;
-                  
+                 
                 const button = userAuthenticated
                     ? <button type="button" onClick={(e) => editTodoHandler(e, aTask.id)} disabled={buttonDisabled}>Edit</button>
                     : <button type="button" disabled>Edit</button>;
-
+                 
                 output.push(
                     <tr key={aTask.id}>
                         <td>{aTask.id}</td>

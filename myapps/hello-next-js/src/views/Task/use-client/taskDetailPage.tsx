@@ -8,7 +8,7 @@ import { TaskDetail } from '@/components/Task/use-client/TaskDetail';
 import type { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 
-export const TaskDetailPage = ({id}: {id: number}) => {
+export const TaskDetailPage = ({id, from}: {id: number, from: string}) => {
   //const { tasks, loading, deleteRowFromId } = useTaskViewModel();
   const { tasks, loading, deleteRowFromId } = useTaskViewModelWithSwr();
   const { checkAuthTokenCookieExist, logoutUser } = useTaskUserViewModel();
@@ -58,13 +58,17 @@ export const TaskDetailPage = ({id}: {id: number}) => {
           tasks={tasks} 
           deleteRowFromId={deleteRowFromId} 
           buttonDisabled={buttonDisabled}
-          setButtonDisabled={setButtonDisabled} 
+          setButtonDisabled={setButtonDisabled}
         /> 
       : <p>{`The record ${id} is no longer exist`}</p>);
   } else {
     body.push(<p>You must be logged-in first to edit this task</p>);
   }
-  body.push(<div><Link href={`${MONOREPO_PREFIX}/${TASKS_CRUD}`}>Back to the table page</Link></div>);  
+  body.push(
+    <div><Link href={from.length > 0 ? from : `${MONOREPO_PREFIX}/${TASKS_CRUD}`}>
+      Back to the table page</Link>
+    </div>
+  );  
 
   return body;
 };

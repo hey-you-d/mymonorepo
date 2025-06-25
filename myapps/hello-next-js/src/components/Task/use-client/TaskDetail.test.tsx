@@ -1,8 +1,13 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TaskDetail } from './TaskDetail';
 import type { Task } from '@/types/Task';
+
+jest.mock('next/router', () => ({
+    useRouter: jest.fn(),
+}));
 
 // Mock the constants
 jest.mock('../../../lib/app/common', () => ({
@@ -36,8 +41,15 @@ describe('TaskDetail', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        (useRouter as jest.Mock).mockReturnValue({
+            asPath: "/hello-next-js/parent",
+        });
         window.location.href = '';
     });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
+    })
 
     describe('Rendering', () => {
         it('renders task details correctly', () => {
