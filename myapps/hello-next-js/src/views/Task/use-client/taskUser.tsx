@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, MouseEvent, memo } from "react";
+import { useLayoutEffect, useState, MouseEvent, memo } from "react";
 import styles from "@/app/page.module.css";
 import useTaskUserViewModel from "@/viewModels/Task/use-client/useTaskUserViewModel";
 import type { TaskUserType } from "@/types/Task";
@@ -14,7 +14,7 @@ const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
 
     const { loading, registerUser, loginUser, logoutUser, checkAuthTokenCookieExist } = useTaskUserViewModel();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const checkUserLoggedIn = async () => {
             // for reference: the http only auth_token cookie is not accessible from the client-side
             const authTokenCookieExist = await checkAuthTokenCookieExist();
@@ -22,7 +22,6 @@ const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
                 setUserAuthenticated(true);
             }
             if (!authTokenCookieExist.outcome && userAuthenticated) {
-                await logoutUser();
                 setUserAuthenticated(false);
             
                 // TODO: a modal popup that says "you have been logged out"

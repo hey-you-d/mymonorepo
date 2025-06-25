@@ -33,7 +33,6 @@ export const TaskDetailPage = ({id}: {id: number}) => {
                   setUserAuthenticated(true);
               }
               if (!authTokenCookieExist.outcome && userAuthenticated) {
-                  await logoutUser();
                   setUserAuthenticated(false);
                   
                   // TODO: a modal popup that says "you have been logged out"
