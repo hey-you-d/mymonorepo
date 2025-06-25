@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import Link from 'next/link';
 //import { useTaskViewModel } from '@/app/viewModels/Task/use-client/useTasksViewModel';
 import { useTaskViewModelWithSwr } from '@/viewModels/Task/use-client/useTasksViewModelWithSwr';
@@ -24,7 +24,7 @@ export const TaskDetailPage = ({id}: {id: number}) => {
     }     
   }, [id, tasks]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
         const checkUserLoggedIn = async () => {
             // for reference: the http only auth_token cookie is not accessible from the client-side
             try {
