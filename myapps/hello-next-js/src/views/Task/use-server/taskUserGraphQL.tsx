@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useState, MouseEvent } from "react";
+import { useLayoutEffect, useState, MouseEvent } from "react";
 import styles from "@/app/page.module.css";
 import { logoutUser, checkAuthTokenCookieExist } from "@/viewModels/Task/use-server/getTasksUserViewModel";
 import { registerUser, loginUser } from "@/viewModels/Task/use-server/getTasksUserGraphQLViewModel";

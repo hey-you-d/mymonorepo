@@ -6,7 +6,7 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import { fetcher } from '@/viewModels/Task/use-server/getTasksViewModelWithSwr';
 import { deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
-import { checkAuthTokenCookieExist, logoutUser } from '@/viewModels/Task/use-server/getTasksUserViewModel';
+import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
 import { TaskDetailWithSwr } from '@/components/Task/use-server/TaskDetailWithSwr';
 import type { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';

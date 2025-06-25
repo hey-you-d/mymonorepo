@@ -4,7 +4,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import { getRowFromId, deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
-import { checkAuthTokenCookieExist, logoutUser } from '@/viewModels/Task/use-server/getTasksUserViewModel';
+import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
 import { TaskDetail } from '@/components/Task/use-server/TaskDetail';
 import type { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
