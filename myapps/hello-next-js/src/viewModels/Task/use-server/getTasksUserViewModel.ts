@@ -10,6 +10,7 @@ import {
     generateJWT,
     getJwtSecret,
 } from '@/lib/app/common';
+import { customResponseMessage, catchedErrorMessage } from '@/lib/app/error';
 import { 
     registerUser as registerUserModel, 
     logInUser as logInUserModel,
@@ -18,16 +19,6 @@ import {
 import type { UserModelType } from '@/types/Task';
 
 const fnSignature = "use-server | view-model | getTasksUserViewModel";
-const customResponseMessage = async (fnName: string, customMsg: string) => {
-    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
-    console.log(msg);
-    return msg;
-}
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 export const createAuthCookie = async (jwt: string) => {
     // for reference:
@@ -76,7 +67,7 @@ export const registerUser = async (email: string, password: string) => {
             return false;
         }
     } catch (error) {
-        const errorMsg = await catchedErrorMessage("registerUser -> logInUserModel", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "registerUser -> logInUserModel", error as Error);
         throw new Error(errorMsg);
     } 
     
@@ -105,7 +96,7 @@ export const registerUser = async (email: string, password: string) => {
         // just to be safe...
         await logoutUser();
         
-        const errorMsg = await catchedErrorMessage("registerUser -> registerUserModel", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "registerUser -> registerUserModel", error as Error);
         throw new Error(errorMsg);
     } 
 }
@@ -134,7 +125,7 @@ export const loginUser = async (email: string, password: string) =>  {
                         // on the server-side (For server-side variant, via Next.js server actions instead of the API endpoint)
                         return await createAuthCookie(result.jwt);
                     } else {
-                        const errorMsg = await customResponseMessage("loginUser", result.message);
+                        const errorMsg = await customResponseMessage(fnSignature, "loginUser", result.message);
                         throw new Error(errorMsg);
                     }
                 }
@@ -150,7 +141,7 @@ export const loginUser = async (email: string, password: string) =>  {
         // just to be safe...
         await logoutUser();
         
-        const errorMsg = await catchedErrorMessage("loginUser", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "loginUser", error as Error);
         throw new Error(errorMsg);
     }
 }
@@ -166,7 +157,7 @@ export const logoutUser = async () => {
         // then it's no longer exist in the client browser, which what we want
         return token && token.value.length > 0 ? false : true;
     } catch (error) {
-        const errorMsg = await catchedErrorMessage("logoutUser", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "logoutUser", error as Error);
         throw new Error(errorMsg);
     }
 }
@@ -193,10 +184,10 @@ export const checkAuthTokenCookieExist = async () => {
         
         return ({  
             outcome: false, 
-            message: await customResponseMessage("checkAuthTokenCookieExist", "unknown error when checking auth_token"), 
+            message: await customResponseMessage(fnSignature, "checkAuthTokenCookieExist", "unknown error when checking auth_token"), 
         });
     } catch (error) {
-        const errorMsg = await catchedErrorMessage("checkAuthTokenCookieExist", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "checkAuthTokenCookieExist", error as Error);
         throw new Error(errorMsg);
     }
 }

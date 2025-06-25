@@ -1,14 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { fetchGraphQL } from '@/models/Task/use-client/TaskGraphqlClient';
+import { catchedErrorMessage } from '@/lib/app/error';
 import type { Task } from '@/types/Task';
 
 const fnSignature = "use-client | view-model | useTaskGraphQLViewModel";
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 export const useTaskGraphQLViewModel = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -34,7 +30,7 @@ export const useTaskGraphQLViewModel = () => {
                 `);
                 setTasks(data.tasks);
             } catch (e) {
-                const errorMsg = await catchedErrorMessage("loadTasks", e as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "loadTasks", e as Error);
                 setError(errorMsg);
             } finally {
                 setLoading(false);
@@ -65,7 +61,7 @@ export const useTaskGraphQLViewModel = () => {
             // preventing race conditions from stale closures.
             setTasks(prev => [data.createTask, ...prev]);
         } catch (e) {
-            const errorMsg = await catchedErrorMessage("createRow", e as Error);
+            const errorMsg = await catchedErrorMessage(fnSignature, "createRow", e as Error);
             setError(errorMsg);
         }
     }
@@ -87,7 +83,7 @@ export const useTaskGraphQLViewModel = () => {
             await fetchGraphQL(mutation);
             setTasks([]);
         } catch (e) {
-            const errorMsg = await catchedErrorMessage("deleteAllRows", e as Error);
+            const errorMsg = await catchedErrorMessage(fnSignature, "deleteAllRows", e as Error);
             setError(errorMsg);
         }
     }
@@ -118,7 +114,7 @@ export const useTaskGraphQLViewModel = () => {
           // dev note 3: I can 100% guarantee that prev is [], hence
           setTasks([...data.seedTasks]);
         } catch (e) {
-            const errorMsg = await catchedErrorMessage("seedTaskDB", e as Error);
+            const errorMsg = await catchedErrorMessage(fnSignature, "seedTaskDB", e as Error);
             setError(errorMsg);
       }
     }
@@ -144,7 +140,7 @@ export const useTaskGraphQLViewModel = () => {
             prev.map(task => (task.id === data.updateTask.id ? data.updateTask : task))
           );
         } catch (e) {
-            const errorMsg = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, e as Error);
+            const errorMsg = await catchedErrorMessage(fnSignature, `updateRowFromId [id: ${id}]`, e as Error);
             setError(errorMsg);
         }
     }

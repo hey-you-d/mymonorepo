@@ -8,14 +8,10 @@ import {
   updateRowFromId as updateRowFromIdTaskModel,
   deleteRowFromId as deleteRowFromIdTaskModel
 } from '@/models/Task/use-server/TaskModel';
+import { catchedErrorMessage } from '@/lib/app/error';
 import type { Task } from '@/types/Task';
 
 const fnSignature = "use-server | view-model | getTasksViewModel";
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
     // for reference:
@@ -27,7 +23,7 @@ export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
       const tasks: Task[] | undefined = await getTasksDBRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       return { tasks: tasks ?? [] };
     } catch (error) {
-      const errorMsg = await catchedErrorMessage("getTasksDBRows", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "getTasksDBRows", error as Error);
       throw new Error(errorMsg);
     } 
 };
@@ -42,7 +38,7 @@ export const deleteAllRows = async (): Promise<{ tasks: Task[] }> => {
       const tasks: Task[] | undefined = await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       return { tasks: tasks ?? [] };
     } catch (error) {
-      const errorMsg = await catchedErrorMessage("deleteAllRows", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "deleteAllRows", error as Error);
       throw new Error(errorMsg);
     } 
 };
@@ -57,7 +53,7 @@ export const seedTasksDB = async (): Promise<{ tasks: Task[] }> => {
       const tasks: Task[] | undefined = await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
       return { tasks: tasks ?? [] };
     } catch (error) {
-      const errorMsg = await catchedErrorMessage("seedTasksDB", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "seedTasksDB", error as Error);
       throw new Error(errorMsg);
     } 
 };
@@ -73,7 +69,7 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
       
       return { task: task ?? null };
     } catch (error) {
-      const errorMsg = await catchedErrorMessage(`getRowFromId [id: ${id}]`, error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, `getRowFromId [id: ${id}]`, error as Error);
       throw new Error(errorMsg);
     }
 };
@@ -91,7 +87,7 @@ export const createRow = async (tasks: Task[], title: string, detail: string): P
       
       return { tasks: updatedTasksDescOrder }
     } catch (error) {
-      const errorMsg = await catchedErrorMessage("createRow", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "createRow", error as Error);
       throw new Error(errorMsg);
     } 
 };
@@ -115,7 +111,7 @@ export const updateRowFromId = async (tasks: Task[], id: number, title: string, 
 
       return { tasks: null };
     } catch (error) {
-      const errorMsg = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, `updateRowFromId [id: ${id}]`, error as Error);
       throw new Error(errorMsg);
     }
 };
@@ -133,7 +129,7 @@ export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | nul
       //const tasks = await getTasksDBRowsTaskModel();
       return { tasks: null };
     } catch (error) {
-      const errorMsg = await catchedErrorMessage(`deleteRowFromId [id: ${id}]`, error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, `deleteRowFromId [id: ${id}]`, error as Error);
       throw new Error(errorMsg);
     } 
 };
