@@ -1,7 +1,7 @@
 'use client';
 // for reference: don't let the folder name mislead you, a view component cannot be a server component.
 // the uniform folder name is for the sake of consistency
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import useSWR from 'swr';
 import { fetcher } from '@/viewModels/Task/use-server/getTasksViewModelWithSwr';
@@ -42,7 +42,7 @@ export const TaskDetailWithSwrPage = ({id}: {id: number}) => {
     }
   }, []); // run once only
 
-  useEffect(() => {
+  useLayoutEffect(() => {
       const checkUserLoggedIn = async () => {
           // for reference: the http only auth_token cookie is not accessible from the client-side
           const authTokenCookieExist = await checkAuthTokenCookieExist();
@@ -50,7 +50,6 @@ export const TaskDetailWithSwrPage = ({id}: {id: number}) => {
               setUserAuthenticated(true);
           }
           if (!authTokenCookieExist.outcome && userAuthenticated) {
-              await logoutUser();
               setUserAuthenticated(false);
               
               // TODO: a modal popup that says "you have been logged out"

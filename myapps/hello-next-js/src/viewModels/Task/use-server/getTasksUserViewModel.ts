@@ -1,14 +1,14 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { getSecret } from '@/lib/app/awsSecretManager';
 import argon2 from 'argon2';
-import { sign } from 'jsonwebtoken';
 import { 
     JWT_TOKEN_COOKIE_NAME, 
     TASKS_SQL_BASE_API_URL,  
     VERIFY_JWT_STRING,
     verifyJwtErrorMsgs,
+    generateJWT,
+    getJwtSecret,
 } from '@/lib/app/common';
 import { 
     registerUser as registerUserModel, 
@@ -27,26 +27,6 @@ const catchedErrorMessage = async (fnName: string, error: Error) => {
     const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
     console.error(errorMsg);
     return errorMsg;
-}
-
-// TODO: Move this to @/lib/app/common
-export const getJwtSecret = async () => {
-    try {
-        if (!process.env.AWS_REGION) {
-            throw new Error("AWS Region is missing");
-        }
-
-        // obtain jwt secret from the AWS secret manager
-        const secret: { jwtSecret: string } = await getSecret(
-            "dev/hello-next-js/jwt-secret", // or prod/hello-next-js/jwt-secret for prod ENV
-            process.env.AWS_REGION
-        );
-
-        return secret;
-    } catch(err) {
-        const errorMsg = await catchedErrorMessage("getJwtSecret", err as Error);
-        throw new Error(errorMsg);
-    }  
 }
 
 export const createAuthCookie = async (jwt: string) => {
@@ -85,14 +65,6 @@ export const generateHashedPassword = async (password: string) => {
         timeCost: 5, // number of iterations - higher = slower = safer
         parallelism: 1, // can increase if needed - match your server's CPU capabilities
     });
-}
-
-export const generateJWT = async (email: string, hashedPwd: string, jwtSecret: string) => {
-    return await sign(
-        { email, hashedPassword: hashedPwd  },
-        jwtSecret,
-        { expiresIn: '900000' } // 90000ms = 15mins
-    );
 }
 
 export const registerUser = async (email: string, password: string) => {

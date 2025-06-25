@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, MouseEvent } from "react";
+import { useEffect, useLayoutEffect, useState, MouseEvent } from "react";
 import styles from "@/app/page.module.css";
 import { logoutUser, checkAuthTokenCookieExist } from "@/viewModels/Task/use-server/getTasksUserViewModel";
 import { registerUser, loginUser } from "@/viewModels/Task/use-server/getTasksUserGraphQLViewModel";
@@ -13,7 +13,7 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
     const [passwordMessage, setPasswordMessage] = useState<string>("");
     const [formMessage, setFormMessage] = useState<string>("only logged-in users can interact with the table");
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const checkUserLoggedIn = async () => {
             // for reference: the http only auth_token cookie is not accessible from the client-side
             const authTokenCookieExist = await checkAuthTokenCookieExist();
@@ -21,7 +21,6 @@ export const TaskUserGraphQL = ({userAuthenticated, setUserAuthenticated} : Task
                 setUserAuthenticated(true);
             }
             if (!authTokenCookieExist.outcome && userAuthenticated) {
-                await logoutUser();
                 setUserAuthenticated(false);
 
                 // TODO: a modal popup that says "you have been logged out"

@@ -1,13 +1,13 @@
 import {
-  getJwtSecret,
   createAuthCookie,
   generateHashedPassword,
-  generateJWT,
   registerUser,
   loginUser,
   logoutUser,
   checkAuthTokenCookieExist
 } from './getTasksUserViewModel';
+
+import { getJwtSecret } from '@/lib/app/common';
 
 // Mock external dependencies
 jest.mock('next/headers', () => ({
@@ -50,9 +50,11 @@ jest.mock('../../../lib/app/featureFlags', () => ({
 }));
 
 jest.mock('../../../lib/app/common', () => ({
-  JWT_TOKEN_COOKIE_NAME: 'auth_token',
-  TASKS_SQL_BASE_API_URL: 'http://test-api.com',
-  VERIFY_JWT_STRING: jest.fn().mockResolvedValue({ valid: true, payload: "" }),
+    JWT_TOKEN_COOKIE_NAME: 'auth_token',
+    TASKS_SQL_BASE_API_URL: 'http://test-api.com',
+    generateJWT: jest.fn().mockResolvedValue("new.jwt.token"),
+    VERIFY_JWT_STRING: jest.fn().mockResolvedValue({ valid: true, payload: "" }),
+    getJwtSecret: jest.fn().mockResolvedValue({ jwtSecret: "123" }),
 }));
 
 import { cookies } from 'next/headers';
@@ -60,7 +62,7 @@ import { getSecret } from '@/lib/app/awsSecretManager';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
 import { registerUser as registerUserModel, logInUser as logInUserModel } from '@/models/Task/use-server/TaskUserModel';
-import { VERIFY_JWT_STRING } from '@/lib/app/common';
+import { generateJWT, VERIFY_JWT_STRING } from '@/lib/app/common';
 
 describe("getTasksUserViewModel", () => {
     interface MockCookieStore {
@@ -123,34 +125,6 @@ describe("getTasksUserViewModel", () => {
 
     afterAll(() => {
         jest.restoreAllMocks();
-    });
-
-    describe('getJwtSecret', () => {
-        it('should successfully retrieve JWT secret from AWS Secret Manager', async () => {
-            const mockSecret = { jwtSecret: 'test-secret-123' };
-            (getSecret as jest.Mock).mockResolvedValue(mockSecret);
-
-            const result = await getJwtSecret();
-
-            expect(getSecret).toHaveBeenCalledWith(
-                'dev/hello-next-js/jwt-secret',
-                'us-east-1'
-            );
-            expect(result).toEqual(mockSecret);
-        });
-
-        it('should throw error when AWS_REGION is missing', async () => {
-            delete process.env.AWS_REGION;
-
-            await expect(getJwtSecret()).rejects.toThrow('AWS Region is missing');
-        });
-
-        it('should handle AWS Secret Manager errors', async () => {
-            const error = new Error('AWS Secret Manager error');
-            (getSecret as jest.Mock).mockRejectedValue(error);
-
-            await expect(getJwtSecret()).rejects.toThrow('AWS Secret Manager error');
-        });
     });
 
     describe('createAuthCookie', () => {
@@ -222,26 +196,6 @@ describe("getTasksUserViewModel", () => {
             parallelism: 1
         });
         expect(result).toBe(hashedPassword);
-        });
-    });
-
-    describe('generateJWT', () => {
-        it('should generate JWT token successfully', async () => {
-        const email = 'test@example.com';
-        const hashedPwd = 'hashed_password';
-        const jwtSecret = 'secret_key';
-        const expectedToken = 'jwt.token.here';
-        
-        (sign as jest.Mock).mockResolvedValue(expectedToken);
-
-        const result = await generateJWT(email, hashedPwd, jwtSecret);
-
-        expect(sign).toHaveBeenCalledWith(
-            { email, hashedPassword: hashedPwd },
-            jwtSecret,
-            { expiresIn: '900000' } // 90000sec = 15mins
-        );
-        expect(result).toBe(expectedToken);
         });
     });
 

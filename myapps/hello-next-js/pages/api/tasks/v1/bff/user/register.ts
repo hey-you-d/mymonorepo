@@ -9,7 +9,7 @@ import {
     TASKS_API_HEADER, 
 } from "@/lib/app/common";
 import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags';
-import { getJwtSecret } from '@/lib/app/common';
+import { getJwtSecret, generateJWT } from '@/lib/app/common';
 
 const fnSignature = "tasks/v1 | BFF | user/register.ts";
 const customResponseMessage = async (fnName: string, customMsg: string) => {
@@ -74,15 +74,6 @@ export const generateHashedPassword = async (password: string) => {
         timeCost: 5, // number of iterations - higher = slower = safer
         parallelism: 1, // can increase if needed - match your server's CPU capabilities
     });
-}
-
-// TODO: move this to @/lib/app/common
-export const generateJWT = async (email: string, hashedPwd: string, jwtSecret: string) => {
-    return await sign(
-        { email, hashedPassword: hashedPwd  },
-        jwtSecret,
-        { expiresIn: '900000' } // 90000ms = 15mins
-    );
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchUrl?: string): Promise<void> => {

@@ -9,6 +9,7 @@ jest.mock('../../../../../../src/lib/app/common', () => ({
   TASKS_SQL_BASE_API_URL: 'http://localhost:3000/api',
   TASKS_API_HEADER: jest.fn(),
   getJwtSecret: jest.fn(),
+  generateJWT: jest.fn(),
 }));
 
 jest.mock('../../../../../../src/lib/app/featureFlags', () => ({
@@ -37,12 +38,13 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
 import { serialize } from 'cookie';
-import handler, { createAuthCookie, generateHashedPassword, generateJWT } from '../../../../../../pages/api/tasks/v1/bff/user/register';
+import handler, { createAuthCookie, generateHashedPassword } from '../../../../../../pages/api/tasks/v1/bff/user/register';
 import { 
     JWT_TOKEN_COOKIE_NAME, 
     TASKS_SQL_BASE_API_URL, 
     TASKS_API_HEADER, 
     getJwtSecret,
+    generateJWT,
 } from '@/lib/app/common';
 import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags';
 
@@ -66,7 +68,9 @@ describe('/bff/user/register', () => {
             'Authorization': 'Bearer test-token'
         });
         
-        (getJwtSecret as jest.Mock).mockResolvedValue({ jwtSecret: 'test-secret' });        
+        (getJwtSecret as jest.Mock).mockResolvedValue({ jwtSecret: 'test-secret' });     
+        
+        (generateJWT as jest.Mock).mockResolvedValue("jwt-token-123");
         
         // Mock console methods to avoid noise in test output
         jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -461,26 +465,6 @@ describe('/bff/user/register', () => {
                     parallelism: 1
                 });
                 expect(result).toBe(hashedPassword);
-            });
-        });
-
-        describe('generateJWT', () => {
-            it('should generate JWT with correct payload and options', async () => {
-                const email = 'test@example.com';
-                const hashedPwd = 'hashed-password';
-                const jwtSecret = 'secret-key';
-                const expectedJwt = 'generated-jwt-token';
-
-                mockedSign.mockReturnValue(expectedJwt);
-
-                const result = await generateJWT(email, hashedPwd, jwtSecret);
-
-                expect(mockedSign).toHaveBeenCalledWith(
-                    { email, hashedPassword: hashedPwd },
-                    jwtSecret,
-                    { expiresIn: '900000' }
-                );
-                expect(result).toBe(expectedJwt);
             });
         });
     });

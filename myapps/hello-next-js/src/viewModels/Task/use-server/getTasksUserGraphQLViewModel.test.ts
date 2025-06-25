@@ -3,24 +3,24 @@ import { fetchGraphQL } from '@/models/Task/use-server/TaskUserGraphqlClient';
 import argon2 from 'argon2';
 import {
   logoutUser,
-  getJwtSecret,
   createAuthCookie,
   generateHashedPassword,
-  generateJWT
 } from './getTasksUserViewModel';
-
+import { generateJWT, getJwtSecret } from '@/lib/app/common';
 // Mock all dependencies
 jest.mock('../../../models/Task/use-server/TaskUserGraphqlClient');
 jest.mock('argon2');
 jest.mock('./getTasksUserViewModel');
+jest.mock('../../../lib/app/common');
 
 const mockFetchGraphQL = fetchGraphQL as jest.MockedFunction<typeof fetchGraphQL>;
 const mockArgon2Verify = argon2.verify as jest.MockedFunction<typeof argon2.verify>;
 const mockLogoutUser = logoutUser as jest.MockedFunction<typeof logoutUser>;
-const mockGetJwtSecret = getJwtSecret as jest.MockedFunction<typeof getJwtSecret>;
 const mockCreateAuthCookie = createAuthCookie as jest.MockedFunction<typeof createAuthCookie>;
 const mockGenerateHashedPassword = generateHashedPassword as jest.MockedFunction<typeof generateHashedPassword>;
+
 const mockGenerateJWT = generateJWT as jest.MockedFunction<typeof generateJWT>;
+const mockGetJwtSecret = getJwtSecret as jest.MockedFunction<typeof getJwtSecret>;
 
 describe('GetTasksUserGraphQLViewModel', () => {
   beforeEach(() => {
