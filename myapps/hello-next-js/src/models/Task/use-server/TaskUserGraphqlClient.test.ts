@@ -17,16 +17,19 @@ global.fetch = jest.fn();
 describe('TaskUserGraphqlClient - fetchGraphQL', () => {
     const mockTasksApiHeader = require('../../../lib/app/common').TASKS_API_HEADER;
     let spyConsoleError: jest.SpyInstance<any, any>;
+    let spyConsoleLog: jest.SpyInstance<any, any>;
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockTasksApiHeader.mockResolvedValue(mockApiHeader);
         // hide console.error to reduce noise on the console output
         spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+        spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
     });
 
     afterEach(() => {
         spyConsoleError.mockRestore();
+        spyConsoleLog.mockRestore();
     });
 
     afterAll(() => {
@@ -158,7 +161,9 @@ describe('TaskUserGraphqlClient - fetchGraphQL', () => {
 
             await expect(
                 fetchGraphQL('query { lookupUser }', { email: 'test@example.com' })
-            ).rejects.toThrow('use-server | model | TaskUserGraphqlClient | not ok response: 404: - undefined ');
+            ).rejects.toThrow(
+                "use-server | model | TaskUserGraphqlClient | fetchGraphQL | not ok response: 404 - undefined "
+            );
         });
 
         it('should throw error for GraphQL errors', async () => {
@@ -176,7 +181,9 @@ describe('TaskUserGraphqlClient - fetchGraphQL', () => {
 
             await expect(
                 fetchGraphQL('query { nonexistent }')
-            ).rejects.toThrow('Field "nonexistent" doesn\'t exist\nSyntax error');
+            ).rejects.toThrow(
+                "use-server | model | TaskUserGraphqlClient | fetchGraphQL - json error | Field \"nonexistent\" doesn't exist-Syntax error"
+            );
         });
 
         it('should handle GraphQL errors with missing message', async () => {
@@ -195,7 +202,9 @@ describe('TaskUserGraphqlClient - fetchGraphQL', () => {
 
             await expect(
                 fetchGraphQL('query { test }')
-            ).rejects.toThrow('use-server | model | TaskUserGraphqlClient | json.errors: Valid error\nunknown error\nunknown error');
+            ).rejects.toThrow(
+                "use-server | model | TaskUserGraphqlClient | fetchGraphQL - json error | Valid error-unknown error-unknown error"
+            );
         });
     });
 

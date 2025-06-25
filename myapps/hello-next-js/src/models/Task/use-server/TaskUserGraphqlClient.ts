@@ -1,6 +1,9 @@
 "use server"
 import { TASKS_API_HEADER } from "@/lib/app/common";
 import { UserModelType, UsersDbQueryResultType } from "@/types/Task";
+import { notOkErrorMessage, customResponseMessage } from "@/lib/app/error";
+
+const fnSignature = "use-server | model | TaskUserGraphqlClient";
 
 export async function fetchGraphQL(query: string, variables?: Record<string, unknown>) {
     // for reference:
@@ -16,8 +19,7 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
 
     // capture http level error (http status code is not 2xx)
     if (!res.ok) {
-      const errorMsg = `use-server | model | TaskUserGraphqlClient | not ok response: ${res.status}: - ${res.statusText} `;
-      console.error(errorMsg);
+      const errorMsg = await notOkErrorMessage(fnSignature, "fetchGraphQL", res);
       throw new Error(errorMsg);
     }
 
@@ -29,8 +31,7 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
         return e && e.message ? e.message : "unknown error";
       }  
 
-      const errorMsg = `use-server | model | TaskUserGraphqlClient | json.errors: ${json.errors.map(errorFn).join('\n')} `;
-      console.error(errorMsg);
+      const errorMsg = await customResponseMessage(fnSignature, "fetchGraphQL - json error", json.errors.map(errorFn).join('-'));
       throw new Error(errorMsg);
     }
 
