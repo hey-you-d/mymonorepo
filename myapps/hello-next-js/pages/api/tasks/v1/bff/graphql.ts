@@ -1,5 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { DOMAIN_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
+import { missingParamErrorMessage, notOkErrorMessage, catchedErrorMessage } from '@/lib/app/error';
+
+const fnSignature = "tasks/v1 | BFF | graphql.ts";
 
 export const config = {
     api: {
@@ -7,33 +10,16 @@ export const config = {
     },
 };
 
-const fnSignature = "tasks/v1 | BFF | graphql.ts";
-const missingParamErrorMessage = async (fnName: string, missingParamMsg: string) => {
-    const errorMsg = `${fnSignature} | ${fnName} | ${missingParamMsg}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
-const notOkErrorMessage = async (fnName: string, response: Response) => {
-    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
-    console.error(errorMsg);
-    return errorMsg;
-}
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
-
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "POST" :
             try {
                 const { query, variables } = req.body;
                 if (!query) return res.status(400).json({ 
-                    error: await missingParamErrorMessage("POST", "GraphQL query is required"),
+                    error: await missingParamErrorMessage(fnSignature, "POST", "GraphQL query is required"),
                 });
                 if (!variables) return res.status(400).json({ 
-                    error: await missingParamErrorMessage("POST", "GraphQL variable is required"), 
+                    error: await missingParamErrorMessage(fnSignature, "POST", "GraphQL variable is required"), 
                 });  
 
                 // for reference:
@@ -52,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 });
                 
                 if (!proxyResponse.ok) {
-                    const errorMsg = await notOkErrorMessage("POST", proxyResponse);
+                    const errorMsg = await notOkErrorMessage(fnSignature, "POST", proxyResponse);
                     throw new Error(errorMsg);
                 }
 
@@ -88,7 +74,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     res.send(rawBody); // for reference: fallback: text/plain, etc.
                 }
             } catch (err) {
-                const errorMsg = await catchedErrorMessage("POST", err as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "POST", err as Error);
                 return res.status(500).json({ error: errorMsg });
             }
             

@@ -10,28 +10,14 @@ import {
 } from "@/lib/app/common";
 import { APP_ENV, LOCALHOST_MODE, LIVE_SITE_MODE } from '@/lib/app/featureFlags';
 import { getJwtSecret, generateJWT } from '@/lib/app/common';
+import { 
+    customResponseMessage, 
+    missingParamErrorMessage, 
+    catchedErrorMessage, 
+    notOkErrorMessage 
+} from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | BFF | user/register.ts";
-const customResponseMessage = async (fnName: string, customMsg: string) => {
-    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
-    console.log(msg);
-    return msg;
-}
-const missingParamErrorMessage = async (fnName: string, missingParamMsg: string) => {
-    const errorMsg = `${fnSignature} | ${fnName} | ${missingParamMsg}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
-const notOkErrorMessage = async (fnName: string, response: Response) => {
-    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
-    console.error(errorMsg);
-    return errorMsg;
-}
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 export const createAuthCookie = async (res: NextApiResponse, jwt: string) => {
     /*
@@ -83,12 +69,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 const { email, password } : { email: string, password: string } = req.body;
                 if (!email || email.trim().length < 1) {
                     return res.status(400).json(
-                        { error: true, message: await missingParamErrorMessage("POST", "Email is required"), }
+                        { error: true, message: await missingParamErrorMessage(fnSignature, "POST", "Email is required"), }
                     );
                 }
                 if (!password || password.trim().length < 1) {
                     return res.status(400).json(
-                        { error: true, message: await missingParamErrorMessage("POST", "Password is required"), }
+                        { error: true, message: await missingParamErrorMessage(fnSignature, "POST", "Password is required"), }
                     );  
                 }
 
@@ -110,7 +96,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                     });
 
                     if (!response.ok) {
-                        const errorMsg = await notOkErrorMessage("POST", response);
+                        const errorMsg = await notOkErrorMessage(fnSignature, "POST", response);
                         throw new Error(errorMsg);
                     } 
                 
@@ -120,11 +106,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                         // this email can't be used for registration, it has already existed in the DB
                         return res.status(200).json({
                             error: true,
-                            message: await customResponseMessage("POST", "Email address cannot be used for registration"), 
+                            message: await customResponseMessage(fnSignature, "POST", "Email address cannot be used for registration"), 
                         });
                     }
                 } catch (err) {
-                    const errorMsg = await catchedErrorMessage("POST", err as Error);
+                    const errorMsg = await catchedErrorMessage(fnSignature, "POST", err as Error);
                     return res.status(500).json({ error: errorMsg });
                 } 
 
@@ -149,7 +135,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                 });
             
                 if (!response.ok) {
-                        const errorMsg = await notOkErrorMessage("POST - Error registering user credential: ", response);
+                        const errorMsg = await notOkErrorMessage(fnSignature, "POST - Error registering user credential: ", response);
                         throw new Error(errorMsg);
                 } 
             
@@ -161,16 +147,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, overrideFetchU
                     
                     return res.status(200).json({
                         error: false,
-                        message: await customResponseMessage("POST", "successful user registration") 
+                        message: await customResponseMessage(fnSignature, "POST", "successful user registration") 
                     });
                 }
                
                 return res.status(500).json({
                     error: true,
-                    message: await notOkErrorMessage("POST - Error registering user credential - JWT is undefined: ", response)
+                    message: await notOkErrorMessage(fnSignature, "POST - Error registering user credential - JWT is undefined: ", response)
                 });
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("POST - Error registering user credential: ", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "POST - Error registering user credential: ", error as Error);
                 return res.status(500).json({ error: errorMsg });
             } 
         default:
