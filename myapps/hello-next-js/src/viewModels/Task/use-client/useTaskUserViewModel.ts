@@ -1,13 +1,9 @@
 import { useState, useMemo, useCallback } from "react";
 import { TaskUserModel } from "@/models/Task/use-client/TaskUserModel";
-import { UserModelType as User } from "@/types/Task";
+import { catchedErrorMessage } from "@/lib/app/error";
+import type { UserModelType as User } from "@/types/Task";
 
 const fnSignature = "use-client | view-model | useTaskUserViewModel";
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 const useTaskUserViewModel = () => {
     const [loading, setLoading] = useState(true);
@@ -24,7 +20,7 @@ const useTaskUserViewModel = () => {
           }
           return false; 
         } catch (error) {
-          const errorMsg = await catchedErrorMessage("registerUser", error as Error);
+          const errorMsg = await catchedErrorMessage(fnSignature, "registerUser", error as Error);
           throw new Error(errorMsg);
         } finally {
           setLoading(false);
@@ -40,7 +36,7 @@ const useTaskUserViewModel = () => {
           }
           return false; 
         } catch (error) {
-          const errorMsg = await catchedErrorMessage("loginUser", error as Error);
+          const errorMsg = await catchedErrorMessage(fnSignature, "loginUser", error as Error);
           throw new Error(errorMsg);
         } finally {
           setLoading(false);
@@ -56,7 +52,7 @@ const useTaskUserViewModel = () => {
           }
           return false;
         } catch (error) {
-          const errorMsg = await catchedErrorMessage("logoutUser", error as Error);
+          const errorMsg = await catchedErrorMessage(fnSignature, "logoutUser", error as Error);
           throw new Error(errorMsg);  
         } finally {
           setLoading(false);
@@ -69,7 +65,7 @@ const useTaskUserViewModel = () => {
           const result: { outcome: boolean, message: string } = await taskUserModel.checkAuthTokenCookieExist();
           return result;
         } catch (error) {
-          const errorMsg = await catchedErrorMessage("checkAuthTokenCookieExist", error as Error);
+          const errorMsg = await catchedErrorMessage(fnSignature, "checkAuthTokenCookieExist", error as Error);
           throw new Error(errorMsg);  
         } finally {
           setLoading(false);

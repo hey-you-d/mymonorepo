@@ -8,15 +8,10 @@ import {
     generateHashedPassword,  
 } from './getTasksUserViewModel';
 import { generateJWT, getJwtSecret } from '@/lib/app/common';
-
+import { catchedErrorMessage } from '@/lib/app/error';
 import type { UserModelType } from '@/types/Task';
 
 const fnSignature = "use-server | view-model | getTasksUserGraphQLViewModel";
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 const lookupUserQuery = `
     query LookUpUser($email: String!) {
@@ -67,7 +62,7 @@ export const loginUser = async (email: string, password: string) => {
         }
         return false;
     } catch (error) {
-        const errorMsg = await catchedErrorMessage("loginUser", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "loginUser", error as Error);
         throw new Error(errorMsg);
     }
 };
@@ -81,7 +76,7 @@ export const registerUser = async(email: string, password: string) => {
             return false;
         }
     } catch (error) {
-        const errorMsg = await catchedErrorMessage("registerUser -> lookupUserQuery", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "registerUser -> lookupUserQuery", error as Error);
         throw new Error(errorMsg);
     }
     
@@ -111,7 +106,7 @@ export const registerUser = async(email: string, password: string) => {
         // just to be safe...
         await logoutUser();
                 
-        const errorMsg = await catchedErrorMessage("registerUser", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "registerUser", error as Error);
         throw new Error(errorMsg);
     }
 }

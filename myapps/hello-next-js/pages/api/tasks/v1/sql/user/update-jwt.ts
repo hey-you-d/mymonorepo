@@ -2,28 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY } from '@/lib/app/common';
 import type { UserModelType, UsersDbQueryResultType } from '@/types/Task';
+import { customResponseMessage, missingParamErrorMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | API | user/update-jwt.ts";
-const customResponseMessage = async (fnName: string, customMsg: string) => {
-    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
-    console.log(msg);
-    return msg;
-}
-const missingParamErrorMessage = async (fnName: string, missingParamMsg: string) => {
-    const errorMsg = `${fnSignature} | ${fnName} | ${missingParamMsg}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
     if (!isAuthorized) return res.status(401).json({ 
-      error: await customResponseMessage("handler", "Unauthorized access: invalid API key"),
+      error: await customResponseMessage(fnSignature, "handler", "Unauthorized access: invalid API key"),
     });  
 
     switch (req.method) {
@@ -31,20 +17,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         try {
           const { email, jwt } = req.body;
           if (!email) return res.status(400).json({ 
-            error: await missingParamErrorMessage("PATCH", "Title is required"),
+            error: await missingParamErrorMessage(fnSignature, "PATCH", "Email is required"),
           });
           if (!jwt) return res.status(400).json({ 
-            error: await missingParamErrorMessage("PATCH", "JWT is required"), 
+            error: await missingParamErrorMessage(fnSignature, "PATCH", "JWT is required"), 
           });  
 
-          const result: { rows: UsersDbQueryResultType[] } = await db.query(`
-            UPDATE users SET jwt = $2 WHERE email = $1 RETURNING *`, 
+          const result: { rows: UsersDbQueryResultType[] } = await db.query(
+            `UPDATE users SET jwt = $2 WHERE email = $1 RETURNING *`, 
             [email, jwt]
           );
 
           // Check for null/undefined result (connection issues)
           if (!result || !result.rows) {
-            const errMsg = await customResponseMessage("PATCH", "null/undefined result");  
+            const errMsg = await customResponseMessage(fnSignature, "PATCH", "null/undefined result");  
             return res.status(500).json(errMsg);
           }
           const rows = result.rows;
@@ -60,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           
           return res.status(201).json(payload);
         } catch (error) {
-          const errorMsg = await catchedErrorMessage("POST", error as Error);
+          const errorMsg = await catchedErrorMessage(fnSignature, "PATCH", error as Error);
           return res.status(500).json({ error: errorMsg });
         }
       default:

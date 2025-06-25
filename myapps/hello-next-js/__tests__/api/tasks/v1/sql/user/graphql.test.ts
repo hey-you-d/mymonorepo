@@ -22,7 +22,7 @@ jest.mock('../../../../../../src/lib/app/common', () => ({
 import { ApolloServer } from '@apollo/server';
 import { gql } from 'graphql-tag';
 import { schema, resolvers } from '../../../../../../pages/api/tasks/v1/sql/user/graphql';
-import { GraphQLContext } from '@/types/Task';
+import type { GraphQLContext } from '@/types/Task';
 //import { CHECK_API_KEY, VERIFY_JWT_IN_AUTH_HEADER } from '@/lib/app/common';
 const {
   CHECK_API_KEY,  

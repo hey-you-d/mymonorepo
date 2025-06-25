@@ -1,15 +1,11 @@
 'use client';
 import { useMemo, useCallback } from 'react';
 import { TaskModel, swrFetcher } from '@/models/Task/use-client/TaskModel';
+import { catchedErrorMessage } from '@/lib/app/error';
 import type { Task } from '@/types/Task';
 import useSWR, { mutate } from 'swr';
 
 const fnSignature = "use-client | view-model | useTasksViewModelWithSwr";
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 const fetcher = async () => {
     return await swrFetcher();
@@ -34,7 +30,7 @@ export const useTaskViewModelWithSwr = () => {
       mutate("Tasks-API", result, false);  // Update SWR cache without refetching
     } catch (error) {
       mutate("Tasks-API", [], false); // Explicitly clear cache
-      const errorMsg = await catchedErrorMessage("getTasksDBRows", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "getTasksDBRows", error as Error);
       throw new Error(errorMsg);
     }
   }, [taskModel]);
@@ -46,7 +42,7 @@ export const useTaskViewModelWithSwr = () => {
       mutate("Tasks-API", result, false);  // Update SWR cache
     } catch (error) {
       mutate("Tasks-API", [], false); // Explicitly clear cache
-      const errorMsg = await catchedErrorMessage("deleteAllRows", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "deleteAllRows", error as Error);
       throw new Error(errorMsg);
     }
   }, [taskModel]);
@@ -58,7 +54,7 @@ export const useTaskViewModelWithSwr = () => {
       mutate("Tasks-API", result, false);  // Update SWR cache
     } catch (error) {
       mutate("Tasks-API", [], false); // Explicitly clear cache
-      const errorMsg = await catchedErrorMessage("seedTasksDB", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "seedTasksDB", error as Error);
       throw new Error(errorMsg);
     }
   }, [taskModel]);
@@ -70,7 +66,7 @@ export const useTaskViewModelWithSwr = () => {
       mutate("Tasks-API", result, false);  // Update SWR cache
     } catch (error) {
       mutate("Tasks-API", [], false); // Explicitly clear cache
-      const errorMsg = await catchedErrorMessage("getRowFromId", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "getRowFromId", error as Error);
       throw new Error(errorMsg);
     }
   }, [taskModel]);
@@ -83,7 +79,7 @@ export const useTaskViewModelWithSwr = () => {
       mutate("Tasks-API", [result[0], ...tasks], false);  // Update SWR cache
     } catch (error) {
       mutate("Tasks-API", [], false); // Explicitly clear cache
-      const errorMsg = await catchedErrorMessage("createRow", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "createRow", error as Error);
       throw new Error(errorMsg);
     }
   }, [taskModel]);
@@ -100,7 +96,7 @@ export const useTaskViewModelWithSwr = () => {
       mutate("Tasks-API", updatedTasks, false);  // Update SWR cache
     } catch (error) {
       mutate("Tasks-API", [], false); // Explicitly clear cache
-      const errorMsg = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, `updateRowFromId [id: ${id}]`, error as Error);
       throw new Error(errorMsg);
     }
   }, [taskModel]);
@@ -113,7 +109,7 @@ export const useTaskViewModelWithSwr = () => {
       mutate("Tasks-API", [], false);  // Update SWR cache
     } catch (error) {
       mutate("Tasks-API", [], false); // Explicitly clear cache
-      const errorMsg = await catchedErrorMessage(`deleteRowFromId [id: ${id}]`, error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, `deleteRowFromId [id: ${id}]`, error as Error);
       throw new Error(errorMsg);
     }
   }, [taskModel]);

@@ -9,22 +9,18 @@ import {
   updateRowFromId as updateRowFromIdTaskModel,
   deleteRowFromId as deleteRowFromIdTaskModel
 } from '@/models/Task/use-server/TaskModel';
+import { catchedErrorMessage } from '@/lib/app/error';
 import type { Task } from '@/types/Task';
 import { revalidateTag } from "next/cache";
 
 const fnSignature = "use-server | view-model | getTasksViewModelWithSwr";
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 export const fetcher = async (): Promise<Task[] | null> => {
     try {
       const result: Task[] | undefined = await swrFetcher();
       return result ?? null;
     } catch (error) {
-      const errorMsg = await catchedErrorMessage("fetcher", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "fetcher", error as Error);
       throw new Error(errorMsg);
     }
 };
@@ -44,7 +40,7 @@ export const getTasksDBRows = async (): Promise<{ tasks: Task[] | null }> => {
       }
       return { tasks: tasks ?? null };
     } catch (error) {
-      const errorMsg = await catchedErrorMessage("getTasksDBRows", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "getTasksDBRows", error as Error);
       throw new Error(errorMsg);
     } 
 };
@@ -61,7 +57,7 @@ export const deleteAllRows = async (): Promise<void> => {
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
     } catch (error) {
-      const errorMsg = await catchedErrorMessage("deleteAllRows", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "deleteAllRows", error as Error);
       throw new Error(errorMsg);
     } 
 };
@@ -78,7 +74,7 @@ export const seedTasksDB = async (): Promise<void> => {
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
     } catch (error) {
-      const errorMsg = await catchedErrorMessage("seedTasksDB", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "seedTasksDB", error as Error);
       throw new Error(errorMsg);
     } 
 };
@@ -99,7 +95,7 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
 
       return { task: task ?? null };
     } catch (error) {
-      const errorMsg = await catchedErrorMessage(`getRowFromId [id: ${id}]`, error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, `getRowFromId [id: ${id}]`, error as Error);
       throw new Error(errorMsg);
     }
 };
@@ -116,7 +112,7 @@ export const createRow = async (title: string, detail: string): Promise<void> =>
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
     } catch (error) {
-      const errorMsg = await catchedErrorMessage("createRow", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "createRow", error as Error);
       throw new Error(errorMsg);
     } 
 };
@@ -133,7 +129,7 @@ export const updateRowFromId = async (id: number, title: string, detail: string,
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
     } catch (error) {
-      const errorMsg = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, `updateRowFromId [id: ${id}]`, error as Error);
       throw new Error(errorMsg);
     }
 };
@@ -152,7 +148,7 @@ export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | nul
 
       return { tasks: null };
     } catch (error) {
-      const errorMsg = await catchedErrorMessage(`deleteRowFromId [id: ${id}]`, error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, `deleteRowFromId [id: ${id}]`, error as Error);
       throw new Error(errorMsg);
     } 
 };

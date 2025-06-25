@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Request as ExpressRequest } from 'express';
+import type { VerifyJwtResult } from '@/types/Task';
 import { getSecret } from "./awsParameterStore";
 import { getSecret as getFrmSecretMgr } from '@/lib/app/awsSecretManager';
 import { LOCALHOST_MODE, LIVE_SITE_MODE, APP_ENV } from './featureFlags';
 import * as cookie from 'cookie';
-import { verify, sign, JwtPayload } from 'jsonwebtoken';
+import { verify, sign } from 'jsonwebtoken';
 
 export const MONOREPO_PREFIX = "/hello-next-js";
 export const TASKS_CRUD = "/task-crud-fullstack";
@@ -103,10 +104,6 @@ export const getJwtSecret = async () => {
         throw err;
     }  
 }
-
-export type VerifyJwtResult =
-  | { valid: true; payload: string | JwtPayload }
-  | { valid: false; error: string };
 
 export const verifyJwtErrorMsgs = {
     TokenExpiredError: 'VERIFY_JWT | Token Expired',

@@ -9,22 +9,13 @@ import { Task, GraphQLContext } from "@/types/Task";
 import { values, placeholders } from "./seed-table";
 import { CHECK_API_KEY, VERIFY_JWT_IN_AUTH_HEADER } from '@/lib/app/common';
 import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
+import { customResponseMessage, catchedErrorMessage } from '@/lib/app/error';
 
 //import { KeyvAdapter } from '@apollo/utils.keyvadapter';
 //import Keyv from 'keyv'; 
 //import KeyvRedis from '@keyv/redis'; // Optional Redis adapter:
 
 const fnSignature = "tasks/v1 | API | graphql.ts";
-const customResponseMessage = async (fnName: string, customMsg: string) => {
-    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
-    console.log(msg);
-    return msg;
-}
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 export const schema = gql`
     type Task {
@@ -59,20 +50,20 @@ export const resolvers = {
                 
                 // Check for null/undefined result (connection issues)
                 if (!res || !res.rows) {
-                    const errMsg = await customResponseMessage("query - tasks", "null/undefined output");
+                    const errMsg = await customResponseMessage(fnSignature, "query - tasks", "null/undefined output");
                     throw new Error(errMsg);
                 }
                 
                 return res.rows;
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("query - tasks", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "query - tasks", error as Error);
                 throw new Error(errorMsg);
             }
         },
         task: async (_: unknown, { id }: { id: Task['id'] }, context: GraphQLContext) => {
             const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
             if (!outcome.valid) {
-                const errMsg = await customResponseMessage("query - task", `failed JWT verification: ${outcome.error}`);
+                const errMsg = await customResponseMessage(fnSignature, "query - task", `failed JWT verification: ${outcome.error}`);
                 throw new Error(errMsg);
             }
 
@@ -81,13 +72,13 @@ export const resolvers = {
                 
                 // Check for null/undefined result (connection issues)
                 if (!res || !res.rows) {
-                    const errMsg = await customResponseMessage("query - task", "null/undefined output");
+                    const errMsg = await customResponseMessage(fnSignature, "query - task", "null/undefined output");
                     throw new Error(errMsg);
                 }
                 
                 return res.rows[0];
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("query - task", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "query - task", error as Error);
                 throw new Error(errorMsg);
             }
         },
@@ -96,7 +87,7 @@ export const resolvers = {
         createTask: async (_: unknown, { title, detail }: Task, context: GraphQLContext) => {
             const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
             if (!outcome.valid) {
-                const errMsg = await customResponseMessage("mutation - createTask", `failed JWT verification: ${outcome.error}`);
+                const errMsg = await customResponseMessage(fnSignature, "mutation - createTask", `failed JWT verification: ${outcome.error}`);
                 throw new Error(errMsg);
             }
             
@@ -108,20 +99,20 @@ export const resolvers = {
 
                 // Check for null/undefined result (connection issues)
                 if (!res || !res.rows) {
-                    const errMsg = await customResponseMessage("mutation - createTask", "null/undefined output");
+                    const errMsg = await customResponseMessage(fnSignature, "mutation - createTask", "null/undefined output");
                     throw new Error(errMsg);
                 }
 
                 return res.rows[0];
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("mutation - createTask", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "mutation - createTask", error as Error);
                 throw new Error(errorMsg);
             }
         },
         updateTask: async (_: unknown, { id, title, detail, completed }: Task, context: GraphQLContext) => {
             const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
             if (!outcome.valid) {
-                const errMsg = await customResponseMessage("mutation - updateTask", `failed JWT verification: ${outcome.error}`);
+                const errMsg = await customResponseMessage(fnSignature, "mutation - updateTask", `failed JWT verification: ${outcome.error}`);
                 throw new Error(errMsg);
             }
 
@@ -133,20 +124,20 @@ export const resolvers = {
 
                 // Check for null/undefined result (connection issues)
                 if (!res || !res.rows) {
-                    const errMsg = await customResponseMessage("mutation - updateTask", "null/undefined output");
+                    const errMsg = await customResponseMessage(fnSignature, "mutation - updateTask", "null/undefined output");
                     throw new Error(errMsg);
                 }
 
                 return res.rows[0];
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("mutation - updateTask", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "mutation - updateTask", error as Error);
                 throw new Error(errorMsg);
             }
         },
         deleteTask: async (_: unknown, { id }: { id: Task['id'] }, context: GraphQLContext) => {
             const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
             if (!outcome.valid) {
-                const errMsg = await customResponseMessage("mutation - deleteTask", `failed JWT verification: ${outcome.error}`);
+                const errMsg = await customResponseMessage(fnSignature, "mutation - deleteTask", `failed JWT verification: ${outcome.error}`);
                 throw new Error(errMsg);
             }
 
@@ -155,20 +146,20 @@ export const resolvers = {
                 
                 // Check for null/undefined result (connection issues)
                 if (!res || !res.rows) {
-                    const errMsg = await customResponseMessage("mutation - deleteTask", "null/undefined output");
+                    const errMsg = await customResponseMessage(fnSignature, "mutation - deleteTask", "null/undefined output");
                     throw new Error(errMsg);
                 }
                 
                 return res.rows[0];
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("mutation - deleteTask", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "mutation - deleteTask", error as Error);
                 throw new Error(errorMsg);
             }
         },
         deleteTasks: async (_: unknown, {}, context: GraphQLContext) => {
             const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
             if (!outcome.valid) {
-                const errMsg = await customResponseMessage("mutation - deleteTasks", `failed JWT verification: ${outcome.error}`);
+                const errMsg = await customResponseMessage(fnSignature, "mutation - deleteTasks", `failed JWT verification: ${outcome.error}`);
                 throw new Error(errMsg);
             }
 
@@ -177,20 +168,20 @@ export const resolvers = {
                 
                 // Check for null/undefined result (connection issues)
                 if (!res || !res.rows) {
-                    const errMsg = await customResponseMessage("mutation - deleteTasks", "null/undefined output");
+                    const errMsg = await customResponseMessage(fnSignature, "mutation - deleteTasks", "null/undefined output");
                     throw new Error(errMsg);
                 }
                 
                 return res.rows;
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("mutation - deleteTasks", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "mutation - deleteTasks", error as Error);
                 throw new Error(errorMsg);
             }
         },
         seedTasks: async (_: unknown, {}, context: GraphQLContext) => {
             const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
             if (!outcome.valid) {
-                const errMsg = await customResponseMessage("mutation - seedTasks", `failed JWT verification: ${outcome.error}`);
+                const errMsg = await customResponseMessage(fnSignature, "mutation - seedTasks", `failed JWT verification: ${outcome.error}`);
                 throw new Error(errMsg);
             }
 
@@ -200,7 +191,7 @@ export const resolvers = {
 
                 // Check for null/undefined result (connection issues)
                 if (!res || !res.rows) {
-                    const errMsg = await customResponseMessage("mutation - seedTasks", "null/undefined output");
+                    const errMsg = await customResponseMessage(fnSignature, "mutation - seedTasks", "null/undefined output");
                     throw new Error(errMsg);
                 }    
 
@@ -208,7 +199,7 @@ export const resolvers = {
                 //    ["hello", "world"]);
                 return res.rows;
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("mutation - seedTasks", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "mutation - seedTasks", error as Error);
                 throw new Error(errorMsg);
             }    
         },

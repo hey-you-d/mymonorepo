@@ -1,19 +1,9 @@
 "use server"
 import { TASKS_API_HEADER } from "@/lib/app/common";
+import { notOkErrorMessage, catchedErrorMessage } from "@/lib/app/error";
 import type { UserModelType } from '@/types/Task';
 
 const fnSignature = "use-server | model | TaskUserModel";
-export const notOkErrorMessage = async (fnName: string, response: Response) => {
-    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
-    console.error(errorMsg);
-    return errorMsg;
-}
-
-export const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-} 
 
 export const registerUser = async (email: string, password: string, jwt: string, overrideFetchUrl?: string): Promise<UserModelType> => {
   // for reference:
@@ -38,14 +28,14 @@ export const registerUser = async (email: string, password: string, jwt: string,
     });
 
     if (!response.ok) {
-      const errorMsg = await notOkErrorMessage("registerUser", response);
+      const errorMsg = await notOkErrorMessage(fnSignature, "registerUser", response);
       throw new Error(errorMsg);
     }
 
     const result: UserModelType = await response.json();
     return result;
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("registerUser", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "registerUser", error as Error);
     throw new Error(errorMsg);
   } 
 }
@@ -71,14 +61,14 @@ export const logInUser = async (email: string, overrideFetchUrl?: string): Promi
     });
 
     if (!response.ok) {
-      const errorMsg = await notOkErrorMessage("loginUser", response);
+      const errorMsg = await notOkErrorMessage(fnSignature, "loginUser", response);
       throw new Error(errorMsg);
     }
 
     const result: UserModelType = await response.json();
     return result;
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("loginUser", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "loginUser", error as Error);
     throw new Error(errorMsg);
   } 
 };
@@ -104,14 +94,14 @@ export const updateJwt = async (email: string, jwt: string, overrideFetchUrl?: s
     });
     
     if (!response.ok) {
-      const errorMsg = await notOkErrorMessage("updateJwt", response);
+      const errorMsg = await notOkErrorMessage(fnSignature, "updateJwt", response);
       throw new Error(errorMsg);
     } 
 
     const result: UserModelType = await response.json();
     return result;
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("updateJwt", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "updateJwt", error as Error);
     throw new Error(errorMsg);
   } 
 };

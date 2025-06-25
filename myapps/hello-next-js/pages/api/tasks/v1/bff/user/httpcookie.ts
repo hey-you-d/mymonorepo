@@ -3,18 +3,9 @@ import { JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
 import * as cookie from 'cookie';
 import { VERIFY_JWT_STRING, verifyJwtErrorMsgs } from '@/lib/app/common';
 import { APP_ENV, LIVE_SITE_MODE, LOCALHOST_MODE } from "@/lib/app/featureFlags";
+import { customResponseMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | BFF | user/httpcookie.ts";
-const customResponseMessage = async (fnName: string, customMsg: string) => {
-    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
-    console.log(msg);
-    return msg;
-}
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 // for reference:
 // for SPA: rely on BFF (the approach below) for any server-side operations
@@ -27,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 if (!rawCookieHeader) {
                     return res.status(200).json({ 
                         outcome: false,
-                        message: await customResponseMessage("GET", "No cookies received in req.headers.cookie") 
+                        message: await customResponseMessage(fnSignature, "GET", "No cookies received in req.headers.cookie") 
                     });
                 }
                 
@@ -41,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 if (token && token.length > 0) {
                     const result = await VERIFY_JWT_STRING(token);
                     if(!result.valid) {
-                        await customResponseMessage("GET", `VERIFY_JWT_STRING | ${result.error}`)
+                        await customResponseMessage(fnSignature, "GET", `VERIFY_JWT_STRING | ${result.error}`)
                     }
 
                     // if the token is already expired, set the cookie value to an empty string, therefore invalidating it
@@ -78,10 +69,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 
                 return res.status(500).json({  
                     outcome: false,
-                    message: await customResponseMessage("POST", "Error: unknown server error") 
+                    message: await customResponseMessage(fnSignature, "POST", "Error: unknown server error") 
                 });    
             } catch (error) {
-                const errorMsg = await catchedErrorMessage("GET", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "GET", error as Error);
                 return res.status(500).json({ error: errorMsg });
             }
         default:

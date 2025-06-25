@@ -9,18 +9,9 @@ import { DateTimeResolver } from 'graphql-scalars';
 import { db } from '@/lib/db/db_postgreSQL';
 import type { UsersDbQueryResultType as User, GraphQLContext } from '@/types/Task';
 import { CHECK_API_KEY, VERIFY_JWT_IN_AUTH_HEADER } from '@/lib/app/common';
+import { customResponseMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | API | user/graphql.ts";
-const customResponseMessage = async (fnName: string, customMsg: string) => {
-    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
-    console.log(msg);
-    return msg;
-}
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 export const schema = gql`
     scalar DateTime
@@ -53,7 +44,7 @@ export const resolvers = {
         users: async(_: unknown, {}, context: GraphQLContext) => {
             const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
             if (!outcome.valid) {
-                const errMsg = await customResponseMessage("query - users", `failed JWT verification : ${outcome.error}`);
+                const errMsg = await customResponseMessage(fnSignature, "query - users", `failed JWT verification : ${outcome.error}`);
                 throw new Error(errMsg);
             }
 
@@ -61,14 +52,14 @@ export const resolvers = {
                 const res = await db.query('SELECT * FROM users ORDER BY id DESC');
                 return res.rows;
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("query - users", error as Error); 
+                const errorMsg = await catchedErrorMessage(fnSignature, "query - users", error as Error); 
                 throw new Error(errorMsg);
             }
         },
         user: async(_: unknown, { id }: { id: User['id'] }, context: GraphQLContext) => {
             const outcome = await VERIFY_JWT_IN_AUTH_HEADER(context.req);
             if (!outcome.valid) {
-                const errMsg = await customResponseMessage("query - user", `failed JWT verification : ${outcome.error}`);
+                const errMsg = await customResponseMessage(fnSignature, "query - user", `failed JWT verification : ${outcome.error}`);
                 throw new Error(errMsg);
             }
 
@@ -76,7 +67,7 @@ export const resolvers = {
                 const res = await db.query('SELECT * FROM users WHERE id = $1', [id]);
                 return res.rows[0];
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("query - user", error as Error); 
+                const errorMsg = await catchedErrorMessage(fnSignature, "query - user", error as Error); 
                 throw new Error(errorMsg);
             }
         },
@@ -87,7 +78,7 @@ export const resolvers = {
                 const { rows } = await db.query('SELECT * FROM users WHERE email = $1', [email]);
                 return rows[0];
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("query - lookupUser", error as Error); 
+                const errorMsg = await catchedErrorMessage(fnSignature, "query - lookupUser", error as Error); 
                 throw new Error(errorMsg);
             }
         },
@@ -104,7 +95,7 @@ export const resolvers = {
 
                 return rows[0];
             } catch(error) {
-                const errorMsg = await catchedErrorMessage("mutation - registerUser", error as Error); 
+                const errorMsg = await catchedErrorMessage(fnSignature, "mutation - registerUser", error as Error); 
                 throw new Error(errorMsg);
             }
         },

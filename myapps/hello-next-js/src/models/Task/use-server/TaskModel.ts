@@ -2,20 +2,10 @@
 import { cookies } from 'next/headers';
 import { TASKS_API_HEADER, JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
 import { Task } from "@/types/Task";
+import { notOkErrorMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "use-server | model | TaskModel";
-export const notOkErrorMessage = async (fnName: string, response: Response) => {
-    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
-    console.error(errorMsg);
-    return errorMsg;
-}
-
-export const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-} 
-
+ 
 export const swrFetcher = async (): Promise<Task[] | undefined> => {
   // for reference:
   // "use server" should only be used in files that contain 
@@ -30,14 +20,14 @@ export const swrFetcher = async (): Promise<Task[] | undefined> => {
       });
 
       if (!response.ok) {
-        const errorMsg = await notOkErrorMessage("swrFetcher", response);
+        const errorMsg = await notOkErrorMessage(fnSignature, "swrFetcher", response);
         throw new Error(errorMsg);
       }
       const result:Task[] = await response.json();
   
       return result;
   } catch(error) {
-      const errorMsg = await catchedErrorMessage("swrFetcher", error as Error);
+      const errorMsg = await catchedErrorMessage(fnSignature, "swrFetcher", error as Error);
       throw new Error(errorMsg);
   }
 }
@@ -59,14 +49,14 @@ export const getTasksDBRows = async (overrideFetchUrl?: string): Promise<Task[] 
     });
 
     if (!response.ok) {
-        const errorMsg = await notOkErrorMessage("getTasksDBRows", response);
+        const errorMsg = await notOkErrorMessage(fnSignature, "getTasksDBRows", response);
         throw new Error(errorMsg);
     }
 
     const result:Task[] = await response.json();
     return result;
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("getTasksDBRows", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "getTasksDBRows", error as Error);
     throw new Error(errorMsg);
   } 
 }
@@ -89,14 +79,14 @@ export const deleteAllRows = async (overrideFetchUrl?: string): Promise<Task[] |
     });
 
     if (!response.ok) {
-        const errorMsg = await notOkErrorMessage("deleteAllRows", response);
+        const errorMsg = await notOkErrorMessage(fnSignature, "deleteAllRows", response);
         throw new Error(errorMsg);
     }
     
     const result: Task[] = await response.json();
     return result;
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("deleteAllRows", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "deleteAllRows", error as Error);
     throw new Error(errorMsg);
   } 
 }
@@ -119,14 +109,14 @@ export const seedTasksDB = async (overrideFetchUrl?: string): Promise<Task[] | u
     });
 
     if (!response.ok) {
-        const errorMsg = await notOkErrorMessage("seedTasksDB", response);
+        const errorMsg = await notOkErrorMessage(fnSignature, "seedTasksDB", response);
         throw new Error(errorMsg);
     }
 
     const result = await response.json();
     return result.rows;
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("seedTasksDB", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "seedTasksDB", error as Error);
     throw new Error(errorMsg);
   } 
 }
@@ -152,14 +142,14 @@ export const getRowFromId = async (id: number, overrideFetchUrl?: string): Promi
         if (response.status == 404) {
           return null;
         }
-        const errorMsg = await notOkErrorMessage("getRowFromId", response);
+        const errorMsg = await notOkErrorMessage(fnSignature, "getRowFromId", response);
         throw new Error(errorMsg);
       }
 
     const result: Task | null = await response.json();   
     return result;  
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("getRowFromId", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "getRowFromId", error as Error);
     throw new Error(errorMsg);
   } 
 }
@@ -186,7 +176,7 @@ export const createRow = async (title: string, detail: string, overrideFetchUrl?
     });
 
     if (!response.ok) {
-        const errorMsg = await notOkErrorMessage("createRow", response);
+        const errorMsg = await notOkErrorMessage(fnSignature, "createRow", response);
         throw new Error(errorMsg);
     }
 
@@ -194,7 +184,7 @@ export const createRow = async (title: string, detail: string, overrideFetchUrl?
     
     return result.rows satisfies Task[];
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("createRow", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "createRow", error as Error);
     throw new Error(errorMsg);
   } 
 }
@@ -222,7 +212,7 @@ export const updateRowFromId = async  (id: number, title: string, detail: string
     });
 
     if (!response.ok) {
-        const errorMsg = await notOkErrorMessage("updateRowFromId", response);
+        const errorMsg = await notOkErrorMessage(fnSignature, "updateRowFromId", response);
         throw new Error(errorMsg);
     }
 
@@ -230,7 +220,7 @@ export const updateRowFromId = async  (id: number, title: string, detail: string
 
     return result;
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("updateRowFromId", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "updateRowFromId", error as Error);
     throw new Error(errorMsg);
   } 
 }
@@ -253,14 +243,14 @@ export const deleteRowFromId = async (id: number, overrideFetchUrl?: string): Pr
     });
 
     if (!response.ok) {
-        const errorMsg = await notOkErrorMessage("deleteRowFromId", response);
+        const errorMsg = await notOkErrorMessage(fnSignature, "deleteRowFromId", response);
         throw new Error(errorMsg);
     }
 
     const result = await response.json();
     return result.rows;
   } catch(error) {
-    const errorMsg = await catchedErrorMessage("deleteRowFromId", error as Error);
+    const errorMsg = await catchedErrorMessage(fnSignature, "deleteRowFromId", error as Error);
     throw new Error(errorMsg);
   } 
 }

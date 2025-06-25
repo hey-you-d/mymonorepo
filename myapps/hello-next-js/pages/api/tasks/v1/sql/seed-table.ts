@@ -1,18 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { CHECK_API_KEY, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
+import { customResponseMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | API | seed-table.ts";
-const customResponseMessage = async (fnName: string, customMsg: string) => {
-    const msg = `${fnSignature} | ${fnName} | ${customMsg}`;
-    console.log(msg);
-    return msg;
-}
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 const tasks = [
     { title: 'Build Next.js CRUD', detail: 'Add full backend API layer to hello-next-js app' },
@@ -54,7 +45,7 @@ export const placeholders = tasks
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
     if (!isAuthorized) return res.status(401).json({ 
-      error: await customResponseMessage("handler", "Unauthorized access: invalid API key"),
+      error: await customResponseMessage(fnSignature, "handler", "Unauthorized access: invalid API key"),
     });
 
     await VERIFY_JWT_RETURN_API_RES(req, res);
@@ -72,7 +63,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 
                 return res.status(201).json(result);
             } catch (error) {
-                const errorMsg = await catchedErrorMessage("POST", error as Error);
+                const errorMsg = await catchedErrorMessage(fnSignature, "POST", error as Error);
                 return res.status(500).json({ error: errorMsg });
             } 
         default:

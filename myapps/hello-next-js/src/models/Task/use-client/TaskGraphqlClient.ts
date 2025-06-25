@@ -1,4 +1,9 @@
 "use client"
+
+import { customResponseMessage, notOkErrorMessage } from "@/lib/app/error";
+
+const fnSignature = "use-client | model | TaskGraphqlClient";
+
 export async function fetchGraphQL(query: string, variables = {}) {
     // for reference:
     // GraphQL does not use HTTP verbs to distinguish operations. Instead:
@@ -21,9 +26,7 @@ export async function fetchGraphQL(query: string, variables = {}) {
 
     // capture http level error (http status code is not 2xx)
     if (!res.ok) {
-      const text = await res.text();
-      const errorMsg = `use-client | model | TaskGraphqlClient | not ok response: ${res.status}: - ${text} `;
-      console.error(errorMsg);
+      const errorMsg = await notOkErrorMessage(fnSignature, "fetchGraphQL", res);
       throw new Error(errorMsg);
     }
 
@@ -31,12 +34,10 @@ export async function fetchGraphQL(query: string, variables = {}) {
 
     // capture graphql level error (http status code is still 200)
     if (json.errors) {
-      
       const errorFn = (e: { message: string }) => {
         return e && e.message ? e.message : "unknown error";
       }  
-      const errorMsg = `use-client | model | TaskGraphqlClient | json.errors: ${json.errors.map(errorFn).join('\n')} `;
-      console.error(errorMsg);
+      const errorMsg = await customResponseMessage(fnSignature, "fetchGraphQL - json error", json.errors.map(errorFn).join('-'));
       throw new Error(errorMsg);
     }
 

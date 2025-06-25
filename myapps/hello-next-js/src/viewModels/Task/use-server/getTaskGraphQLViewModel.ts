@@ -1,14 +1,10 @@
 'use server';
 
 import { fetchGraphQL } from '@/models/Task/use-server/TaskGraphqlClient';
+import { catchedErrorMessage } from '@/lib/app/error';
 import type { Task } from '@/types/Task';
 
 const fnSignature = "use-server | view-model | getTaskGraphQLViewModel";
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
 
 export const getTasksDBRows = async () => {
     const query = `
@@ -26,7 +22,7 @@ export const getTasksDBRows = async () => {
         const data: { tasks: Task[] } = await fetchGraphQL(query);
         return data.tasks;
     } catch (error) {
-        const errorMsg = await catchedErrorMessage("getTasksDBRows", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "getTasksDBRows", error as Error);
         throw new Error(errorMsg);
     }
 };
@@ -50,7 +46,7 @@ export const createRow = async(_: Task[], title: string, detail: string) => {
 
         return data.createTask;
     } catch (error) {
-        const errorMsg = await catchedErrorMessage("createRow", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "createRow", error as Error);
         throw new Error(errorMsg);
     }
 }
@@ -75,7 +71,7 @@ export const deleteAllRows = async() => {
         await fetchGraphQL(mutation);
         return [] as Task[];
     } catch (error) {
-        const errorMsg = await catchedErrorMessage("deleteAllRows", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "deleteAllRows", error as Error);
         throw new Error(errorMsg);
     }
 }
@@ -97,7 +93,7 @@ export const seedTaskDB = async() => {
         const data: { seedTasks: Task[] } = await fetchGraphQL(mutation);        
         return data.seedTasks;
     } catch (error) {
-        const errorMsg = await catchedErrorMessage("seedTaskDB", error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, "seedTaskDB", error as Error);
         throw new Error(errorMsg);
     }
 }
@@ -121,7 +117,7 @@ export const updateRowFromId = async(_: Task[], id: number, title: string, detai
   
         return data.updateTask;
     } catch (error) {
-        const errorMsg = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, error as Error);
+        const errorMsg = await catchedErrorMessage(fnSignature, `updateRowFromId [id: ${id}]`, error as Error);
         throw new Error(errorMsg);
     }
 }

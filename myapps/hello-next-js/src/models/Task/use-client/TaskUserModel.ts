@@ -1,23 +1,13 @@
 "use client"
 import { TASKS_BFF_BASE_API_URL } from "@/lib/app/common";
 import { UserModelType } from "@/types/Task";
+import { notOkErrorMessage, catchedErrorMessage } from "@/lib/app/error";
 
 const headers = {
     "Content-Type": "application/json",
 };
 
 const fnSignature = "use-client | model | TaskUserModel";
-export const notOkErrorMessage = async (fnName: string, response: Response) => {
-    const errorMsg = `${fnSignature} | ${fnName} | not ok response: ${response.status} - ${response.statusText} `;
-    console.error(errorMsg);
-    return errorMsg;
-}
-
-export const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-} 
 
 export class TaskUserModel {    
     constructor() {}
@@ -38,7 +28,7 @@ export class TaskUserModel {
             });
 
             if (!response.ok) {
-                const errorMsg = await notOkErrorMessage("registerUser", response);
+                const errorMsg = await notOkErrorMessage(fnSignature, "registerUser", response);
                 throw new Error(errorMsg);
             }
 
@@ -46,7 +36,7 @@ export class TaskUserModel {
             
             return result;
         } catch(error) {
-            const errorMsg = await catchedErrorMessage("registerUser", error as Error);
+            const errorMsg = await catchedErrorMessage(fnSignature, "registerUser", error as Error);
             throw new Error(errorMsg);
         }
     }
@@ -68,7 +58,7 @@ export class TaskUserModel {
             });
 
             if (!response.ok) {
-                const errorMsg = await notOkErrorMessage("loginUser", response);
+                const errorMsg = await notOkErrorMessage(fnSignature, "loginUser", response);
                 throw new Error(errorMsg);
             }
 
@@ -76,7 +66,7 @@ export class TaskUserModel {
 
             return result;
         } catch(error) {
-            const errorMsg = await catchedErrorMessage("loginUser", error as Error);
+            const errorMsg = await catchedErrorMessage(fnSignature, "loginUser", error as Error);
             throw new Error(errorMsg);
         }
     }
@@ -94,7 +84,7 @@ export class TaskUserModel {
             });
 
             if (!response.ok) {
-                const errorMsg = await notOkErrorMessage("logoutUser", response);
+                const errorMsg = await notOkErrorMessage(fnSignature, "logoutUser", response);
                 throw new Error(errorMsg);
             }
 
@@ -102,7 +92,7 @@ export class TaskUserModel {
             
             return result;
         } catch(error) {
-            const errorMsg = await catchedErrorMessage("logoutUser", error as Error);
+            const errorMsg = await catchedErrorMessage(fnSignature, "logoutUser", error as Error);
             throw new Error(errorMsg);
         }
     }
@@ -120,7 +110,7 @@ export class TaskUserModel {
             });
 
             if (!response.ok) {
-                const errorMsg = await notOkErrorMessage("checkAuthTokenCookieExist", response);
+                const errorMsg = await notOkErrorMessage(fnSignature, "checkAuthTokenCookieExist", response);
                 throw new Error(errorMsg);
             }
 
@@ -128,7 +118,7 @@ export class TaskUserModel {
             
             return result;
         } catch(error) {
-            const errorMsg = await catchedErrorMessage("checkAuthTokenCookieExist", error as Error);
+            const errorMsg = await catchedErrorMessage(fnSignature, "checkAuthTokenCookieExist", error as Error);
             throw new Error(errorMsg);
         }
     }

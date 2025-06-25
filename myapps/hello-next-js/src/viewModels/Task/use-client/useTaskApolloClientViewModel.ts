@@ -2,14 +2,9 @@
 import { useState } from 'react';
 import { ApolloError, gql, useQuery, useMutation } from '@apollo/client';
 import { Task } from "@/types/Task";
+import { catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "use-client | view-model | useTaskApolloClientViewModel";
-const catchedErrorMessage = async (fnName: string, error: Error) => {
-    const errorMsg = `${fnSignature} | ${fnName} | catched error: ${error.name} - ${error.message}`;
-    console.error(errorMsg);
-    return errorMsg;
-}
-
 
 export const GET_ALL_TASKS = gql`
     query {
@@ -130,7 +125,7 @@ export const useTaskApolloClientViewModel = () => {
             // preventing race conditions from stale closures.
             setTasks(prev => [mutatedData.createTask, ...prev]);
         } catch (e) {
-            const errorMessage = await catchedErrorMessage("createRow", e as Error);
+            const errorMessage = await catchedErrorMessage(fnSignature, "createRow", e as Error);
             setErrorMsg(errorMessage);
         } finally {
             setIsLoading(false);
@@ -158,7 +153,7 @@ export const useTaskApolloClientViewModel = () => {
             
             setTasks([]);
         } catch (e) {
-            const errorMessage = await catchedErrorMessage("deleteAllRows", e as Error);
+            const errorMessage = await catchedErrorMessage(fnSignature, "deleteAllRows", e as Error);
             setErrorMsg(errorMessage);
         } finally {
             setIsLoading(false);
@@ -194,7 +189,7 @@ export const useTaskApolloClientViewModel = () => {
             // dev note 3: I can 100% guarantee that prev is [], hence
             setTasks([...mutatedData.seedTasks]);
         } catch (e) {
-            const errorMessage = await catchedErrorMessage("seedTaskDB", e as Error);
+            const errorMessage = await catchedErrorMessage(fnSignature, "seedTaskDB", e as Error);
             setErrorMsg(errorMessage);
         } finally {
             setIsLoading(false);
@@ -225,7 +220,7 @@ export const useTaskApolloClientViewModel = () => {
             );
             
         } catch (e) {
-            const errorMessage = await catchedErrorMessage(`updateRowFromId [id: ${id}]`, e as Error);
+            const errorMessage = await catchedErrorMessage(fnSignature, `updateRowFromId [id: ${id}]`, e as Error);
             setErrorMsg(errorMessage);
         } finally {
             setIsLoading(false);

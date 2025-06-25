@@ -4,15 +4,18 @@ global.fetch = jest.fn();
 
 describe('fetchGraphQL', () => {
   let spyConsoleError: jest.SpyInstance<any, any>;
+  let spyConsoleLog: jest.SpyInstance<any, any>;
 
   beforeEach(() => {
     jest.clearAllMocks();
     // hide console.error to reduce noise on the console output
     spyConsoleError = jest.spyOn(console, "error").mockImplementation(()=> {});
+    spyConsoleLog = jest.spyOn(console, "log").mockImplementation(()=> {});
   });
 
   afterEach(() => {
     spyConsoleError.mockRestore();
+    spyConsoleLog.mockRestore();
   });
 
   afterAll(() => {
@@ -54,7 +57,9 @@ describe('fetchGraphQL', () => {
 
     const query = `query { tasks { id } }`;
 
-    await expect(fetchGraphQL(query)).rejects.toThrow("use-client | model | TaskGraphqlClient | not ok response: 500: - Internal Server Error ");
+    await expect(fetchGraphQL(query)).rejects.toThrow(
+      "use-client | model | TaskGraphqlClient | fetchGraphQL | not ok response: 500 - Server Error "
+    );
   });
 
   it('throws an error when GraphQL response contains errors', async () => {
@@ -73,7 +78,7 @@ describe('fetchGraphQL', () => {
     const query = `query { tasks { id } }`;
     
     await expect(fetchGraphQL(query)).rejects.toThrow(
-      'First error message\nSecond error message'
+      "use-client | model | TaskGraphqlClient | fetchGraphQL - json error | First error message-Second error message"
     );
   });
 
@@ -88,7 +93,7 @@ describe('fetchGraphQL', () => {
     const query = `query { tasks { id } }`;
     
     await expect(fetchGraphQL(query)).rejects.toThrow(
-      'use-client | model | TaskGraphqlClient | json.errors: unknown error\nunknown error'
+      "use-client | model | TaskGraphqlClient | fetchGraphQL - json error | unknown error-unknown error"
     );
   });
 
@@ -102,7 +107,9 @@ describe('fetchGraphQL', () => {
 
     const query = `query { tasks { id } }`;
 
-    await expect(fetchGraphQL(query)).rejects.toThrow('use-client | model | TaskGraphqlClient | json.errors: unknown error ');
+    await expect(fetchGraphQL(query)).rejects.toThrow(
+      "use-client | model | TaskGraphqlClient | fetchGraphQL - json error | unknown error"
+    );
   });
 
   it('throws an error when fetch itself fails (network error)', async () => {

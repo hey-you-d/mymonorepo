@@ -16,7 +16,7 @@ jest.mock('../../../../../pages/api/tasks/v1/sql/seed-table', () => ({
 
 import { ApolloServer } from '@apollo/server';
 import { gql } from 'graphql-tag';
-import { GraphQLContext } from '@/types/Task';
+import type { GraphQLContext } from '@/types/Task';
 // Import the actual schema and resolvers from your file
 // Adjust the path according to your actual file structure
 import { schema, resolvers } from '../../../../../pages/api/tasks/v1/sql/graphql'
