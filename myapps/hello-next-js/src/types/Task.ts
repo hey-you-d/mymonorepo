@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { Request as ExpressRequest, Response as ExpressResponse } from "express";
+import { JwtPayload } from 'jsonwebtoken';
 
 export type Task = {
     id: number,
@@ -51,3 +52,7 @@ export type GraphQLContext = {
   res: ExpressResponse;
   user?: unknown; // optional, if you add decoded user info after verifying JWT
 };
+
+export type VerifyJwtResult =
+  | { valid: true; payload: string | JwtPayload }
+  | { valid: false; error: string };
