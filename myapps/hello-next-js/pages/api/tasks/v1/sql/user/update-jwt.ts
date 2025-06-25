@@ -17,14 +17,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         try {
           const { email, jwt } = req.body;
           if (!email) return res.status(400).json({ 
-            error: await missingParamErrorMessage(fnSignature, "PATCH", "Title is required"),
+            error: await missingParamErrorMessage(fnSignature, "PATCH", "Email is required"),
           });
           if (!jwt) return res.status(400).json({ 
             error: await missingParamErrorMessage(fnSignature, "PATCH", "JWT is required"), 
           });  
 
-          const result: { rows: UsersDbQueryResultType[] } = await db.query(`
-            UPDATE users SET jwt = $2 WHERE email = $1 RETURNING *`, 
+          const result: { rows: UsersDbQueryResultType[] } = await db.query(
+            `UPDATE users SET jwt = $2 WHERE email = $1 RETURNING *`, 
             [email, jwt]
           );
 
@@ -46,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           
           return res.status(201).json(payload);
         } catch (error) {
-          const errorMsg = await catchedErrorMessage(fnSignature, "POST", error as Error);
+          const errorMsg = await catchedErrorMessage(fnSignature, "PATCH", error as Error);
           return res.status(500).json({ error: errorMsg });
         }
       default:
