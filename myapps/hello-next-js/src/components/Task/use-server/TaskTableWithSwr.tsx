@@ -7,7 +7,7 @@
 import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
 import { mutate } from 'swr';
 import { useRouter, usePathname } from 'next/navigation';
-import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
+import { MONOREPO_PREFIX, TASKS_CRUD, isSafeInput } from "@/lib/app/common";
 import type { Task } from "@/types/Task"; 
 
 // For reference: **
@@ -21,13 +21,6 @@ export type TaskTableWithSwrType = {
     userAuthenticated: boolean,
 }
 export type TaskTableType = TaskTableWithSwrType;
-
-const isSafeInput = (str: string) => {
-    // for reference: To prevent SQL injection attack
-    // Only allow alphanumeric characters, basic punctuation, and whitespace
-    const regex = /^[a-zA-Z0-9\s.,!?'"()\-_:;]{1,500}$/;
-    return regex.test(str);
-};
 
 export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const appRouter = useRouter();
