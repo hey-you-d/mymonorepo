@@ -1,8 +1,13 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TaskTable } from './TaskTable';
 import type { Task } from '@/types/Task';
+
+jest.mock('next/router', () => ({
+    useRouter: jest.fn(),
+}));
 
 // Mock the constants
 jest.mock('../../../lib/app/common', () => ({
@@ -40,6 +45,13 @@ describe('TaskTable', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockReplace.mockClear();
+        (useRouter as jest.Mock).mockReturnValue({
+            asPath: "/hello-next-js/parent",
+        });
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
     });
 
     describe('Rendering', () => {
@@ -158,7 +170,7 @@ describe('TaskTable', () => {
             const firstEditButton = screen.getAllByText('Edit')[0];
             fireEvent.click(firstEditButton);
             
-            expect(mockReplace).toHaveBeenCalledWith('/app/tasks/edit/1');
+            expect(mockReplace).toHaveBeenCalledWith("/app/tasks/edit/1?from=/hello-next-js/parent");
         });
 
         it('disables edit buttons when user is not authenticated', () => {

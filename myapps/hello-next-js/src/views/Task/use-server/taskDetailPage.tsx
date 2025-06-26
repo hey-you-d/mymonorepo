@@ -7,7 +7,6 @@ import { getRowFromId, deleteRowFromId } from '@/viewModels/Task/use-server/getT
 import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
 import { TaskDetail } from '@/components/Task/use-server/TaskDetail';
 import type { Task } from '@/types/Task';
-import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 
 export const TaskDetailPage = ({id}: {id: number}) => {
   const [task, setTask] = useState<Task | null>(null);
@@ -72,11 +71,6 @@ export const TaskDetailPage = ({id}: {id: number}) => {
   } else {
     body.push(<p>You must be logged-in first to edit this task</p>);
   }
-  body.push(
-    <div>
-      <Link href={`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server`}>Back to the table page</Link>
-    </div>
-  );  
 
   return body;
 };

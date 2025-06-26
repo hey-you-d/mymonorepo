@@ -5,8 +5,8 @@
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
-import { useRouter } from 'next/navigation';
-import { Task } from "@/types/Task";
+import { useRouter, usePathname } from 'next/navigation';
+import type { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
 // for reference: 
@@ -55,6 +55,8 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
+    const pathName = usePathname();
+    
     const chkBoxHandler = useCallback(async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         setButtonDisabled(true);
         const result: { tasks: Task[] | null } = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
@@ -64,8 +66,8 @@ export const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
 
     const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
-        appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}`);
-    }, [appRouter]);
+        appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}?from=${pathName}`);
+    }, [appRouter, pathName]);
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();

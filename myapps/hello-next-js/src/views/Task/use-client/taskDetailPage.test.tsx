@@ -85,7 +85,7 @@ describe('TaskDetailPage', () => {
                 deleteRowFromId: mockDeleteRowFromId
             });
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
             
             expect(screen.getByText('Loading...')).toBeInTheDocument();
         });
@@ -95,7 +95,7 @@ describe('TaskDetailPage', () => {
         it('should check authentication on mount', async () => {
             mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
             await waitFor(() => {
                 expect(mockCheckAuthTokenCookieExist).toHaveBeenCalled();
@@ -105,7 +105,7 @@ describe('TaskDetailPage', () => {
         it('should show TaskDetail when user is authenticated and task exists', async () => {
             mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
             await waitFor(() => {
                 expect(screen.getByTestId('task-detail')).toBeInTheDocument();
@@ -117,7 +117,7 @@ describe('TaskDetailPage', () => {
         it('should show login message when user is not authenticated', async () => {
             mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: false });
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
             await waitFor(() => {
                 expect(screen.getByText('You must be logged-in first to edit this task')).toBeInTheDocument();
@@ -131,7 +131,7 @@ describe('TaskDetailPage', () => {
         it('should show task not found message when task does not exist but user is authenticated', async () => {
             mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
-            render(<TaskDetailPage id={999} />); // Non-existent task ID
+            render(<TaskDetailPage id={999} from={"/hello-next-js/parent"} />); // Non-existent task ID
 
             await waitFor(() => {
                 expect(screen.getByText('The record 999 is no longer exist')).toBeInTheDocument();
@@ -143,7 +143,7 @@ describe('TaskDetailPage', () => {
         it('should find and display the correct task by id', async () => {
             mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
-            render(<TaskDetailPage id={2} />);
+            render(<TaskDetailPage id={2} from={"/hello-next-js/parent"} />);
 
             await waitFor(() => {
                 expect(screen.getByText('Task ID: 2')).toBeInTheDocument();
@@ -156,8 +156,20 @@ describe('TaskDetailPage', () => {
         it('should always render back link to tasks page', async () => {
             mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
+            await waitFor(() => {
+                const backLink = screen.getByText('Back to the table page');
+                expect(backLink).toBeInTheDocument();
+                expect(backLink.closest('a')).toHaveAttribute('href', '/hello-next-js/parent');
+            });
+        });
+
+        it('should always render back link to tasks page - from attr is an empty string', async () => {
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
+
+            render(<TaskDetailPage id={1} from="" />);
+            
             await waitFor(() => {
                 const backLink = screen.getByText('Back to the table page');
                 expect(backLink).toBeInTheDocument();
@@ -168,8 +180,20 @@ describe('TaskDetailPage', () => {
         it('should render back link even when not authenticated', async () => {
             mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: false });
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
+            await waitFor(() => {
+                const backLink = screen.getByText('Back to the table page');
+                expect(backLink).toBeInTheDocument();
+                expect(backLink.closest('a')).toHaveAttribute('href', '/hello-next-js/parent');
+            });
+        });
+
+        it('should render back link even when not authenticated - from attr is an empty string', async () => {
+            mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: false });
+
+            render(<TaskDetailPage id={1} from="" />);
+            
             await waitFor(() => {
                 const backLink = screen.getByText('Back to the table page');
                 expect(backLink).toBeInTheDocument();
@@ -182,7 +206,7 @@ describe('TaskDetailPage', () => {
         it('should pass correct props to TaskDetail component', async () => {
             mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
             await waitFor(() => {
                 const taskDetail = screen.getByTestId('task-detail');
@@ -206,7 +230,7 @@ describe('TaskDetailPage', () => {
             
             mockCheckAuthTokenCookieExist.mockReturnValue(authPromise);
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
             // Initially should show login message (not authenticated yet)
             expect(screen.getByText('You must be logged-in first to edit this task')).toBeInTheDocument();
@@ -231,7 +255,7 @@ describe('TaskDetailPage', () => {
             
             mockCheckAuthTokenCookieExist.mockResolvedValue({ outcome: true });
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
             await waitFor(() => {
                 expect(screen.getByText('The record 1 is no longer exist')).toBeInTheDocument();
@@ -247,7 +271,7 @@ describe('TaskDetailPage', () => {
             
             mockCheckAuthTokenCookieExist.mockResolvedValue(true);
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
             await waitFor(() => {
                 expect(screen.getByText('You must be logged-in first to edit this task')).toBeInTheDocument();
@@ -257,7 +281,7 @@ describe('TaskDetailPage', () => {
         it('should handle authentication check failure', async () => {
             (mockCheckAuthTokenCookieExist as jest.Mock).mockRejectedValue(new Error('Auth check failed'));
 
-            render(<TaskDetailPage id={1} />);
+            render(<TaskDetailPage id={1} from={"/hello-next-js/parent"} />);
 
             await waitFor(() => {
                 expect(screen.getByText('You must be logged-in first to edit this task')).toBeInTheDocument();

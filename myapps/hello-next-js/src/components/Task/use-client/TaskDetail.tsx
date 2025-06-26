@@ -3,7 +3,7 @@
 // The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import { Dispatch, SetStateAction, MouseEvent } from 'react';
-import { Task } from "@/types/Task";
+import type { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
 export type TaskDetailType = {

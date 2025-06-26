@@ -56,3 +56,8 @@ export type GraphQLContext = {
 export type VerifyJwtResult =
   | { valid: true; payload: string | JwtPayload }
   | { valid: false; error: string };
+
+export type AppRouterPageProps = {
+    params: { id: string };
+    searchParams?: { [key: string]: string | string[] | undefined }; // to retrieve query param: &from=""
+}   
