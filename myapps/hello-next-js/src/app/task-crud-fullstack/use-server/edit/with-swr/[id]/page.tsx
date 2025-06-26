@@ -6,11 +6,7 @@ import Layout from "../../../../../../../pagesLayouts/Layout";
 import { SERVER_SIDE_FRONTEND_LAYOUT_TITLE } from "../../../../../../../pagesLayouts/layout-title";
 import { TaskDetailWithSwrPage } from "@/views/Task/use-server/taskDetailWithSwrPage";
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
-
-type Props = {
-    params: { id: string };
-    searchParams?: { [key: string]: string | string[] | undefined }; // to retrieve query param: &from=""
-};
+import type { AppRouterPageProps as Props } from '@/types/Task';
 
 // const TaskDetailNextJSPage = ({ params }: { params: { id: string } }) => {
 // for reference:
