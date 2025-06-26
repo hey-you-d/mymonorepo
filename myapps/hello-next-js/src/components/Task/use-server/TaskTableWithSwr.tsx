@@ -6,9 +6,9 @@
 // responding to user actions passed in as props.
 import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
 import { mutate } from 'swr';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
-import { Task } from "@/types/Task"; 
+import type { Task } from "@/types/Task"; 
 
 // For reference: **
 // the viewmodel fn will call revalidateTag to refresh the tasks array instead of returning the updated tasks array
@@ -34,6 +34,8 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
+    const pathName = usePathname();   
+
     const chkBoxHandler = useCallback(async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         setButtonDisabled(true);
         await updateRowFromId(id, title, detail, !isCurrentlySelected);
@@ -45,8 +47,8 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
 
     const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
-        appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}`);
-    }, [appRouter]);
+        appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/with-swr/${id}?from=${pathName}`);
+    }, [appRouter, pathName]);
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
