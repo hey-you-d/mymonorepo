@@ -4,6 +4,7 @@ import '@testing-library/jest-dom';
 import { usePathname, useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
 import { TaskTable, TaskTableType } from './TaskTable';
+import { isSafeInput } from '@/lib/app/common';
 
 // mock the http only auth_token cookie. 
 // The presence of this cookie indicates that the user has logged in
@@ -28,6 +29,7 @@ jest.mock('next/navigation', () => ({
 jest.mock("../../../lib/app/common", () => ({
     MONOREPO_PREFIX: '/app',
     TASKS_CRUD: 'tasks',
+    isSafeInput: jest.fn().mockReturnValue(true),
 }));
 
 let spyConsoleError: jest.SpyInstance<any, any>;
@@ -66,8 +68,11 @@ describe('TaskTable Component', () => {
 
     afterEach(() => {
         spyConsoleError.mockRestore();
-        jest.clearAllMocks();
     });
+
+    afterAll(() => {
+        jest.restoreAllMocks();
+    })
 
     const defaultProps: TaskTableType = {
         tasks: mockTasks,
@@ -197,6 +202,8 @@ describe('TaskTable Component', () => {
         });
 
         it('rejects input with HTML tags', async () => {
+            (isSafeInput as jest.Mock).mockReturnValue(false);
+                        
             render(<TaskTable {...defaultProps} />);
             
             const titleInput = screen.getByPlaceholderText('Title');
@@ -229,6 +236,8 @@ describe('TaskTable Component', () => {
         ];
 
         it('accepts valid inputs', async () => {
+            (isSafeInput as jest.Mock).mockReturnValue(true);
+                        
             for (const validInput of validInputs) {
                 const mockTasks: Task[] = [
                     { id: 1, title: 'Test Task 1', detail: 'Test Detail 1', completed: false, created_at: '' },
@@ -265,6 +274,8 @@ describe('TaskTable Component', () => {
         });
 
         it('rejects invalid inputs', async () => {
+            (isSafeInput as jest.Mock).mockReturnValue(false);    
+
             for (const invalidInput of invalidInputs) {
                 const mockTasks: Task[] = [
                     { id: 1, title: 'Test Task 1', detail: 'Test Detail 1', completed: false, created_at: '' },
@@ -298,6 +309,8 @@ describe('TaskTable Component', () => {
             }
         });
         it('rejects input that is too long', async () => {
+            (isSafeInput as jest.Mock).mockReturnValue(false);
+
             render(<TaskTable {...defaultProps} />);
             
             const titleInput = screen.getByPlaceholderText('Title');

@@ -4,6 +4,7 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import { TaskTable } from './TaskTable';
 import type { Task } from '@/types/Task';
+import { isSafeInput } from '@/lib/app/common';
 
 jest.mock('next/router', () => ({
     useRouter: jest.fn(),
@@ -12,7 +13,8 @@ jest.mock('next/router', () => ({
 // Mock the constants
 jest.mock('../../../lib/app/common', () => ({
     MONOREPO_PREFIX: '/app',
-    TASKS_CRUD: 'tasks'
+    TASKS_CRUD: 'tasks',
+    isSafeInput: jest.fn().mockReturnValue(true),
 }));
 
 // Mock window.location.replace
@@ -50,9 +52,9 @@ describe('TaskTable', () => {
         });
     });
 
-    afterEach(() => {
+    afterAll(() => {
         jest.restoreAllMocks();
-    });
+    })
 
     describe('Rendering', () => {
         it('renders table with correct structure and headers', () => {
@@ -246,6 +248,8 @@ describe('TaskTable', () => {
         });
 
         it('does not create task with unsafe input (potential SQL injection)', async () => {
+            (isSafeInput as jest.Mock).mockReturnValue(false);
+            
             render(<TaskTable {...defaultProps} />);
             
             const titleInput = screen.getByPlaceholderText('Title');
@@ -263,6 +267,8 @@ describe('TaskTable', () => {
         });
 
         it('does not create task with input longer than 500 characters', async () => {
+            (isSafeInput as jest.Mock).mockReturnValue(false);
+            
             render(<TaskTable {...defaultProps} />);
             
             const titleInput = screen.getByPlaceholderText('Title');
@@ -303,6 +309,8 @@ describe('TaskTable', () => {
         });
 
         it('clears inputs after successful task creation', async () => {
+            (isSafeInput as jest.Mock).mockReturnValue(true);
+            
             render(<TaskTable {...defaultProps} />);
             
             const titleInput = screen.getByPlaceholderText('Title') as HTMLInputElement;
@@ -341,6 +349,8 @@ describe('TaskTable', () => {
         ];
 
         it('accepts valid inputs', async () => {
+            (isSafeInput as jest.Mock).mockReturnValue(true);
+            
             for (const validInput of validInputs) {
                 const mockTasks: Task[] = [
                     { id: 1, title: 'Test Task 1', detail: 'Test Detail 1', completed: false, created_at: '' },
@@ -376,6 +386,8 @@ describe('TaskTable', () => {
         });
 
         it('rejects invalid inputs', async () => {
+            (isSafeInput as jest.Mock).mockReturnValue(false);
+            
             for (const invalidInput of invalidInputs) {
                 const mockTasks: Task[] = [
                     { id: 1, title: 'Test Task 1', detail: 'Test Detail 1', completed: false, created_at: '' },

@@ -7,7 +7,7 @@
 import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import type { Task } from "@/types/Task";
-import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
+import { MONOREPO_PREFIX, TASKS_CRUD, isSafeInput } from "@/lib/app/common";
 
 type TaskTableDefaultType = {
     tasks: Task[],
@@ -19,13 +19,6 @@ type TaskTableDefaultType = {
     userAuthenticated: boolean,
 }
 export type TaskTableType = TaskTableDefaultType;
-
-const isSafeInput = (str: string) => {
-    // for reference: To prevent SQL injection attack
-    // Only allow alphanumeric characters, basic punctuation, and whitespace
-    const regex = /^[a-zA-Z0-9\s.,!?'"()\-_:;]{1,500}$/;
-    return regex.test(str);
-};
 
 export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const appRouter = useRouter();
