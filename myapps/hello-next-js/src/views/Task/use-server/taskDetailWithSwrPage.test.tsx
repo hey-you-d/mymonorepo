@@ -150,24 +150,6 @@ describe('TaskDetailWithSwrPage', () => {
         });
     });
 
-    it('renders back link with correct href', async () => {
-        mockUseSWR.mockReturnValue({
-            data: mockTasks,
-            error: undefined,
-            isLoading: false,
-            mutate: jest.fn(),
-            isValidating: false,
-        });
-
-        render(<TaskDetailWithSwrPage id={1} />);
-
-        await waitFor(() => {
-            const backLink = screen.getByText('Back to the table page');
-            expect(backLink).toBeInTheDocument();
-            expect(backLink.closest('a')).toHaveAttribute('href', '/app/tasks/use-server');
-        });
-    });
-
     it('passes correct props to TaskDetailWithSwr component', async () => {
         const mockDeleteRowFromId = require('../../../viewModels/Task/use-server/getTasksViewModel').deleteRowFromId;
         
@@ -245,7 +227,7 @@ describe('TaskDetailWithSwrPage', () => {
         expect(mockUseSWR).toHaveBeenCalledWith("Tasks-API-USE-SWR", expect.any(Function));
     });
 
-    it('renders both task detail and back link when task exists', async () => {
+    it('renders both task detail when task exists', async () => {
         mockUseSWR.mockReturnValue({
             data: mockTasks,
             error: undefined,
@@ -258,11 +240,10 @@ describe('TaskDetailWithSwrPage', () => {
 
         await waitFor(() => {
             expect(screen.getByTestId('task-detail-component')).toBeInTheDocument();
-            expect(screen.getByText('Back to the table page')).toBeInTheDocument();
         });
     });
 
-    it('renders record not found message and back link when task does not exist', async () => {
+    it('renders record not found message when task does not exist', async () => {
         mockUseSWR.mockReturnValue({
             data: [],
             error: undefined,
@@ -275,7 +256,6 @@ describe('TaskDetailWithSwrPage', () => {
 
         await waitFor(() => {
             expect(screen.getByText('The record 999 is no longer exist')).toBeInTheDocument();
-            expect(screen.getByText('Back to the table page')).toBeInTheDocument();
         });
   });
 });

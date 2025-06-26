@@ -102,20 +102,6 @@ describe('TaskDetailPage', () => {
                 expect(screen.getByText('Task Title: Test Task')).toBeInTheDocument();
             });
         });
-
-        it('should render back link with correct href', async () => {
-            mockGetRowFromId.mockResolvedValue({ task: mockTask });
-
-            render(<TaskDetailPage id={1} />);
-
-            await waitFor(() => {
-                expect(screen.queryByText('Loading...')).not.toBeInTheDocument;
-                
-                const backLink = screen.getByText('Back to the table page');
-                expect(backLink).toBeInTheDocument();
-                expect(backLink.closest('a')).toHaveAttribute('href', '/app/tasks/use-server');
-            });
-        });
     });
 
     describe('Error Handling', () => {
@@ -262,12 +248,11 @@ describe('TaskDetailPage', () => {
                 expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
             });
 
-            // Both TaskDetail and back link should be present
+            // Both TaskDetail should be present
             expect(screen.getByTestId('task-detail')).toBeInTheDocument();
-            expect(screen.getByText('Back to the table page')).toBeInTheDocument();
         });
 
-        it('should return error message and back link when task not found', async () => {
+        it('should return error message when task not found', async () => {
             mockGetRowFromId.mockResolvedValue({ task: null });
 
             render(<TaskDetailPage id={1} />);
@@ -276,7 +261,6 @@ describe('TaskDetailPage', () => {
                 expect(screen.queryByText('Loading..')).not.toBeInTheDocument();
                 // Both error message and back link should be present
                 expect(screen.getByText('The record 1 is no longer exist')).toBeInTheDocument();
-                expect(screen.getByText('Back to the table page')).toBeInTheDocument();
             });
         });
     });

@@ -1,7 +1,7 @@
 import React, { SetStateAction, Dispatch } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
 import { TaskTableWithSwr, TaskTableType } from './TaskTableWithSwr';
 
@@ -21,6 +21,7 @@ jest.mock('next/headers', () => ({
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
     useRouter: jest.fn(),
+    usePathname: jest.fn(),
 }));
 
 // Mock constants
