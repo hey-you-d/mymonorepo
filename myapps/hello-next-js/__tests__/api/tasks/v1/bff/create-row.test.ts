@@ -1,6 +1,7 @@
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
-    BASE_URL: 'https://api.example.com',
+    TASKS_SQL_DOMAIN_API_URL: 'https://api.example.com/api/tasks/v1/sql',
+    TASKS_SQL_BASE_API_URL: 'https://api.example.com/hello-next-js/api/tasks/v1/sql',
     TASKS_API_HEADER: jest.fn(),
     VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
     getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),
@@ -11,11 +12,8 @@ global.fetch = jest.fn();
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks, RequestMethod } from 'node-mocks-http';
-//import handler from '../../../../../pages/api/tasks/v1/bff/create-row';
-//import { BASE_URL, TASKS_API_HEADER, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
 const handler = require('../../../../../pages/api/tasks/v1/bff/create-row').default;
 const {
-  BASE_URL,  
   TASKS_API_HEADER,
   VERIFY_JWT_RETURN_API_RES,
 } = require('../../../../../src/lib/app/common');
@@ -71,7 +69,7 @@ describe('/api/tasks/v1/bff/create-row handler', () => {
 
             //  Assert
             expect(fetch).toHaveBeenCalledWith(
-                `${BASE_URL}/api/tasks/v1/sql/create-row`,
+                "https://api.example.com/hello-next-js/api/tasks/v1/sql/create-row",
                 {
                     method: 'POST',
                     headers: mockHeaders,

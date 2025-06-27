@@ -10,6 +10,7 @@ import {
 } from '@/models/Task/use-server/TaskModel';
 import { catchedErrorMessage } from '@/lib/app/error';
 import type { Task } from '@/types/Task';
+import { TASKS_BFF_BASE_API_URL } from '@/lib/app/common';
 
 const fnSignature = "use-server | view-model | getTasksViewModel";
 
@@ -20,7 +21,7 @@ export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
     const { BASE_URL } = await import("@/lib/app/common");
   
     try {
-      const tasks: Task[] | undefined = await getTasksDBRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      const tasks: Task[] | undefined = await getTasksDBRowsTaskModel(`${TASKS_BFF_BASE_API_URL}`);
       return { tasks: tasks ?? [] };
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, "getTasksDBRows", error as Error);
@@ -32,10 +33,10 @@ export const deleteAllRows = async (): Promise<{ tasks: Task[] }> => {
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      const tasks: Task[] | undefined = await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      const tasks: Task[] | undefined = await deleteAllRowsTaskModel(TASKS_SQL_BASE_API_URL);
       return { tasks: tasks ?? [] };
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, "deleteAllRows", error as Error);
@@ -47,10 +48,10 @@ export const seedTasksDB = async (): Promise<{ tasks: Task[] }> => {
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      const tasks: Task[] | undefined = await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      const tasks: Task[] | undefined = await seedTasksDBTaskModel(TASKS_SQL_BASE_API_URL);
       return { tasks: tasks ?? [] };
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, "seedTasksDB", error as Error);
@@ -62,10 +63,10 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      const task: Task | null | undefined = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
+      const task: Task | null | undefined = await getRowFromIdTaskModel(id, TASKS_SQL_BASE_API_URL);
       
       return { task: task ?? null };
     } catch (error) {
@@ -78,10 +79,10 @@ export const createRow = async (tasks: Task[], title: string, detail: string): P
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      const result: Task[] | undefined = await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
+      const result: Task[] | undefined = await createRowTaskModel(title, detail, TASKS_SQL_BASE_API_URL);
       
       const updatedTasksDescOrder = result ? [result[0], ...tasks].sort((a, b) => b.id - a.id) : [];
       
@@ -96,10 +97,10 @@ export const updateRowFromId = async (tasks: Task[], id: number, title: string, 
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      const updatedRow: Task | undefined = await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
+      const updatedRow: Task | undefined = await updateRowFromIdTaskModel(id, title, detail, completed, TASKS_SQL_BASE_API_URL);
 
       if (updatedRow) {
         const updatedTasks = tasks.map((item, index) => 
@@ -120,10 +121,10 @@ export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | nul
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      await deleteRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
+      await deleteRowFromIdTaskModel(id, TASKS_SQL_BASE_API_URL);
       // for reference: createRowTaskModel returns the a single task only (the deleted one), 
       // we need the updated tasks to rehydrate the client component
       //const tasks = await getTasksDBRowsTaskModel();

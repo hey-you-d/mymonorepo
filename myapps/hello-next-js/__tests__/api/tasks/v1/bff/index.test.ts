@@ -1,6 +1,7 @@
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
-    BASE_URL: 'https://api.example.com',
+    TASKS_SQL_DOMAIN_API_URL: 'https://api.example.com/api/tasks/v1/sql',
+    TASKS_SQL_BASE_API_URL: 'https://api.example.com/hello-next-js/api/tasks/v1/sql',
     TASKS_API_HEADER: jest.fn().mockResolvedValue({
         "Content-Type": "application/json",
         "x-api-key": "test-key",
@@ -14,7 +15,7 @@ global.fetch = jest.fn();
 import handler from '../../../../../pages/api/tasks/v1/bff';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks, RequestMethod } from 'node-mocks-http';
-import { TASKS_API_HEADER, getInternalApiKey } from '@/lib/app/common';
+import { TASKS_API_HEADER, TASKS_SQL_BASE_API_URL, TASKS_SQL_DOMAIN_API_URL, getInternalApiKey } from '@/lib/app/common';
 
 describe('/api/tasks/v1/bff handler', () => {
     beforeEach(() => {
@@ -66,7 +67,7 @@ describe('/api/tasks/v1/bff handler', () => {
 
             // Assert
             expect(fetch).toHaveBeenCalledWith(
-                'https://api.example.com/api/tasks/v1/sql/',
+                'https://api.example.com/hello-next-js/api/tasks/v1/sql/',
                 {
                     method: 'GET',
                     credentials: 'include',
@@ -272,8 +273,12 @@ describe('/api/tasks/v1/bff handler', () => {
 
             // Assert
             expect(fetch).toHaveBeenCalledWith(
-                expect.stringContaining('https://api.example.com/api/tasks/v1/sql/'),
-                expect.any(Object)
+                'https://api.example.com/hello-next-js/api/tasks/v1/sql/',
+                {
+                    "credentials": "include", 
+                    "headers": {"Content-Type": "application/json", "x-api-key": "test-key"}, 
+                    "method": "GET"
+                }
             );
         });
 

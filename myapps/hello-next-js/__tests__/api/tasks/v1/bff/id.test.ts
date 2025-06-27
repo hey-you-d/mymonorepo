@@ -1,13 +1,14 @@
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
-  BASE_URL: 'https://api.example.com',
-  TASKS_API_HEADER: jest.fn().mockResolvedValue({
+    TASKS_SQL_DOMAIN_API_URL: 'https://api.example.com/api/tasks/v1/sql',
+    TASKS_SQL_BASE_API_URL: 'https://api.example.com/hello-next-js/api/tasks/v1/sql',
+    TASKS_API_HEADER: jest.fn().mockResolvedValue({
         'Content-Type': 'application/json',
         'x-api-key': 'valid key',
         Authorization: 'bearer '
-  }),
-  VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
-  getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),
+    }),
+    VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
+    getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),
 }));
 
 // Mock fetch globally
@@ -70,7 +71,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
             await handler(req, res);
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://api.example.com/api/tasks/v1/sql/123',
+                "https://api.example.com/hello-next-js/api/tasks/v1/sql/123",
                 {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json', 'x-api-key': 'valid key', Authorization: 'bearer ' },
@@ -98,7 +99,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
             await handler(req, res);
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://api.example.com/api/tasks/v1/sql/123', // Should use first element
+                "https://api.example.com/hello-next-js/api/tasks/v1/sql/123", // Should use first element
                 expect.any(Object)
             );
             expect(res._getStatusCode()).toBe(200);
@@ -179,7 +180,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
             await handler(req, res);
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://api.example.com/api/tasks/v1/sql/123',
+                "https://api.example.com/hello-next-js/api/tasks/v1/sql/123",
                 {
                 method: 'PUT',
                 credentials: 'include',
@@ -287,7 +288,7 @@ describe('/api/tasks/v1/bff/[id] handler', () => {
             await handler(req, res);
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://api.example.com/api/tasks/v1/sql/123',
+                "https://api.example.com/hello-next-js/api/tasks/v1/sql/123",
                 {
                     method: 'DELETE',
                     credentials: 'include',

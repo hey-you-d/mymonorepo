@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
-import { BASE_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
+import { BASE_URL, TASKS_API_HEADER, TASKS_SQL_BASE_API_URL, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 import { notOkErrorMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | BFF | seed-table.ts";
@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "POST" :
             try {
-                const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/seed-table`, {
+                const response = await fetch(`${TASKS_SQL_BASE_API_URL}/seed-table`, {
                     method: 'POST',
                     headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
                     credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.

@@ -1,5 +1,5 @@
 "use server"
-import { TASKS_API_HEADER } from "@/lib/app/common";
+import { TASKS_API_HEADER, TASKS_SQL_DOMAIN_API_URL } from "@/lib/app/common";
 import { UserModelType, UsersDbQueryResultType } from "@/types/Task";
 import { notOkErrorMessage, customResponseMessage } from "@/lib/app/error";
 
@@ -11,7 +11,7 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
     const { DOMAIN_URL } = await import("@/lib/app/common");
 
-    const res = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/user/graphql`, {
+    const res = await fetch(`${TASKS_SQL_DOMAIN_API_URL}/user/graphql`, {
         method: 'POST',
         headers: await TASKS_API_HEADER(), // JWT auth is not needed for registration/login process 
         body: JSON.stringify({ query, variables: variables ?? {} }),

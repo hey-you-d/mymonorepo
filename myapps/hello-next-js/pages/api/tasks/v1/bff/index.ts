@@ -11,7 +11,7 @@
 // - You still support a mixed environment with Client Components or CSR where secrets cannot be sent directly.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
-import { BASE_URL, TASKS_API_HEADER } from "@/lib/app/common";
+import { TASKS_API_HEADER, TASKS_SQL_BASE_API_URL } from "@/lib/app/common";
 import { notOkErrorMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | BFF | index.ts";
@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             try {
                 // users don't have to be logged-in in order to see the populated table, 
                 // hence for this GET request action, JWT auth is unnecessary
-                const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/`, {
+                const response = await fetch(`${TASKS_SQL_BASE_API_URL}/`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: await TASKS_API_HEADER(),

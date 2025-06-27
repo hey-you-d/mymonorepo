@@ -1,4 +1,4 @@
-import { DOMAIN_URL } from '@/lib/app/common';
+import { TASKS_SQL_DOMAIN_API_URL, TASKS_SQL_BASE_API_URL } from '@/lib/app/common';
 
 describe('fetchGraphQL', () => {
   const mockApiHeader = {
@@ -16,9 +16,9 @@ describe('fetchGraphQL', () => {
 
     // Must go before any imports
     jest.doMock('../../../lib/app/common', () => ({
-      TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
+      TASKS_SQL_DOMAIN_API_URL: 'https://api.example.com/api/tasks/v1/sql',
+      TASKS_SQL_BASE_API_URL: 'https://api.example.com/hello-next-js/api/tasks/v1/sql',
       TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
-      DOMAIN_URL: 'http://localhost:3000',
     }));
 
     // mock the http only auth_token cookie. 
@@ -70,7 +70,7 @@ describe('fetchGraphQL', () => {
 
     const result = await fetchGraphQL(query, variables);
 
-    expect(fetch).toHaveBeenCalledWith(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, {
+    expect(fetch).toHaveBeenCalledWith('https://api.example.com/api/tasks/v1/sql/graphql', {
       method: 'POST',
       headers: mockApiHeader,
       body: JSON.stringify({ query, variables }),

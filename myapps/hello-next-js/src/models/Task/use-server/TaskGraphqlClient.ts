@@ -1,5 +1,5 @@
 "use server"
-import { TASKS_API_HEADER, JWT_TOKEN_COOKIE_NAME } from "@/lib/app/common";
+import { TASKS_API_HEADER, JWT_TOKEN_COOKIE_NAME, TASKS_SQL_DOMAIN_API_URL } from "@/lib/app/common";
 import { cookies } from 'next/headers';
 import { notOkErrorMessage, customResponseMessage } from "@/lib/app/error";
 
@@ -29,7 +29,7 @@ export async function fetchGraphQL(query: string, variables?: Record<string, unk
     // Whereas apollo-server-micro was more forgiving and didn't enforce body schema as strictly.
     const cookieStore = await cookies();
     const reqCookie = cookieStore.get(JWT_TOKEN_COOKIE_NAME);
-    const res = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, {
+    const res = await fetch(`${TASKS_SQL_DOMAIN_API_URL}/graphql`, {
         method: 'POST',
         headers: await TASKS_API_HEADER(reqCookie?.value ?? ""),
         body: JSON.stringify({ query, variables: variables ?? {} }),

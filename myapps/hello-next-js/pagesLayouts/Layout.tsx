@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode } from 'react';
 import Link from 'next/link';
 import Footer from './Footer';
-import { TASKS_CRUD, DOMAIN_URL } from '@/lib/app/common';
+import { TASKS_CRUD, DOMAIN_URL, TASKS_BFF_DOMAIN_API_URL, TASKS_SQL_DOMAIN_API_URL } from '@/lib/app/common';
 import "@/app/globals.css";
 import styles from "@/app/page.module.css";
 
@@ -29,8 +29,8 @@ const Layout = ({ children, title } : { children:ReactNode | ReactElement, title
                 <h3>[Backend layer]</h3>
                 <ul>
                     <li><Link href={`${TASKS_CRUD}/swagger`}>Swagger Doc Page</Link></li>
-                    <li><Link href={`${DOMAIN_URL}/api/tasks/v1/sql`}>Tasks API Endpoints</Link></li>
-                    <li><Link href={`${DOMAIN_URL}/api/tasks/v1/bff`}>Tasks BFF Endpoints (used by the client-side variant Model component)</Link></li>
+                    <li><Link href={`${TASKS_SQL_DOMAIN_API_URL}`}>Tasks API Endpoints</Link></li>
+                    <li><Link href={`${TASKS_BFF_DOMAIN_API_URL}`}>Tasks BFF Endpoints (used by the client-side variant Model component)</Link></li>
                 </ul>
                 <hr/>
                 {children}
