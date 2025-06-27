@@ -24,7 +24,7 @@ const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButto
 
     const chkBoxHandler = useCallback((_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
-    }, [updateRowFromId]);
+    }, [updateRowFromId, tasks]);
     
     const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
@@ -92,7 +92,7 @@ const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButto
                 <td>-</td>
             </tr>
         ];
-    }, [tasks, userAuthenticated, editTodoHandler, buttonDisabled]);
+    }, [tasks, userAuthenticated, editTodoHandler, buttonDisabled, chkBoxHandler]);
 
     // for reference: useMemo won't help because dependencies changes frequently: 
     // - title and detail change on every keystroke 

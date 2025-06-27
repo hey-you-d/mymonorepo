@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { DOMAIN_URL, TASKS_API_HEADER, TASKS_SQL_DOMAIN_API_URL, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
+import { TASKS_API_HEADER, TASKS_SQL_DOMAIN_API_URL, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 import { missingParamErrorMessage, notOkErrorMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | BFF | graphql.ts";

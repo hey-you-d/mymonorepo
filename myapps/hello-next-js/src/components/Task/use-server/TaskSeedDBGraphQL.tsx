@@ -4,7 +4,7 @@
 
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { Dispatch, SetStateAction, useCallback, useMemo, memo } from 'react';
+import { Dispatch, SetStateAction, useCallback, memo } from 'react';
 import type { Task } from '@/types/Task';
 
 type TaskSeedDBGraphQLType = {

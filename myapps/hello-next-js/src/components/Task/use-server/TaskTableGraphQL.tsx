@@ -45,7 +45,7 @@ const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
     const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
         appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}?from=${pathName}`);
-    }, [appRouter, MONOREPO_PREFIX, TASKS_CRUD, pathName]);
+    }, [appRouter, pathName]);
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();

@@ -4,7 +4,7 @@
 
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { Dispatch, SetStateAction, useCallback, useMemo, memo } from 'react';
+import { Dispatch, SetStateAction, useCallback, memo } from 'react';
 import type { Task } from '@/types/Task';
 
 type TaskSeedDBType = {
@@ -27,7 +27,7 @@ const TaskSeedDB = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled
         setTasks(updatedTasks.tasks);
         
         setButtonDisabled(false);
-    }, [tasks]);
+    }, [tasks, seedTaskDB, deleteAllRows]);
     // for reference: excluded from useCallback dependencies:
     // - setButtonDisabled & setTask are state setters and don't need to be a dependency 
 
