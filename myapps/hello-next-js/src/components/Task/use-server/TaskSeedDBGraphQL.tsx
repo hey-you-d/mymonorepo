@@ -30,9 +30,14 @@ const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonD
         }
         
         setButtonDisabled(false);
-    }, [seedTaskDB, deleteAllRows, setButtonDisabled, tasks]);
+    }, [seedTaskDB, deleteAllRows, tasks]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled is a state setter and doesn't need to be a dependency
 
-    const renderButton = useMemo((): React.ReactElement => {
+    // for reference: renderButton is not wrapped in useMemo because:
+    // - It depends on userAuthenticated, totalRows, buttonDisabled, and onClickHandler - some of these change frequently.
+    // - The logic is just a simple ternary operator based on userAuthenticated and totalRows - this is very fast to compute.    
+    const renderButton = (): React.ReactElement => {
         return userAuthenticated 
             ? (
                 <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
@@ -42,12 +47,12 @@ const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonD
                     {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
                 </button> 
             );
-    }, [userAuthenticated, onClickHandler, tasks, buttonDisabled]); 
+    }; 
     
     return (
         <>
             <p>{`Currently, there are ${tasks.length} rows in the Tasks table.`}</p>
-            {renderButton}
+            {renderButton()}
         </>
     );
 };

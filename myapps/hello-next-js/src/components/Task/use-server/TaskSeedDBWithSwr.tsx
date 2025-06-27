@@ -35,9 +35,14 @@ const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, s
         mutate("Tasks-API-USE-SWR");
 
         setButtonDisabled(false);
-    }, [setButtonDisabled, seedTaskDB, deleteAllRows, tasks, mutate]);
+    }, [seedTaskDB, deleteAllRows, tasks, mutate]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled & setTask are state setters and don't need to be a dependency 
 
-    const renderButton = useMemo((): React.ReactElement => {
+    // for reference: renderButton is not wrapped in useMemo because:
+    // - It depends on userAuthenticated, totalRows, buttonDisabled, and onClickHandler - some of these change frequently.
+    // - The logic is just a simple ternary operator based on userAuthenticated and totalRows - this is very fast to compute. 
+    const renderButton = (): React.ReactElement => {
         return userAuthenticated 
             ? (
                 <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
@@ -47,12 +52,12 @@ const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, s
                     {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
                 </button> 
             );
-    }, [userAuthenticated, onClickHandler, tasks, buttonDisabled]);
+    };
      
     return (
         <>
             <p>{`Currently, there are ${tasks.length} rows in the Tasks table.`}</p>
-            { renderButton }
+            { renderButton() }
         </>
     );
 };

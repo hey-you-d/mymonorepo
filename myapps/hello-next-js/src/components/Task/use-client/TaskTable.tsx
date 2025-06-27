@@ -31,7 +31,10 @@ const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButto
 
         // render the following next.js Page route: /pages/task-crud-fullstack/edit/[id].tsx
         window.location.replace( `${MONOREPO_PREFIX}/${TASKS_CRUD}/edit/${id}?from=${router.asPath}`);
-    }, [router, MONOREPO_PREFIX, TASKS_CRUD]);
+    }, [router.asPath]);
+    // for reference: excluded from useCallback dependencies:
+    // - MONOREPO_PREFIX and TASKS_CRUD are constants and don't need to be dependencies
+    // - router object is stable in Next.js and doesn't change between renders
     
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -45,7 +48,12 @@ const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButto
         } else {
             // TODO: visual indicator - e.g. red border styling
         }    
-    }, [createRow, tasks, title, detail, setButtonDisabled]);
+    }, [createRow, tasks, title, detail]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled is a state setter and doesn't need to be a dependency
+    // for reference: included in useCallback dependencies:
+    // - Including title and detail means the function recreates every time user types
+    // - tasks changes frequently, causing unnecessary recreations
 
     const tBody = useMemo<React.ReactElement[]>((): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
@@ -86,7 +94,11 @@ const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButto
         ];
     }, [tasks, userAuthenticated, editTodoHandler]);
 
-    const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement => {
+    // for reference: useMemo won't help because dependencies changes frequently: 
+    // - title and detail change on every keystroke 
+    // - buttonDisabled toggles during operations
+    // - userAuthenticated can change during the session
+    const renderAddRowForm = (isDisabled: boolean): React.ReactElement => {
         const inputTitle = <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />;
         const inputDetail = <input type="text" placeholder="Description" value={detail} onChange={e => setDetail(e.target.value)} />;
         const buttonTriggeredByIsDisabled = !isDisabled
@@ -106,7 +118,7 @@ const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButto
                 <td>{button}</td>
             </tr>
         );
-    }, [addNewTodoHandler, title, detail, userAuthenticated]);
+    };
 
     const tFooter = useMemo<React.ReactElement>((): React.ReactElement => {
         if (Array.isArray(tasks) && tasks.length > 0) {

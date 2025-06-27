@@ -35,8 +35,13 @@ const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisabled, setB
             }
         }
         setButtonDisabled(false);
-    }, [seedTaskDB, deleteAllRows, setButtonDisabled, totalRows]);
+    }, [seedTaskDB, deleteAllRows, totalRows]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled is a state setter and doesn't need to be a dependency    
 
+    // for reference: renderButton is not wrapped in useMemo because:
+    // - It depends on userAuthenticated, totalRows, buttonDisabled, and onClickHandler - some of these change frequently.
+    // - The logic is just a simple ternary operator based on userAuthenticated and totalRows - this is very fast to compute.
     const renderButton: React.ReactElement = userAuthenticated 
         ? (
             <button type="button" onClick={(e) => onClickHandler(e)} disabled={buttonDisabled}>

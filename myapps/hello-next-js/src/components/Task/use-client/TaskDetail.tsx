@@ -34,7 +34,9 @@ const TaskDetail = ({ row, tasks, deleteRowFromId, buttonDisabled, setButtonDisa
         } catch(e) {
             throw new Error(`Delete row ${row.id} failed: ${e}`);
         }
-    }, [row.id, deleteRowFromId, setButtonDisabled]);
+    }, [row.id, deleteRowFromId]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled is a state setter and doesn't need to be a dependency    
 
     return (
         <>

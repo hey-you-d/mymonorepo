@@ -61,7 +61,9 @@ const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
-    }, [createRow, setTasks, tasks, setButtonDisabled]);
+    }, [createRow, tasks]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled & setTask are state setters and don't need to be a dependency 
 
     const tBody = useMemo((): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
