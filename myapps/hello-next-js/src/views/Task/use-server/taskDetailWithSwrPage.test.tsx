@@ -42,7 +42,10 @@ jest.mock('../../../viewModels/Task/use-server/getTasksUserViewModel', () => ({
 }));
 
 jest.mock('../../../components/Task/use-server/TaskDetailWithSwr', () => ({
-    TaskDetailWithSwr: ({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDisabled } : TaskDetailWithSwrType) => (
+    // tells Jest that the module uses ES module syntax, which is required when mocking default exports.
+    __esModule: true,
+    // default: (...) => JSX replaces the memoized component safely and correctly.
+    default: ({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDisabled } : TaskDetailWithSwrType) => (
         <div data-testid="task-detail-component">
         <p>Task ID: {row.id}</p>
         <p>Task Title: {row.title}</p>

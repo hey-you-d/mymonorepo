@@ -4,7 +4,7 @@
 
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useCallback, useMemo, memo } from 'react';
 import { mutate } from 'swr';
 import type { Task } from '@/types/Task';
 
@@ -19,8 +19,8 @@ export type TaskSeedDBType = {
     userAuthenticated: boolean,
 }
 
-export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBType) => {
-    const onClickHandler = async (e: React.FormEvent) => {
+const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBType) => {
+    const onClickHandler = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();  
 
         setButtonDisabled(true);
@@ -35,15 +35,19 @@ export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisa
         mutate("Tasks-API-USE-SWR");
 
         setButtonDisabled(false);
-    }
+    }, [setButtonDisabled, seedTaskDB, deleteAllRows, tasks, mutate]);
 
-    const renderButton: React.ReactElement = userAuthenticated 
-    ? ( <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
-            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-        </button>
-    ) : ( <button type="button" disabled>
-            {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-        </button> );
+    const renderButton = useMemo((): React.ReactElement => {
+        return userAuthenticated 
+            ? (
+                <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
+                    {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+                </button>
+            ) : ( <button type="button" disabled>
+                    {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+                </button> 
+            );
+    }, [userAuthenticated, onClickHandler, tasks, buttonDisabled]);
      
     return (
         <>
@@ -52,3 +56,5 @@ export const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisa
         </>
     );
 };
+
+export default memo(TaskSeedDBWithSwr);

@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import { fetcher } from '@/viewModels/Task/use-server/getTasksViewModelWithSwr';
 import { deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
 import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
-import { TaskDetailWithSwr } from '@/components/Task/use-server/TaskDetailWithSwr';
+import TaskDetailWithSwr from '@/components/Task/use-server/TaskDetailWithSwr';
 import type { Task } from '@/types/Task';
 
 export const TaskDetailWithSwrPage = ({id}: {id: number}) => {

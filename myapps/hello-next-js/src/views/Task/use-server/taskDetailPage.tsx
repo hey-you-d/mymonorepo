@@ -5,7 +5,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import { getRowFromId, deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
 import { checkAuthTokenCookieExist } from '@/viewModels/Task/use-server/getTasksUserViewModel';
-import { TaskDetail } from '@/components/Task/use-server/TaskDetail';
+import TaskDetail from '@/components/Task/use-server/TaskDetail';
 import type { Task } from '@/types/Task';
 
 export const TaskDetailPage = ({id}: {id: number}) => {

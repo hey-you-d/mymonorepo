@@ -9,8 +9,8 @@ import {
   deleteAllRows,
   seedTasksDB
 } from '@/viewModels/Task/use-server/getTasksViewModelWithSwr';
-import { TaskSeedDBWithSwr } from '@/components/Task/use-server/TaskSeedDBWithSwr';
-import { TaskTableWithSwr } from '@/components/Task/use-server/TaskTableWithSwr';
+import TaskSeedDBWithSwr from '@/components/Task/use-server/TaskSeedDBWithSwr';
+import TaskTableWithSwr from '@/components/Task/use-server/TaskTableWithSwr';
 import { TaskUser } from "./taskUser";
 import { Task } from "@/types/Task";
 import useSWR from 'swr';

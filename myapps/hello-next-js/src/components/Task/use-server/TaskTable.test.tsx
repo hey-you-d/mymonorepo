@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import '@testing-library/jest-dom';
 import { usePathname, useRouter } from 'next/navigation';
 import { Task } from "@/types/Task";
-import { TaskTable, TaskTableType } from './TaskTable';
+import TaskTable, { TaskTableType } from './TaskTable';
 import { isSafeInput } from '@/lib/app/common';
 
 // mock the http only auth_token cookie. 

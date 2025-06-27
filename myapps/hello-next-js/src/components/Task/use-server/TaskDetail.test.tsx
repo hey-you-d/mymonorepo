@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TaskDetail } from './TaskDetail';
+import TaskDetail from './TaskDetail';
 import type { Task } from '@/types/Task';
 
 // mock the http only auth_token cookie. 

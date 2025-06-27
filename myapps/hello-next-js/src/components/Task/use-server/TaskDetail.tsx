@@ -5,7 +5,7 @@
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
 import type { Task } from "@/types/Task";
-import { Dispatch, SetStateAction, MouseEvent } from "react";
+import { Dispatch, SetStateAction, MouseEvent, useCallback, memo } from "react";
 
 type TaskTableType = {
     row: Task,
@@ -15,8 +15,8 @@ type TaskTableType = {
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
 
-export const TaskDetail = ({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
-    const onClickHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+const TaskDetail = ({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDisabled } : TaskTableType) => {
+    const onClickHandler = useCallback(async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
         setButtonDisabled(true);
@@ -30,7 +30,7 @@ export const TaskDetail = ({ row, setTask, deleteRowFromId, buttonDisabled, setB
         } catch(e) {
             throw new Error(`Delete row ${row.id} failed: ${e}`);
         }
-    }
+    }, [setButtonDisabled, deleteRowFromId, row]);
 
     return (
         <>
@@ -44,3 +44,5 @@ export const TaskDetail = ({ row, setTask, deleteRowFromId, buttonDisabled, setB
         </>
     );    
 };
+
+export default memo(TaskDetail);

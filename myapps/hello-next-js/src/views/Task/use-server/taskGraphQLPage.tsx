@@ -10,8 +10,8 @@ import {
     seedTaskDB
 } from '@/viewModels/Task/use-server/getTaskGraphQLViewModel';
 import { TaskUserGraphQL } from "./taskUserGraphQL";
-import { TaskSeedDBGraphQL } from '@/components/Task/use-server/TaskSeedDBGraphQL';
-import { TaskTableGraphQL } from '@/components/Task/use-server/TaskTableGraphQL';
+import TaskSeedDBGraphQL from '@/components/Task/use-server/TaskSeedDBGraphQL';
+import TaskTableGraphQL from '@/components/Task/use-server/TaskTableGraphQL';
 import { Task } from "@/types/Task";
 
 export const TaskGraphQLPage = () => {

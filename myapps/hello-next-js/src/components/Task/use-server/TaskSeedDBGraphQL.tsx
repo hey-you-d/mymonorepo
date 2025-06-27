@@ -4,7 +4,7 @@
 
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useCallback, useMemo, memo } from 'react';
 import type { Task } from '@/types/Task';
 
 type TaskSeedDBGraphQLType = {
@@ -17,8 +17,8 @@ type TaskSeedDBGraphQLType = {
     userAuthenticated: boolean,
 }
 
-export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBGraphQLType) => {
-    const onClickHandler = async (e: React.FormEvent) => {
+const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBGraphQLType) => {
+    const onClickHandler = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         
         setButtonDisabled(true);
@@ -30,17 +30,20 @@ export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, 
         }
         
         setButtonDisabled(false);
-    }
+    }, [seedTaskDB, deleteAllRows, setButtonDisabled, tasks]);
 
-    const renderButton: React.ReactElement = userAuthenticated 
-        ? (
-            <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
-                {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-            </button>
-        ) : ( <button type="button" disabled>
-                {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-            </button> );
-     
+    const renderButton = useMemo((): React.ReactElement => {
+        return userAuthenticated 
+            ? (
+                <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
+                    {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+                </button>
+            ) : ( <button type="button" disabled>
+                    {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+                </button> 
+            );
+    }, [userAuthenticated, onClickHandler, tasks, buttonDisabled]); 
+    
     return (
         <>
             <p>{`Currently, there are ${tasks.length} rows in the Tasks table.`}</p>
@@ -48,3 +51,5 @@ export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, 
         </>
     );
 };
+
+export default memo(TaskSeedDBGraphQL);

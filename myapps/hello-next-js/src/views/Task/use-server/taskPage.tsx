@@ -9,8 +9,8 @@ import {
   getTasksDBRows,
   seedTasksDB
 } from '@/viewModels/Task/use-server/getTasksViewModel';
-import { TaskSeedDB } from '@/components/Task/use-server/TaskSeedDB';
-import { TaskTable } from '@/components/Task/use-server/TaskTable';
+import TaskSeedDB from '@/components/Task/use-server/TaskSeedDB';
+import TaskTable from '@/components/Task/use-server/TaskTable';
 import { TaskUser } from "./taskUser";
 import { Task } from "@/types/Task";
 
