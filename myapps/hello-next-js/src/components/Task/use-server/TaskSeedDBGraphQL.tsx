@@ -30,6 +30,7 @@ const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonD
         }
         
         setButtonDisabled(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [seedTaskDB, deleteAllRows, tasks]);
     // for reference: excluded from useCallback dependencies:
     // - setButtonDisabled is a state setter and doesn't need to be a dependency

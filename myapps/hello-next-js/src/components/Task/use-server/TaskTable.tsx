@@ -61,6 +61,7 @@ const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createRow, tasks]);
     // for reference: excluded from useCallback dependencies:
     // - setButtonDisabled & setTask are state setters and don't need to be a dependency 

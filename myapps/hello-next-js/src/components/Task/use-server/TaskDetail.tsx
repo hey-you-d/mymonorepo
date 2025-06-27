@@ -30,6 +30,7 @@ const TaskDetail = ({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDi
         } catch(e) {
             throw new Error(`Delete row ${row.id} failed: ${e}`);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [deleteRowFromId, row]);
     // for reference: excluded from useCallback dependencies:
     // - setButtonDisabled is a state setter and doesn't need to be a dependency 

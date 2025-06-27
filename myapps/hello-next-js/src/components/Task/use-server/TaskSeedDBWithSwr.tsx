@@ -35,6 +35,7 @@ const TaskSeedDBWithSwr = ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, s
         mutate("Tasks-API-USE-SWR");
 
         setButtonDisabled(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [seedTaskDB, deleteAllRows, tasks, mutate]);
     // for reference: excluded from useCallback dependencies:
     // - setButtonDisabled & setTask are state setters and don't need to be a dependency 

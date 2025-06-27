@@ -63,6 +63,7 @@ const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createRow]);
     // for reference: excluded from useCallback dependencies:
     // - setButtonDisabled is a state setter and doesn't need to be a dependency 
@@ -158,7 +159,7 @@ const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
                 </tr>
             </>
         ];
-    }, [tasks, renderAddRowForm]);
+    }, [tasks, renderAddRowForm, buttonDisabled]);
 
     return (
         <table>

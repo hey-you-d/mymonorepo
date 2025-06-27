@@ -27,6 +27,7 @@ const TaskSeedDB = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled
         setTasks(updatedTasks.tasks);
         
         setButtonDisabled(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tasks, seedTaskDB, deleteAllRows]);
     // for reference: excluded from useCallback dependencies:
     // - setButtonDisabled & setTask are state setters and don't need to be a dependency 

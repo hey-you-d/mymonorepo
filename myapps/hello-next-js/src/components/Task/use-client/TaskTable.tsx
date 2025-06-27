@@ -47,7 +47,8 @@ const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButto
             setButtonDisabled(false);
         } else {
             // TODO: visual indicator - e.g. red border styling
-        }    
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps    
     }, [createRow, tasks, title, detail]);
     // for reference: excluded from useCallback dependencies:
     // - setButtonDisabled is a state setter and doesn't need to be a dependency
@@ -94,10 +95,11 @@ const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButto
         ];
     }, [tasks, userAuthenticated, editTodoHandler, buttonDisabled, chkBoxHandler]);
 
-    // for reference: useMemo won't help because dependencies changes frequently: 
+    // for reference: neither useCallback nor useMemo will help because dependencies changes frequently: 
     // - title and detail change on every keystroke 
     // - buttonDisabled toggles during operations
     // - userAuthenticated can change during the session
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const renderAddRowForm = (isDisabled: boolean): React.ReactElement => {
         const inputTitle = <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />;
         const inputDetail = <input type="text" placeholder="Description" value={detail} onChange={e => setDetail(e.target.value)} />;

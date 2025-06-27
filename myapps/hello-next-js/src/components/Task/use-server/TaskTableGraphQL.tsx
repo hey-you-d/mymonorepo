@@ -70,6 +70,7 @@ const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createRow, tasks]);
     // for reference: excluded from useCallback dependencies:
     // - setButtonDisabled & setTask are state setters and don't need to be a dependency
@@ -163,7 +164,7 @@ const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, buttonD
                 </tr>
             </>
         );
-    }, [tasks, renderAddRowForm]);
+    }, [tasks, renderAddRowForm, buttonDisabled]);
 
     return (
         <table>
