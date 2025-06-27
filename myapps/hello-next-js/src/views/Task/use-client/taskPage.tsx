@@ -38,7 +38,7 @@ export const TaskPage = () => {
 
   return tasks ? (
     <>
-      <h2>Default example: MVVM client-side components rendered with Next.js Page Router</h2>
+      <h2>Default example: MVVM client-side components rendered via Next.js Page Router</h2>
       <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <span>filter task description: </span>
       <input type="text" placeholder="Filter detail..."  

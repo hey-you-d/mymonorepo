@@ -102,7 +102,7 @@ const TaskTable = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled
                 <td>-</td>
             </tr>
         ];
-    }, [tasks, userAuthenticated, chkBoxHandler, editTodoHandler]);
+    }, [tasks, userAuthenticated, chkBoxHandler, editTodoHandler, buttonDisabled]);
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
         const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;

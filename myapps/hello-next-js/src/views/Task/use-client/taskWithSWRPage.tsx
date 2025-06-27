@@ -62,7 +62,7 @@ export const TaskWithSWRPage = () => {
 
   return tasks ? (
     <>
-      <h2>Frontend cached with Vercel SWR: MVVM client-side components rendered with Next.js App Router</h2>
+      <h2>Frontend cached with Vercel SWR: MVVM client-side components rendered via Next.js Page Router</h2>
       <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <TaskSeedDB 
         totalRows={tasks.length} 

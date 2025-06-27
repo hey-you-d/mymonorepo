@@ -92,7 +92,7 @@ const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButto
                 <td>-</td>
             </tr>
         ];
-    }, [tasks, userAuthenticated, editTodoHandler]);
+    }, [tasks, userAuthenticated, editTodoHandler, buttonDisabled]);
 
     // for reference: useMemo won't help because dependencies changes frequently: 
     // - title and detail change on every keystroke 
