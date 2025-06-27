@@ -2,7 +2,7 @@
 
 // The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { Dispatch, SetStateAction } from 'react';
+import { memo, useCallback, Dispatch, SetStateAction } from 'react';
 
 export type TaskSeedDBType = {
     totalRows: number, 
@@ -13,8 +13,8 @@ export type TaskSeedDBType = {
     userAuthenticated: boolean,
 }
 
-export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBType) => {
-    const onClickHandler = async (e: React.FormEvent) => {
+const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBType) => {
+    const onClickHandler = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();    
         setButtonDisabled(true);
         if (totalRows <= 0) {
@@ -35,7 +35,7 @@ export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisable
             }
         }
         setButtonDisabled(false);
-    }
+    }, [seedTaskDB, deleteAllRows, setButtonDisabled, totalRows]);
 
     const renderButton: React.ReactElement = userAuthenticated 
         ? (
@@ -53,3 +53,5 @@ export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisable
         </>
     )
 };
+
+export default memo(TaskSeedDB);

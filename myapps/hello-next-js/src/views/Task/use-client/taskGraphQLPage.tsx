@@ -2,8 +2,8 @@
 import { useState } from 'react';
 import { useTaskGraphQLViewModel } from '../../../viewModels/Task/use-client/useTaskGraphQLViewModel'; 
 import TaskUser from "./taskUser";
-import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
-import { TaskTable } from '@/components/Task/use-client/TaskTable';
+import TaskSeedDB from '@/components/Task/use-client/TaskSeedDB';
+import TaskTable from '@/components/Task/use-client/TaskTable';
 
 export const TaskGraphQLPage = () => {
     const { tasks, loading, error, seedTaskDB, deleteAllRows, createRow, updateRowFromId } = useTaskGraphQLViewModel();

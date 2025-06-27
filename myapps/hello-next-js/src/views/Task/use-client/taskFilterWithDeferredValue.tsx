@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState, useMemo, useDeferredValue } from 'react';
 import type { TaskTableType } from '@/types/Task';
-import { TaskTable } from '@/components/Task/use-client/TaskTable';
+import TaskTable from '@/components/Task/use-client/TaskTable';
 
 // dev note - use-case scenario of useDeferredValue:
 // Imagine you're running a live product search on an e-commerce site

@@ -2,8 +2,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useTaskViewModelWithSwr } from '@/viewModels/Task/use-client/useTasksViewModelWithSwr';
 import TaskUser from "./taskUser";
-import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
-import { TaskTable } from '@/components/Task/use-client/TaskTable';
+import TaskSeedDB from '@/components/Task/use-client/TaskSeedDB';
+import TaskTable from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
 import styles from "@/app/page.module.css";
 

@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { useTaskViewModel } from '@/viewModels/Task/use-client/useTasksViewModel';
 import TaskUser from "./taskUser";
-import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
-import { TaskTable } from '@/components/Task/use-client/TaskTable';
+import TaskSeedDB from '@/components/Task/use-client/TaskSeedDB';
+import TaskTable from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
 
 export const TaskPage = () => {

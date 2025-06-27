@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TaskTable } from './TaskTable';
+import TaskTable from './TaskTable';
 import type { Task } from '@/types/Task';
 import { isSafeInput } from '@/lib/app/common';
 
