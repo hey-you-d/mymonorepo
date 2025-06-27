@@ -4,7 +4,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { SWRConfig } from 'swr';
 import { TaskModel } from '@/models/Task/use-client/TaskModel';
 import { TaskWithSWRPage } from '@/views/Task/use-client/taskWithSWRPage';
-import { BASE_URL } from "@/lib/app/common";
+import { TASKS_BFF_BASE_API_URL } from "@/lib/app/common";
 
 // for reference: alternative function signature:
 //type Props = {
@@ -24,7 +24,7 @@ const TaskListWithSWR = ({ fallback }: InferGetServerSidePropsType<typeof getSer
 
 export const getServerSideProps: GetServerSideProps = async () => {
   // Inside getServerSideProps, we can't use a relative URL  
-  const tasks = await (new TaskModel()).getTasksDBRows(`${BASE_URL}/api/tasks/v1/bff`);
+  const tasks = await (new TaskModel()).getTasksDBRows(TASKS_BFF_BASE_API_URL);
   
   return {
     props: {

@@ -42,9 +42,9 @@ describe('TaskModel', () => {
 
     // Must go before any imports
     jest.doMock('../../../lib/app/common', () => ({
-      TASKS_SQL_BASE_API_URL: '/api/tasks/v1/sql',
       TASKS_API_HEADER: jest.fn().mockResolvedValue(mockApiHeader),
-      BASE_URL: APP_ENV === "LIVE" ? 'https://mock-base-url.com' : "",
+      TASKS_SQL_DOMAIN_API_URL: 'https://api.example.com/api/tasks/v1/sql',
+      TASKS_SQL_BASE_API_URL: 'https://api.example.com/hello-next-js/api/tasks/v1/sql',
     }));
 
     // mock the http only auth_token cookie. 
@@ -105,7 +105,7 @@ describe('TaskModel', () => {
 
       expect(result).toEqual(mockData);
 
-      expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/`, {
+      expect(fetch).toHaveBeenCalledWith("https://api.example.com/hello-next-js/api/tasks/v1/sql/", {
         method: 'GET',
         headers: mockApiHeader
       });
@@ -133,7 +133,7 @@ describe('TaskModel', () => {
 
       const result = await deleteAllRows();
 
-      expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/delete-rows`, {
+      expect(fetch).toHaveBeenCalledWith("https://api.example.com/hello-next-js/api/tasks/v1/sql/delete-rows", {
         method: 'POST',
         headers: mockApiHeader
       });
@@ -155,7 +155,7 @@ describe('TaskModel', () => {
 
       const result = await seedTasksDB();
 
-      expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/seed-table`, {
+      expect(fetch).toHaveBeenCalledWith("https://api.example.com/hello-next-js/api/tasks/v1/sql/seed-table", {
         method: 'POST',
         headers: mockApiHeader
       });
@@ -187,7 +187,7 @@ describe('TaskModel', () => {
       expect(TASKS_API_HEADER).toHaveBeenCalled();
 
       expect(result).toEqual({rows: mockData});
-      expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/1`,  {
+      expect(fetch).toHaveBeenCalledWith("https://api.example.com/hello-next-js/api/tasks/v1/sql/1", {
         method: 'GET',
         headers: mockApiHeader
       });
@@ -227,7 +227,7 @@ describe('TaskModel', () => {
 
       const result = await createRow('test', 'test');
       expect(result).toEqual(mockData); // the fn returns the newly created row
-      expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/create-row`, {
+      expect(fetch).toHaveBeenCalledWith("https://api.example.com/hello-next-js/api/tasks/v1/sql/create-row", {
         method: 'POST',
         headers: mockApiHeader,
         body: "{\"title\":\"test\",\"detail\":\"test\"}"
@@ -266,7 +266,7 @@ describe('TaskModel', () => {
 
       const result = await updateRowFromId(999, 'test', 'test', true);
       expect(result).toEqual({ rows: mockData }); // the fn returns the updated row
-      expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/999`, {
+      expect(fetch).toHaveBeenCalledWith("https://api.example.com/hello-next-js/api/tasks/v1/sql/999", {
         method: 'PUT',
         headers: mockApiHeader,
         body: "{\"title\":\"test\",\"detail\":\"test\",\"completed\":true}"
@@ -305,7 +305,7 @@ describe('TaskModel', () => {
 
       const result = await deleteRowFromId(999);
       expect(result).toEqual(mockData); // the fn returns the deleted row
-      expect(fetch).toHaveBeenCalledWith(`${url}/api/tasks/v1/sql/999`, {
+      expect(fetch).toHaveBeenCalledWith("https://api.example.com/hello-next-js/api/tasks/v1/sql/999", {
         method: 'DELETE',
         headers: mockApiHeader
       });

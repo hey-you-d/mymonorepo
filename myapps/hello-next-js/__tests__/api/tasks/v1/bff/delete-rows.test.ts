@@ -18,8 +18,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 //import handler from '../../../../../pages/api/tasks/v1/bff/delete-rows';
 //import { VERIFY_JWT_RETURN_API_RES, TASKS_API_HEADER } from '@/lib/app/common';
 const handler = require('../../../../../pages/api/tasks/v1/bff/delete-rows').default;
-const {
-  BASE_URL,  
+const { 
   TASKS_API_HEADER,
   VERIFY_JWT_RETURN_API_RES,
 } = require('../../../../../src/lib/app/common');

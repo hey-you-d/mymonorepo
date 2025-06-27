@@ -10,7 +10,6 @@ import {
 } from '@/models/Task/use-server/TaskModel';
 import { catchedErrorMessage } from '@/lib/app/error';
 import type { Task } from '@/types/Task';
-import { TASKS_BFF_BASE_API_URL } from '@/lib/app/common';
 
 const fnSignature = "use-server | view-model | getTasksViewModel";
 
@@ -18,10 +17,10 @@ export const getTasksDBRows = async (): Promise<{ tasks: Task[] }> => {
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      const tasks: Task[] | undefined = await getTasksDBRowsTaskModel(`${TASKS_BFF_BASE_API_URL}`);
+      const tasks: Task[] | undefined = await getTasksDBRowsTaskModel(`${TASKS_SQL_BASE_API_URL}`);
       return { tasks: tasks ?? [] };
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, "getTasksDBRows", error as Error);

@@ -244,7 +244,7 @@ describe('/api/tasks/v1/bff handler', () => {
     });
 
     describe('Integration scenarios', () => {
-        it('should properly construct the API URL using BASE_URL', async () => {
+        it('should properly construct the API URL', async () => {
             // Arrange
             const mockTasks = [{ id: 1, title: 'Test Task' }];
             
