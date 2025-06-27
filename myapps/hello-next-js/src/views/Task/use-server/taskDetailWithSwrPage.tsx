@@ -2,7 +2,6 @@
 // for reference: don't let the folder name mislead you, a view component cannot be a server component.
 // the uniform folder name is for the sake of consistency
 import { useState, useEffect, useLayoutEffect } from 'react';
-import Link from 'next/link';
 import useSWR from 'swr';
 import { fetcher } from '@/viewModels/Task/use-server/getTasksViewModelWithSwr';
 import { deleteRowFromId } from '@/viewModels/Task/use-server/getTasksViewModel';
