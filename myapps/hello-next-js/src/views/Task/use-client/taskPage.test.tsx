@@ -120,7 +120,7 @@ describe('TaskPage', () => {
     it('renders all main components when tasks exist', () => {
       render(<TaskPage />);
 
-      expect(screen.getByText('Default example: MVVM client-side components rendered with Next.js Page Router')).toBeInTheDocument();
+      expect(screen.getByText('Default example: MVVM client-side components rendered via Next.js Page Router')).toBeInTheDocument();
       expect(screen.getByTestId('task-user')).toBeInTheDocument();
       expect(screen.getByTestId('task-seed-db')).toBeInTheDocument();
       expect(screen.getByTestId('task-table')).toBeInTheDocument();
