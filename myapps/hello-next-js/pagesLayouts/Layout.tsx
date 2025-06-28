@@ -14,7 +14,7 @@ const Layout = ({ children, title } : { children:ReactNode | ReactElement, title
             <main className={styles.main}>
                 <h3>[Client-side components MVVM variant example pages]</h3>
                 <ul>
-                    <li><Link href={`${TASKS_CRUD}`}>Default example page</Link></li>    
+                    <li><Link href={`${TASKS_CRUD}`}>Default (No Frills) example page</Link></li>    
                     <li><Link href={`${TASKS_CRUD}/with-swr`}>Cached With Vercel SWR example page</Link></li>
                     <li><Link href={`${TASKS_CRUD}/with-search-filter`}>useDeferredValue optimised filtering example page</Link></li>
                     <li><Link href={`${TASKS_CRUD}/graphql`}>Data fetching with graphql (via Apollo Server) example page</Link></li>
@@ -22,7 +22,7 @@ const Layout = ({ children, title } : { children:ReactNode | ReactElement, title
                 </ul>
                 <h3>[Server-side components MVVM variant example pages]</h3>
                 <ul>
-                    <li><Link href={`${TASKS_CRUD}/use-server`}>Default example page</Link></li>
+                    <li><Link href={`${TASKS_CRUD}/use-server`}>Default (No Frills) example page</Link></li>
                     <li><Link href={`${TASKS_CRUD}/use-server/with-swr`}>Cached With Vercel SWR example page</Link></li>
                     <li><Link href={`${TASKS_CRUD}/use-server/graphql`}>Data fetching with graphql (via Apollo Server) example page</Link></li>
                 </ul>
