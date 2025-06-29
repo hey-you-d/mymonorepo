@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TaskDetail } from './TaskDetail';
+import TaskDetail from './TaskDetail';
 import type { Task } from '@/types/Task';
 
 jest.mock('next/router', () => ({

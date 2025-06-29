@@ -33,8 +33,14 @@ export const isRunningLocally = (req: NextApiRequest) => {
 export const DOMAIN_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.domain : LOCALHOST_MODE.domain;
 export const BASE_URL = APP_ENV === "LIVE" ? LIVE_SITE_MODE.base.serverSide : LOCALHOST_MODE.base.serverSide;
 export const BASE_URL_CLIENT_COMP = APP_ENV === "LIVE" ? LIVE_SITE_MODE.base.clientSide : LOCALHOST_MODE.base.clientSide;
-export const TASKS_BFF_BASE_API_URL = `${BASE_URL}/api/tasks/v1/bff`;
-export const TASKS_SQL_BASE_API_URL = `${BASE_URL}/api/tasks/v1/sql`;      
+
+export const TASKS_BFF_RELATIVE_URL = "/api/tasks/v1/bff";
+export const TASKS_BFF_BASE_API_URL = `${BASE_URL}${TASKS_BFF_RELATIVE_URL}`;
+export const TASKS_BFF_DOMAIN_API_URL = `${DOMAIN_URL}${TASKS_BFF_RELATIVE_URL}`;
+
+export const TASKS_API_RELATIVE_URL = "/api/tasks/v1/sql";
+export const TASKS_SQL_BASE_API_URL = `${BASE_URL}${TASKS_API_RELATIVE_URL}`;   
+export const TASKS_SQL_DOMAIN_API_URL = `${DOMAIN_URL}${TASKS_API_RELATIVE_URL}`;   
         
 export const getInternalApiKey = async (): Promise<string | undefined> => {
     const secretId = APP_ENV === "LIVE" ? LIVE_SITE_MODE.apiKeyId : LOCALHOST_MODE.apiKeyId; 

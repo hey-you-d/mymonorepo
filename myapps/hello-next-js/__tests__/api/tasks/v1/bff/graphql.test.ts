@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../../pages/api/tasks/v1/bff/graphql';
-import { DOMAIN_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
+import { TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 
 // Mock the dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
-    DOMAIN_URL: 'https://example.com',
+    TASKS_SQL_DOMAIN_API_URL: 'https://api.example.com/api/tasks/v1/sql',
+    TASKS_SQL_BASE_API_URL: 'https://api.example.com/hello-next-js/api/tasks/v1/sql',
     TASKS_API_HEADER: jest.fn(),
     getJWTFrmHttpOnlyCookie: jest.fn(),
 }));
@@ -87,7 +88,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(fetch).toHaveBeenCalledWith(
-                'https://example.com/api/tasks/v1/sql/graphql',
+                "https://api.example.com/api/tasks/v1/sql/graphql",
                 {
                 method: 'POST',
                 headers: {
@@ -381,7 +382,7 @@ describe('/api/tasks/v1/bff/graphql handler', () => {
             await handler(req as NextApiRequest, res as NextApiResponse);
 
             expect(fetch).toHaveBeenCalledWith(
-                'https://example.com/api/tasks/v1/sql/graphql',
+                "https://api.example.com/api/tasks/v1/sql/graphql",
                 expect.objectContaining({
                 body: JSON.stringify({
                     query: req.body.query,

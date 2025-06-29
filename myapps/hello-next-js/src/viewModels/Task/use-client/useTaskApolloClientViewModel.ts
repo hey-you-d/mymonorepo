@@ -1,8 +1,8 @@
-'use server';
+'use client';
 import { useState } from 'react';
 import { ApolloError, gql, useQuery, useMutation } from '@apollo/client';
 import { Task } from "@/types/Task";
-import { catchedErrorMessage } from '@/lib/app/error';
+import { catchedErrorMessage, customResponseMessage } from '@/lib/app/error';
 
 const fnSignature = "use-client | view-model | useTaskApolloClientViewModel";
 
@@ -67,7 +67,6 @@ export const UPDATE_A_TASK = gql`
 
 export const useTaskApolloClientViewModel = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
     // All of the mutation query functions
@@ -88,16 +87,26 @@ export const useTaskApolloClientViewModel = () => {
         onCompleted: (data: { tasks: Task[] } | undefined) => {
             if(data?.tasks) {
                 setTasks(data.tasks);
-                setIsLoading(false);
             }
         },
-        onError: (error: ApolloError) => {
-            setErrorMsg(error.message);
+        /* // Apollo Client doesn't handle async callbacks properly. This could cause issues.
+        onError: async (error: ApolloError) => {
+            setErrorMsg(await customResponseMessage(fnSignature, "getAllTasksHandler - onError", error.message));
             setIsLoading(false);
         }
+        */
+        onError: (error: ApolloError) => {
+            // Make this synchronous to avoid issues
+            customResponseMessage(fnSignature, "getAllTasksHandler - onError", error.message)
+                .then(msg => setErrorMsg(msg))
+                .catch(err => setErrorMsg(`Error handling failed: ${err.message}`));
+        }    
     }
-    //const { loading: getTasksLoading } = useQuery(GET_ALL_TASKS, getAllTasksHandler);
-    useQuery(GET_ALL_TASKS, getAllTasksHandler);
+    
+    const { loading: queryLoading, error: queryError } = useQuery(GET_ALL_TASKS, getAllTasksHandler);
+
+    // Use Apollo's loading state combined with any custom loading states
+    const isLoading = queryLoading;
 
     const createRow = async(_: Task[], title: string, detail: string) => {    
         try {
@@ -117,18 +126,19 @@ export const useTaskApolloClientViewModel = () => {
             }
             */    
             if (!mutatedData?.createTask) {
-                throw new Error('No task returned');
+                const errMsg = await customResponseMessage(fnSignature, "createRow", "no task returned");
+                throw new Error(errMsg);
             }
 
             // for reference: Use Functional setTasks to Avoid Stale State
             // This ensures the update works even if multiple tasks are added quickly, 
             // preventing race conditions from stale closures.
             setTasks(prev => [mutatedData.createTask, ...prev]);
+            // Clear any previous error messages on success
+            setErrorMsg(null);
         } catch (e) {
             const errorMessage = await catchedErrorMessage(fnSignature, "createRow", e as Error);
             setErrorMsg(errorMessage);
-        } finally {
-            setIsLoading(false);
         }
     }
     
@@ -148,15 +158,16 @@ export const useTaskApolloClientViewModel = () => {
             */
 
             if (!mutatedData?.deleteTasks) {
-                throw new Error('No task returned');
+                const errMsg = await customResponseMessage(fnSignature, "deleteAllRows", "no task returned");
+                throw new Error(errMsg);
             }
             
             setTasks([]);
+            // Clear any previous error messages on success
+            setErrorMsg(null);
         } catch (e) {
             const errorMessage = await catchedErrorMessage(fnSignature, "deleteAllRows", e as Error);
             setErrorMsg(errorMessage);
-        } finally {
-            setIsLoading(false);
         }
     }
 
@@ -175,7 +186,8 @@ export const useTaskApolloClientViewModel = () => {
             }
             */
             if (!mutatedData?.seedTasks) {
-                throw new Error('No task returned');
+                const errMsg = await customResponseMessage(fnSignature, "seedTaskDB", "no task returned");
+                throw new Error(errMsg);
             }
 
             // for reference: Use Functional setTasks to Avoid Stale State
@@ -188,11 +200,11 @@ export const useTaskApolloClientViewModel = () => {
             //setTasks(prev => [...mutatedData.seedTasks, ...prev]);
             // dev note 3: I can 100% guarantee that prev is [], hence
             setTasks([...mutatedData.seedTasks]);
+            // Clear any previous error messages on success
+            setErrorMsg(null);
         } catch (e) {
             const errorMessage = await catchedErrorMessage(fnSignature, "seedTaskDB", e as Error);
             setErrorMsg(errorMessage);
-        } finally {
-            setIsLoading(false);
         }
     }
 
@@ -211,26 +223,26 @@ export const useTaskApolloClientViewModel = () => {
             }
             */
             if (!mutatedData?.updateTask) {
-                throw new Error('No task returned');
+                const errMsg = await customResponseMessage(fnSignature, "updateRowFromId", "no task returned");
+                throw new Error(errMsg);
             }
 
             // for reference: update only the changed task in the list
             setTasks(prev =>
                 prev.map(task => (task.id === mutatedData.updateTask.id ? mutatedData.updateTask : task))
             );
-            
+            // Clear any previous error messages on success
+            setErrorMsg(null);
         } catch (e) {
             const errorMessage = await catchedErrorMessage(fnSignature, `updateRowFromId [id: ${id}]`, e as Error);
             setErrorMsg(errorMessage);
-        } finally {
-            setIsLoading(false);
         }
     }
   
     return {
         tasks,
         loading: isLoading,
-        error: errorMsg,
+        error: errorMsg || queryError?.message, // Combine custom errors with Apollo errors
         seedTaskDB,
         deleteAllRows,
         createRow,

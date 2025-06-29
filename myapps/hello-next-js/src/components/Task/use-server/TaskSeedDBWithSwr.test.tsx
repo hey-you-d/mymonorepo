@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TaskSeedDBWithSwr } from './TaskSeedDBWithSwr';
+import TaskSeedDBWithSwr from './TaskSeedDBWithSwr';
 import type { Task } from '@/types/Task';
 
 // mock the http only auth_token cookie. 

@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { useTaskViewModel } from '@/viewModels/Task/use-client/useTasksViewModel';
 import TaskUser from "./taskUser";
-import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
-import { TaskTable } from '@/components/Task/use-client/TaskTable';
+import TaskSeedDB from '@/components/Task/use-client/TaskSeedDB';
+import TaskTable from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
 
 export const TaskPage = () => {
@@ -38,7 +38,7 @@ export const TaskPage = () => {
 
   return tasks ? (
     <>
-      <h2>Default example: MVVM client-side components rendered with Next.js Page Router</h2>
+      <h2>Default (No frills) example: MVVM client-side components rendered via Next.js Page Router</h2>
       <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <span>filter task description: </span>
       <input type="text" placeholder="Filter detail..."  

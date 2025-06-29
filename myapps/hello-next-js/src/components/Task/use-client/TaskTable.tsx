@@ -2,7 +2,7 @@
 
 // for reference: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { useState, useCallback, Dispatch, SetStateAction } from 'react';
+import { memo, useState, useMemo, useCallback, Dispatch, SetStateAction } from 'react';
 import { useRouter } from 'next/router';
 import type { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD, isSafeInput } from "@/lib/app/common";
@@ -16,22 +16,25 @@ export type TaskTableType = {
     userAuthenticated: boolean,
 }
 
-export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
+const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const [title, setTitle] = useState("");
     const [detail, setDetail] = useState("");
 
     const router = useRouter();
 
-    const chkBoxHandler = (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
+    const chkBoxHandler = useCallback((_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
-    }
+    }, [updateRowFromId, tasks]);
     
-    const editTodoHandler = (e: React.MouseEvent, id: number) => {
+    const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
 
         // render the following next.js Page route: /pages/task-crud-fullstack/edit/[id].tsx
         window.location.replace( `${MONOREPO_PREFIX}/${TASKS_CRUD}/edit/${id}?from=${router.asPath}`);
-    }
+    }, [router.asPath]);
+    // for reference: excluded from useCallback dependencies:
+    // - MONOREPO_PREFIX and TASKS_CRUD are constants and don't need to be dependencies
+    // - router object is stable in Next.js and doesn't change between renders
     
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -44,10 +47,16 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
             setButtonDisabled(false);
         } else {
             // TODO: visual indicator - e.g. red border styling
-        }    
-    }, [createRow, tasks, title, detail, setButtonDisabled]);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps    
+    }, [createRow, tasks, title, detail]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled is a state setter and doesn't need to be a dependency
+    // for reference: included in useCallback dependencies:
+    // - Including title and detail means the function recreates every time user types
+    // - tasks changes frequently, causing unnecessary recreations
 
-    const tBody = (): React.ReactElement[] => {
+    const tBody = useMemo<React.ReactElement[]>((): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
             
@@ -84,9 +93,14 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
                 <td>-</td>
             </tr>
         ];
-    }
+    }, [tasks, userAuthenticated, editTodoHandler, buttonDisabled, chkBoxHandler]);
 
-    const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement => {
+    // for reference: neither useCallback nor useMemo will help because dependencies changes frequently: 
+    // - title and detail change on every keystroke 
+    // - buttonDisabled toggles during operations
+    // - userAuthenticated can change during the session
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const renderAddRowForm = (isDisabled: boolean): React.ReactElement => {
         const inputTitle = <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />;
         const inputDetail = <input type="text" placeholder="Description" value={detail} onChange={e => setDetail(e.target.value)} />;
         const buttonTriggeredByIsDisabled = !isDisabled
@@ -106,9 +120,9 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
                 <td>{button}</td>
             </tr>
         );
-    }, [addNewTodoHandler, title, detail, userAuthenticated]);
+    };
 
-    const tFooter = (): React.ReactElement => {
+    const tFooter = useMemo<React.ReactElement>((): React.ReactElement => {
         if (Array.isArray(tasks) && tasks.length > 0) {
             return (
                 <>
@@ -130,7 +144,7 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
                 {renderAddRowForm(true)}
             </>
         );
-    };
+    }, [renderAddRowForm, tasks, buttonDisabled]);
 
     return (
         <table>
@@ -153,11 +167,13 @@ export const TaskTable = ({ tasks, createRow, updateRowFromId, buttonDisabled, s
                 </tr>
             </thead>
             <tbody>
-               {tBody()}
+               {tBody}
             </tbody>
             <tfoot>
-               {tFooter()}
+               {tFooter}
             </tfoot>
         </table>
     )
 };
+
+export default  memo(TaskTable);

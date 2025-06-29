@@ -29,10 +29,10 @@ export const getTasksDBRows = async (): Promise<{ tasks: Task[] | null }> => {
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      const tasks: Task[] | undefined = await getTasksDBRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      const tasks: Task[] | undefined = await getTasksDBRowsTaskModel(TASKS_SQL_BASE_API_URL);
 
       if (tasks) {
         // Revalidate the swr cache tag - this works with Next.js fetch cache
@@ -49,10 +49,10 @@ export const deleteAllRows = async (): Promise<void> => {
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      await deleteAllRowsTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      await deleteAllRowsTaskModel(TASKS_SQL_BASE_API_URL);
       
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
@@ -66,10 +66,10 @@ export const seedTasksDB = async (): Promise<void> => {
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      await seedTasksDBTaskModel(`${BASE_URL}/api/tasks/v1/sql`);
+      await seedTasksDBTaskModel(TASKS_SQL_BASE_API_URL);
 
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
@@ -83,10 +83,10 @@ export const getRowFromId = async (id: number): Promise<{ task: Task | null }> =
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      const task: Task | null | undefined = await getRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
+      const task: Task | null | undefined = await getRowFromIdTaskModel(id, TASKS_SQL_BASE_API_URL);
 
       if (task) {
         // Revalidate the swr cache tag - this works with Next.js fetch cache
@@ -104,10 +104,10 @@ export const createRow = async (title: string, detail: string): Promise<void> =>
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      await createRowTaskModel(title, detail, `${BASE_URL}/api/tasks/v1/sql`);
+      await createRowTaskModel(title, detail, TASKS_SQL_BASE_API_URL);
       
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
@@ -121,10 +121,10 @@ export const updateRowFromId = async (id: number, title: string, detail: string,
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      await updateRowFromIdTaskModel(id, title, detail, completed, `${BASE_URL}/api/tasks/v1/sql`);
+      await updateRowFromIdTaskModel(id, title, detail, completed, TASKS_SQL_BASE_API_URL);
       
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");
@@ -138,10 +138,10 @@ export const deleteRowFromId = async (id: number): Promise<{ tasks: Task[] | nul
     // for reference:
     // "use server" should only be used in files that contain 
     // server actions (async functions for form handling, etc.), not in regular React components or utility files.
-    const { BASE_URL } = await import("@/lib/app/common");
+    const { TASKS_SQL_BASE_API_URL } = await import("@/lib/app/common");
   
     try {
-      await deleteRowFromIdTaskModel(id, `${BASE_URL}/api/tasks/v1/sql`);
+      await deleteRowFromIdTaskModel(id, TASKS_SQL_BASE_API_URL);
       
       // Revalidate the swr cache tag - this works with Next.js fetch cache
       revalidateTag("tasks-api-swr-tag");  

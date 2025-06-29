@@ -35,7 +35,10 @@ jest.mock('../../../viewModels/Task/use-server/getTasksUserViewModel', () => ({
 
 // Mock the TaskDetail component
 jest.mock('../../../components/Task/use-server/TaskDetail', () => ({
-    TaskDetail: jest.fn(({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDisabled }) => (
+    // tells Jest that the module uses ES module syntax, which is required when mocking default exports.
+    __esModule: true,
+    // default: (...) => JSX replaces the memoized component safely and correctly.
+    default: jest.fn(({ row, setTask, deleteRowFromId, buttonDisabled, setButtonDisabled }) => (
         <div data-testid="task-detail">
             <span>Task ID: {row.id}</span>
             <span>Task Title: {row.title}</span>
@@ -148,8 +151,8 @@ describe('TaskDetailPage', () => {
             });
 
             // Verify TaskDetail received correct props
-            const { TaskDetail } = require('../../../components/Task/use-server/TaskDetail');
-            expect(TaskDetail).toHaveBeenCalledWith(
+            const TaskDetailMock = require('../../../components/Task/use-server/TaskDetail');
+            expect(TaskDetailMock.default).toHaveBeenCalledWith(
                 expect.objectContaining({
                     row: mockTask,
                     setTask: expect.any(Function),

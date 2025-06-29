@@ -4,7 +4,7 @@
 
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
+import { useCallback, useMemo, memo, useRef, Dispatch, SetStateAction } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import type { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD, isSafeInput } from "@/lib/app/common";
@@ -20,14 +20,14 @@ type TaskTableDefaultType = {
 }
 export type TaskTableType = TaskTableDefaultType;
 
-export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
+const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const appRouter = useRouter();
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
     
     const pathName = usePathname();    
 
-    const chkBoxHandler = async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
+    const chkBoxHandler = useCallback(async (_: React.MouseEvent, id: number, title: string, detail: string, isCurrentlySelected: boolean) => {
         setButtonDisabled(true);
         const result = await updateRowFromId(tasks, id, title, detail, !isCurrentlySelected);
         
@@ -40,12 +40,12 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
             setTasks(updatedTasks);
         }
         setButtonDisabled(false);
-    }
+    }, [setButtonDisabled, tasks, setTasks, updateRowFromId]);
 
-    const editTodoHandler = (e: React.MouseEvent, id: number) => {
+    const editTodoHandler = useCallback((e: React.MouseEvent, id: number) => {
         e.preventDefault();
         appRouter.push(`${MONOREPO_PREFIX}/${TASKS_CRUD}/use-server/edit/${id}?from=${pathName}`);
-    }
+    }, [appRouter, pathName]);
 
     const addNewTodoHandler = useCallback(async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -70,9 +70,12 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
-    }, [createRow, setTasks, tasks, setButtonDisabled]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [createRow, tasks]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled & setTask are state setters and don't need to be a dependency
 
-    const tBody = (): React.ReactElement[] => {
+    const tBody = useMemo((): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
             
@@ -109,7 +112,7 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
                 <td>-</td>
             </tr>
         ];
-    }
+    }, [tasks, userAuthenticated, chkBoxHandler, buttonDisabled, editTodoHandler]);
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
         const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
@@ -122,6 +125,7 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
             ? buttonTriggeredByIsDisabled
             : <button type="button" disabled>add</button>;
 
+        // for reference: returns an array, so must be memoized with useCallback instead of useMemo    
         return ([
             <>
                 <td>Add new task:</td>
@@ -133,9 +137,9 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
         ]);
     }, [addNewTodoHandler, userAuthenticated]);
 
-    const tFooter = (): React.ReactElement[] => {
+    const tFooter = useMemo((): React.ReactElement => {
         if (Array.isArray(tasks) && tasks.length > 0) {
-            return [
+            return (
                 <>
                     <tr key="some-total-rows">
                         <td>Total Rows:</td>
@@ -145,10 +149,11 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
                         {renderAddRowForm(buttonDisabled)}
                     </tr>
                 </>
-            ];
+            );
         } 
 
-        return [
+        // for reference: returns an array, so must be memoized with useCallback instead of useMemo
+        return (
             <>
                 <tr key="zero-total-row">
                     <td>Total Rows:</td>
@@ -158,8 +163,8 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
                     {renderAddRowForm(true)}
                 </tr>
             </>
-        ];
-    };
+        );
+    }, [tasks, renderAddRowForm, buttonDisabled]);
 
     return (
         <table>
@@ -182,11 +187,13 @@ export const TaskTableGraphQL = ({ tasks, setTasks, createRow, updateRowFromId, 
                 </tr>
             </thead>
             <tbody>
-               {tBody()}
+               {tBody}
             </tbody>
             <tfoot>
-               {tFooter()}
+               {tFooter}
             </tfoot>
         </table>
     )
 };
+
+export default memo(TaskTableGraphQL);

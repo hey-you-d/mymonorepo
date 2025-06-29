@@ -8,7 +8,8 @@ const mockApiHeader = {
 
 jest.mock('../../../lib/app/common', () => ({
     TASKS_API_HEADER: jest.fn(),
-    DOMAIN_URL: 'https://test-domain.com',
+    TASKS_SQL_DOMAIN_API_URL: 'https://api.example.com/api/tasks/v1/sql',
+    TASKS_SQL_BASE_API_URL: 'https://api.example.com/hello-next-js/api/tasks/v1/sql',
 }));
 
 // Mock fetch globally
@@ -60,7 +61,7 @@ describe('TaskUserGraphqlClient - fetchGraphQL', () => {
             );
 
             expect(fetch).toHaveBeenCalledWith(
-                'https://test-domain.com/api/tasks/v1/sql/user/graphql',
+                'https://api.example.com/api/tasks/v1/sql/user/graphql',
                 {
                     method: 'POST',
                     headers: mockApiHeader,
@@ -137,7 +138,7 @@ describe('TaskUserGraphqlClient - fetchGraphQL', () => {
             const result = await fetchGraphQL('query { allUsers { email } }');
 
             expect(fetch).toHaveBeenCalledWith(
-                'https://test-domain.com/api/tasks/v1/sql/user/graphql',
+                'https://api.example.com/api/tasks/v1/sql/user/graphql',
                 {
                     method: 'POST',
                     headers: mockApiHeader,

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useTaskViewModelWithSwr } from '@/viewModels/Task/use-client/useTasksViewModelWithSwr'; 
 import TaskUser from "./taskUser";
-import { TaskSeedDB } from '@/components/Task/use-client/TaskSeedDB';
+import TaskSeedDB from '@/components/Task/use-client/TaskSeedDB';
 import { TaskFilterWithDeferredValue } from './taskFilterWithDeferredValue';
 import { TaskFilterWithUseTransition } from './taskFilterWithUseTransition';
 import { TABLE_FILTER_OPTIMISATION as featureFlag } from "@/lib/app/featureFlags";

@@ -4,7 +4,7 @@
 
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { useCallback, useRef, Dispatch, SetStateAction } from 'react';
+import { useCallback, useMemo, memo, useRef, Dispatch, SetStateAction } from 'react';
 import { mutate } from 'swr';
 import { useRouter, usePathname } from 'next/navigation';
 import { MONOREPO_PREFIX, TASKS_CRUD, isSafeInput } from "@/lib/app/common";
@@ -22,7 +22,7 @@ export type TaskTableWithSwrType = {
 }
 export type TaskTableType = TaskTableWithSwrType;
 
-export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
+const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskTableType) => {
     const appRouter = useRouter();
     const inputTitleRef = useRef<HTMLInputElement>(null);
     const inputDetailRef = useRef<HTMLInputElement>(null);
@@ -63,9 +63,12 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
         } else {
             // TODO: visual indicator - e.g. red border styling
         }
-    }, [createRow, setButtonDisabled]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [createRow]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled is a state setter and doesn't need to be a dependency 
 
-    const tBody = (): React.ReactElement[] => {
+    const tBody = useMemo((): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
             
@@ -102,7 +105,7 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
                 <td>-</td>
             </tr>
         ];
-    }
+    }, [tasks, userAuthenticated, chkBoxHandler, editTodoHandler, buttonDisabled]);
 
     const renderAddRowForm = useCallback((isDisabled: boolean): React.ReactElement[] => {
        const inputForTitle = <input type="text" ref={inputTitleRef} placeholder="Title" defaultValue="" />;
@@ -126,7 +129,7 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
         ]);
     }, [addNewTodoHandler, userAuthenticated]);
 
-    const tFooter = (): React.ReactElement[] => {
+    const tFooter = useMemo((): React.ReactElement[] => {
         if (Array.isArray(tasks) && tasks.length > 0) {
             const output:React.ReactElement[] = [];
             
@@ -156,7 +159,7 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
                 </tr>
             </>
         ];
-    };
+    }, [tasks, renderAddRowForm, buttonDisabled]);
 
     return (
         <table>
@@ -179,11 +182,13 @@ export const TaskTableWithSwr = ({ tasks, createRow, updateRowFromId, buttonDisa
                 </tr>
             </thead>
             <tbody>
-               {tBody()}
+               {tBody}
             </tbody>
             <tfoot>
-               {tFooter()}
+               {tFooter}
             </tfoot>
         </table>
     )
 };
+
+export default memo(TaskTableWithSwr);

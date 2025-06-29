@@ -9,8 +9,8 @@ import {
   getTasksDBRows,
   seedTasksDB
 } from '@/viewModels/Task/use-server/getTasksViewModel';
-import { TaskSeedDB } from '@/components/Task/use-server/TaskSeedDB';
-import { TaskTable } from '@/components/Task/use-server/TaskTable';
+import TaskSeedDB from '@/components/Task/use-server/TaskSeedDB';
+import TaskTable from '@/components/Task/use-server/TaskTable';
 import { TaskUser } from "./taskUser";
 import { Task } from "@/types/Task";
 
@@ -62,7 +62,7 @@ export const TaskPage = () => {
 
   return (
     <>
-      <h2>Default example: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
+      <h2>Default (No frills) example: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
       <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
       <TaskSeedDB
         tasks={tasks}

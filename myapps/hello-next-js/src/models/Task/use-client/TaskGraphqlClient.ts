@@ -1,6 +1,7 @@
 "use client"
 
 import { customResponseMessage, notOkErrorMessage } from "@/lib/app/error";
+import { TASKS_BFF_RELATIVE_URL } from "@/lib/app/common";
 
 const fnSignature = "use-client | model | TaskGraphqlClient";
 
@@ -15,7 +16,7 @@ export async function fetchGraphQL(query: string, variables = {}) {
     // SSR: 'http://localhost:3000/api/tasks/v1/sql/graphql'
     // CSR: '/api/tasks/v1/sql/graphql'
     // note: can't be prepended with "/hello-next-js/" 
-    const res = await fetch(`/api/tasks/v1/bff/graphql`, {
+    const res = await fetch(`${TASKS_BFF_RELATIVE_URL}/graphql`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

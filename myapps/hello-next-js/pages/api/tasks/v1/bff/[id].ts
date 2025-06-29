@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Task } from "@/types/Task";
-import { BASE_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
+import { TASKS_API_HEADER, TASKS_SQL_BASE_API_URL, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 import { missingParamErrorMessage, notOkErrorMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | BFF | [id].ts";
@@ -11,7 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
         case "GET" :
             try {
-                const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
+                const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
                     method: 'GET',
                     headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
                     credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 error: await missingParamErrorMessage(fnSignature, `PUT id:${id}`, "Detail is required"), 
             });  
             try {
-                const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
+                const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
                     method: 'PUT',
                     headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
                     credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
@@ -63,7 +63,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             }
         case "DELETE" :
             try {
-                const response = await fetch(`${BASE_URL}/api/tasks/v1/sql/${id}`, {
+                const response = await fetch(`${TASKS_SQL_BASE_API_URL}/${id}`, {
                     method: 'DELETE',
                     credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.
                     headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),

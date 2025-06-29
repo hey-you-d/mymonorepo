@@ -24,16 +24,19 @@ jest.mock('./taskUser', () => {
   };
 });
 
+// the approach below only works for named export, not default export
+//require('../../../components/Task/use-client/TaskSeedDB').TaskSeedDB = MockTaskSeedDB;
+// the approach below works for default export
 jest.mock('../../../components/Task/use-client/TaskSeedDB', () => ({
-  TaskSeedDB: function TaskSeedDB({ 
-    totalRows, 
-    seedTaskDB, 
-    deleteAllRows, 
-    buttonDisabled, 
-    setButtonDisabled, 
-    userAuthenticated 
-  }: TaskSeedDBType) {
-    return (
+    __esModule: true,
+    default: jest.fn(({ 
+      totalRows, 
+      seedTaskDB, 
+      deleteAllRows, 
+      buttonDisabled, 
+      setButtonDisabled,
+      userAuthenticated 
+    }) => (
       <div data-testid="task-seed-db">
         <span>Total: {totalRows}</span>
         <button 
@@ -51,23 +54,25 @@ jest.mock('../../../components/Task/use-client/TaskSeedDB', () => ({
           Delete All
         </button>
       </div>
-    );
-  }
+    ))
 }));
 
+// the approach below only works for named export, not default export
+//require('../../../components/Task/use-client/TaskTable').TaskTable = MockTaskTable;  
+// the approach below works for default export
 jest.mock('../../../components/Task/use-client/TaskTable', () => ({
-  TaskTable: function TaskTable({ 
-    tasks, 
-    createRow, 
-    updateRowFromId, 
-    buttonDisabled, 
-    setButtonDisabled, 
-    userAuthenticated 
-  }: TaskTableType) {
-    return (
+    __esModule: true,
+    default: jest.fn(({ 
+      tasks, 
+      createRow, 
+      updateRowFromId, 
+      buttonDisabled,
+      setButtonDisabled,
+      userAuthenticated 
+    }) => (
       <div data-testid="task-table">
         <div data-testid="task-count">Tasks: {tasks.length}</div>
-        {tasks.map(task => (
+        {tasks.map((task: { id: string | number; detail: string; }) => (
           <div key={task.id} data-testid={`task-${task.id}`}>
             {task.detail}
           </div>
@@ -76,16 +81,7 @@ jest.mock('../../../components/Task/use-client/TaskTable', () => ({
           Create Row
         </button>
       </div>
-    );
-  }
-}));
-
-// Mock CSS modules
-jest.mock('../../../app/page.module.css', () => ({
-  tasksFilterRow: 'tasksFilterRow',
-  tasksFilterCol1: 'tasksFilterCol1',
-  tasksFilterCol2: 'tasksFilterCol2',
-  tasksFilterCol3: 'tasksFilterCol3'
+    ))
 }));
 
 const { useTaskViewModelWithSwr } = require('../../../viewModels/Task/use-client/useTasksViewModelWithSwr');

@@ -7,7 +7,7 @@ const fnSignature = "use-client | model | TaskModel";
 
 export const swrFetcher = async () => {
   try {
-      const response = await fetch(`${TASKS_BFF_BASE_API_URL}/`, {
+      const response = await fetch(TASKS_BFF_BASE_API_URL, {
           method: 'GET',
           headers: {
               "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export class TaskModel {
     async getTasksDBRows(overrideFetchUrl?: string): Promise<Task[]> {
       // In case this fn is called from within Next.js page routes methods such as getServerSideProps.
       // In this case, we must supply an absolute URL  
-      const finalUrl = overrideFetchUrl ? overrideFetchUrl : `${TASKS_BFF_BASE_API_URL}/`;
+      const finalUrl = overrideFetchUrl ? overrideFetchUrl : TASKS_BFF_BASE_API_URL;
 
       try {
         const response = await fetch(finalUrl, {

@@ -1,9 +1,10 @@
 // Mock the dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
-  BASE_URL: 'https://test-api.com',
-  TASKS_API_HEADER: jest.fn(),
-  VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
-  getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),  
+    TASKS_SQL_DOMAIN_API_URL: 'https://api.example.com/api/tasks/v1/sql',
+    TASKS_SQL_BASE_API_URL: 'https://api.example.com/hello-next-js/api/tasks/v1/sql',
+    TASKS_API_HEADER: jest.fn(),
+    VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
+    getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),  
 }));
 
 // Mock fetch globally
@@ -17,8 +18,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 //import handler from '../../../../../pages/api/tasks/v1/bff/delete-rows';
 //import { VERIFY_JWT_RETURN_API_RES, TASKS_API_HEADER } from '@/lib/app/common';
 const handler = require('../../../../../pages/api/tasks/v1/bff/delete-rows').default;
-const {
-  BASE_URL,  
+const { 
   TASKS_API_HEADER,
   VERIFY_JWT_RETURN_API_RES,
 } = require('../../../../../src/lib/app/common');
@@ -71,7 +71,7 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
 
             // Assert
             expect(fetch).toHaveBeenCalledWith(
-                'https://test-api.com/api/tasks/v1/sql/delete-rows',
+                "https://api.example.com/hello-next-js/api/tasks/v1/sql/delete-rows",
                 {
                     method: 'POST',
                     headers: {
@@ -105,7 +105,7 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
 
             // Assert
             expect(fetch).toHaveBeenCalledWith(
-                'https://test-api.com/api/tasks/v1/sql/delete-rows',
+                "https://api.example.com/hello-next-js/api/tasks/v1/sql/delete-rows",
                 {
                     method: 'POST',
                     headers: {
@@ -143,7 +143,7 @@ describe('/api/tasks/v1/bff/delete-rows handler', () => {
 
             // Assert
             expect(fetch).toHaveBeenCalledWith(
-                'https://test-api.com/api/tasks/v1/sql/delete-rows',
+                "https://api.example.com/hello-next-js/api/tasks/v1/sql/delete-rows",
                 {
                     method: 'POST',
                     headers: {

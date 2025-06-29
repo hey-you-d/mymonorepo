@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { DOMAIN_URL, TASKS_API_HEADER, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
+import { TASKS_API_HEADER, TASKS_SQL_DOMAIN_API_URL, getJWTFrmHttpOnlyCookie } from "@/lib/app/common";
 import { missingParamErrorMessage, notOkErrorMessage, catchedErrorMessage } from '@/lib/app/error';
 
 const fnSignature = "tasks/v1 | BFF | graphql.ts";
@@ -26,8 +26,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 // The GraphQL handler is registered under: /api/tasks/v1/sql/graphql
                 // and and Next.js API routes are not automatically prefixed with your basePath (like /hello-next-js) — that's 
                 // only used for page routes and static assets, not API routes.
-                const proxyResponse = await fetch(`${DOMAIN_URL}/api/tasks/v1/sql/graphql`, { // V - correct
-                //const proxyResponse = await fetch(`${BASE_URL}/api/tasks/v1/sql/graphql`, {  // X - wrong
+                const proxyResponse = await fetch(`${TASKS_SQL_DOMAIN_API_URL}/graphql`, { // V - correct
+                //const proxyResponse = await fetch(`${TASKS_SQL_BASE_API_URL}/graphql`, {  // X - wrong
                     method: 'POST',
                     headers: await TASKS_API_HEADER(await getJWTFrmHttpOnlyCookie(req)),
                     credentials: 'include', // for reference: credentials: 'include' is required to send cookies in fetch for same-site or cross-site requests.

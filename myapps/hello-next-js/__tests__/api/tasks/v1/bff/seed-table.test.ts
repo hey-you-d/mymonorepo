@@ -1,6 +1,7 @@
 // Mock the external dependencies
 jest.mock('../../../../../src/lib/app/common', () => ({
-    BASE_URL: 'https://test-api.example.com',
+    TASKS_SQL_DOMAIN_API_URL: 'https://api.example.com/api/tasks/v1/sql',
+    TASKS_SQL_BASE_API_URL: 'https://api.example.com/hello-next-js/api/tasks/v1/sql',
     TASKS_API_HEADER: jest.fn(),
     VERIFY_JWT_RETURN_API_RES: jest.fn().mockResolvedValue(true),
     getJWTFrmHttpOnlyCookie: jest.fn().mockResolvedValue("fake jwt"),    
@@ -15,8 +16,9 @@ import type { Task } from '@/types/Task';
 //import handler from '../../../../../pages/api/tasks/v1/bff/seed-table';
 //import { TASKS_API_HEADER, VERIFY_JWT_RETURN_API_RES } from '@/lib/app/common';
 const handler = require('../../../../../pages/api/tasks/v1/bff/seed-table').default;
-const {
-  BASE_URL,  
+const {  
+  TASKS_SQL_DOMAIN_API_URL,
+  TASKS_SQL_BASE_API_URL,
   TASKS_API_HEADER,
   VERIFY_JWT_RETURN_API_RES,
 } = require('../../../../../src/lib/app/common');
@@ -66,7 +68,7 @@ describe('/api/tasks/v1/bff/seed-table handler', () => {
             // Assert
             expect(TASKS_API_HEADER).toHaveBeenCalledTimes(1);
             expect(global.fetch).toHaveBeenCalledWith(
-                'https://test-api.example.com/api/tasks/v1/sql/seed-table',
+                "https://api.example.com/hello-next-js/api/tasks/v1/sql/seed-table",
                 { method: 'POST', headers: mockHeaders, credentials: 'include' }
             );
             expect(res._getStatusCode()).toBe(200);

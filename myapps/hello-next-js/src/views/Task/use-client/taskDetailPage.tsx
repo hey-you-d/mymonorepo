@@ -4,7 +4,7 @@ import Link from 'next/link';
 //import { useTaskViewModel } from '@/app/viewModels/Task/use-client/useTasksViewModel';
 import { useTaskViewModelWithSwr } from '@/viewModels/Task/use-client/useTasksViewModelWithSwr';
 import useTaskUserViewModel from '@/viewModels/Task/use-client/useTaskUserViewModel';
-import { TaskDetail } from '@/components/Task/use-client/TaskDetail';
+import TaskDetail from '@/components/Task/use-client/TaskDetail';
 import type { Task } from '@/types/Task';
 import { MONOREPO_PREFIX, TASKS_CRUD } from '@/lib/app/common';
 

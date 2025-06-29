@@ -35,7 +35,7 @@ import {
 } from '@/models/Task/use-server/TaskModel';
 import { revalidateTag as mockRevalidateTag } from 'next/cache';
 import type { Task } from '@/types/Task';
-import { BASE_URL } from '@/lib/app/common';
+import { TASKS_SQL_BASE_API_URL } from '@/lib/app/common';
 
 const mockTask: Task = {
   id: 1,
@@ -81,7 +81,7 @@ describe('getTasksViewModelWithSwr', () => {
       
       const result = await getTasksDBRowsVM();
       
-      expect(getTasksDBRowsModel).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/sql`);
+      expect(getTasksDBRowsModel).toHaveBeenCalledWith(TASKS_SQL_BASE_API_URL);
       expect(mockRevalidateTag).toHaveBeenCalledWith('tasks-api-swr-tag');
       expect(result).toEqual({ tasks: [mockTask] });
     });
@@ -97,7 +97,7 @@ describe('getTasksViewModelWithSwr', () => {
     it('should delete all rows and revalidate cache', async () => {
       await deleteAllRowsVM();
       
-      expect(deleteAllRowsModel).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/sql`);
+      expect(deleteAllRowsModel).toHaveBeenCalledWith(TASKS_SQL_BASE_API_URL);
       expect(mockRevalidateTag).toHaveBeenCalledWith('tasks-api-swr-tag');
     });
 
@@ -112,7 +112,7 @@ describe('getTasksViewModelWithSwr', () => {
     it('should seed database and revalidate cache', async () => {
       await seedTasksDBVM();
       
-      expect(seedTasksDBModel).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/sql`);
+      expect(seedTasksDBModel).toHaveBeenCalledWith(TASKS_SQL_BASE_API_URL);
       expect(mockRevalidateTag).toHaveBeenCalledWith('tasks-api-swr-tag');
     });
 
@@ -129,7 +129,7 @@ describe('getTasksViewModelWithSwr', () => {
       
       const result = await getRowFromIdVM(1);
       
-      expect(getRowFromIdModel).toHaveBeenCalledWith(1, `${BASE_URL}/api/tasks/v1/sql`);
+      expect(getRowFromIdModel).toHaveBeenCalledWith(1, TASKS_SQL_BASE_API_URL);
       expect(mockRevalidateTag).toHaveBeenCalledWith('tasks-api-swr-tag');
       expect(result).toEqual({ task: mockTask });
     });
@@ -156,7 +156,7 @@ describe('getTasksViewModelWithSwr', () => {
       expect(createRowModel).toHaveBeenCalledWith(
         'New Task', 
         'New Detail', 
-        `${BASE_URL}/api/tasks/v1/sql`
+        TASKS_SQL_BASE_API_URL
       );
       expect(mockRevalidateTag).toHaveBeenCalledWith('tasks-api-swr-tag');
     });
@@ -177,7 +177,7 @@ describe('getTasksViewModelWithSwr', () => {
         'Updated Task', 
         'Updated Detail', 
         true,
-        `${BASE_URL}/api/tasks/v1/sql`
+        TASKS_SQL_BASE_API_URL
       );
       expect(mockRevalidateTag).toHaveBeenCalledWith('tasks-api-swr-tag');
     });
@@ -196,7 +196,7 @@ describe('getTasksViewModelWithSwr', () => {
       
       expect(deleteRowFromIdModel).toHaveBeenCalledWith(
         1,
-        `${BASE_URL}/api/tasks/v1/sql`
+        TASKS_SQL_BASE_API_URL
       );
       expect(mockRevalidateTag).toHaveBeenCalledWith('tasks-api-swr-tag');
       expect(result).toEqual({ tasks: null });

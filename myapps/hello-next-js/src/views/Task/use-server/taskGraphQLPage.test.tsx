@@ -18,7 +18,10 @@ jest.mock('next/headers', () => ({
 
 // Mock the child components
 jest.mock('../../../components/Task/use-server/TaskSeedDBGraphQL', () => ({
-    TaskSeedDBGraphQL: jest.fn(({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled }) => (
+    // tells Jest that the module uses ES module syntax, which is required when mocking default exports.
+    __esModule: true,
+    // default: (...) => JSX replaces the memoized component safely and correctly.
+    default: jest.fn(({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled }) => (
         <div 
             data-testid="task-seed-db-graphql"
             data-tasks-length={tasks.length}
@@ -30,7 +33,10 @@ jest.mock('../../../components/Task/use-server/TaskSeedDBGraphQL', () => ({
 }));
 
 jest.mock('../../../components/Task/use-server/TaskTableGraphQL', () => ({
-    TaskTableGraphQL: jest.fn(({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled }) => (
+    // tells Jest that the module uses ES module syntax, which is required when mocking default exports.
+    __esModule: true,
+    // default: (...) => JSX replaces the memoized component safely and correctly.
+    default: jest.fn(({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled }) => (
         <div 
             data-testid="task-table-graphql"
             data-tasks-length={tasks.length}
@@ -59,8 +65,8 @@ import {
     seedTaskDB
 } from '@/viewModels/Task/use-server/getTaskGraphQLViewModel';
 import { TaskGraphQLPage } from './taskGraphQLPage';
-import { TaskSeedDBGraphQL } from '@/components/Task/use-server/TaskSeedDBGraphQL';
-import { TaskTableGraphQL } from '@/components/Task/use-server/TaskTableGraphQL';
+import TaskSeedDBGraphQL from '@/components/Task/use-server/TaskSeedDBGraphQL';
+import TaskTableGraphQL from '@/components/Task/use-server/TaskTableGraphQL';
 
 let spyConsoleError: jest.SpyInstance<any, any>;
 let spyConsoleLog: jest.SpyInstance<any, any>;

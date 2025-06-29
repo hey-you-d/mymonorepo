@@ -1,6 +1,6 @@
 import * as TaskModel from '../../../models/Task/use-server/TaskModel';
 import type { Task } from '@/types/Task';
-import { BASE_URL } from '@/lib/app/common';
+import { TASKS_SQL_BASE_API_URL } from '@/lib/app/common';
 
 jest.mock('../../../models/Task/use-server/TaskModel', () => ({
     getTasksDBRows: jest.fn(),
@@ -139,7 +139,7 @@ describe('getTaskViewModel', () => {
 
         // assert
         expect(TaskModel.createRow).toHaveBeenCalledTimes(1);
-        expect(TaskModel.createRow).toHaveBeenCalledWith("new title", "new detail", `${BASE_URL}/api/tasks/v1/sql`);
+        expect(TaskModel.createRow).toHaveBeenCalledWith("new title", "new detail", TASKS_SQL_BASE_API_URL);
         const updatedMockTasksDescOrder = [...mockTasks, newRow].sort((a, b) => b.id - a.id);
         expect(result).toEqual({ tasks: updatedMockTasksDescOrder });
     });
@@ -165,7 +165,7 @@ describe('getTaskViewModel', () => {
 
         // assert
         expect(TaskModel.getRowFromId).toHaveBeenCalledTimes(1);
-        expect(TaskModel.getRowFromId).toHaveBeenCalledWith(mockTasks[0].id, `${BASE_URL}/api/tasks/v1/sql`);
+        expect(TaskModel.getRowFromId).toHaveBeenCalledWith(mockTasks[0].id, TASKS_SQL_BASE_API_URL);
         expect(result).toEqual({ task: mockTasks[0] });
     });
 
@@ -190,7 +190,7 @@ describe('getTaskViewModel', () => {
 
         // assert
         expect(TaskModel.deleteRowFromId).toHaveBeenCalledTimes(1);
-        expect(TaskModel.deleteRowFromId).toHaveBeenCalledWith(mockTasks[0].id, `${BASE_URL}/api/tasks/v1/sql`);
+        expect(TaskModel.deleteRowFromId).toHaveBeenCalledWith(mockTasks[0].id, TASKS_SQL_BASE_API_URL);
         expect(result).toEqual({ tasks: null });
     });
 
@@ -222,7 +222,7 @@ describe('getTaskViewModel', () => {
         expect(TaskModel.updateRowFromId).toHaveBeenCalledTimes(1);
         expect(TaskModel.updateRowFromId).toHaveBeenCalledWith(
             mockUpdatedData.id, mockUpdatedData.title, mockUpdatedData.detail, mockUpdatedData.completed,
-            `${BASE_URL}/api/tasks/v1/sql`
+            TASKS_SQL_BASE_API_URL
         );
         expect(result).toEqual({ tasks: [mockUpdatedData, mockTasks[1]] });
     });

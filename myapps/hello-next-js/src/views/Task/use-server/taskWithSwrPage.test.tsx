@@ -40,7 +40,10 @@ jest.mock('../../../viewModels/Task/use-server/getTasksViewModelWithSwr', () => 
 
 // Mock the components
 jest.mock('../../../components/Task/use-server/TaskSeedDBWithSwr', () => ({
-    TaskSeedDBWithSwr: ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled } : TaskSeedDBType) => (
+    // tells Jest that the module uses ES module syntax, which is required when mocking default exports.
+    __esModule: true,
+    // default: (...) => JSX replaces the memoized component safely and correctly.
+    default: ({ tasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled } : TaskSeedDBType) => (
         <div data-testid="task-seed-db">
         <button 
             data-testid="seed-button" 
@@ -61,7 +64,10 @@ jest.mock('../../../components/Task/use-server/TaskSeedDBWithSwr', () => ({
 }));
 
 jest.mock('../../../components/Task/use-server/TaskTableWithSwr', () => ({
-    TaskTableWithSwr: ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableWithSwrType) => (
+    // tells Jest that the module uses ES module syntax, which is required when mocking default exports.
+    __esModule: true,
+    // default: (...) => JSX replaces the memoized component safely and correctly.
+    default: ({ tasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled } : TaskTableWithSwrType) => (
         <div data-testid="task-table">
         <div data-testid="task-count">{tasks?.length || 0} tasks</div>
         {tasks?.map(task => (

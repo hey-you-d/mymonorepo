@@ -49,7 +49,10 @@ jest.mock('next/link', () => {
 });
 
 jest.mock('../../../components/Task/use-server/TaskSeedDB', () => ({
-  TaskSeedDB: jest.fn(({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated }) => (
+    // tells Jest that the module uses ES module syntax, which is required when mocking default exports.
+    __esModule: true,
+    // default: (...) => JSX replaces the memoized component safely and correctly.
+    default: jest.fn(({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated }) => (
     <div data-testid="task-seed-db">
       <button 
         data-testid="seed-button" 
@@ -81,33 +84,36 @@ jest.mock('../../../components/Task/use-server/TaskSeedDB', () => ({
 }));
 
 jest.mock('../../../components/Task/use-server/TaskTable', () => ({
-  TaskTable: jest.fn(({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated }) => {
-    userAuthenticated = true;
-    
-    return (
-        <div data-testid="task-table">
-        <div data-testid="task-count">{tasks.length} tasks</div>
-        {tasks.map((task: Task, index: number) => (
-            <div key={index} data-testid={`task-${index}`}>
-            {task.detail}
+    // tells Jest that the module uses ES module syntax, which is required when mocking default exports.
+    __esModule: true,
+    // default: (...) => JSX replaces the memoized component safely and correctly.
+    default: jest.fn(({ tasks, setTasks, createRow, updateRowFromId, buttonDisabled, setButtonDisabled, userAuthenticated }) => {
+        userAuthenticated = true;
+        
+        return (
+            <div data-testid="task-table">
+            <div data-testid="task-count">{tasks.length} tasks</div>
+            {tasks.map((task: Task, index: number) => (
+                <div key={index} data-testid={`task-${index}`}>
+                {task.detail}
+                </div>
+            ))}
+            <button 
+                data-testid="create-task-button" 
+                disabled={buttonDisabled}
+                onClick={() => {
+                setButtonDisabled(true);
+                const newTask = { id: Date.now(), detail: 'New Task' };
+                createRow(newTask).then(() => {
+                    setTasks((prev: Task[]) => [...prev, newTask]);
+                    setButtonDisabled(false);
+                });
+                }}
+            >
+                Create Task
+            </button>
             </div>
-        ))}
-        <button 
-            data-testid="create-task-button" 
-            disabled={buttonDisabled}
-            onClick={() => {
-            setButtonDisabled(true);
-            const newTask = { id: Date.now(), detail: 'New Task' };
-            createRow(newTask).then(() => {
-                setTasks((prev: Task[]) => [...prev, newTask]);
-                setButtonDisabled(false);
-            });
-            }}
-        >
-            Create Task
-        </button>
-        </div>
-    );
+        );
 })}));
 
 jest.mock('./taskUser', () => ({

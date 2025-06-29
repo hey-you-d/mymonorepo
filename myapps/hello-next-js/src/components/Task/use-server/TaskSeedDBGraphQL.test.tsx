@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TaskSeedDBGraphQL } from './TaskSeedDBGraphQL';
+import TaskSeedDBGraphQL from './TaskSeedDBGraphQL';
 import type { Task } from '@/types/Task';
 
 // mock the http only auth_token cookie. 

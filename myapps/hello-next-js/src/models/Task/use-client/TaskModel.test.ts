@@ -1,5 +1,5 @@
 import { TaskModel } from './TaskModel';
-import { BASE_URL } from "@/lib/app/common";
+import { TASKS_BFF_BASE_API_URL } from "@/lib/app/common";
 
 // Define mock response type
 type MockResponse = {
@@ -45,7 +45,7 @@ describe('TaskModel', () => {
 
       const result = await taskModel.getTasksDBRows();
 
-      expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/bff/`, {
+      expect(fetch).toHaveBeenCalledWith(TASKS_BFF_BASE_API_URL, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ describe('TaskModel', () => {
 
       const result = await taskModel.deleteAllRows();
 
-      expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/bff/delete-rows`, {
+      expect(fetch).toHaveBeenCalledWith(`${TASKS_BFF_BASE_API_URL}/delete-rows`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ describe('TaskModel', () => {
 
       const result = await taskModel.seedTasksDB();
 
-      expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/bff/seed-table`, {
+      expect(fetch).toHaveBeenCalledWith(`${TASKS_BFF_BASE_API_URL}/seed-table`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ describe('TaskModel', () => {
 
       const result = await taskModel.getRowFromId(1);
       expect(result).toEqual(mockData);
-      expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/bff/1`,  {
+      expect(fetch).toHaveBeenCalledWith(`${TASKS_BFF_BASE_API_URL}/1`,  {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ describe('TaskModel', () => {
 
       const result = await taskModel.createRow('test', 'test');
       expect(result).toEqual(mockData);
-      expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/bff/create-row`, {
+      expect(fetch).toHaveBeenCalledWith(`${TASKS_BFF_BASE_API_URL}/create-row`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ describe('TaskModel', () => {
 
       const result = await taskModel.updateRowFromId(999, 'test', 'test', true);
       expect(result).toEqual({"rows": [{"id": 1, "name": "Test task"}]});
-      expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/bff/999`, {
+      expect(fetch).toHaveBeenCalledWith(`${TASKS_BFF_BASE_API_URL}/999`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -256,7 +256,7 @@ describe('TaskModel', () => {
 
       const result = await taskModel.deleteRowFromId(999);
       expect(result).toEqual(undefined); // the fn is a void function
-      expect(fetch).toHaveBeenCalledWith(`${BASE_URL}/api/tasks/v1/bff/999`, {
+      expect(fetch).toHaveBeenCalledWith(`${TASKS_BFF_BASE_API_URL}/999`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

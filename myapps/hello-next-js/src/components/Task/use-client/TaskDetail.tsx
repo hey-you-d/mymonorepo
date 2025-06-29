@@ -2,7 +2,7 @@
 
 // The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { Dispatch, SetStateAction, MouseEvent } from 'react';
+import { memo, useCallback, Dispatch, SetStateAction, MouseEvent } from 'react';
 import type { Task } from "@/types/Task";
 import { MONOREPO_PREFIX, TASKS_CRUD } from "@/lib/app/common";
 
@@ -14,7 +14,7 @@ export type TaskDetailType = {
     setButtonDisabled: Dispatch<SetStateAction<boolean>>,
 }
 
-export const TaskDetail = ({ row, tasks, deleteRowFromId, buttonDisabled, setButtonDisabled } : TaskDetailType) => {
+const TaskDetail = ({ row, tasks, deleteRowFromId, buttonDisabled, setButtonDisabled } : TaskDetailType) => {
     // for reference: the if condition below only applies to the non-graphql row deletion op.
     // the graphql version returns an updated tasks (sans the deleted row). 
     if (tasks && tasks.length <= 0) {
@@ -24,7 +24,7 @@ export const TaskDetail = ({ row, tasks, deleteRowFromId, buttonDisabled, setBut
         window.location.href=`${MONOREPO_PREFIX}${TASKS_CRUD}`;
     }
 
-    const onClickHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+    const onClickHandler = useCallback(async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
         setButtonDisabled(true);
@@ -34,7 +34,10 @@ export const TaskDetail = ({ row, tasks, deleteRowFromId, buttonDisabled, setBut
         } catch(e) {
             throw new Error(`Delete row ${row.id} failed: ${e}`);
         }
-    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [row.id, deleteRowFromId]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled is a state setter and doesn't need to be a dependency    
 
     return (
         <>
@@ -48,3 +51,5 @@ export const TaskDetail = ({ row, tasks, deleteRowFromId, buttonDisabled, setBut
         </>
     );    
 };
+
+export default memo(TaskDetail);

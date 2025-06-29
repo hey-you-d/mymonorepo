@@ -1,3 +1,7 @@
+// Mock the dependencies
+jest.mock('./taskUser');
+jest.mock('../../../viewModels/Task/use-client/useTasksViewModel');
+
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -5,63 +9,63 @@ import { TaskPage } from './taskPage';
 import { useTaskViewModel } from '@/viewModels/Task/use-client/useTasksViewModel';
 import type { Task } from '@/types/Task';
 
-// Mock the dependencies
-jest.mock('../../../viewModels/Task/use-client/useTasksViewModel');
-jest.mock('./taskUser');
-jest.mock('../../../components/Task/use-client/TaskSeedDB');
-jest.mock('../../../components/Task/use-client/TaskTable');
+// the approach below only works for named export, not default export
+//require('../../../components/Task/use-client/TaskSeedDB').TaskSeedDB = MockTaskSeedDB;
+// the approach below works for default export
+jest.mock('../../../components/Task/use-client/TaskSeedDB', () => ({
+    __esModule: true,
+    default: jest.fn(({ 
+      totalRows, 
+      seedTaskDB, 
+      deleteAllRows, 
+      buttonDisabled, 
+      setButtonDisabled,
+      userAuthenticated 
+    }) => (
+      <div data-testid="task-seed-db">
+        <span>Total Rows: {totalRows}</span>
+        <button onClick={seedTaskDB} disabled={buttonDisabled}>Seed DB</button>
+        <button onClick={deleteAllRows} disabled={buttonDisabled}>Delete All</button>
+        <button onClick={() => setButtonDisabled(!buttonDisabled)}>
+          Toggle Disabled: {buttonDisabled ? 'Disabled' : 'Enabled'}
+        </button>
+      </div>
+    ))
+}));
 
-// Mock child components
-const MockTaskUser = jest.fn(({ userAuthenticated, setUserAuthenticated }) => (
+// the approach below only works for named export, not default export
+//require('../../../components/Task/use-client/TaskTable').TaskTable = MockTaskTable;  
+// the approach below works for default export
+jest.mock('../../../components/Task/use-client/TaskTable', () => ({
+    __esModule: true,
+    default: jest.fn(({ 
+      tasks, 
+      createRow, 
+      updateRowFromId, 
+      buttonDisabled,
+      setButtonDisabled,
+      userAuthenticated 
+    }) => (
+      <div data-testid="task-table">
+        <span>Tasks Count: {tasks.length}</span>
+        <button onClick={() => createRow({ id: 'new', detail: 'New Task' })}>Create Row</button>
+        <button onClick={() => updateRowFromId('1', { detail: 'Updated' })}>Update Row</button>
+        {tasks.map((task: Task) => (
+          <div key={task.id} data-testid={`task-${task.id}`}>
+            {task.detail}
+          </div>
+        ))}
+      </div>
+    ))
+}));
+
+require('./taskUser').default = jest.fn(({ userAuthenticated, setUserAuthenticated }) => (
   <div data-testid="task-user">
     <button onClick={() => setUserAuthenticated(!userAuthenticated)}>
       Toggle Auth: {userAuthenticated ? 'Authenticated' : 'Not Authenticated'}
     </button>
   </div>
 ));
-
-const MockTaskSeedDB = jest.fn(({ 
-  totalRows, 
-  seedTaskDB, 
-  deleteAllRows, 
-  buttonDisabled, 
-  setButtonDisabled,
-  userAuthenticated 
-}) => (
-  <div data-testid="task-seed-db">
-    <span>Total Rows: {totalRows}</span>
-    <button onClick={seedTaskDB} disabled={buttonDisabled}>Seed DB</button>
-    <button onClick={deleteAllRows} disabled={buttonDisabled}>Delete All</button>
-    <button onClick={() => setButtonDisabled(!buttonDisabled)}>
-      Toggle Disabled: {buttonDisabled ? 'Disabled' : 'Enabled'}
-    </button>
-  </div>
-));
-
-const MockTaskTable = jest.fn(({ 
-  tasks, 
-  createRow, 
-  updateRowFromId, 
-  buttonDisabled,
-  setButtonDisabled,
-  userAuthenticated 
-}) => (
-  <div data-testid="task-table">
-    <span>Tasks Count: {tasks.length}</span>
-    <button onClick={() => createRow({ id: 'new', detail: 'New Task' })}>Create Row</button>
-    <button onClick={() => updateRowFromId('1', { detail: 'Updated' })}>Update Row</button>
-    {tasks.map((task: Task) => (
-      <div key={task.id} data-testid={`task-${task.id}`}>
-        {task.detail}
-      </div>
-    ))}
-  </div>
-));
-
-// Apply mocks
-require('./taskUser').default = MockTaskUser;
-require('../../../components/Task/use-client/TaskSeedDB').TaskSeedDB = MockTaskSeedDB;
-require('../../../components/Task/use-client/TaskTable').TaskTable = MockTaskTable;
 
 const mockUseTaskViewModel = useTaskViewModel as jest.MockedFunction<typeof useTaskViewModel>;
 
@@ -116,7 +120,6 @@ describe('TaskPage', () => {
     it('renders all main components when tasks exist', () => {
       render(<TaskPage />);
 
-      expect(screen.getByText('Default example: MVVM client-side components rendered with Next.js Page Router')).toBeInTheDocument();
       expect(screen.getByTestId('task-user')).toBeInTheDocument();
       expect(screen.getByTestId('task-seed-db')).toBeInTheDocument();
       expect(screen.getByTestId('task-table')).toBeInTheDocument();

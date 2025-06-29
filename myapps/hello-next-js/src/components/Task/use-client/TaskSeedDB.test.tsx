@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TaskSeedDB } from './TaskSeedDB';
+import TaskSeedDB from './TaskSeedDB';
 
 // Mock functions for testing
 const mockSeedTaskDB = jest.fn();

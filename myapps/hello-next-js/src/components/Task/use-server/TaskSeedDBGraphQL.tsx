@@ -4,7 +4,7 @@
 
 // for reference #2: The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useCallback, memo } from 'react';
 import type { Task } from '@/types/Task';
 
 type TaskSeedDBGraphQLType = {
@@ -17,8 +17,8 @@ type TaskSeedDBGraphQLType = {
     userAuthenticated: boolean,
 }
 
-export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBGraphQLType) => {
-    const onClickHandler = async (e: React.FormEvent) => {
+const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBGraphQLType) => {
+    const onClickHandler = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
         
         setButtonDisabled(true);
@@ -30,21 +30,32 @@ export const TaskSeedDBGraphQL = ({ tasks, setTasks, seedTaskDB, deleteAllRows, 
         }
         
         setButtonDisabled(false);
-    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [seedTaskDB, deleteAllRows, tasks]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled is a state setter and doesn't need to be a dependency
 
-    const renderButton: React.ReactElement = userAuthenticated 
-        ? (
-            <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
-                {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-            </button>
-        ) : ( <button type="button" disabled>
-                {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
-            </button> );
-     
+    // for reference: renderButton is not wrapped in useMemo because:
+    // - It depends on userAuthenticated, totalRows, buttonDisabled, and onClickHandler - some of these change frequently.
+    // - The logic is just a simple ternary operator based on userAuthenticated and totalRows - this is very fast to compute.    
+    const renderButton = (): React.ReactElement => {
+        return userAuthenticated 
+            ? (
+                <button type="button" onClick={onClickHandler} disabled={buttonDisabled}>
+                    {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+                </button>
+            ) : ( <button type="button" disabled>
+                    {tasks.length <= 0 ? "Seed DB" : "Delete all rows"}
+                </button> 
+            );
+    }; 
+    
     return (
         <>
             <p>{`Currently, there are ${tasks.length} rows in the Tasks table.`}</p>
-            {renderButton}
+            {renderButton()}
         </>
     );
 };
+
+export default memo(TaskSeedDBGraphQL);

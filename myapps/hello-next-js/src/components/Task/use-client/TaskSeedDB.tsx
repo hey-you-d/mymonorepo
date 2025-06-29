@@ -2,7 +2,7 @@
 
 // The View (presentation component) is a pure functional component focused on displaying data and 
 // responding to user actions passed in as props.
-import { Dispatch, SetStateAction } from 'react';
+import { memo, useCallback, Dispatch, SetStateAction } from 'react';
 
 export type TaskSeedDBType = {
     totalRows: number, 
@@ -13,8 +13,8 @@ export type TaskSeedDBType = {
     userAuthenticated: boolean,
 }
 
-export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBType) => {
-    const onClickHandler = async (e: React.FormEvent) => {
+const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisabled, setButtonDisabled, userAuthenticated } : TaskSeedDBType) => {
+    const onClickHandler = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();    
         setButtonDisabled(true);
         if (totalRows <= 0) {
@@ -35,8 +35,14 @@ export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisable
             }
         }
         setButtonDisabled(false);
-    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [seedTaskDB, deleteAllRows, totalRows]);
+    // for reference: excluded from useCallback dependencies:
+    // - setButtonDisabled is a state setter and doesn't need to be a dependency    
 
+    // for reference: renderButton is not wrapped in useMemo because:
+    // - It depends on userAuthenticated, totalRows, buttonDisabled, and onClickHandler - some of these change frequently.
+    // - The logic is just a simple ternary operator based on userAuthenticated and totalRows - this is very fast to compute.
     const renderButton: React.ReactElement = userAuthenticated 
         ? (
             <button type="button" onClick={(e) => onClickHandler(e)} disabled={buttonDisabled}>
@@ -53,3 +59,5 @@ export const TaskSeedDB = ({ totalRows, seedTaskDB, deleteAllRows, buttonDisable
         </>
     )
 };
+
+export default memo(TaskSeedDB);
