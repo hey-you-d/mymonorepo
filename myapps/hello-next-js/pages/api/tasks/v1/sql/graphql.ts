@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db/db_postgreSQL';
 import { Task, GraphQLContext } from "@/types/Task";
 import { values, placeholders } from "./seed-table";
-import { CHECK_API_KEY, VERIFY_JWT_IN_AUTH_HEADER } from '@/lib/app/common';
+import { VERIFY_JWT_IN_AUTH_HEADER } from '@/lib/app/common';
 import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
 import { customResponseMessage, catchedErrorMessage } from '@/lib/app/error';
 
