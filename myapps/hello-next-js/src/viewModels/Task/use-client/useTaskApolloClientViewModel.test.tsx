@@ -247,7 +247,9 @@ describe('useTaskApolloClientViewModel', () => {
         fireEvent.click(getByText('Add Task'));
         
         await waitFor(() => {
-            expect(onErrorSpy).toHaveBeenCalledWith('use-client | view-model | useTaskApolloClientViewModel | createRow | catched error: Error - No task returned');
+            expect(onErrorSpy).toHaveBeenCalledWith(
+              "use-client | view-model | useTaskApolloClientViewModel | createRow | catched error: Error - use-client | view-model | useTaskApolloClientViewModel | createRow | no task returned"
+            );
         });
     });
 
