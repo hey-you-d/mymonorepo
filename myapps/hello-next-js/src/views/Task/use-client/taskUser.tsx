@@ -1,18 +1,25 @@
 'use client';
 
-import { useLayoutEffect, useState, MouseEvent, memo } from "react";
+import { useLayoutEffect, useState, MouseEvent, memo, useEffect } from "react";
 import styles from "@/app/page.module.css";
 import useTaskUserViewModel from "@/viewModels/Task/use-client/useTaskUserViewModel";
 import type { TaskUserType } from "@/types/Task";
 
 const TaskUser = ({userAuthenticated, setUserAuthenticated} : TaskUserType) => {
-    const [email, setEmail] = useState<string>(sessionStorage.getItem("email") ?? "");
+    const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [emailMessage, setEmailMessage] = useState<string>("");
     const [passwordMessage, setPasswordMessage] = useState<string>("");
     const [formMessage, setFormMessage] = useState<string>("only logged-in users can interact with the table");
 
     const { loading, registerUser, loginUser, logoutUser, checkAuthTokenCookieExist } = useTaskUserViewModel();
+
+    useEffect(() => {
+        if (email.length < 1) {
+            const storedEmail = sessionStorage.getItem("email");
+            if (storedEmail) setEmail(storedEmail); 
+        }    
+    }, []); // run once
 
     useLayoutEffect(() => {
         const checkUserLoggedIn = async () => {
