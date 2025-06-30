@@ -8,7 +8,7 @@ import { Task } from "@/types/Task";
 import styles from "@/app/page.module.css";
 
 export const TaskWithSWRPage = () => {
-  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();
+  const { tasks, loading, error, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModelWithSwr();
 
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
@@ -23,11 +23,11 @@ export const TaskWithSWRPage = () => {
       setFilteredTasks(tasks);
     }
   }, [tasks, setFilteredTasks, isFiltering]);
-
+  
   useEffect(() => {
     setButtonDisabled(filteredTasks.length != tasks?.length);
   }, [setButtonDisabled, filteredTasks, tasks]);
-
+  
   const confirmedTasks = isFiltering
     ? filteredTasks
     : tasks ?? [];
@@ -58,20 +58,40 @@ export const TaskWithSWRPage = () => {
     }
   } 
 
-  if (loading) return <p>Loading...</p>;
+  const loadingMsg = loading ? <p>Loading...</p> : <></>;
+  const errorMsg = !error 
+    ? <></>
+    : (
+      <div>
+        <p>{error.name}</p>
+        <p>{error.message}</p>
+      </div>
+    );
+  const authContent = !tasks
+    ? <></>
+    : <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />;     
+  const seedContent = !tasks
+    ? <></>
+    : (
+      <>
+        <TaskSeedDB 
+          totalRows={tasks.length} 
+          seedTaskDB={seedTasksDB} 
+          deleteAllRows={deleteAllRows} 
+          buttonDisabled={buttonDisabled}
+          setButtonDisabled={setButtonDisabled}
+          userAuthenticated={userAuthenticated}      
+        />
+      </>
+    );
 
-  return tasks ? (
+  return (
     <>
       <h2>Frontend cached with Vercel SWR: MVVM client-side components rendered via Next.js Page Router</h2>
-      <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
-      <TaskSeedDB 
-        totalRows={tasks.length} 
-        seedTaskDB={seedTasksDB} 
-        deleteAllRows={deleteAllRows} 
-        buttonDisabled={buttonDisabled}
-        setButtonDisabled={setButtonDisabled}
-        userAuthenticated={userAuthenticated}
-      />
+      {authContent}
+      {!error && loadingMsg}
+      {errorMsg}
+      {seedContent}
       <p>filter task description: </p>
       <div className={styles.tasksFilterRow}>
         <div className={styles.tasksFilterCol1}><input ref={filterInputRef} placeholder="Filter detail..." /></div>
@@ -87,5 +107,5 @@ export const TaskWithSWRPage = () => {
         userAuthenticated={userAuthenticated}
       />
     </>
-  ) : (<></>);
+  );
 };

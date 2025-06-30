@@ -59,19 +59,19 @@ export const TaskPage = () => {
           userAuthenticated={userAuthenticated}      
         />
       </>
-    )
+    );
 
   return (
     <>
       <h2>Default (No frills) example: MVVM client-side components rendered via Next.js Page Router</h2>
       {authContent}
+      {loadingMsg}
+      {errorMsg}
+      {seedContent}
       <span>filter task description: </span>
       <input type="text" placeholder="Filter detail..."  
         onChange={(e) => setFilterText(e.target.value)}
       />
-      {loadingMsg}
-      {errorMsg}
-      {seedContent}
       <TaskTable 
           tasks={confirmedTasks} 
           createRow={createRow} 
