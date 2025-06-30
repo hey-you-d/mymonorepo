@@ -9,6 +9,7 @@ const fnSignature = "use-client | view-model | useTasksViewModel";
 export const useTaskViewModel = () => {
   const [tasks, setTasks] = useState<Task[] | undefined>(undefined);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<{ name: string, message: string } | null>(null);
   
   // Memoize userModel so it is created only once unless apiEndpoint changes
   const taskModel = useMemo(() => new TaskModel(), []);
@@ -20,6 +21,7 @@ export const useTaskViewModel = () => {
       setTasks(result);
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, "getTasksDBRows", error as Error);
+      setError({ name: (error as Error).name, message: (error as Error).message });
       throw new Error(errorMsg);
     } finally {
       setLoading(false);
@@ -33,6 +35,7 @@ export const useTaskViewModel = () => {
       setTasks(result);
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, "deleteAllRows", error as Error);
+      setError({ name: (error as Error).name, message: (error as Error).message });
       throw new Error(errorMsg);
     } finally {
       setLoading(false);
@@ -46,6 +49,7 @@ export const useTaskViewModel = () => {
       setTasks(result);
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, "seedTasksDB", error as Error);
+      setError({ name: (error as Error).name, message: (error as Error).message });
       throw new Error(errorMsg);
     } finally {
       setLoading(false);
@@ -59,6 +63,7 @@ export const useTaskViewModel = () => {
       setTasks(result);
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, `getRowFromId [id: ${id}]`, error as Error);
+      setError({ name: (error as Error).name, message: (error as Error).message });
       throw new Error(errorMsg);
     } finally {
       setLoading(false);
@@ -72,6 +77,7 @@ export const useTaskViewModel = () => {
       setTasks([result[0], ...tasks]);
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, "createRow", error as Error);
+      setError({ name: (error as Error).name, message: (error as Error).message });
       throw new Error(errorMsg);
     } finally {
       setLoading(false);
@@ -90,6 +96,7 @@ export const useTaskViewModel = () => {
       setTasks(updatedTasks);
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, `updateRowFromId [id: ${id}]`, error as Error);
+      setError({ name: (error as Error).name, message: (error as Error).message });
       throw new Error(errorMsg);
     } finally {
       setLoading(false);
@@ -103,6 +110,7 @@ export const useTaskViewModel = () => {
       setTasks([]);
     } catch (error) {
       const errorMsg = await catchedErrorMessage(fnSignature, `deleteRowFromId [id: ${id}]`, error as Error);
+      setError({ name: (error as Error).name, message: (error as Error).message });
       throw new Error(errorMsg);
     } finally {
       setLoading(false);
@@ -128,6 +136,7 @@ export const useTaskViewModel = () => {
   return {
     tasks,
     loading,
+    error,
     getTasksDBRows,
     seedTasksDB,
     deleteAllRows,

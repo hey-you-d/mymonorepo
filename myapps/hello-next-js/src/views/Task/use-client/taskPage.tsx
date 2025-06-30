@@ -7,7 +7,7 @@ import TaskTable from '@/components/Task/use-client/TaskTable';
 import { Task } from "@/types/Task";
 
 export const TaskPage = () => {
-  const { tasks, loading, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
+  const { tasks, loading, error, seedTasksDB, createRow, updateRowFromId, deleteAllRows } = useTaskViewModel();
 
   const [filterText, setFilterText] = useState("");
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks ?? []);
@@ -34,32 +34,52 @@ export const TaskPage = () => {
   
   const confirmedTasks = isFiltering ? filteredTasks : (tasks ? tasks : []);
   
-  if (loading) return <p>Loading...</p>;
+  const loadingMsg = loading ? <p>Loading...</p> : <></>;
+  const errorMsg = !error 
+    ? <></>
+    : (
+      <div>
+        <p>{error.name}</p>
+        <p>{error.message}</p>
+      </div>
+    );
+  const authContent = !tasks
+    ? <></>
+    : <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />;     
+  const seedContent = !tasks
+    ? <></>
+    : (
+      <>
+        <TaskSeedDB 
+          totalRows={tasks.length} 
+          seedTaskDB={seedTasksDB} 
+          deleteAllRows={deleteAllRows} 
+          buttonDisabled={buttonDisabled}
+          setButtonDisabled={setButtonDisabled}
+          userAuthenticated={userAuthenticated}      
+        />
+      </>
+    )
 
-  return tasks ? (
+  return (
     <>
       <h2>Default (No frills) example: MVVM client-side components rendered via Next.js Page Router</h2>
-      <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
+      {authContent}
       <span>filter task description: </span>
       <input type="text" placeholder="Filter detail..."  
         onChange={(e) => setFilterText(e.target.value)}
       />
-      <TaskSeedDB 
-        totalRows={tasks.length} 
-        seedTaskDB={seedTasksDB} 
-        deleteAllRows={deleteAllRows} 
-        buttonDisabled={buttonDisabled}
-        setButtonDisabled={setButtonDisabled}
-        userAuthenticated={userAuthenticated}      
-      />
+      {loadingMsg}
+      {errorMsg}
+      {seedContent}
       <TaskTable 
-        tasks={confirmedTasks} 
-        createRow={createRow} 
-        updateRowFromId={updateRowFromId} 
-        buttonDisabled={buttonDisabled}
-        setButtonDisabled={setButtonDisabled}
-        userAuthenticated={userAuthenticated}      
+          tasks={confirmedTasks} 
+          createRow={createRow} 
+          updateRowFromId={updateRowFromId} 
+          buttonDisabled={buttonDisabled}
+          setButtonDisabled={setButtonDisabled}
+          userAuthenticated={userAuthenticated}      
       />
     </>
-  ) : (<></>);
+  );
 };
