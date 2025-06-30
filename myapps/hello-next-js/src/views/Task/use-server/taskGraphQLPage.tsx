@@ -13,12 +13,16 @@ import { TaskUserGraphQL } from "./taskUserGraphQL";
 import TaskSeedDBGraphQL from '@/components/Task/use-server/TaskSeedDBGraphQL';
 import TaskTableGraphQL from '@/components/Task/use-server/TaskTableGraphQL';
 import { Task } from "@/types/Task";
+import { catchedErrorMessage } from "@/lib/app/error";
+
+const fnSignature = "use-server | view | taskGraphQLPage";
 
 export const TaskGraphQLPage = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
     const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
     // Fetch tasks on mount
     useEffect(() => {
@@ -31,10 +35,12 @@ export const TaskGraphQLPage = () => {
                     setTasks(tasks);
                 }
                 setButtonDisabled(false);
-            } catch (e) {
-                if (e instanceof Error) {
-                    console.error("taskGraphQLPage | Failed to fetch tasks db rows:", e?.message);
-                }
+            } catch (err) {
+                // in real world scenario, this sort of error msg must not be visible to public.
+                // A detailed error msg should only be sent to a remote logging service, whereas client will be presented
+                // with a simplified error msg such as: "An error has been encountered (HTML status code: 500)". 
+                const errMsg = await catchedErrorMessage(fnSignature, "useEffect - getTasksDBRows", err as Error);
+                setError(errMsg);
             } finally {
                 setLoading(false);
             }
@@ -43,13 +49,16 @@ export const TaskGraphQLPage = () => {
         fetchTasks();
     }, []); // run once only
 
-    if (loading) return <p>Loading...</p>;
+    const loadingMsg = loading ? <p>Loading...</p> : <></>;
+    
+    const authContent = error
+    ? <></>
+    : <TaskUserGraphQL userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />;
 
-    return (
-        <>
-          <h2>Data fetching & querying with Apollo Graphql: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
-          <TaskUserGraphQL userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
-          <TaskSeedDBGraphQL
+    const seedContent = error
+    ? <></>
+    : (
+        <TaskSeedDBGraphQL
             tasks={tasks}
             setTasks={setTasks}
             seedTaskDB={seedTaskDB}
@@ -58,6 +67,15 @@ export const TaskGraphQLPage = () => {
             setButtonDisabled={setButtonDisabled}
             userAuthenticated={userAuthenticated}
           />
+    );
+
+    return (
+        <>
+          <h2>Data fetching & querying with Apollo Graphql: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
+          {authContent}
+          {error}
+          {loadingMsg}
+          {seedContent}
           <TaskTableGraphQL
             tasks={tasks}
             setTasks={setTasks}

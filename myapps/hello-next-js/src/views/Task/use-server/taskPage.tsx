@@ -59,8 +59,6 @@ export const TaskPage = () => {
       )
     : tasks;
 
-  if (loading) return <p>Loading...</p>;
-
   const renderFilterField = ( 
       <>
         <span>Filter task description: </span>
@@ -70,6 +68,8 @@ export const TaskPage = () => {
         /> 
       </>   
   );
+
+  const loadingMsg = loading ? <p>Loading...</p> : <></>;
 
   const authContent = error
     ? <></>
@@ -92,6 +92,7 @@ export const TaskPage = () => {
       <h2>Default (No frills) example: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
       {authContent}
       {error}
+      {loadingMsg}
       {seedContent}
       <br />
       {renderFilterField}
