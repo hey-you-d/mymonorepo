@@ -254,7 +254,6 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
         try {
             // To enforce webapp-wide Authentication & Authorization,
             // We can check the API-key, and JWT here
-            /* 
             const isAuthorized = await CHECK_API_KEY(
                 reqExp as unknown as NextApiRequest, 
                 resExp as unknown as NextApiResponse
@@ -264,7 +263,7 @@ const handler = async(req: NextApiRequest, res: NextApiResponse) => {
                 res.status(401).end('Unauthorized API Key');
                 return;
             }
-            */    
+
             next();
         } catch (err) {
             console.error("Apollo context error", err);

@@ -117,16 +117,6 @@ describe('TaskWithSWRPage', () => {
       render(<TaskWithSWRPage />);
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
-
-    it('should not render main content when loading', () => {
-      useTaskViewModelWithSwr.mockReturnValue({
-        ...mockHookReturn,
-        loading: true
-      });
-
-      render(<TaskWithSWRPage />);
-      expect(screen.queryByTestId('task-table')).not.toBeInTheDocument();
-    });
   });
 
   describe('Initial Rendering', () => {
@@ -346,7 +336,7 @@ describe('TaskWithSWRPage', () => {
       });
 
       render(<TaskWithSWRPage />);
-      expect(screen.queryByTestId('task-table')).not.toBeInTheDocument();
+      expect(screen.getByTestId('task-count')).toHaveTextContent('Tasks: 0');
     });
 
     it('should handle empty tasks array', () => {

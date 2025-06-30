@@ -79,6 +79,7 @@ describe('TaskPage', () => {
   const mockViewModelReturn = {
     tasks: mockTasks,
     loading: false,
+    error: { name: "error", message: "error detected" },
     getTasksDBRows: jest.fn(),
     deleteAllRows: jest.fn(),
     seedTasksDB: jest.fn(),
@@ -104,7 +105,7 @@ describe('TaskPage', () => {
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
 
-    it('renders empty fragment when tasks is undefined and not loading', () => {
+    it('still renders the page title when tasks is undefined and not loading', () => {
       mockUseTaskViewModel.mockReturnValue({
         ...mockViewModelReturn,
         tasks: undefined,
@@ -112,7 +113,7 @@ describe('TaskPage', () => {
       });
 
       const { container } = render(<TaskPage />);
-      expect(container.firstChild).toBeNull();
+      expect(container.firstChild).toContainHTML("<h2>Default (No frills) example: MVVM client-side components rendered via Next.js Page Router</h2>");
     });
   });
 
@@ -306,7 +307,7 @@ describe('TaskPage', () => {
       expect(screen.getByText('Total Rows: 0')).toBeInTheDocument();
     });
 
-    it('handles tasks becoming undefined after initial render', () => {
+    it('still renders the page title when tasks becoming undefined after initial render', () => {
       const { rerender } = render(<TaskPage />);
       
       expect(screen.getByTestId('task-table')).toBeInTheDocument();
@@ -319,7 +320,7 @@ describe('TaskPage', () => {
       rerender(<TaskPage />);
       
       const { container } = render(<TaskPage />);
-      expect(container.firstChild).toBeNull();
+      expect(container.firstChild).toContainHTML("<h2>Default (No frills) example: MVVM client-side components rendered via Next.js Page Router</h2>");
     });
 
     it('updates filtered tasks when tasks prop changes', async () => {

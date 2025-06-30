@@ -3,7 +3,7 @@ import { useMemo, useCallback } from 'react';
 import { TaskModel, swrFetcher } from '@/models/Task/use-client/TaskModel';
 import { catchedErrorMessage } from '@/lib/app/error';
 import type { Task } from '@/types/Task';
-import useSWR, { mutate } from 'swr';
+import useSWR, { mutate, SWRConfiguration } from 'swr';
 
 const fnSignature = "use-client | view-model | useTasksViewModelWithSwr";
 
@@ -20,8 +20,20 @@ export const useTaskViewModelWithSwr = () => {
   // Memoize the task model to ensure it's not recreated unnecessarily
   const taskModel = useMemo(() => new TaskModel(), []);
 
+  // configure useSWR to retry only once after an error (like a 500 DB error) by using its onErrorRetry option
+  const swrErrorRetry: SWRConfiguration['onErrorRetry'] = (
+    error: Error, 
+    key: string, 
+    config: SWRConfiguration, 
+    revalidate: (options: { retryCount: number }) => void, 
+    { retryCount }: { retryCount: number }) => {
+        const status = (error as Error & { status?: number }).status;
+        if (status === 500 || retryCount >= 1) return;
+        revalidate({ retryCount });
+  }
+
   // Use SWR to automatically fetch tasks (no need to set up the tasks state, and loading state)
-  const { data: tasks, error, isLoading } = useSWR<Task[]>("Tasks-API", fetcher);
+  const { data: tasks, error, isLoading } = useSWR<Task[]>("Tasks-API", fetcher, { onErrorRetry: swrErrorRetry });
 
   // Function to manually fetch tasks and trigger SWR cache update
   const getTasksDBRows = useCallback(async () => {

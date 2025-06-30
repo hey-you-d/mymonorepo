@@ -13,24 +13,43 @@ export const TaskWithSearchFilterPage = () => {
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
     const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
-    if (loading) return (<p>Loading...</p>);
-    if (error) return (<p>{error.message}</p>);
-
-    return tasks ? (
+    const loadingMsg = loading ? <p>Loading...</p> : <></>;
+    const errorMsg = !error 
+      ? <></>
+      : (
+        <div>
+          <p>{error.name}</p>
+          <p>{error.message}</p>
+        </div>
+      );
+    const authContent = !tasks
+      ? <></>
+      : <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />;     
+    const seedContent = !tasks
+      ? <></>
+      : (
         <>
-          <h2>Table filtering feature optimised with React hook useDeferredValue</h2>
-          <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
           <TaskSeedDB 
             totalRows={tasks.length} 
             seedTaskDB={seedTasksDB} 
             deleteAllRows={deleteAllRows} 
             buttonDisabled={buttonDisabled}
             setButtonDisabled={setButtonDisabled}
-            userAuthenticated={userAuthenticated}
+            userAuthenticated={userAuthenticated}      
           />
+        </>
+      );
+
+    return (
+        <>
+          <h2>Table filtering feature optimised with React hook useDeferredValue</h2>
+          {authContent}
+          {!error && loadingMsg}
+          {errorMsg}
+          {seedContent}
           {featureFlag.withUseDeferredValue && 
             <TaskFilterWithDeferredValue 
-              tasks={tasks} 
+              tasks={tasks ?? []} 
               createRow={createRow} 
               updateRowFromId={updateRowFromId}
               buttonDisabled={buttonDisabled}
@@ -40,7 +59,7 @@ export const TaskWithSearchFilterPage = () => {
           }
           {featureFlag.withUseTransition &&
             <TaskFilterWithUseTransition 
-              tasks={tasks} 
+              tasks={tasks ?? []} 
               createRow={createRow} 
               updateRowFromId={updateRowFromId}
               buttonDisabled={buttonDisabled}
@@ -49,5 +68,5 @@ export const TaskWithSearchFilterPage = () => {
             />
           }  
         </>
-    ) : (<></>);
+    );
 };
