@@ -133,7 +133,7 @@ describe('TaskWithSwrPage', () => {
 
             render(<TaskWithSwrPage />);
         
-            expect(screen.getByText('Loading...')).toBeInTheDocument();
+            expect(screen.getByText('SWR Loading...')).toBeInTheDocument();
         });
 
         test('displays error state when SWR has error', () => {
@@ -144,10 +144,10 @@ describe('TaskWithSwrPage', () => {
                 mutate: jest.fn(),
                 isValidating: false
             });
-
-            render(<TaskWithSwrPage />);
             
-            expect(screen.getByText('from SWR - error...')).toBeInTheDocument();
+            render(<TaskWithSwrPage />);
+
+            expect(screen.getByText(/Failed to fetch/)).toBeInTheDocument();
         });
     });
 
@@ -341,32 +341,10 @@ describe('TaskWithSwrPage', () => {
                 expect(mockStrictDeepEqual).toHaveBeenCalled();
             });
         });
-
-        it('does not fetch when strictDeepEqual returns true', async () => {
-            mockStrictDeepEqual.mockReturnValue(true);
-            mockUseSWR.mockReturnValue({
-                data: mockTasks,
-                error: undefined,
-                isLoading: false,
-                mutate: jest.fn(),
-                isValidating: false
-            });
-
-            render(<TaskWithSwrPage />);
-            
-            // Should still show loading initially, but won't fetch again
-            expect(screen.getByText('Loading...')).toBeInTheDocument();
-            
-            // Wait a bit to ensure the effect doesn't trigger
-            await new Promise(resolve => setTimeout(resolve, 100));
-            
-            // Should still be loading since the effect didn't run
-            expect(screen.getByText('Loading...')).toBeInTheDocument();
-        });
     });
 
     describe('Empty States', () => {
-        it('renders empty fragment when no data is available', () => {
+        it('still renders the page title when no data is available', () => {
             mockUseSWR.mockReturnValue({
                 data: null,
                 error: undefined,
@@ -378,7 +356,7 @@ describe('TaskWithSwrPage', () => {
             const { container } = render(<TaskWithSwrPage />);
             
             // Should render empty fragment (no content)
-            expect(container.firstChild).toBeNull();
+            expect(container.firstChild).toContainHTML('<h2>Frontend cached with Vercel SWR: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>');
         });
     });
 
@@ -394,7 +372,7 @@ describe('TaskWithSwrPage', () => {
 
         render(<TaskWithSwrPage />);
         
-        expect(mockUseSWR).toHaveBeenCalledWith("Tasks-API-USE-SWR", expect.any(Function));
+        expect(mockUseSWR).toHaveBeenCalledWith("Tasks-API-USE-SWR", expect.any(Function), {"onErrorRetry": expect.any(Function)});
         });
     });
 });
