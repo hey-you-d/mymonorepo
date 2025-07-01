@@ -13,40 +13,48 @@ import TaskSeedDBWithSwr from '@/components/Task/use-server/TaskSeedDBWithSwr';
 import TaskTableWithSwr from '@/components/Task/use-server/TaskTableWithSwr';
 import { TaskUser } from "./taskUser";
 import { Task } from "@/types/Task";
-import useSWR from 'swr';
+import useSWR, { SWRConfiguration } from 'swr';
 import { strictDeepEqual } from 'fast-equals';
 
 export const TaskWithSwrPage = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
     const [filterText, setFilterText] = useState("");
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
     const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
+    // configure useSWR to retry only once after an error (like a 500 DB error) by using its onErrorRetry option
+    const swrErrorRetry: SWRConfiguration['onErrorRetry'] = (
+        error: Error, 
+        key: string, 
+        config: SWRConfiguration, 
+        revalidate: (options: { retryCount: number }) => void, 
+        { retryCount }: { retryCount: number }) => {
+            const status = (error as Error & { status?: number }).status;
+            if (status === 500 || retryCount >= 1) return;
+            revalidate({ retryCount });
+    }
+
     // Use SWR to automatically fetch tasks (no need to set up the tasks state, and loading state)
-    const { data: swrData, error: swrError, isLoading: swrLoading } = useSWR<Task[] | null>("Tasks-API-USE-SWR", fetcher);
+    const { data: swrData, error: swrError, isLoading: swrLoading } = useSWR<Task[] | null>(
+        "Tasks-API-USE-SWR", 
+        fetcher, 
+        { onErrorRetry: swrErrorRetry }
+    );
 
     useEffect(() => {
         const fetchCachedTasks = async () => {
-            setLoading(true);
             setButtonDisabled(true);
-            try {
-                if (swrData) {
-                    setTasks(swrData);
-                    setButtonDisabled(false);
-                }
-            } catch (err) {
-                console.error("Error fetching cached tasks:", err);
-            } finally {
-                setLoading(false);
+            if (swrData) {
+                setTasks(swrData);
+                setButtonDisabled(false);
             }
         };
 
         // for reference: ensure the fn is not called whenever this component is re-hydrated
-        if (!swrLoading && !strictDeepEqual(tasks, swrData)) {
+        if (!swrLoading && !strictDeepEqual(tasks, swrData) && !swrError) {
             fetchCachedTasks();
         }
-    }, [tasks, swrData, swrLoading, setTasks, setLoading]);
+    }, [tasks, swrData, swrLoading, swrError, setTasks]);
 
     useEffect(() => {
         setButtonDisabled(filterText.trim().length > 0);
@@ -59,30 +67,51 @@ export const TaskWithSwrPage = () => {
         )
         : swrData ;
 
-    if (loading || swrLoading) return <p>Loading...</p>;
-    if (swrError) return <p>from SWR - error...</p>
+    const swrLoadingMsg = swrLoading ? <p>SWR Loading...</p> : <></>;
+    const swrErrormsg = swrError ? <p>{(swrError as Error).name} - {(swrError as Error).message}</p> : <></>;
     
-    return swrData  && confirmedTasks ? (
-        <>
-            <h2>Frontend cached with Vercel SWR: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
-            <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
+    const authContent = swrError
+        ? <></>
+        : <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />;     
+
+    const seedContent = swrError || !swrData
+        ? <></>
+        : (
             <TaskSeedDBWithSwr
-                tasks={swrData }
+                tasks={swrData}
                 seedTaskDB={seedTasksDB}
                 deleteAllRows={deleteAllRows}
                 buttonDisabled={buttonDisabled}
                 setButtonDisabled={setButtonDisabled}
                 userAuthenticated={userAuthenticated}
             />
+        );
+        
+    const filterContent = swrError
+        ? <></>
+        : (
+            <>
+                <span>Filter task description: </span>
+                <input
+                    onChange={(e) => setFilterText(e.target.value)}
+                    placeholder="Filter detail..."
+                />
+            </>
+        );  
+        
+
+    return (
+        <>
+            <h2>Frontend cached with Vercel SWR: Model + ViewModel server-side components, & View client-side components rendered with Next.js App Router</h2>
+            {authContent}
+            {swrLoadingMsg}
+            {swrErrormsg}
+            {seedContent}
             <br />
-            <span>Filter task description: </span>
-            <input
-                onChange={(e) => setFilterText(e.target.value)}
-                placeholder="Filter detail..."
-            />
+            {filterContent}
             <br />
             <TaskTableWithSwr
-                tasks={confirmedTasks}
+                tasks={confirmedTasks ?? []}
                 createRow={createRow}
                 updateRowFromId={updateRowFromId}
                 buttonDisabled={buttonDisabled}
@@ -90,5 +119,5 @@ export const TaskWithSwrPage = () => {
                 userAuthenticated={userAuthenticated}
             />
         </>
-    ) : (<></>);
+    );
 };

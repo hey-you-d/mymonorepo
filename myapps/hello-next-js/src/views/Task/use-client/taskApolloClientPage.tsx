@@ -11,21 +11,33 @@ export const TaskApolloClientPage = () => {
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
     const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
-
-    return tasks ? (
-        <>
-            <h2>Data fetching & querying with Apollo Graphql Server & Client</h2>
-            <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />
+    const loadingMsg = loading ? <p>Loading...</p> : <></>;
+    const errorMsg = !error 
+        ? <></>
+        : <div><p>{error}</p></div>;
+    const authContent = !tasks
+        ? <></>
+        : <TaskUser userAuthenticated={userAuthenticated} setUserAuthenticated={setUserAuthenticated} />;     
+    const seedContent = !tasks 
+        ? <></>
+        : (
             <TaskSeedDB 
                 totalRows={tasks.length} 
                 seedTaskDB={seedTaskDB} 
                 deleteAllRows={deleteAllRows} 
                 buttonDisabled={buttonDisabled}
                 setButtonDisabled={setButtonDisabled}
-                userAuthenticated={userAuthenticated}
+                userAuthenticated={userAuthenticated}      
             />
+        ); 
+
+    return (
+        <>
+            <h2>Data fetching & querying with Apollo Graphql Server & Client</h2>
+            {authContent}
+            {!error && loadingMsg}
+            {errorMsg}
+            {seedContent}
             <TaskTable 
                 tasks={tasks} 
                 createRow={createRow} 
@@ -35,5 +47,5 @@ export const TaskApolloClientPage = () => {
                 userAuthenticated={userAuthenticated}
             />
         </>
-    ) : (<></>);
+    );
 }

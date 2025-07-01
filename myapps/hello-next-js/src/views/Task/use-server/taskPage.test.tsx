@@ -182,7 +182,7 @@ describe('TaskPage Component', () => {
                 expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
             });
             
-            expect(consoleSpy).toHaveBeenCalledWith('Error fetching tasks:', expect.any(Error));
+            expect(consoleSpy).toHaveBeenCalledWith("use-server | view | TaskPage | useEffect - getTasksDBRows | catched error: Error - API Error");
             consoleSpy.mockRestore();
         });
     });

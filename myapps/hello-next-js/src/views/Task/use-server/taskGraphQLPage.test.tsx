@@ -215,9 +215,14 @@ describe('TaskGraphQLPage', () => {
 
           render(<TaskGraphQLPage />);
           await waitFor(() => {
-              expect(consoleSpy).toHaveBeenCalledWith(
-                  'taskGraphQLPage | Failed to fetch tasks db rows:',
-                  errorMessage
+              expect(consoleSpy.mock.calls[0][0]).toContain(
+                "Error: failed to obtain JWT from AWS Secret Manager ", 
+              );
+              expect(consoleSpy.mock.calls[1][0]).toContain(
+                "use-server | view | taskGraphQLPage | useEffect - getTasksDBRows | catched error: Error - Failed to connect to database", 
+              );
+              expect(consoleSpy.mock.calls[2][0]).toContain(
+                "VERIFY_JWT_STRING | VERIFY_JWT | Unknown JWT error", 
               );
           });          
 
