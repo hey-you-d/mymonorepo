@@ -239,13 +239,30 @@ For more info, have a look at [sql_create_tables.sql](https://github.com/hey-you
 docker start hellonextjs-postgresdb
 ```
 
-6. run the dev build of hello-next-js
+6. Add the following environment variables in .env.local:
+```bash
+APP_ENV=LOCAL
+SECRETLOCATION=LOCAL
+TEST_JWT_SECRET=12345
+TEST_API_KEY=67890
+```
+
+7. run the dev build of hello-next-js
 ```bash
 yarn workspace hello-next-js dev
 ```
+or 
+run the optimised build for prod of hello-next-js (recommended approach)
+```bash
+yarn workspace hello-next-js build
+```
+then
+```bash
+yarn workspace hello-next-js start
+```
+ 
+8. The URL (Client components MVVM): [localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
 
-7. The URL (Client components MVVM): [localhost:3000/hello-next-js/task-crud-fullstack](http://localhost:3000/hello-next-js/task-crud-fullstack)
+9. The URL (Server components MVVM): [localhost:3000/hello-next-js/task-crud-fullstack/use-server](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server)
 
-8. The URL (Server components MVVM): [localhost:3000/hello-next-js/task-crud-fullstack/use-server](http://localhost:3000/hello-next-js/task-crud-fullstack/use-server)
-
-9. For the rest of demo pages: [localhost demo](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md#localhost-demo)
+10. For the rest of demo pages: [localhost demo](https://github.com/hey-you-d/mymonorepo/blob/master/myapps/hello-next-js/README.md#localhost-demo)
