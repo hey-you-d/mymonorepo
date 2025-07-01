@@ -13,7 +13,7 @@ jest.mock('../../../../../../src/lib/app/common', () => ({
 }));
 
 jest.mock('../../../../../../src/lib/app/featureFlags', () => ({
-  APP_ENV: 'TEST',
+  APP_ENV: 'LOCAL',
   LIVE_SITE_MODE: {
     cookie: {
       path: '/live',

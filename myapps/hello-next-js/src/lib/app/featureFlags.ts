@@ -1,3 +1,8 @@
+// REMOTE: JWT secret is stored in AWS Secret Manager, API key is stored in AWS Parameter Store
+// LOCAL: both secrets are defined in env.local
+type SecretLocationType = "REMOTE" | "LOCAL";
+// LIVE: remote (serverless) hosting
+// LOCAL: localhost
 type AppEnvType = "LIVE" | "LOCAL";
 type EnvModeType = {
     apiKeyId: string,
@@ -16,7 +21,15 @@ type EnvModeType = {
     }
 }
 
-export const APP_ENV: AppEnvType = "LOCAL"; // Temporary flag until the prod db is ready
+// server-side only. 
+export const APP_ENV: AppEnvType = process.env.APP_ENV // process.env.APP_ENV is defined in both .env.local & dockerfile 
+    ? process.env.APP_ENV as AppEnvType
+    : "LOCAL";
+
+// server-side only - SECRET_LOCATION is always set to REMOTE if APP_ENV === LIVE
+export const SECRET_LOCATION: SecretLocationType = process.env.SECRETLOCATION
+    ? APP_ENV === "LOCAL" ? process.env.SECRETLOCATION as SecretLocationType : "REMOTE"
+    : "LOCAL";
 
 export const LIVE_SITE_MODE: EnvModeType = {
     apiKeyId: "/prod/tasks/bff/x-api-key",
