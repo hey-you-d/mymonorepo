@@ -13,7 +13,7 @@ jest.mock('../../../../../../src/lib/app/common', () => ({
 }));
 
 jest.mock('../../../../../../src/lib/app/featureFlags', () => ({
-  APP_ENV: 'LOCALHOST',
+  APP_ENV: 'LOCAL',
   LIVE_SITE_MODE: {
     cookie: {
       path: '/',
@@ -30,7 +30,6 @@ jest.mock('../../../../../../src/lib/app/featureFlags', () => ({
 
 // Import mocked functions
 import { VERIFY_JWT_STRING, verifyJwtErrorMsgs } from '@/lib/app/common';
-import { APP_ENV, LIVE_SITE_MODE, LOCALHOST_MODE } from '@/lib/app/featureFlags';
 
 const mockVerifyJwtString = VERIFY_JWT_STRING as jest.MockedFunction<typeof VERIFY_JWT_STRING>;
 

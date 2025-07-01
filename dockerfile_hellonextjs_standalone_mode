@@ -70,6 +70,10 @@ USER node
 #ENV NEXT_TELEMETRY_DISABLED=1
 #ENV NODE_ENV=production
 
+# except this one
+ENV APP_ENV=LIVE
+ENV SECRETLOCATION=REMOTE
+
 # Expose the default next.js port
 EXPOSE 3000
 

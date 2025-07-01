@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Task } from "@/types/Task";
+import { LOCALHOST_MODE, SECRET_LOCATION } from "../../../lib/app/featureFlags";
 
 // mock the http only auth_token cookie. 
 // The presence of this cookie indicates that the user has logged in
@@ -14,6 +15,23 @@ jest.mock('next/headers', () => ({
             return undefined;
         },
     })),
+}));
+
+jest.mock("../../../lib/app/featureFlags", () => ({
+    APP_ENV: "LOCAL",
+    SECRET_LOCATION: "REMOTE",
+    LOCALHOST_MODE: {
+        apiKeyId: "/dev/tasks/bff/x-api-key",
+        domain: "http://localhost:3000",
+        base: {
+            clientSide: "", // can be a relative url
+            serverSide: "http://localhost:3000", // must be an absolute url
+        },
+        cookie: {
+            secure: false,
+            path: "/",
+        },
+    }
 }));
 
 // Mock the child components
