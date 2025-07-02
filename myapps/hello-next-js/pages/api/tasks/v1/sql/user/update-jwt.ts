@@ -23,20 +23,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             error: await missingParamErrorMessage(fnSignature, "PATCH", "JWT is required"), 
           });  
 
-          const result: { rows: UsersDbQueryResultType[] } = await db.query(
+          const { rows } = await db.query(
             `UPDATE users SET jwt = $2 WHERE email = $1 RETURNING *`, 
             [email, jwt]
           );
 
           // Check for null/undefined result (connection issues)
-          if (!result || !result.rows) {
+          if (!rows) {
             const errMsg = await customResponseMessage(fnSignature, "PATCH", "null/undefined result");  
             return res.status(500).json(errMsg);
           }
-          const rows = result.rows;
-          const payload: UserModelType = rows.length > 0 && rows[0].email === email ? {
-            email: rows[0].email, 
-            jwt: rows[0].jwt,
+          if (rows.length > 0 && 'error' in rows[0]) {
+            const errMsg = await customResponseMessage(fnSignature, "POST", "db query returns GenericStringError obj");  
+            return res.status(500).json({ error: errMsg });
+          }
+          
+          const typeCastedRows = rows as UsersDbQueryResultType[];
+          const payload: UserModelType = typeCastedRows.length > 0 && typeCastedRows[0].email === email ? {
+            email: typeCastedRows[0].email, 
+            jwt: typeCastedRows[0].jwt,
             error: false, 
             message: "JWT update operation is succesful"
           } : {

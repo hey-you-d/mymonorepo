@@ -26,23 +26,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             error: await missingParamErrorMessage(fnSignature, "POST", "JWT is required"), 
           });  
           
-          const result: { rows: UsersDbQueryResultType[] } = await db.query(`
+          const { rows } = await db.query(`
             INSERT INTO users (email, hashed_pwd, auth_type, admin_access, jwt) 
             VALUES ($1, $2, $3, $4, $5) RETURNING *`, 
             [email, password, "basic_auth", false, jwt]
           );
 
           // Check for null/undefined result (connection issues)
-          if (!result || !result.rows) {
+          if (!rows) {
             const errMsg = await customResponseMessage(fnSignature, "POST", "null/undefined result");  
             return res.status(500).json({ error: errMsg });
           }
-          const rows = result.rows;
-          const payload: UserModelType = rows.length > 0 && rows[0].email === email ? {
-            email: rows[0].email, 
-            password: rows[0].hashed_pwd, 
-            jwt: rows[0].jwt,
-            admin: rows[0].admin_access,
+
+          if (rows.length > 0 && 'error' in rows[0]) {
+            const errMsg = await customResponseMessage(fnSignature, "POST", "db query returns GenericStringError obj");  
+            return res.status(500).json({ error: errMsg });
+          }
+          
+          const typeCastedRows = rows as UsersDbQueryResultType[];
+          const payload: UserModelType = typeCastedRows.length > 0 && typeCastedRows[0].email === email ? {
+            email: typeCastedRows[0].email, 
+            password: typeCastedRows[0].hashed_pwd, 
+            jwt: typeCastedRows[0].jwt,
+            admin: typeCastedRows[0].admin_access,
             error: false, 
             message: "successful user registration"
           } : {

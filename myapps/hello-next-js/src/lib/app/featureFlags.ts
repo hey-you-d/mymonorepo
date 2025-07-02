@@ -16,8 +16,16 @@ type EnvModeType = {
         path: string,
     },
     db: {
-        connectionString: string,
-        ssl: boolean | { rejectUnauthorized: boolean },
+        localhost?: {
+            connectionString: string,
+            ssl: boolean | { rejectUnauthorized: boolean },
+        },
+        supabase?: {
+            awsParamStore: {
+                url: string,
+                apiKey: string,
+            }
+        }
     }
 }
 
@@ -43,8 +51,12 @@ export const LIVE_SITE_MODE: EnvModeType = {
         path: "/hello-next-js", // only accessible by /hello-next-js site
     },
     db: {
-        connectionString: "", // [WIP] hasn't determined Live DB provider
-        ssl: { rejectUnauthorized: false },
+        supabase: {
+            awsParamStore: {
+                url: "/supabase/url",
+                apiKey: "/supabase/apikey",
+            }
+        }
     }
 }
 
@@ -60,8 +72,10 @@ export const LOCALHOST_MODE: EnvModeType = {
         path: "/",
     },
     db: {
-        connectionString: "postgres://postgres:postgres@localhost:5432/tasks-db",
-        ssl: false,
+        localhost: {
+            connectionString: "postgres://postgres:postgres@localhost:5432/tasks-db",
+            ssl: false,
+        },
     }
 }
 
