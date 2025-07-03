@@ -234,16 +234,14 @@ describe('Tasks Users API handler - update-jwt.ts', () => {
                 req.method = 'PATCH';
                 req.body = { email: 'test@example.com', jwt: 'valid-jwt-token' };
 
-                (db.query as jest.Mock).mockResolvedValue(null as any);
+                (db.query as jest.Mock).mockResolvedValue({ rows: null as any});
 
                 await handler(req, res);
 
                 expect(res._getStatusCode()).toBe(500);
-                expect(res._getJSONData()).toBe('Custom error message');
+                expect(res._getJSONData()).toStrictEqual("Custom error message");
                 expect(mockCustomResponseMessage).toHaveBeenCalledWith(
-                'tasks/v1 | API | user/update-jwt.ts',
-                'PATCH',
-                'null/undefined result'
+                    "tasks/v1 | API | user/update-jwt.ts", "PATCH", "null/undefined result"
                 );
             });
 
@@ -257,7 +255,7 @@ describe('Tasks Users API handler - update-jwt.ts', () => {
                 await handler(req, res);
 
                 expect(res._getStatusCode()).toBe(500);
-                expect(res._getJSONData()).toBe('Custom error message');
+                expect(res._getJSONData()).toStrictEqual({error: "Caught error message"});
             });
 
             it('should handle result with null rows', async () => {

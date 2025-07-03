@@ -75,9 +75,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
       case "GET" :
         try {
-          const { rows } = await db.query('SELECT * FROM tasks ORDER BY id DESC');
+          const result = await db.query('SELECT * FROM tasks ORDER BY id DESC');
         
-          return res.status(200).json(rows);
+          return res.status(200).json(result.rows);
         } catch (error) {
           const errorMsg = await catchedErrorMessage(fnSignature, "GET", error as Error);
           return res.status(500).json({ error: errorMsg });

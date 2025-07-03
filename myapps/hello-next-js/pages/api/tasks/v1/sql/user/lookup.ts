@@ -17,21 +17,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         try {
           const { email } = req.body;
  
-          const { rows } = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
+          const result = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
           
           // Check for null/undefined result (connection issues)
-          if (!rows) {
+          if (!result.rows) {
             const errMsg = await customResponseMessage(fnSignature, "POST", "null/undefined result");  
             return res.status(500).json({ error: errMsg });
           }
 
-          if (rows.length > 0 && 'error' in rows[0]) {
+          if (result.rows.length > 0 && 'error' in result.rows[0]) {
             const errMsg = await customResponseMessage(fnSignature, "POST", "db query returns GenericStringError");  
             return res.status(500).json({ error: errMsg });
           }
       
-          const typeCastedRows = rows as UsersDbQueryResultType[];
-          const payload: UserModelType = rows != null && rows.length > 0 && rows[0].email === email ? {
+          const typeCastedRows = result.rows as UsersDbQueryResultType[];
+          const payload: UserModelType = result.rows != null && result.rows.length > 0 && result.rows[0].email === email ? {
             email: typeCastedRows[0].email, 
             password: typeCastedRows[0].hashed_pwd, 
             jwt: typeCastedRows[0].jwt,
