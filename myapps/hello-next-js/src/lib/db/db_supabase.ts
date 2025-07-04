@@ -45,7 +45,8 @@ export const executeSupabaseQuery = async (sql: string, params?: unknown[]) => {
 
 // --- SUPABASE AUX HELPER FN: handleSelectQuery - FOR executeSupabaseQuery FN ---
 async function handleSelectQuery(sql: string, params?: unknown[]) {
-  const match = sql.match(/select\s+(.+?)\s+from\s+(\w+)(?:\s+where\s+(.+?))?(?:\s+order\s+by\s+(.+?))?(?:\s+limit\s+(\d+))?/i);
+  const match = sql.match(/select\s+(.+?)\s+from\s+(\w+)(?:\s+where\s+(.+?))?(?:\s+order\s+by\s+(.+))?(?:\s+limit\s+(\d+))?/i);  
+  
   if (!match) throw new Error(`Supabase db connector | handleSelectQuery | Unsupported SELECT query: ${sql}`);
   
   const [, columns, table, whereClause, orderClause, limitClause] = match;
@@ -59,18 +60,21 @@ async function handleSelectQuery(sql: string, params?: unknown[]) {
   
   // Handle ORDER BY
   if (orderClause) {
-    const orderMatch = orderClause.match(/(\w+)(?:\s+(asc|desc))?/i);
+    const orderMatch = orderClause.trim().match(/^(\w+)(?:\s+(asc|desc))?$/i);
+
     if (orderMatch) {
       const [, column, direction] = orderMatch;
       query = query?.order(column, { ascending: !direction || direction.toLowerCase() === 'asc' });
-    }
+    } 
+  } else {
+    throw new Error(`Supabase db connector | handleSelectQuery | Invalid ORDER BY clause: ${orderClause}`);
   }
   
   // Handle LIMIT
   if (limitClause) {
     query = query?.limit(parseInt(limitClause));
   }
-  
+
   return await query;
 }
 

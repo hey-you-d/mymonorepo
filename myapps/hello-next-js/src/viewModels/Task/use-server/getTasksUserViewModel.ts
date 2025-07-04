@@ -184,7 +184,7 @@ export const checkAuthTokenCookieExist = async () => {
         
         return ({  
             outcome: false, 
-            message: "no auth_token in the client browser", 
+            message: `NOTIFICATION: ${fnSignature} | checkAuthTokenCookieExist | no auth_token in the client browser`, 
         });
     } catch (error) {
         const errorMsg = await catchedErrorMessage(fnSignature, "checkAuthTokenCookieExist", error as Error);
