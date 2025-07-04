@@ -404,7 +404,7 @@ describe('Tasks Users API handler - register.ts', () => {
         // Assert
         expect(res._getStatusCode()).toBe(500);
         expect(JSON.parse(res._getData())).toEqual({
-            error: "tasks/v1 | API | user/register.ts | POST | null/undefined result"
+            error: "tasks/v1 | API | user/register.ts | POST | catched error: TypeError - Cannot read properties of null (reading 'rows')",
         });
     });
 });

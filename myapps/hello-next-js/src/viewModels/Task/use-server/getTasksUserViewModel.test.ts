@@ -373,7 +373,7 @@ describe("getTasksUserViewModel", () => {
 
             expect(result).toStrictEqual(
                 {
-                    message: "use-server | view-model | getTasksUserViewModel | checkAuthTokenCookieExist | unknown error when checking auth_token", 
+                    message: "NOTIFICATION: use-server | view-model | getTasksUserViewModel | checkAuthTokenCookieExist | no auth_token in the client browser", 
                     outcome: false
                 }
             );
@@ -386,7 +386,7 @@ describe("getTasksUserViewModel", () => {
 
             expect(result).toStrictEqual(
                 {
-                    message: "use-server | view-model | getTasksUserViewModel | checkAuthTokenCookieExist | unknown error when checking auth_token", 
+                    message: "NOTIFICATION: use-server | view-model | getTasksUserViewModel | checkAuthTokenCookieExist | no auth_token in the client browser", 
                     outcome: false
                 }
             );

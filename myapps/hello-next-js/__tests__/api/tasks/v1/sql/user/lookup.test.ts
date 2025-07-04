@@ -129,7 +129,7 @@ describe('Tasks Users API handler - lookup.ts', () => {
                 message: "successful email lookup"
             });
             expect(db.query).toHaveBeenCalledWith(
-                "SELECT * FROM users WHERE email = 'test@example.com'"
+                "SELECT * FROM users WHERE email = $1", ["test@example.com"]
             );
         });
 
@@ -154,7 +154,7 @@ describe('Tasks Users API handler - lookup.ts', () => {
                 message: "provided email does not exist in the db"
             });
             expect(db.query).toHaveBeenCalledWith(
-                "SELECT * FROM users WHERE email = 'nonexistent@example.com'"
+                "SELECT * FROM users WHERE email = $1", ["nonexistent@example.com"]
             );
         });
 
@@ -228,7 +228,7 @@ describe('Tasks Users API handler - lookup.ts', () => {
                 message: "provided email does not exist in the db"
             });
             expect(db.query).toHaveBeenCalledWith(
-                "SELECT * FROM users WHERE email = 'undefined'"
+                "SELECT * FROM users WHERE email = $1", [undefined]
             );
         });
     });
@@ -253,7 +253,7 @@ describe('Tasks Users API handler - lookup.ts', () => {
             // Assert
             expect(res._getStatusCode()).toBe(500);
             expect(JSON.parse(res._getData())).toEqual({
-                error: "tasks/v1 | API | user/lookup.ts | POST | null/undefined result",
+                error: "tasks/v1 | API | user/lookup.ts | POST | catched error: TypeError - Cannot read properties of null (reading 'rows')",
             });
         });
 
@@ -275,7 +275,7 @@ describe('Tasks Users API handler - lookup.ts', () => {
             // Assert
             expect(res._getStatusCode()).toBe(201);
             expect(db.query).toHaveBeenCalledWith(
-                `SELECT * FROM users WHERE email = '${emailWithSpecialChars}'`
+                "SELECT * FROM users WHERE email = $1", ["test+tag@example.com"]
             );
         });
     });    
