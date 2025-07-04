@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { getSecret } from '../app/awsParameterStore';
-import { APP_ENV, LIVE_SITE_MODE } from "../app/featureFlags";
+import { SQL_DB_LOCATION, LIVE_SITE_MODE } from "../app/featureFlags";
 
 // Create Supabase client for live environment
 export const supabase = async () => {
@@ -13,14 +13,14 @@ export const supabase = async () => {
   const projectUrl = await getSecret(LIVE_SITE_MODE.db.supabase.awsParamStore.url);
   const apiKey = await getSecret(LIVE_SITE_MODE.db.supabase.awsParamStore.apiKey);
 
-  return APP_ENV === "LIVE" && projectUrl && apiKey
+  return SQL_DB_LOCATION === "REMOTE" && projectUrl && apiKey
     ? createClient(projectUrl, apiKey)
     : null;
 }
 
 // Helper function to convert simple SQL to Supabase queries
 export const executeSupabaseQuery = async (sql: string, params?: unknown[]) => {
-  if (!supabase) throw new Error("Supabase client not available");
+  if (!supabase) throw new Error("Supabase db connector | executeSupabaseQuery | Missing the required feature flags");
   
   const trimmedSql = sql.trim().toLowerCase();
   

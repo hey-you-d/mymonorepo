@@ -3,7 +3,7 @@ import type { Request as ExpressRequest } from 'express';
 import type { VerifyJwtResult } from '@/types/Task';
 import { getSecret } from "./awsParameterStore";
 import { getSecret as getFrmSecretMgr } from '@/lib/app/awsSecretManager';
-import { LOCALHOST_MODE, LIVE_SITE_MODE, APP_ENV, SECRET_LOCATION } from './featureFlags';
+import { LOCALHOST_MODE, LIVE_SITE_MODE, APP_ENV, SECRET_KEY_LOCATION } from './featureFlags';
 import * as cookie from 'cookie';
 import { verify, sign } from 'jsonwebtoken';
 
@@ -90,7 +90,7 @@ export const TASKS_API_HEADER = async (jwt?: string) => {
 
 // for reference: can only be called on server-side only
 export const CHECK_API_KEY = async (req: NextApiRequest, _: NextApiResponse) => {
-    if (SECRET_LOCATION === "LOCAL") {
+    if (SECRET_KEY_LOCATION === "LOCAL") {
         return process.env.TEST_API_KEY ? process.env.TEST_API_KEY : "67890";
     }
 
@@ -109,7 +109,7 @@ export const generateJWT = async (email: string, hashedPwd: string, jwtSecret: s
 }
 
 export const getJwtSecret = async () => {
-    if (SECRET_LOCATION === "LOCAL") {
+    if (SECRET_KEY_LOCATION === "LOCAL") {
         return { jwtSecret: process.env.TEST_JWT_SECRET ? process.env.TEST_JWT_SECRET : "12345" };
     }
 

@@ -1,9 +1,9 @@
 import { Pool } from 'pg'; // postgresql db
-import { APP_ENV, LOCALHOST_MODE } from '../app/featureFlags';
+import { SQL_DB_LOCATION, LOCALHOST_MODE } from '../app/featureFlags';
 import { executeSupabaseQuery, supabase } from './db_supabase';
 
 // Create PostgreSQL pool for development
-const pool = APP_ENV !== "LIVE" 
+const pool = SQL_DB_LOCATION !== "REMOTE" 
   ? new Pool({
       connectionString: LOCALHOST_MODE.db.localhost?.connectionString,
       ssl: LOCALHOST_MODE.db.localhost?.ssl,
@@ -12,7 +12,7 @@ const pool = APP_ENV !== "LIVE"
 
 export const db = {
   query: async (text: string, params?: unknown[]) => {
-    if (APP_ENV === "LIVE") {
+    if (SQL_DB_LOCATION === "REMOTE") {
       // Convert SQL to Supabase queries
       const result = await executeSupabaseQuery(text, params);
       
