@@ -19,14 +19,20 @@ type EnvModeType = {
         path: string,
     },
     db: {
-        localhost?: {
+        localDb?: {
             connectionString: string,
             ssl: boolean | { rejectUnauthorized: boolean },
         },
         supabase: {
+            connectionString: {
+                beforeDbPasswordPartial: string,
+                afterDbPasswordPartial: string,
+            },
+            ssl: boolean | { rejectUnauthorized: boolean },
             awsParamStore: {
                 url: string,
                 apiKey: string,
+                dbPassword: string,
             }
         }
     }
@@ -60,9 +66,15 @@ export const LIVE_SITE_MODE: EnvModeType = {
     },
     db: {
         supabase: {
+            connectionString: {
+                beforeDbPasswordPartial: "postgresql://postgres.uexpzgyunktzbropinwv:",
+                afterDbPasswordPartial: "@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres", // transaction pooler approach (support ipv4) 
+            },
+            ssl: false,
             awsParamStore: {
                 url: "/supabase/url",
                 apiKey: "/supabase/apikey",
+                dbPassword: "/supabase/db/password",
             }
         }
     }
@@ -80,14 +92,20 @@ export const LOCALHOST_MODE: EnvModeType = {
         path: "/",
     },
     db: {
-        localhost: {
+        localDb: {
             connectionString: "postgres://postgres:postgres@localhost:5432/tasks-db",
             ssl: false,
         },
         supabase: {
+            connectionString: {
+                beforeDbPasswordPartial: "postgresql://postgres.uexpzgyunktzbropinwv:",
+                afterDbPasswordPartial: "@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres", // transaction pooler approach (support ipv4)
+            },
+            ssl: false,
             awsParamStore: {
                 url: "/supabase/url",
                 apiKey: "/supabase/apikey",
+                dbPassword: "/supabase/db/password",
             }
         }
     }
