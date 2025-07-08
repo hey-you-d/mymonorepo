@@ -44,6 +44,18 @@ exec: true     # Enable running commands in your container.
 network:
   connect: true # Enable Service Connect for intra-environment traffic between services.
 
+# Add task role permissions
+task_role_policy: |
+  Version: '2012-10-17'
+  Statement:
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+        - ssm:GetParameters
+      Resource: 
+        - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/prod/tasks/bff/x-api-key/*'
+        - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/supabase/db/password/*'
+
 # alternatively, declare them in dockerfile (better practice to declare them here)
 variables:
   PORT: "3000"
