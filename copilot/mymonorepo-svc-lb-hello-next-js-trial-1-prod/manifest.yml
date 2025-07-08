@@ -63,8 +63,8 @@ task_role_policy: |
         - ssm:GetParameter
         - ssm:GetParameters
       Resource: 
-        - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/prod/tasks/bff/x-api-key'
-        - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/supabase/db/password'  
+        - !Sub 'arn:aws:ssm:us-east-1:120569641426:parameter/prod/tasks/bff/x-api-key'
+        - !Sub 'arn:aws:ssm:us-east-1:120569641426:parameter/supabase/db/password' 
 
 # storage:
   # readonly_fs: true       # Limit to read-only access to mounted root filesystems.
