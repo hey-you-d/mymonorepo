@@ -242,7 +242,7 @@ docker start hellonextjs-postgresdb
 6. Add the following environment variables in .env.local:
 ```bash
 APP_ENV=LOCAL
-SECRETLOCATION=LOCAL
+SECRETKEY_LOCATION=LOCAL
 TEST_JWT_SECRET=12345
 TEST_API_KEY=67890
 ```

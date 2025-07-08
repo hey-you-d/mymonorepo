@@ -68,6 +68,8 @@ const fnSignature = "tasks/v1 | API | index.ts";
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const isAuthorized = await CHECK_API_KEY(req, res);
+    // TODO: investigate -  a single "Unauthorized access: invalid API key" that popped up ended up being a false alarm
+    //console.log("before isAuthorized ", req.headers["x-api-key"], " " , isAuthorized);
     if (!isAuthorized) return res.status(401).json({ 
       error: await customResponseMessage(fnSignature, "handler", "Unauthorized access: invalid API key"),
     });
@@ -75,9 +77,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     switch (req.method) {
       case "GET" :
         try {
-          const { rows } = await db.query('SELECT * FROM tasks ORDER BY id DESC');
+          const result = await db.query('SELECT * FROM tasks ORDER BY id DESC');
         
-          return res.status(200).json(rows);
+          return res.status(200).json(result.rows);
         } catch (error) {
           const errorMsg = await catchedErrorMessage(fnSignature, "GET", error as Error);
           return res.status(500).json({ error: errorMsg });
