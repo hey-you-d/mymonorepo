@@ -23,13 +23,13 @@ class DatabaseConnection {
       });
 
       // Handle pool errors
-      this.pool.on('error', (err) => {
-        console.error('Unexpected error on idle client', err);
+      this.pool.on('error', (error) => {
+        console.error(`lib | db | Unexpected error on idle client: ${(error as Error).name} - ${(error as Error).message}`);
       });
 
       this.isInitialized = true;
     } catch (error) {
-      console.error('Failed to initialize database connection:', error);
+      console.error(`lib | db | Failed to initialize database connection: ${(error as Error).name} - ${(error as Error).message}`);
       throw error;
     }
   }
@@ -56,10 +56,12 @@ class DatabaseConnection {
 
   async query(text: string, params?: unknown[]) {
     try {
+      // For reference:
+      // Lazy Initialization: Pool is created only when first needed
       await this.initialize();
       
       if (!this.pool) {
-        throw new Error('Database pool not initialized');
+        throw new Error('lib | db | Database pool not initialized');
       }
 
       return await this.pool.query(text, params);
@@ -76,7 +78,8 @@ class DatabaseConnection {
     }
   }
 
-  // For health checks
+  // For reference:
+  // health checks: Method to verify database connectivity
   async isHealthy(): Promise<boolean> {
     try {
       await this.query('SELECT 1');
@@ -87,7 +90,10 @@ class DatabaseConnection {
   }
 }
 
-// Create singleton instance
+// For reference:
+// Create singleton instance - benefit: Pool is created once and reused
+// Also, the web app will not need to call AWS Param Store's getSecrets() on every request,
+// which will add unnecessary latency & could hit rate limits
 const dbConnection = new DatabaseConnection();
 
 export const db = {
@@ -98,15 +104,18 @@ export const db = {
 
 export type DB = typeof db;
 
-// Graceful shutdown handling
+// For reference:
+// Graceful shutdown handling: Properly closes connections on app termination by calling db.end()
+// otherwise the web app will keep accumulating unclosed connections and event listeners, 
+// leading to memory leaks.
 process.on('SIGINT', async () => {
-  console.log('Closing database connections...');
+  console.log('lib | db | Closing database connections...');
   await db.end();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  console.log('Closing database connections...');
+  console.log('lib | db | Closing database connections...');
   await db.end();
   process.exit(0);
 });
