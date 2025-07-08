@@ -42,18 +42,6 @@ export const TASKS_API_RELATIVE_URL = "/api/tasks/v1/sql";
 export const TASKS_SQL_BASE_API_URL = `${BASE_URL}${TASKS_API_RELATIVE_URL}`;   
 export const TASKS_SQL_DOMAIN_API_URL = `${DOMAIN_URL}${TASKS_API_RELATIVE_URL}`;   
 
-export const getSupabaseProjectUrl = async() => {
-    const projectUrl = await getSecret("/supabase/url");
-    
-    return projectUrl;
-}
-
-export const getSupabaseApiKey = async() => {
-    const apiKey = await getSecret("/supabase/apikey");
-    
-    return apiKey;
-}
-
 export const getInternalApiKey = async (): Promise<string | undefined> => {
     const secretId = APP_ENV === "LIVE" ? LIVE_SITE_MODE.apiKeyId : LOCALHOST_MODE.apiKeyId; 
     const xApiKey = await getSecret(secretId);

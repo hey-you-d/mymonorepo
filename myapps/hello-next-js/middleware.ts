@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { APP_ENV } from "@/lib/app/featureFlags";
 
 const prefix = '/hello-next-js';
 
@@ -61,12 +62,20 @@ export const middleware = (req: NextRequest) => {
         return NextResponse.rewrite(newUrl);
     }
 
+    /***
+     * CORS
+     */
+    NextResponse.next().headers.set('Access-Control-Allow-Origin', '*');
+    NextResponse.next().headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    NextResponse.next().headers.set('Access-Control-Allow-Headers', 'Content-Type, x-api-key, Authorization');
+
     return NextResponse.next();
 } 
 
 
 /*** 
- * Only run the middleware for any path that starts with /hello-next-js/ (and everything under it).
+ * Only run the middleware for any path that starts with /hello-next-js/ (and everything under it) 
+ * & /api/ (and everything under it).
  * 
  * Since this app is not using basePath anymore, but the hello-next-js app  is still served behind 
  * a path prefix via ALB, the middleware needs to handle rewriting and asset loading cleanly only for 
@@ -76,5 +85,5 @@ export const middleware = (req: NextRequest) => {
  * (like hello-react-js). 
  */
 export const config = {
-    matcher: ['/hello-next-js/:path*'],
+    matcher: ['/hello-next-js/:path*', '/api/:path*'],
 }
