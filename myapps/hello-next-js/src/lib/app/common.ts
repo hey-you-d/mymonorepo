@@ -106,13 +106,9 @@ export const getJwtSecret = async () => {
             throw new Error("AWS Region is missing");
         }
 
-        const secretLabel = APP_ENV === "LIVE"
-            ? "prod/hello-next-js/jwt-secret"
-            : "dev/hello-next-js/jwt-secret";
-
         // obtain jwt secret from the AWS secret manager
         const secret: { jwtSecret: string } = await getFrmSecretMgr(
-            secretLabel,
+            APP_ENV === "LIVE" ? LIVE_SITE_MODE.jwt.secretId : LOCALHOST_MODE.jwt.secretId,
             process.env.AWS_REGION
         );
 
