@@ -54,32 +54,11 @@ variables:
   NEXT_TELEMETRY_DISABLED: "1"
   NODE_ENV: "production"
 
-# Add task role permissions
-task_role_policy: |
-  {
-    "Version": "2012-10-17",
-    "Statement": [
-      {
-        "Effect": "Allow",
-        "Action": [
-          "ssm:GetParameter",
-          "ssm:GetParameters"
-        ],
-        "Resource": [
-          "arn:aws:ssm:us-east-1:120569641426:parameter/prod/tasks/bff/x-api-key",
-          "arn:aws:ssm:us-east-1:120569641426:parameter/supabase/db/password"
-        ]
-      },
-      {
-        "Effect": "Allow",
-        "Action": "secretsmanager:GetSecretValue",
-        "Resource": [
-          "arn:aws:secretsmanager:us-east-1:120569641426:secret:prod/hello-next-js/jwt-secret*",
-          "arn:aws:secretsmanager:us-east-1:120569641426:secret:dev/hello-next-js/jwt-secret*"
-        ]
-      }
-    ]
-  }
+secrets:
+  X_API_KEY: /prod/tasks/bff/x-api-key  # SSM Parameter
+  DB_PASSWORD: /supabase/db/password    # SSM Parameter
+  JWT_SECRET_PROD: "secret:prod/hello-next-js/jwt-secret"  # Secrets Manager
+  JWT_SECRET_DEV: "secret:dev/hello-next-js/jwt-secret"    # Secrets Manager
 
 # storage:
   # readonly_fs: true       # Limit to read-only access to mounted root filesystems.
