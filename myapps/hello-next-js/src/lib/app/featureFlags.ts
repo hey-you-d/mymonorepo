@@ -18,6 +18,9 @@ type EnvModeType = {
         secure: boolean,
         path: string,
     },
+    jwt: {
+        secretId: string,
+    },
     db: {
         localDb?: {
             connectionString: string,
@@ -64,6 +67,9 @@ export const LIVE_SITE_MODE: EnvModeType = {
         secure: true,
         path: "/hello-next-js", // only accessible by /hello-next-js site
     },
+    jwt: {
+        secretId: "/prod/hello-next-js/jwt-secret",
+    },
     db: {
         supabase: {
             connectionString: {
@@ -90,6 +96,9 @@ export const LOCALHOST_MODE: EnvModeType = {
     cookie: {
         secure: false,
         path: "/",
+    },
+    jwt: {
+        secretId: "/dev/hello-next-js/jwt-secret",
     },
     db: {
         localDb: {

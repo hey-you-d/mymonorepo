@@ -108,7 +108,7 @@ export const getJwtSecret = async () => {
 
         // obtain jwt secret from the AWS secret manager
         const secret: { jwtSecret: string } = await getFrmSecretMgr(
-            "dev/hello-next-js/jwt-secret", // or prod/hello-next-js/jwt-secret for prod ENV
+            APP_ENV === "LIVE" ? LIVE_SITE_MODE.jwt.secretId : LOCALHOST_MODE.jwt.secretId,
             process.env.AWS_REGION
         );
 
