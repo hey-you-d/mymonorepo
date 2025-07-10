@@ -53,8 +53,14 @@ task_role_policy: |
         - ssm:GetParameter
         - ssm:GetParameters
       Resource: 
-        - !Sub 'arn:aws:ssm:us-east-1:120569641426:parameter/prod/tasks/bff/x-api-key'
-        - !Sub 'arn:aws:ssm:us-east-1:120569641426:parameter/supabase/db/password'
+        - 'arn:aws:ssm:us-east-1:120569641426:parameter/prod/tasks/bff/x-api-key'
+        - 'arn:aws:ssm:us-east-1:120569641426:parameter/supabase/db/password'
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+      Resource:
+        - 'arn:aws:secretsmanager:us-east-1:120569641426:secret:prod/hello-next-js/jwt-secret'
+        - 'arn:aws:secretsmanager:us-east-1:120569641426:secret:dev/hello-next-js/jwt-secret'
 
 # alternatively, declare them in dockerfile (better practice to declare them here)
 variables:
