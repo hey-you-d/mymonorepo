@@ -65,6 +65,7 @@ task_role_policy: |
         - ssm:GetParameters
       Resource: 
         - "arn:aws:ssm:us-east-1:120569641426:parameter/prod/tasks/bff/x-api-key"
+        - "arn:aws:ssm:us-east-1:120569641426:parameter/dev/tasks/bff/x-api-key"
         - "arn:aws:ssm:us-east-1:120569641426:parameter/supabase/db/password"
     - Effect: Allow
       Action:
