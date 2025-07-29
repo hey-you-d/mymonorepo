@@ -4,6 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Server as IOServer, Socket } from "socket.io";
 import { Server as HttpServer } from "http";
 import { ChatMessageType } from "@/types/Chat";
+import { SocketIoEventName, WebSocketServerPath } from "@/lib/app/socketIoExample";
 
 // Extend the Next.js response type to include the custom server property
 type NextApiResponseWithSocket = NextApiResponse & {
@@ -38,28 +39,28 @@ export default function handler(req: NextApiRequest, res: NextApiResponseWithSoc
             console.log("Initialising Websocket server...");
 
             io = new IOServer(res.socket.server, {
-                path: "/api/socket-io-example/server",
+                path: WebSocketServerPath,
                 addTrailingSlash: false,
             });
         
             res.socket.server.io = io;
         }
 
-        io.on("connection", (socket: Socket) => {
+        io.on(SocketIoEventName.CONNECTION, (socket: Socket) => {
             console.log("New Client connection...", socket.id);
             
-            socket.on("message", (msg: ChatMessageType) => {
+            socket.on(SocketIoEventName.MESSAGE, (msg: ChatMessageType) => {
                 try {
                     console.log("Message received: ", msg, " of type ", typeof(msg));
 
-                    io.emit("message", msg);
+                    io.emit(SocketIoEventName.MESSAGE, msg);
                 } catch(err) {
                     console.error("Error handling 'message' event: ", err);
                     socket.emit("error", "Server error while processing message");
                 }
             });
 
-            socket.on("disconnect", () => {
+            socket.on(SocketIoEventName.DISCONNECT, () => {
                 console.log("Client disconnected: ", socket.id);
             });
         });
