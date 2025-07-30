@@ -10,7 +10,7 @@ const reduxSagaChatSlice = createSlice({
         addMessage(state, action: PayloadAction<ChatMessageType>) {
             state.messages.push(action.payload);
         },
-        sendMessage(_: any, action: PayloadAction<ChatMessageType>) {
+        sendMessage(_: unknown, action: PayloadAction<ChatMessageType>) {
             // saga handles this
         },
     }

@@ -1,11 +1,12 @@
-import { takeEvery, put, call, fork } from "redux-saga/effects";
-import { eventChannel, END } from "redux-saga";
+import { take, takeEvery, put, call, fork } from "redux-saga/effects";
+import { EventChannel, eventChannel, END } from "redux-saga";
+import { Socket } from "socket.io-client";
 import { getSocket } from "@/views/sharedSocketIoClientExample";
 import { addMessage, sendMessage } from "@/models/ReduxSagaChatSlice";
 import { SocketIoEventName } from "@/lib/app/socketIoExample";
 import { ChatMessageType } from "@/types/Chat";
 
-function createSocketChannel(socket) {
+function createSocketChannel(socket: Socket) {
   return eventChannel((emit) => {
     socket.on(SocketIoEventName.MESSAGE, (msg: ChatMessageType) => {
       emit(msg);
@@ -53,7 +54,7 @@ function* watchIncomingMessages() {
         });
     });
     */
-    const channel = yield call(createSocketChannel, socket);
+    const channel: EventChannel<ChatMessageType> = yield call(createSocketChannel, socket);
 
     while (true) {
         const msg: ChatMessageType = yield take(channel);
@@ -67,7 +68,7 @@ function* watchIncomingMessages() {
 // You only use takeLatest, takeEvery, etc. when you're watching Redux actions (e.g. SEND_MESSAGE, FETCH_DATA, etc.) — 
 // not when you're reacting to external sources like Socket.IO directly.
 export function* watchSendMessageAction() {
-    yield takeEvery(sendMessage.type, handleSendMessage);
+    yield takeEvery(sendMessage, handleSendMessage);
 }
 
 // Root Saga for this viewModel
