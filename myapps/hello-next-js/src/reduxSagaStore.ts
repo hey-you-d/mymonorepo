@@ -1,5 +1,11 @@
 // Redux implementation example #2: 
 // Next.js redux implementation using Redux saga while following the MVVM patternW
+
+// Steps:
+// 1. create redux store with saga middleware (/hello-next-js/src/reduxSagaStore.ts)
+// 2. create a redux slice (/hello-next-js/src/models/ReduxSagaUserSlice.ts)
+// 3. create a saga (/hello-next-js/src/viewModels/reduxSagaUserViewModel.ts)
+// 4. use it in components (e.g /hello-next-js/src/views/reduxSagaExamplePage.tsx)
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import { createWrapper } from 'next-redux-wrapper';
