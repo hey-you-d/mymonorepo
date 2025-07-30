@@ -1,0 +1,14 @@
+import { useEffect } from "react";
+import { useStore } from "react-redux";
+import { injectSaga } from "@/lib/app/reduxSaga";
+import { rootSaga as chatSaga } from "@/viewModels/reduxSagaChatViewModel";
+
+export default function ReduxSagaExamplePage() {
+  const store = useStore();
+
+  useEffect(() => {
+    injectSaga(store, "chatSaga", chatSaga);
+  }, [store]);
+
+  return <div>Chat Room</div>;
+}

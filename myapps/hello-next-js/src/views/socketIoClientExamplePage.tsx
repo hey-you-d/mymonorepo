@@ -1,9 +1,10 @@
 // src/views/socketIoClientExamplePage.ts
 
 import { useEffect, useState, useRef } from "react";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { ChatMessageType } from "@/types/Chat";
 import { SocketIoEventName, WebSocketServerPath } from "@/lib/app/socketIoExample";
+import { getSocket } from "./sharedSocketIoClientExample";
 
 export default function SocketIoClientExamplePage() {
     const socketRef = useRef<Socket | null>(null);
@@ -15,9 +16,7 @@ export default function SocketIoClientExamplePage() {
         // Initialize server once
         fetch(WebSocketServerPath);
 
-        socketRef.current = io({
-            path: WebSocketServerPath,
-        });
+        socketRef.current = getSocket();
 
         socketRef.current.on(SocketIoEventName.MESSAGE, (msg: ChatMessageType) => {
             console.log("useEffect message ", msg);

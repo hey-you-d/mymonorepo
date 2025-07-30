@@ -28,11 +28,15 @@ export function* fetchUsersSaga(): Generator<any, void, any> {
 }
 
 // Saga watcher
-function* watchFetchUsers() {
+// for reference:
+// Yes, use takeLatest (or takeEvery, throttle, etc.) when you want to handle Redux-dispatched actions, not socket events.
+// You only use takeLatest, takeEvery, etc. when you're watching Redux actions (e.g. SEND_MESSAGE, FETCH_DATA, etc.) — 
+// not when you're reacting to external sources like Socket.IO directly.
+export function* watchFetchUsers() {
     yield takeLatest(fetchUsersRequest.type, fetchUsersSaga); // takeLatest to handle the latest request
 }
 
 // Root Saga
-export default function* rootSaga() {
+export function* rootSaga() {
     yield watchFetchUsers();
 }

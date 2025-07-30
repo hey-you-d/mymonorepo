@@ -10,7 +10,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import { createWrapper } from 'next-redux-wrapper';
 import reduxSagaUserReducer from "./models/ReduxSagaUserSlice";
-import rootSaga from "./viewModels/reduxSagaUserViewModel";
+//import rootSaga from "./viewModels/reduxSagaUserViewModel";
+import rootSaga from "./viewModels/reduxMultipleSagasExampleViewModel";
 
 const sagaMiddleware = createSagaMiddleware();
 
