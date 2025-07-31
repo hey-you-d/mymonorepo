@@ -1,5 +1,7 @@
-import Layout from '../pagesLayouts/Layout';
+//import Layout from '../pagesLayouts/Layout';
 import ReduxSagaExamplePage from '@/views/reduxSagaExamplePage';
+//import ChatWithSocketIoReduxSagaExamplePage from '@/views/reduxChatSagaExamplePage';
+import SocketIoClientExamplePage from '@/views/socketIoClientExamplePage';
 
 // for reference:
 // Redux-Saga is a middleware for Redux, not a replacement for Redux itself. 
@@ -11,14 +13,14 @@ import ReduxSagaExamplePage from '@/views/reduxSagaExamplePage';
 // - You wrap your React app with Provider from react-redux to give components access to the store.
 // - Components dispatch actions → Redux reducers update state OR Redux-Saga listens and handles side effects (e.g. API calls).
 // Think of it like this:
-// Think of it like this:
 // - react-redux handles React <--> Redux store connection.
 // - redux-saga handles Redux store <--> Side effects (like API calls, delays, etc).
 const ExampleReduxSaga = () => {
     return ( 
-        <Layout title="hello-next-js - MVVM pattern example - Redux Saga">
+        <>
             <ReduxSagaExamplePage />
-        </Layout>
+            <SocketIoClientExamplePage />
+        </>
     );
 }
 
